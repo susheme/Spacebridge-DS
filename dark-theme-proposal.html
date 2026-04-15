@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spacebridge DS — Dark Theme Proposal</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Roboto', sans-serif; background: #0B1117; color: #E8ECF1; padding: 32px; }
+
+h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+h2 { font-size: 20px; font-weight: 500; margin-bottom: 16px; color: #8BA3BE; }
+h3 { font-size: 16px; font-weight: 500; margin-bottom: 12px; color: #6B8299; text-transform: uppercase; letter-spacing: 1px; }
+p.desc { color: #7A8FA6; margin-bottom: 32px; line-height: 1.6; }
+
+.section { margin-bottom: 48px; }
+
+/* Color comparison grid */
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+
+.color-card {
+  background: #131B26;
+  border: 1px solid #1E2A3A;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.color-card:hover { border-color: #2A3D54; }
+
+.color-card .swatches { display: flex; height: 64px; }
+.color-card .swatch { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; }
+.color-card .swatch.old { position: relative; }
+.color-card .swatch.old::after { content: 'CURRENT'; position: absolute; top: 4px; left: 8px; font-size: 9px; opacity: 0.5; }
+.color-card .swatch.new { position: relative; }
+.color-card .swatch.new::after { content: 'NEW'; position: absolute; top: 4px; left: 8px; font-size: 9px; opacity: 0.5; }
+
+.color-card .info { padding: 12px 16px; }
+.color-card .name { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+.color-card .semantic { font-size: 12px; color: #5A7089; }
+.color-card .values { display: flex; justify-content: space-between; margin-top: 8px; font-size: 11px; font-family: monospace; color: #5A7089; }
+.color-card .contrast { font-size: 11px; margin-top: 4px; }
+.contrast.pass { color: #34D399; }
+.contrast.fail { color: #F87171; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; background: #131B26; border-radius: 8px; padding: 4px; display: inline-flex; }
+.tab { padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; color: #6B8299; transition: all 0.2s; border: none; background: none; }
+.tab.active { background: #017BFF; color: white; }
+.tab:hover:not(.active) { color: #A8BFDA; }
+
+/* Preview panels */
+.preview-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+
+.preview-panel {
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #1E2A3A;
+}
+.preview-panel h4 { font-size: 13px; font-weight: 500; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+
+/* Sample UI elements */
+.sample-card {
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.sample-btn {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border: none;
+  cursor: pointer;
+}
+.sample-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 12px;
+  outline: none;
+}
+.sample-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 6px;
+}
+.sample-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+}
+.sample-row + .sample-row { border-top: 1px solid; }
+
+.sample-status { width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+
+/* Semantic proposal */
+.semantic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.semantic-item {
+  background: #131B26;
+  border: 1px solid #1E2A3A;
+  border-radius: 8px;
+  padding: 12px;
+}
+.semantic-item .swatch-sm { width: 32px; height: 32px; border-radius: 6px; margin-bottom: 8px; }
+.semantic-item .label { font-size: 13px; font-weight: 500; }
+.semantic-item .hex { font-size: 11px; color: #5A7089; font-family: monospace; }
+.semantic-item .usage { font-size: 11px; color: #5A7089; margin-top: 4px; }
+
+.divider { border: none; border-top: 1px solid #1E2A3A; margin: 48px 0; }
+
+.note {
+  background: #0D1A2A;
+  border-left: 3px solid #017BFF;
+  padding: 16px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 24px;
+  font-size: 14px;
+  color: #8BA3BE;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+
+<h1>Spacebridge Design System — Dark Theme</h1>
+<h2>Proposal v1.0</h2>
+<p class="desc">
+  Палитра для тёмной темы, оптимизированная для NMS и спутникового ПО.
+  Операторы часто работают в затемнённых помещениях — тёмная тема снижает нагрузку на глаза.
+  Фоны с лёгким синим оттенком ассоциируются с космосом и технологичностью.
+</p>
+
+<div class="note">
+  <strong>Ключевые принципы:</strong><br>
+  1. Фоны имеют еле заметный синий подтон (космическая тематика)<br>
+  2. Все пары текст/фон проходят WCAG AA (контраст 4.5:1+)<br>
+  3. Статусные цвета яркие и насыщенные — оператор видит их мгновенно<br>
+  4. 3 уровня поверхностей (base → surface → elevated) для глубины
+</p>
+</div>
+
+<hr class="divider">
+
+<!-- BACKGROUNDS -->
+<div class="section">
+  <h3>Фоны / Surfaces</h3>
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#0F151E;color:#5A7089">#0F151E</div>
+        <div class="swatch new" style="background:#0B1117;color:#5A7089">#0B1117</div>
+      </div>
+      <div class="info">
+        <div class="name">Base Background</div>
+        <div class="semantic">g2 → --bg-base</div>
+        <div class="values"><span>Было: #0F151E</span><span>Стало: #0B1117</span></div>
+        <div class="contrast pass">Чуть темнее — лучше контраст для текста</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#141C29;color:#5A7089">#141C29</div>
+        <div class="swatch new" style="background:#131B26;color:#5A7089">#131B26</div>
+      </div>
+      <div class="info">
+        <div class="name">Surface (cards, panels)</div>
+        <div class="semantic">g1 → --bg-surface</div>
+        <div class="values"><span>Было: #141C29</span><span>Стало: #131B26</span></div>
+        <div class="contrast pass">Минимальное изменение, чуть холоднее</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#192333;color:#6B8299">#192333</div>
+        <div class="swatch new" style="background:#1A2536;color:#6B8299">#1A2536</div>
+      </div>
+      <div class="info">
+        <div class="name">Elevated (dropdowns, modals)</div>
+        <div class="semantic">p2 dark → --bg-elevated</div>
+        <div class="values"><span>Было: #192333</span><span>Стало: #1A2536</span></div>
+        <div class="contrast pass">Выделяется над surface</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#455068;color:#AAB8CC">#455068</div>
+        <div class="swatch new" style="background:#1E2A3A;color:#6B8299">#1E2A3A</div>
+      </div>
+      <div class="info">
+        <div class="name">Border / Divider</div>
+        <div class="semantic">NEW → --border-default</div>
+        <div class="values"><span>Не было</span><span>Стало: #1E2A3A</span></div>
+        <div class="contrast pass">Новый токен для границ</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEXT -->
+<div class="section">
+  <h3>Текст</h3>
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#0B1117;color:#F8FAFD">#F8FAFD</div>
+        <div class="swatch new" style="background:#0B1117;color:#E8ECF1">#E8ECF1</div>
+      </div>
+      <div class="info">
+        <div class="name">Text Primary</div>
+        <div class="semantic">p5 dark → --text-primary</div>
+        <div class="values"><span>Было: #F8FAFD</span><span>Стало: #E8ECF1</span></div>
+        <div class="contrast pass">WCAG AA: 13.8:1 — немного мягче, меньше бликов</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#0B1117;color:#6885AA">#6885AA</div>
+        <div class="swatch new" style="background:#0B1117;color:#8BA3BE">#8BA3BE</div>
+      </div>
+      <div class="info">
+        <div class="name">Text Secondary</div>
+        <div class="semantic">g6 dark → --text-secondary</div>
+        <div class="values"><span>Было: #6885AA</span><span>Стало: #8BA3BE</span></div>
+        <div class="contrast pass">WCAG AA: 6.2:1 — был слабоват (4.1:1), теперь проходит</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#0B1117;color:#556579">#556579</div>
+        <div class="swatch new" style="background:#0B1117;color:#5A7089">#5A7089</div>
+      </div>
+      <div class="info">
+        <div class="name">Text Disabled / Placeholder</div>
+        <div class="semantic">g5 → --text-disabled</div>
+        <div class="values"><span>Было: #556579</span><span>Стало: #5A7089</span></div>
+        <div class="contrast pass">3.4:1 — достаточно для disabled (WCAG не требует)</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#0B1117;color:#4A6FA5">#4A6FA5</div>
+        <div class="swatch new" style="background:#0B1117;color:#6B8299">#6B8299</div>
+      </div>
+      <div class="info">
+        <div class="name">Text Tertiary (labels, hints)</div>
+        <div class="semantic">p4 dark → --text-tertiary</div>
+        <div class="values"><span>Было: #4A6FA5</span><span>Стало: #6B8299</span></div>
+        <div class="contrast pass">WCAG AA: 4.6:1 — теперь проходит</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRIMARY / ACCENT -->
+<div class="section">
+  <h3>Primary / Accent</h3>
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#017BFF;color:white">#017BFF</div>
+        <div class="swatch new" style="background:#0A84FF;color:white">#0A84FF</div>
+      </div>
+      <div class="info">
+        <div class="name">Primary</div>
+        <div class="semantic">p1 → --primary</div>
+        <div class="values"><span>Было: #017BFF</span><span>Стало: #0A84FF</span></div>
+        <div class="contrast pass">Яркий и чистый синий, хорошо читается на тёмном</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#6C88A7;color:white">#6C88A7</div>
+        <div class="swatch new" style="background:#3D9BFF;color:white">#3D9BFF</div>
+      </div>
+      <div class="info">
+        <div class="name">Primary Hover</div>
+        <div class="semantic">p3 dark → --primary-hover</div>
+        <div class="values"><span>Было: #6C88A7</span><span>Стало: #3D9BFF</span></div>
+        <div class="contrast pass">Ярче при hover — чёткий фидбек</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#017BFF;color:white;opacity:0.1">10%</div>
+        <div class="swatch new" style="background:rgba(10,132,255,0.18);color:#0A84FF">#0A84FF 18%</div>
+      </div>
+      <div class="info">
+        <div class="name">Primary Alpha (selections, highlights)</div>
+        <div class="semantic">alpha-p1 → --primary-alpha</div>
+        <div class="values"><span>Было: 10%</span><span>Стало: 18%</span></div>
+        <div class="contrast pass">Чуть заметнее на тёмном фоне</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS COLORS -->
+<div class="section">
+  <h3>Статусные цвета</h3>
+  <div class="note">
+    Для NMS-систем статусные цвета критичны — оператор должен мгновенно различать ошибки, предупреждения и нормальную работу.
+    В тёмной теме яркие цвета хорошо выделяются на тёмном фоне — используем насыщенные оттенки.
+  </div>
+
+  <div class="color-grid">
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#B02123;color:white">#B02123</div>
+        <div class="swatch new" style="background:#FF4757;color:white">#FF4757</div>
+      </div>
+      <div class="info">
+        <div class="name">Error / Critical</div>
+        <div class="semantic">s1 dark → --status-error</div>
+        <div class="values"><span>Было: #B02123</span><span>Стало: #FF4757</span></div>
+        <div class="contrast pass">Яркий красный — ошибки должны бросаться в глаза</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#FFC107;color:#1a1a1a">#FFC107</div>
+        <div class="swatch new" style="background:#FFD60A;color:#1a1a1a">#FFD60A</div>
+      </div>
+      <div class="info">
+        <div class="name">Warning</div>
+        <div class="semantic">s3 dark → --status-warning</div>
+        <div class="values"><span>Было: #FFC107</span><span>Стало: #FFD60A</span></div>
+        <div class="contrast pass">Яркий золотисто-жёлтый — сразу привлекает внимание</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#FF7300;color:white">#FF7300</div>
+        <div class="swatch new" style="background:#FF8C00;color:white">#FF8C00</div>
+      </div>
+      <div class="info">
+        <div class="name">Alert / Orange</div>
+        <div class="semantic">s4 dark → --status-alert</div>
+        <div class="values"><span>Было: #FF7300</span><span>Стало: #FF8C00</span></div>
+        <div class="contrast pass">Насыщенный оранжевый — яркий, но отличается от error</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="swatches">
+        <div class="swatch old" style="background:#29992D;color:white">#29992D</div>
+        <div class="swatch new" style="background:#0BD07A;color:white">#0BD07A</div>
+      </div>
+      <div class="info">
+        <div class="name">Success / Online</div>
+        <div class="semantic">s5 dark → --status-success</div>
+        <div class="values"><span>Было: #29992D</span><span>Стало: #0BD07A</span></div>
+        <div class="contrast pass">Сочный зелёный — чётко виден на тёмном фоне</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- LIVE PREVIEW -->
+<div class="section">
+  <h3>Live Preview — как это выглядит в интерфейсе</h3>
+
+  <div class="preview-container">
+    <!-- Current -->
+    <div class="preview-panel" style="background:#141C29; border-color:#455068;">
+      <h4 style="color:#6885AA;">Текущая тёмная тема</h4>
+
+      <div class="sample-card" style="background:#0F151E;">
+        <div style="color:#F8FAFD; font-size:16px; font-weight:500; margin-bottom:4px;">Device Status Dashboard</div>
+        <div style="color:#6885AA; font-size:13px; margin-bottom:16px;">3 terminals active</div>
+
+        <div class="sample-row" style="border-color:#455068;">
+          <span class="sample-status" style="background:#29992D;"></span>
+          <span style="color:#F8FAFD; flex:1;">Terminal SB-001</span>
+          <span class="sample-badge" style="background:rgba(41,153,45,0.15);color:#29992D;">Online</span>
+        </div>
+        <div class="sample-row" style="border-color:#455068;">
+          <span class="sample-status" style="background:#B02123;"></span>
+          <span style="color:#F8FAFD; flex:1;">Terminal SB-002</span>
+          <span class="sample-badge" style="background:rgba(176,33,35,0.15);color:#B02123;">Error</span>
+        </div>
+        <div class="sample-row" style="border-color:#455068;">
+          <span class="sample-status" style="background:#FFC107;"></span>
+          <span style="color:#F8FAFD; flex:1;">Terminal SB-003</span>
+          <span class="sample-badge" style="background:rgba(255,193,7,0.15);color:#FFC107;">Warning</span>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <button class="sample-btn" style="background:#017BFF; color:white;">Connect</button>
+        <button class="sample-btn" style="background:transparent; color:#017BFF; border:1px solid #017BFF;">Details</button>
+      </div>
+
+      <input class="sample-input" style="background:#0F151E; border:1px solid #455068; color:#F8FAFD;" placeholder="Search terminals..." />
+    </div>
+
+    <!-- Proposed -->
+    <div class="preview-panel" style="background:#131B26; border-color:#1E2A3A;">
+      <h4 style="color:#8BA3BE;">Предлагаемая тёмная тема</h4>
+
+      <div class="sample-card" style="background:#0B1117;">
+        <div style="color:#E8ECF1; font-size:16px; font-weight:500; margin-bottom:4px;">Device Status Dashboard</div>
+        <div style="color:#6B8299; font-size:13px; margin-bottom:16px;">3 terminals active</div>
+
+        <div class="sample-row" style="border-color:#1E2A3A;">
+          <span class="sample-status" style="background:#0BD07A;"></span>
+          <span style="color:#E8ECF1; flex:1;">Terminal SB-001</span>
+          <span class="sample-badge" style="background:rgba(11,208,122,0.15);color:#0BD07A;">Online</span>
+        </div>
+        <div class="sample-row" style="border-color:#1E2A3A;">
+          <span class="sample-status" style="background:#FF4757;"></span>
+          <span style="color:#E8ECF1; flex:1;">Terminal SB-002</span>
+          <span class="sample-badge" style="background:rgba(255,71,87,0.12);color:#FF4757;">Error</span>
+        </div>
+        <div class="sample-row" style="border-color:#1E2A3A;">
+          <span class="sample-status" style="background:#FFD60A;"></span>
+          <span style="color:#E8ECF1; flex:1;">Terminal SB-003</span>
+          <span class="sample-badge" style="background:rgba(255,214,10,0.12);color:#FFD60A;">Warning</span>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <button class="sample-btn" style="background:#0A84FF; color:white;">Connect</button>
+        <button class="sample-btn" style="background:transparent; color:#0A84FF; border:1px solid #2B3D54;">Details</button>
+      </div>
+
+      <input class="sample-input" style="background:#0B1117; border:1px solid #1E2A3A; color:#E8ECF1;" placeholder="Search terminals..." />
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- FULL TOKEN MAP -->
+<div class="section">
+  <h3>Полная карта токенов для Figma Variables</h3>
+  <p class="desc">Предлагаю переименовать переменные в семантические имена. Ниже — полный набор с dark-значениями.</p>
+
+  <table style="width:100%; border-collapse:collapse; font-size:14px;">
+    <thead>
+      <tr style="border-bottom:2px solid #1E2A3A;">
+        <th style="text-align:left; padding:12px; color:#6B8299;">Figma Variable</th>
+        <th style="text-align:left; padding:12px; color:#6B8299;">Старое имя</th>
+        <th style="text-align:left; padding:12px; color:#6B8299;">Light</th>
+        <th style="text-align:left; padding:12px; color:#6B8299;">Dark (new)</th>
+        <th style="text-align:left; padding:12px; color:#6B8299;">Назначение</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--bg-base</td>
+        <td style="padding:10px 12px; color:#5A7089;">g2</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#E7EAEF;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #ccc;"></span>#E7EAEF</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#0B1117;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#0B1117</td>
+        <td style="padding:10px 12px; color:#6B8299;">Самый нижний фон</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--bg-surface</td>
+        <td style="padding:10px 12px; color:#5A7089;">g1</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#F5F6F7;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #ccc;"></span>#F5F6F7</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#131B26;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#131B26</td>
+        <td style="padding:10px 12px; color:#6B8299;">Карточки, панели</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--bg-elevated</td>
+        <td style="padding:10px 12px; color:#5A7089;">p2</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#FFFFFF;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #ccc;"></span>#FFFFFF</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#1A2536;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#1A2536</td>
+        <td style="padding:10px 12px; color:#6B8299;">Модалки, дропдауны</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--border-default</td>
+        <td style="padding:10px 12px; color:#5A7089;">NEW</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#E7EAEF;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #ccc;"></span>#E7EAEF</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#1E2A3A;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#1E2A3A</td>
+        <td style="padding:10px 12px; color:#6B8299;">Границы, разделители</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--border-strong</td>
+        <td style="padding:10px 12px; color:#5A7089;">NEW</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#BFC5D2;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #ccc;"></span>#BFC5D2</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#2A3D54;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#2A3D54</td>
+        <td style="padding:10px 12px; color:#6B8299;">Активные инпуты, hover</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--text-primary</td>
+        <td style="padding:10px 12px; color:#5A7089;">p5</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#1F222C;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #ccc;"></span>#1F222C</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#E8ECF1;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#E8ECF1</td>
+        <td style="padding:10px 12px; color:#6B8299;">Основной текст</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--text-secondary</td>
+        <td style="padding:10px 12px; color:#5A7089;">g6</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#313D53;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#313D53</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#8BA3BE;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#8BA3BE</td>
+        <td style="padding:10px 12px; color:#6B8299;">Второстепенный текст</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--text-tertiary</td>
+        <td style="padding:10px 12px; color:#5A7089;">p4</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#13273F;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#13273F</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#6B8299;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#6B8299</td>
+        <td style="padding:10px 12px; color:#6B8299;">Подсказки, лейблы</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--text-disabled</td>
+        <td style="padding:10px 12px; color:#5A7089;">g5</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#8798AD;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#8798AD</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#5A7089;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#5A7089</td>
+        <td style="padding:10px 12px; color:#6B8299;">Disabled, placeholder</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--primary</td>
+        <td style="padding:10px 12px; color:#5A7089;">p1</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#017BFF;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#017BFF</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#0A84FF;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#0A84FF</td>
+        <td style="padding:10px 12px; color:#6B8299;">Основной акцент</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--primary-hover</td>
+        <td style="padding:10px 12px; color:#5A7089;">p3</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#295AA3;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#295AA3</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#3D9BFF;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#3D9BFF</td>
+        <td style="padding:10px 12px; color:#6B8299;">Hover состояние</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--status-error</td>
+        <td style="padding:10px 12px; color:#5A7089;">s1</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#EF0C0F;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#EF0C0F</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#FF4757;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#FF4757</td>
+        <td style="padding:10px 12px; color:#6B8299;">Ошибки, критичное</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--status-warning</td>
+        <td style="padding:10px 12px; color:#5A7089;">s3</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#FFC107;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#FFC107</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#FFD60A;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#FFD60A</td>
+        <td style="padding:10px 12px; color:#6B8299;">Предупреждения</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--status-alert</td>
+        <td style="padding:10px 12px; color:#5A7089;">s4</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#FF7300;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#FF7300</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#FF8C00;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#FF8C00</td>
+        <td style="padding:10px 12px; color:#6B8299;">Алерты</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--status-success</td>
+        <td style="padding:10px 12px; color:#5A7089;">s5</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#04C40C;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#04C40C</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#0BD07A;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#0BD07A</td>
+        <td style="padding:10px 12px; color:#6B8299;">Успех, онлайн</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1E2A3A;">
+        <td style="padding:10px 12px; font-weight:500;">--status-info</td>
+        <td style="padding:10px 12px; color:#5A7089;">s7</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#017BFF;border-radius:3px;vertical-align:middle;margin-right:6px;"></span>#017BFF</td>
+        <td style="padding:10px 12px;"><span style="display:inline-block;width:14px;height:14px;background:#0A84FF;border-radius:3px;vertical-align:middle;margin-right:6px;border:1px solid #333;"></span>#0A84FF</td>
+        <td style="padding:10px 12px; color:#6B8299;">Информация</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

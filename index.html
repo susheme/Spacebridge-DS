@@ -5,6 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Spacebridge UI — Design System</title>
 <script>(function(){var t=localStorage.getItem('sb-theme')||'light';document.documentElement.setAttribute('data-theme',t);})();</script>
+<script>
+// ═══════════════════════════════════════════
+//  COLOR TOKENS — SINGLE SOURCE OF TRUTH
+//  Меняй только здесь. CSS и страница Colors
+//  генерируются автоматически из этих данных.
+// ═══════════════════════════════════════════
+window.COLOR_TOKENS = [
+  { label: 'Brand', tokens: [
+    { name: '--primary',       light: '#017BFF',              dark: '#0A84FF' },
+    { name: '--primary-hover', light: '#295AA3',              dark: '#3D9BFF' },
+    { name: '--primary-alpha', light: 'rgba(1,123,255,0.1)',  dark: 'rgba(10,132,255,0.18)' },
+    { name: '--secondary',     light: '#295AA3',              dark: '#4A9EFF' },
+    { name: '--tertiary',      light: '#13273F',              dark: '#1C3A5C' },
+  ]},
+  { label: 'Background', tokens: [
+    { name: '--bg-base',     light: '#E7EAEF', dark: '#0B1117' },
+    { name: '--bg-surface',  light: '#F5F6F7', dark: '#131B26' },
+    { name: '--bg-elevated', light: '#FFFFFF',  dark: '#1A2536' },
+    { name: '--bg-hover',    light: '#E7EAEF', dark: '#1E2A3A' },
+    { name: '--bg-card',     light: '#FFFFFF',  dark: '#1A2536' },
+  ]},
+  { label: 'Text', tokens: [
+    { name: '--text-primary',   light: '#1F222C', dark: '#E8ECF1' },
+    { name: '--text-secondary', light: '#313D53', dark: '#8BA3BE' },
+    { name: '--text-tertiary',  light: '#556579', dark: '#6B8299' },
+    { name: '--text-disabled',  light: '#8798AD', dark: '#5A7089' },
+  ]},
+  { label: 'Border', tokens: [
+    { name: '--border-default', light: '#E0E3E8', dark: '#1E2A3A' },
+    { name: '--border-strong',  light: '#BFC5D2', dark: '#2A3D54' },
+    { name: '--border',         light: '#E0E3E8', dark: '#2A3D54' },
+  ]},
+  { label: 'Status', tokens: [
+    { name: '--status-error',   light: '#EF0C0F', dark: '#FF4757' },
+    { name: '--status-warning', light: '#FFC107', dark: '#FFD60A' },
+    { name: '--status-alert',   light: '#FF7300', dark: '#FF8C00' },
+    { name: '--status-success', light: '#04C40C', dark: '#0BD07A' },
+    { name: '--status-info',    light: '#017BFF', dark: '#0A84FF' },
+  ]},
+  { label: 'Semantic alpha', tokens: [
+    { name: '--error-alpha',   light: 'rgba(239,12,15,0.08)',   dark: 'rgba(255,71,87,0.12)' },
+    { name: '--warning-alpha', light: 'rgba(255,193,7,0.1)',    dark: 'rgba(255,214,10,0.12)' },
+    { name: '--alert-alpha',   light: 'rgba(255,115,0,0.1)',    dark: 'rgba(255,140,0,0.12)' },
+    { name: '--success-alpha', light: 'rgba(4,196,12,0.08)',    dark: 'rgba(11,208,122,0.12)' },
+    { name: '--info-alpha',    light: 'rgba(1,123,255,0.08)',   dark: 'rgba(10,132,255,0.12)' },
+    { name: '--neutral-alpha', light: 'rgba(135,152,173,0.12)', dark: 'rgba(90,112,137,0.15)' },
+  ]},
+  { label: 'Shadows', tokens: [
+    { name: '--shadow',         light: '0 4px 24px rgba(0,0,0,0.08)',  dark: '0 4px 24px rgba(0,0,0,0.4)' },
+    { name: '--shadow-sm',      light: 'rgba(0,0,0,0.08)',             dark: 'rgba(0,0,0,0.2)' },
+    { name: '--shadow-md',      light: 'rgba(0,0,0,0.16)',             dark: 'rgba(0,0,0,0.35)' },
+    { name: '--shadow-lg',      light: 'rgba(255,255,255,0.55)',        dark: 'rgba(20,28,41,0.25)' },
+    { name: '--shadow-overlay', light: 'rgba(135,152,173,0.3)',         dark: 'rgba(20,28,41,0.5)' },
+  ]},
+  { label: 'System', tokens: [
+    { name: '--code-bg',   light: '#F0F2F5',                   dark: '#0D1520' },
+    { name: '--scanline',  light: 'transparent',               dark: 'rgba(10,132,255,0.03)' },
+  ]},
+];
+// Inject CSS variables into <head> — runs once on load
+(function() {
+  var dark = '[data-theme="dark"] {\n', light = '[data-theme="light"] {\n';
+  COLOR_TOKENS.forEach(function(g) {
+    g.tokens.forEach(function(t) {
+      dark  += '  ' + t.name + ': ' + t.dark  + ';\n';
+      light += '  ' + t.name + ': ' + t.light + ';\n';
+    });
+  });
+  var el = document.createElement('style');
+  el.id = 'sb-color-vars';
+  el.textContent = dark + '}\n' + light + '}\n';
+  document.head.appendChild(el);
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <style>
@@ -35,85 +109,7 @@
   --transition: 0.2s ease;
 }
 
-[data-theme="dark"] {
-  --bg-base: #0B1117;
-  --bg-surface: #131B26;
-  --bg-elevated: #1A2536;
-  --bg-hover: #1E2A3A;
-  --border-default: #2A3545;
-  --border-strong: #2A3D54;
-  --text-primary: #E8ECF1;
-  --text-secondary: #8BA3BE;
-  --text-tertiary: #6B8299;
-  --text-disabled: #5A7089;
-  --primary: #0A84FF;
-  --primary-hover: #3D9BFF;
-  --primary-alpha: rgba(10,132,255,0.18);
-  --status-error: #FF4757;
-  --status-warning: #FFD60A;
-  --status-alert: #FF8C00;
-  --status-success: #0BD07A;
-  --status-info: #0A84FF;
-  --error-alpha: rgba(255,71,87,0.12);
-  --warning-alpha: rgba(255,214,10,0.12);
-  --alert-alpha: rgba(255,140,0,0.12);
-  --success-alpha: rgba(11,208,122,0.12);
-  --info-alpha: rgba(10,132,255,0.12);
-  --neutral-alpha: rgba(90,112,137,0.15);
-  --code-bg: #0D1520;
-  --shadow: 0 4px 24px rgba(0,0,0,0.4);
-  --scanline: rgba(10,132,255,0.03);
-  --border: #2A3D54;
-  --bg-card: #1A2536;
-  /* Brand extended */
-  --secondary: #4A9EFF;
-  --tertiary: #1C3A5C;
-  /* Shadow scale */
-  --shadow-sm: rgba(0,0,0,0.2);
-  --shadow-md: rgba(0,0,0,0.35);
-  --shadow-lg: rgba(255,255,255,0.06);
-  --shadow-overlay: rgba(20,28,41,0.5);
-}
-
-[data-theme="light"] {
-  --bg-base: #E7EAEF;
-  --bg-surface: #F5F6F7;
-  --bg-elevated: #FFFFFF;
-  --bg-hover: #E7EAEF;
-  --border-default: #E0E3E8;
-  --border-strong: #BFC5D2;
-  --text-primary: #1F222C;
-  --text-secondary: #313D53;
-  --text-tertiary: #556579;
-  --text-disabled: #8798AD;
-  --primary: #017BFF;
-  --primary-hover: #295AA3;
-  --primary-alpha: rgba(1,123,255,0.1);
-  --status-error: #EF0C0F;
-  --status-warning: #E5A800;
-  --status-alert: #FF7300;
-  --status-success: #04C40C;
-  --status-info: #017BFF;
-  --error-alpha: rgba(239,12,15,0.08);
-  --warning-alpha: rgba(255,193,7,0.1);
-  --alert-alpha: rgba(255,115,0,0.1);
-  --success-alpha: rgba(4,196,12,0.08);
-  --info-alpha: rgba(1,123,255,0.08);
-  --neutral-alpha: rgba(135,152,173,0.12);
-  --code-bg: #F0F2F5;
-  --shadow: 0 4px 24px rgba(0,0,0,0.08);
-  --scanline: transparent;
-  --border: #E0E3E8;
-  --bg-card: #FFFFFF;
-  /* Brand extended */
-  --secondary: #295AA3;
-  --tertiary: #13273F;
-  /* Shadow scale */
-  --shadow-sm: rgba(0,0,0,0.08);
-  --shadow-md: rgba(0,0,0,0.16);
-  --shadow-lg: rgba(255,255,255,0.55);
-  --shadow-overlay: rgba(135,152,173,0.3);
-}
+/* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */
 
 /* ═══════════════════════════════════════════
    ZONE 2: RESET & LAYOUT
@@ -1793,7 +1789,6 @@ a:hover { color: var(--primary-hover); }
 .sb-tag.filled.tc-error { background: var(--status-error); }
 .sb-tag.filled.tc-warning { background: var(--status-warning); color: var(--text-primary); }
 .sb-tag.filled.tc-alert { background: var(--status-alert); }
-.sb-tag.filled.tc-neutral { background: var(--text-tertiary); }
 /* Show More */
 .sb-tag.more {
   padding: 2px 8px; gap: 4px;
@@ -2780,7 +2775,6 @@ const COMP_CSS = {
 .sb-tag.filled.tc-error { background: var(--status-error); }
 .sb-tag.filled.tc-warning { background: var(--status-warning); color: var(--text-primary); }
 .sb-tag.filled.tc-alert { background: var(--status-alert); }
-.sb-tag.filled.tc-neutral { background: var(--text-tertiary); }
 .sb-tag.more { padding: 2px 8px; gap: 4px; border-radius: 100px; background: var(--primary-alpha); color: var(--primary); }
 .sb-tag-group { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
 .sb-tag-input-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 6px 0; min-height: 40px; cursor: text; border-bottom: 1.5px solid var(--border-strong); background: transparent; transition: border-color 0.15s; }
@@ -3124,54 +3118,7 @@ sbRegister({
   title: 'Getting Started',
   description: 'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision, and 24/7 operational environments.',
   renderPage() {
-    const colorGroups = [
-      { label: 'Brand', tokens: [
-        { name: '--primary',       light: '#017BFF',              dark: '#0A84FF' },
-        { name: '--primary-hover', light: '#295AA3',              dark: '#3D9BFF' },
-        { name: '--primary-alpha', light: 'rgba(1,123,255,0.1)',  dark: 'rgba(10,132,255,0.18)' },
-        { name: '--secondary',     light: '#295AA3',              dark: '#4A9EFF' },
-        { name: '--tertiary',      light: '#13273F',              dark: '#1C3A5C' },
-      ]},
-      { label: 'Background', tokens: [
-        { name: '--bg-base',     light: '#E7EAEF', dark: '#0B1117' },
-        { name: '--bg-surface',  light: '#F5F6F7', dark: '#131B26' },
-        { name: '--bg-elevated', light: '#FFFFFF',  dark: '#1A2536' },
-        { name: '--bg-hover',    light: '#E7EAEF', dark: '#1E2A3A' },
-        { name: '--bg-card',     light: '#FFFFFF',  dark: '#1A2536' },
-      ]},
-      { label: 'Text', tokens: [
-        { name: '--text-primary',   light: '#1F222C', dark: '#E8ECF1' },
-        { name: '--text-secondary', light: '#313D53', dark: '#8BA3BE' },
-        { name: '--text-tertiary',  light: '#556579', dark: '#6B8299' },
-        { name: '--text-disabled',  light: '#8798AD', dark: '#5A7089' },
-      ]},
-      { label: 'Border', tokens: [
-        { name: '--border-default', light: '#E0E3E8', dark: '#1E2A3A' },
-        { name: '--border-strong',  light: '#BFC5D2', dark: '#2A3D54' },
-        { name: '--border',         light: '#E0E3E8', dark: '#2A3D54' },
-      ]},
-      { label: 'Status', tokens: [
-        { name: '--status-error',   light: '#EF0C0F', dark: '#FF4757' },
-        { name: '--status-warning', light: '#FFC107', dark: '#FFD60A' },
-        { name: '--status-alert',   light: '#FF7300', dark: '#FF8C00' },
-        { name: '--status-success', light: '#04C40C', dark: '#0BD07A' },
-        { name: '--status-info',    light: '#017BFF', dark: '#0A84FF' },
-      ]},
-      { label: 'Semantic (alpha)', tokens: [
-        { name: '--error-alpha',   light: 'rgba(239,12,15,0.08)',   dark: 'rgba(255,71,87,0.12)' },
-        { name: '--warning-alpha', light: 'rgba(255,193,7,0.1)',    dark: 'rgba(255,214,10,0.12)' },
-        { name: '--alert-alpha',   light: 'rgba(255,115,0,0.1)',    dark: 'rgba(255,140,0,0.12)' },
-        { name: '--success-alpha', light: 'rgba(4,196,12,0.08)',    dark: 'rgba(11,208,122,0.12)' },
-        { name: '--info-alpha',    light: 'rgba(1,123,255,0.08)',   dark: 'rgba(10,132,255,0.12)' },
-        { name: '--neutral-alpha', light: 'rgba(135,152,173,0.12)', dark: 'rgba(90,112,137,0.15)' },
-      ]},
-      { label: 'Shadows', tokens: [
-        { name: '--shadow-sm',      light: 'rgba(0,0,0,0.08)',       dark: 'rgba(0,0,0,0.2)' },
-        { name: '--shadow-md',      light: 'rgba(0,0,0,0.16)',       dark: 'rgba(0,0,0,0.35)' },
-        { name: '--shadow-lg',      light: 'rgba(255,255,255,0.55)', dark: 'rgba(20,28,41,0.25)' },
-        { name: '--shadow-overlay', light: 'rgba(135,152,173,0.3)',  dark: 'rgba(20,28,41,0.5)' },
-      ]},
-    ];
+    const colorGroups = window.COLOR_TOKENS;
 
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
@@ -4597,15 +4544,12 @@ sbRegister({
     playground: {
       title: 'Tag Playground',
       wide: true,
-      state: { variant: 'mono' },
+      state: { colorful: false },
       controls(pg) {
-        return pg.select('variant', [
-          { value: 'mono', label: 'Default' },
-          { value: 'color', label: 'Colorful' },
-        ]);
+        return pg.toggle('colorful', 'Colorful');
       },
       render(s) {
-        if ((s.variant || 'mono') === 'color') {
+        if (s.colorful) {
           return `<div style="display:flex;flex-direction:column;gap:16px;width:100%;max-width:480px">
             <div style="display:flex;flex-direction:column;gap:4px">
               <span style="font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.05em">Online</span>
@@ -4686,12 +4630,8 @@ sbRegister({
             ${mkTag({ mode: 'filled', text: 'Alert', color: 'alert' })}
             ${mkTag({ mode: 'filled', text: 'Ka-Band', color: 'alert', removable: true })}
           </div>
-          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-            ${mkTag({ mode: 'filled', text: 'Neutral', color: 'neutral' })}
-            ${mkTag({ mode: 'filled', text: 'Archived', color: 'neutral', removable: true })}
-          </div>
         </div>`,
-        html: `<div class="sb-tag filled tc-success"><span class="sb-tag-label">Online</span></div>\n<div class="sb-tag filled tc-error"><span class="sb-tag-label">Offline</span></div>\n<div class="sb-tag filled tc-warning"><span class="sb-tag-label">Warning</span></div>\n<div class="sb-tag filled tc-alert"><span class="sb-tag-label">Alert</span></div>\n<div class="sb-tag filled tc-neutral"><span class="sb-tag-label">Neutral</span></div>`,
+        html: `<div class="sb-tag filled tc-success"><span class="sb-tag-label">Online</span></div>\n<div class="sb-tag filled tc-error"><span class="sb-tag-label">Offline</span></div>\n<div class="sb-tag filled tc-warning"><span class="sb-tag-label">Warning</span></div>\n<div class="sb-tag filled tc-alert"><span class="sb-tag-label">Alert</span></div>`,
         css: COMP_CSS.tags,
       },
       {

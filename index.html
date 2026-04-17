@@ -4381,8 +4381,20 @@ sbRegister({
           ${pg.toggle('showDesc',   'Description', { requires: 'showLabel' })}
         </div>`;
       },
+      onControlChange(key, value, s) {
+        if (key === 'disabled' && value) s.open = false;
+      },
+      syncControls(s, container) {
+        const openWrap = container.querySelector('[data-pg-ctrl="open"]');
+        if (openWrap) {
+          const cb = openWrap.querySelector('input[type="checkbox"]');
+          if (cb) cb.disabled = !!s.disabled;
+          openWrap.style.opacity = s.disabled ? '0.35' : '';
+          openWrap.style.pointerEvents = s.disabled ? 'none' : '';
+        }
+      },
       render(s) {
-        const selOpts = { placeholder: s.placeholder, selected: s.selected, critical: s.critical, disabled: s.disabled, open: s.open };
+        const selOpts = { placeholder: s.placeholder, selected: s.selected, critical: s.critical, disabled: s.disabled, open: s.open && !s.disabled };
         const rowOpts = { showIcon: s.showIcon, showAddBtn: s.showAddBtn };
         const fOpts   = {
           label:        s.showLabel ? 'Label' : null,
@@ -4393,7 +4405,7 @@ sbRegister({
         return mkSelField(selOpts, fOpts, rowOpts);
       },
       genCode(s) {
-        const selOpts = { placeholder: s.placeholder, selected: s.selected, critical: s.critical, disabled: s.disabled, open: s.open };
+        const selOpts = { placeholder: s.placeholder, selected: s.selected, critical: s.critical, disabled: s.disabled, open: s.open && !s.disabled };
         const rowOpts = { showIcon: s.showIcon, showAddBtn: s.showAddBtn };
         const fOpts   = {
           label:        s.showLabel ? 'Label' : null,

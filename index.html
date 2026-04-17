@@ -373,12 +373,11 @@ a:hover { color: var(--primary); }
 }
 
 .example-code {
-  border-top: 1px solid var(--border);
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
 }
-.example-code.open { max-height: 800px; }
+.example-code.open { max-height: 800px; border-top: 1px solid var(--border); }
 
 .example-toolbar {
   display: flex;

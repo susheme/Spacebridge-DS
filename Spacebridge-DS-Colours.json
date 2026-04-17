@@ -1,0 +1,132 @@
+{
+  "name": "Color",
+  "themes": ["Light", "Dark"],
+  "colors": {
+    "primary": {
+      "description": "Primary Accent color",
+      "light": { "hex": "#017BFF", "rgb": "rgb(1,123,255)", "rgba": "rgba(1,123,255,1)" },
+      "dark": { "hex": "#0A84FF", "rgb": "rgb(10,132,255)", "rgba": "rgba(10,132,255,1)" }
+    },
+    "secondary": {
+      "description": "Иконки, бордеры",
+      "light": { "hex": "#295AA3", "rgb": "rgb(41,90,163)", "rgba": "rgba(41,90,163,1)" },
+      "dark": { "hex": "#4A9EFF", "rgb": "rgb(74,158,255)", "rgba": "rgba(74,158,255,1)" }
+    },
+    "tertiary": {
+      "description": "Ховер-эффекты",
+      "light": { "hex": "#13273F", "rgb": "rgb(19,39,63)", "rgba": "rgba(19,39,63,1)" },
+      "dark": { "hex": "#1C3A5C", "rgb": "rgb(28,58,92)", "rgba": "rgba(28,58,92,1)" }
+    },
+    "background": {
+      "description": "Background Cards",
+      "light": { "hex": "#FFFFFF", "rgb": "rgb(255,255,255)", "rgba": "rgba(255,255,255,1)" },
+      "dark": { "hex": "#0D1117", "rgb": "rgb(13,17,23)", "rgba": "rgba(13,17,23,1)" }
+    },
+    "text": {
+      "primary": {
+        "description": "Чистый текст",
+        "light": { "hex": "#1F222C", "rgb": "rgb(31,34,44)", "rgba": "rgba(31,34,44,1)" },
+        "dark": { "hex": "#F0F2F5", "rgb": "rgb(240,242,245)", "rgba": "rgba(240,242,245,1)" }
+      },
+      "secondary": {
+        "description": "Icons",
+        "light": { "hex": "#8798AD", "rgb": "rgb(135,152,173)", "rgba": "rgba(135,152,173,1)" },
+        "dark": { "hex": "#8899AA", "rgb": "rgb(136,153,170)", "rgba": "rgba(136,153,170,1)" }
+      },
+      "muted": {
+        "description": "Фон карточек",
+        "light": { "hex": "#556579", "rgb": "rgb(85,101,121)", "rgba": "rgba(85,101,121,1)" },
+        "dark": { "hex": "#5A6B7F", "rgb": "rgb(90,107,127)", "rgba": "rgba(90,107,127,1)" }
+      },
+      "tertiary": {
+        "description": "Фон модальных окон",
+        "light": { "hex": "#313D53", "rgb": "rgb(49,61,83)", "rgba": "rgba(49,61,83,1)" },
+        "dark": { "hex": "#6885AA", "rgb": "rgb(104,133,170)", "rgba": "rgba(104,133,170,1)" }
+      }
+    },
+    "surface": {
+      "surface-1": {
+        "description": "Background Page",
+        "light": { "hex": "#F5F6F7", "rgb": "rgb(245,246,247)", "rgba": "rgba(245,246,247,1)" },
+        "dark": { "hex": "#141C29", "rgb": "rgb(20,28,41)", "rgba": "rgba(20,28,41,1)" }
+      },
+      "surface-2": {
+        "description": "Separators, Headers BG",
+        "light": { "hex": "#E7EAEF", "rgb": "rgb(231,234,239)", "rgba": "rgba(231,234,239,1)" },
+        "dark": { "hex": "#0F151E", "rgb": "rgb(15,21,30)", "rgba": "rgba(15,21,30,1)" }
+      },
+      "border": {
+        "description": "Glifs",
+        "light": { "hex": "#BFC5D2", "rgb": "rgb(191,197,210)", "rgba": "rgba(191,197,210,1)" },
+        "dark": { "hex": "#2A3545", "rgb": "rgb(42,53,69)", "rgba": "rgba(42,53,69,1)" }
+      }
+    },
+    "status": {
+      "error": {
+        "description": "Критические ошибки, алерты",
+        "light": { "hex": "#EF0C0F", "rgb": "rgb(239,12,15)", "rgba": "rgba(239,12,15,1)" },
+        "dark": { "hex": "#E5484D", "rgb": "rgb(229,72,77)", "rgba": "rgba(229,72,77,1)" }
+      },
+      "warning": {
+        "description": "Важные уведомления",
+        "light": { "hex": "#FFC107", "rgb": "rgb(255,193,7)", "rgba": "rgba(255,193,7,1)" },
+        "dark": { "hex": "#FFC107", "rgb": "rgb(255,193,7)", "rgba": "rgba(255,193,7,1)" }
+      },
+      "alert": {
+        "description": "Акцентные предупреждения",
+        "light": { "hex": "#FF7300", "rgb": "rgb(255,115,0)", "rgba": "rgba(255,115,0,1)" },
+        "dark": { "hex": "#FF8B3E", "rgb": "rgb(255,139,62)", "rgba": "rgba(255,139,62,1)" }
+      },
+      "success": {
+        "description": "Успешные действия",
+        "light": { "hex": "#04C40C", "rgb": "rgb(4,196,12)", "rgba": "rgba(4,196,12,1)" },
+        "dark": { "hex": "#3FC241", "rgb": "rgb(63,194,65)", "rgba": "rgba(63,194,65,1)" }
+      },
+      "info": {
+        "description": "Информационные сообщения",
+        "light": { "hex": "#017BFF", "rgb": "rgb(1,123,255)", "rgba": "rgba(1,123,255,1)" },
+        "dark": { "hex": "#2B8FFF", "rgb": "rgb(43,143,255)", "rgba": "rgba(43,143,255,1)" }
+      }
+    },
+    "hover": {
+      "primary-hover": {
+        "light": { "hex": "#017BFF1A", "rgba": "rgba(1,123,255,0.1)" },
+        "dark": { "hex": "#0A84FF1A", "rgba": "rgba(10,132,255,0.1)" }
+      },
+      "error-hover": {
+        "light": { "hex": "#EF0C0F1A", "rgba": "rgba(239,12,15,0.1)" },
+        "dark": { "hex": "#E5484D0D", "rgba": "rgba(229,72,77,0.05)" }
+      },
+      "success-hover": {
+        "light": { "hex": "#04C40C1A", "rgba": "rgba(4,196,12,0.1)" },
+        "dark": { "hex": "#3FC24140", "rgba": "rgba(63,194,65,0.25)" }
+      },
+      "alert-hover": {
+        "light": { "hex": "#FF73001A", "rgba": "rgba(255,115,0,0.1)" },
+        "dark": { "hex": "#FF8B3E1A", "rgba": "rgba(255,139,62,0.1)" }
+      },
+      "warning-hover": {
+        "light": { "hex": "#FFC1071A", "rgba": "rgba(255,193,7,0.1)" },
+        "dark": { "hex": "#FFC1071A", "rgba": "rgba(255,193,7,0.1)" }
+      }
+    },
+    "shadows": {
+      "shadow-sm": {
+        "light": { "rgba": "rgba(0,0,0,0.08)" },
+        "dark": { "rgba": "rgba(0,0,0,0.2)" }
+      },
+      "shadow-md": {
+        "light": { "rgba": "rgba(0,0,0,0.16)" },
+        "dark": { "rgba": "rgba(0,0,0,0.35)" }
+      },
+      "shadow-lg": {
+        "light": { "rgba": "rgba(255,255,255,0.55)" },
+        "dark": { "rgba": "rgba(20,28,41,0.25)" }
+      },
+      "shadow-overlay": {
+        "light": { "rgba": "rgba(135,152,173,0.3)" },
+        "dark": { "rgba": "rgba(20,28,41,0.5)" }
+      }
+    }
+  }
+}

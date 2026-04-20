@@ -1,0 +1,16 @@
+/* --- [SYNC:counter] Counter --- */
+.sb-counter {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 24px; min-width: 24px;
+  padding: var(--pad-vert-4) var(--pad-horiz-8); box-sizing: border-box;
+  border-radius: var(--radius-4); border: var(--border-width-1-5) solid var(--border);
+  background: var(--background);
+  color: var(--text-secondary);
+  font-size: var(--body-font-size-m); font-weight: var(--font-weight-bold); line-height: 1;
+  white-space: nowrap; user-select: none;
+}
+.sb-counter.empty { color: var(--text-secondary); opacity: 0.5; }
+.sb-counter-online { color: var(--success); }
+.sb-counter-sep    { color: var(--text-secondary); }
+.sb-counter-total  { color: var(--text-secondary); }
+/* --- [/SYNC:counter] --- */

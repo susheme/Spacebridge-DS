@@ -1,0 +1,30 @@
+
+/* ═══════════════════════════════════════════
+   ZONE 7: ANIMATIONS
+   ═══════════════════════════════════════════ */
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.copy-toast {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: var(--pad-vert-2) var(--pad-horiz-8);
+  border-radius: var(--radius-4);
+  background: var(--success);
+  color: var(--background);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.copy-toast.show {
+  opacity: 1;
+}
+

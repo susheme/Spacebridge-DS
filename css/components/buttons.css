@@ -1,0 +1,183 @@
+/* --- [SYNC:buttons] Buttons ---
+   Figma: h=40px(L)/32px(S), pad=8px 16px(L)/6px 12px(S),
+   radius=8px, border=1.5px, font=15px/600(L) 13px/600(S),
+   gap=8px, icon=24px(L)/16px(S), min-w=112px */
+.sb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-horiz-s);
+  height: var(--btn-primary-min-height);
+  padding: 0 var(--pad-horiz-16);
+  min-width: var(--btn-primary-min-width);
+  border-radius: var(--radius-8);
+  font-family: var(--font-body);
+  font-size: var(--button-font-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  border: var(--border-width-1-5) solid transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+  white-space: nowrap;
+  text-decoration: none;
+  letter-spacing: var(--letter-spacing);
+  box-sizing: border-box;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+.sb-btn:active:not(:disabled):not(.disabled) { transform: scale(0.98); }
+.sb-btn:focus-visible { outline: var(--border-width-2) solid var(--primary); outline-offset: 2px; }
+
+/* Icons: L=24px, S=16px */
+.sb-btn svg { width: 24px; height: 24px; flex-shrink: 0; }
+.sb-btn-sm svg { width: 16px; height: 16px; }
+
+/* Враппер для inline-SVG иконок из папки Icons/ */
+.sb-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
+.sb-icon-wrap svg { display: block; }
+
+/* ── Size S ── */
+.sb-btn-sm { height: 32px; padding: 0 var(--pad-horiz-16); font-size: var(--body-font-size-m); min-width: 80px; }
+.sb-btn-sm svg { width: 16px; height: 16px; }
+
+/* ── Icon-only (square: width = height) ── */
+.sb-btn-icon   { min-width: unset; width: var(--btn-primary-min-height); padding: 0; }
+.sb-btn-icon.sb-btn-sm { width: 32px; }
+/* ── Icon-only 2 Icons ── */
+.sb-btn-icon-2          { min-width: unset; width: var(--btn-rounded-max-width); padding: var(--pad-horiz-4); gap: var(--gap-horiz-xs); }
+.sb-btn-icon-2.sb-btn-sm { width: 52px; padding: var(--pad-horiz-4); gap: var(--gap-horiz-xs); }
+
+/* ── PRIMARY ── */
+.sb-btn-primary {
+  background: var(--primary);
+  color: var(--background);
+  border-color: transparent;
+}
+.sb-btn-primary:hover,
+.sb-btn-primary.is-hover {
+  border-color: var(--primary-hover);
+  box-shadow:
+    0 6px 10px -6px var(--primary-hover),
+    0 2px 8px  0px var(--primary-hover),
+    0 10px 20px 0px var(--primary-hover);
+}
+
+/* ── SECONDARY ── */
+.sb-btn-secondary { background: var(--surface-1); color: var(--primary); border-color: transparent; }
+.sb-btn-secondary:hover,
+.sb-btn-secondary.is-hover {
+  background: var(--primary-hover);
+  border-color: transparent;
+  color: var(--primary);
+}
+
+/* ── TEXT / LINK ── */
+.sb-btn-text { background: transparent; color: var(--primary); border-color: transparent; min-width: unset; padding: 0 var(--pad-horiz-8); }
+.sb-btn-text:hover,
+.sb-btn-text.is-hover { background: transparent; border-color: var(--primary); }
+/* Text Critical — overrides base .sb-btn-critical background */
+.sb-btn-text.sb-btn-critical { background: transparent; color: var(--error); border-color: transparent; box-shadow: none; }
+.sb-btn-text.sb-btn-critical:hover,
+.sb-btn-text.sb-btn-critical.is-hover { background: transparent; border-color: var(--error); box-shadow: none; }
+
+/* ── CRITICAL (Primary flavor) ── */
+.sb-btn-critical {
+  background: var(--error);
+  color: var(--background);
+  border-color: transparent;
+}
+.sb-btn-critical:hover,
+.sb-btn-critical.is-hover {
+  border-color: var(--error-hover);
+  box-shadow:
+    0 6px 10px -6px var(--error-hover),
+    0 2px 8px  0px var(--error-hover),
+    0 10px 20px 0px var(--error-hover);
+}
+
+/* ── SECONDARY CRITICAL ── */
+.sb-btn-secondary.sb-btn-critical { background: var(--surface-1); color: var(--error); border-color: transparent; }
+.sb-btn-secondary.sb-btn-critical:hover,
+.sb-btn-secondary.sb-btn-critical.is-hover { background: var(--error-hover); border-color: transparent; box-shadow: none; }
+
+/* ── DISABLED — точно по Figma: серый фон, серый текст (не opacity!) ── */
+.sb-btn:disabled, .sb-btn.disabled {
+  background: var(--surface-1) !important;
+  color: var(--border) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── LOADING ── */
+.sb-btn-loading {
+  pointer-events: none;
+  cursor: default;
+  color: transparent !important;
+}
+.sb-btn-loading > * { visibility: hidden; }
+.sb-btn-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 16px; height: 16px;
+  border: var(--border-width-2) solid var(--shadow-lg);
+  border-top-color: var(--background);
+  border-radius: 50%;
+  animation: sb-spin 0.6s linear infinite;
+}
+.sb-btn-secondary.sb-btn-loading::after,
+.sb-btn-text.sb-btn-loading::after {
+  border-color: var(--border);
+  border-top-color: var(--primary);
+}
+.sb-btn-secondary.sb-btn-critical.sb-btn-loading::after {
+  border-color: var(--error-hover);
+  border-top-color: var(--error);
+}
+
+@keyframes sb-spin { to { transform: rotate(360deg); } }
+
+/* ── BUTTON SHOWCASE TABLE (doc page) ── */
+.btn-showcase-wrap {
+  overflow-x: auto;
+  margin-bottom: 8px;
+  border-radius: var(--radius-8);
+  border: var(--border-width-1) solid var(--border);
+}
+.btn-showcase-table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+}
+.btn-showcase-table th {
+  padding: var(--pad-vert-8) var(--pad-horiz-24);
+  color: var(--text-muted);
+  background: var(--surface-1);
+  border-bottom: var(--border-width-1) solid var(--border);
+  white-space: nowrap;
+  text-align: center;
+}
+.btn-showcase-table th:first-child { text-align: left; min-width: 140px; padding-left: var(--pad-horiz-16); }
+.btn-showcase-table td {
+  padding: var(--pad-vert-8) var(--pad-horiz-24);
+  border-bottom: var(--border-width-1) solid var(--border);
+  vertical-align: middle;
+  text-align: center;
+}
+.btn-showcase-table td:first-child { text-align: left; padding-left: var(--pad-horiz-16); }
+.btn-showcase-table tr:last-child td { border-bottom: none; }
+.btn-showcase-table tr:hover td { background: var(--surface-2); }
+.btn-variant-label {
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+/* --- [/SYNC:buttons] --- */

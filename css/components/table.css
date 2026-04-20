@@ -1,0 +1,78 @@
+/* --- [SYNC:table] Table --- */
+.sb-table-wrap {
+  border: var(--border-width-1) solid var(--border);
+  border-radius: var(--radius-8);
+  overflow: hidden;
+}
+
+.sb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--body-font-size-m);
+}
+
+.sb-table th {
+  text-align: left;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--body-font-size-s);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sb-table th:hover { color: var(--text-primary); }
+
+.sb-table th .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.3; }
+.sb-table th.sorted .sort-icon { opacity: 1; color: var(--primary); }
+
+.sb-table td {
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  border-bottom: var(--border-width-1) solid var(--border);
+  color: var(--text-primary);
+}
+
+.sb-table tr:last-child td { border-bottom: none; }
+
+.sb-table tr:hover td { background: var(--surface-2); }
+
+.sb-table .cell-checkbox { width: 40px; }
+
+.sb-table .cell-status { display: flex; align-items: center; gap: var(--gap-horiz-s); }
+
+.table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  background: var(--background);
+  border-top: var(--border-width-1) solid var(--border);
+  font-size: var(--body-font-size-s);
+  color: var(--text-tertiary);
+}
+
+.table-pagination .pages { display: flex; gap: var(--gap-horiz-xs); }
+
+.page-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-4);
+  border: var(--border-width-1) solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: var(--body-font-size-s);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.page-btn:hover { border-color: var(--primary); color: var(--primary); }
+.page-btn.active { background: var(--primary); color: var(--background); border-color: var(--primary); }
+/* --- [/SYNC:table] --- */

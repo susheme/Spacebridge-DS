@@ -1,0 +1,22 @@
+/* --- [SYNC:pin] Pin --- */
+.sb-pin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-horiz-xs);
+  padding: var(--pad-horiz-4);
+  border-radius: var(--radius-20);
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+  color: var(--background);
+  background: var(--text-primary);
+  white-space: nowrap;
+  border: var(--border-width-1) solid var(--background);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+.sb-pin-primary { background: var(--primary); }
+.sb-pin-success { background: var(--success); }
+.sb-pin-error   { background: var(--error); }
+.sb-pin-alert   { background: var(--alert); }
+/* --- [/SYNC:pin] --- */

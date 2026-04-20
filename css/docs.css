@@ -1,0 +1,93 @@
+/* ═══════════════════════════════════════════
+   ZONE 5: DOCUMENTATION UI
+   ═══════════════════════════════════════════ */
+
+/* --- Color Palette Grid --- */
+.color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--gap-horiz-s); }
+
+.color-swatch {
+  position: relative;
+  border-radius: var(--radius-8);
+  overflow: hidden;
+  border: var(--border-width-1) solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.color-swatch:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.color-swatch.copied {
+  border-color: var(--success);
+  box-shadow: 0 0 0 1px var(--success);
+}
+
+.color-swatch-preview { height: 56px; }
+
+.color-swatch-info {
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  background: var(--background);
+}
+
+.color-swatch-name { margin-bottom: 2px; }
+.color-swatch-hex { font-family: var(--font-mono); color: var(--text-muted); }
+
+/* Typography Scale */
+.typo-scale { display: flex; flex-direction: column; gap: var(--gap-horiz-m); }
+
+.typo-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--gap-horiz-lg);
+  padding: var(--pad-vert-16) 0;
+  border-bottom: var(--border-width-1) solid var(--border);
+}
+
+.typo-label {
+  width: 80px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.typo-sample { flex: 1; text-align: left; min-width: 0; }
+.typo-sample.sb-h1 { margin-left: -0.04em; }
+.typo-sample.sb-btn-text { padding: 0; background: none; border: none; color: var(--text-primary); display: block; min-width: 0; }
+
+.typo-meta {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  width: 160px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.typo-end { display: flex; align-items: center; gap: var(--gap-horiz-s); flex-shrink: 0; align-self: baseline; }
+
+/* Symbol Badges grid */
+.sb-sb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--gap-horiz-lg) 8px; padding: var(--pad-vert-4) 0; width: 100%; }
+.sb-sb-item { display: flex; flex-direction: column; align-items: center; gap: var(--gap-horiz-s); width: 100%; }
+.sb-sb-item .sb-body-s { color: var(--text-tertiary); text-align: center; }
+
+/* Section preview layout — утилиты для превью секций в Zone E.
+   Параметры через CSS-vars: --gap (16px), --maxw (none).
+   Варианты через модификаторы: gap-sm/lg, narrow/medium/wide/xl. */
+.sec-col { display: flex; flex-direction: column; gap: var(--gap, var(--gap-horiz-m)); width: 100%; max-width: var(--maxw, none); }
+.sec-row { display: flex; align-items: center; gap: var(--gap, var(--gap-horiz-m)); flex-wrap: var(--wrap, nowrap); }
+.sec-col.gap-xs, .sec-row.gap-xs { --gap: var(--gap-horiz-s); }
+.sec-col.gap-sm, .sec-row.gap-sm { --gap: var(--gap-horiz-s); }
+.sec-col.gap-md, .sec-row.gap-md { --gap: var(--gap-horiz-m); }
+.sec-col.gap-lg, .sec-row.gap-lg { --gap: var(--gap-horiz-lg); }
+.sec-col.narrow { --maxw: 360px; }
+.sec-col.medium { --maxw: 400px; }
+.sec-col.wide   { --maxw: 480px; }
+.sec-col.xl     { --maxw: 520px; }
+.sec-row.wrap   { --wrap: wrap; }
+/* Wrap-ряд: 8px вертикально, 24px горизонтально (для списков вариантов) */
+.sec-row.spread { --wrap: wrap; gap: var(--gap-horiz-s) var(--gap-horiz-lg); }
+/* Простые width-обёртки без flex (когда родитель уже задаёт layout) */
+.sec-w100   { width: 100%; }
+.sec-narrow { width: 100%; max-width: 360px; }
+.sec-medium { width: 100%; max-width: 400px; }
+.sec-wide   { width: 100%; max-width: 480px; }
+.sec-xl     { width: 100%; max-width: 520px; }

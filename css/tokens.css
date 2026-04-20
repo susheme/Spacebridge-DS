@@ -1,0 +1,278 @@
+/* ═══════════════════════════════════════════
+   ZONE 1: FONTS & TOKENS
+   ═══════════════════════════════════════════ */
+
+/* --- Custom Fonts --- */
+@font-face {
+  font-family: 'SpaceBridge Classic';
+  src: url('../SpaceBridge-Classic.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Theme Tokens --- */
+:root {
+  /* ───────── FONT FAMILIES ───────── */
+  /* Figma Typography-DS: Font-Family, Font-Corporate */
+  --font-family: 'Roboto', sans-serif;
+  --font-corporate: 'SpaceBridge Classic', sans-serif;
+  /* Внутренние расширения — mono не из Figma */
+  --font-body: 'Roboto', sans-serif;
+  --font-brand: 'SpaceBridge Classic', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+
+  /* ───────── TYPOGRAPHY FONT SIZES ───────── */
+  /* Figma Typography-DS/Headline (Desktop) */
+  --headline-font-size-h1: 96px;
+  --headline-font-size-h2: 64px;
+  --headline-font-size-h3: 48px;
+  --headline-font-size-h4: 32px;
+  --headline-font-size-h5: 28px;
+  --headline-font-size-h6: 24px;
+  --headline-font-size-h7: 22px;
+  --headline-font-size-h8: 20px;
+  /* Figma Typography-DS/Title */
+  --title-font-size-l: 18px;
+  --title-font-size-m: 16px;
+  --title-font-size-s: 14px;
+  --title-font-size-caption: 12px;
+  /* Figma Typography-DS/Body */
+  --body-font-size-l: 16px;
+  --body-font-size-m: 14px;
+  --body-font-size-s: 12px;
+  /* Figma Typography-DS/Link */
+  --link-font-size-l: 18px;
+  --link-font-size-m: 16px;
+  --link-font-size-s: 14px;
+  /* Figma Typography-DS/Subscription, Button, Badge */
+  --subscription-font-size: 12px;
+  --button-font-size: 15px;
+  --badge-font-size: 10px;
+
+  /* ───────── TYPOGRAPHY LINE HEIGHTS ───────── */
+  /* Figma Typography-DS/Headline (generic + H5/H8 specific) */
+  --headline-line-height-16: 16px;
+  --headline-line-height-18: 18px;
+  --headline-line-height-20: 20px;
+  --headline-line-height-22: 22px;
+  --headline-line-height-24: 24px;
+  --headline-line-height-32: 32px;
+  --headline-line-height-48: 48px;
+  --headline-line-height-64: 64px;
+  --headline-line-height-96: 96px;
+  --headline-line-height-h5: 32px;
+  --headline-line-height-h8: 16px;
+  /* Figma Typography-DS/Title */
+  --title-line-height-l: 16px;
+  --title-line-height-s: 12px;
+  --title-line-height-caption: 12px;
+  /* Figma Typography-DS/Body/Link/Subscription/Button */
+  --body-line-height: 20px;
+  --link-line-height: 14px;
+  --subscription-line-height: 14px;
+  --button-line-height: 12px;
+
+  /* ───────── FONT WEIGHTS ───────── */
+  /* Figma Typography-DS/Weight (значение = CSS numeric, имя = семантика Figma) */
+  --font-weight-light: 100;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* ───────── LETTER SPACING ───────── */
+  /* Figma Typography-DS/Letter Spacing, Letter Spacing L */
+  --letter-spacing: 0;
+  --letter-spacing-l: 2px;
+
+  /* ───────── TAB & SEGMENT (typography-related widths) ───────── */
+  --tab-segment-max-width-tab-name: 112px;
+  --tab-segment-max-width-segment-name: 112px;
+
+  /* ───────── RADIUS ───────── */
+  /* Figma Dimensions-DS/Radius (имена как в JSON) */
+  --radius-0: 0;
+  --radius-1: 1px;
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-14: 14px;
+  --radius-16: 16px;
+  --radius-18: 18px;
+  --radius-20: 20px;
+  --radius-22: 22px;
+  --radius-24: 24px;
+  --radius-28: 28px;
+  --radius-100: 100px;
+
+  /* ───────── BORDER WIDTH ───────── */
+  /* Figma Dimensions-DS/Border */
+  --border-width-1: 1px;
+  --border-width-1-5: 1.5px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+
+  /* ───────── GAP ───────── */
+  /* Figma Dimensions-DS/Gap (Desktop values).
+     Responsive: Mobile частично уменьшает (gap-horiz-s→4, gap-*-m→8, gap-*-lg→16, gap-horiz-xxl→32).
+     Responsive пока не внедряем. */
+  --gap-horiz-0: 0;
+  --gap-horiz-xxs: 2px;
+  --gap-horiz-xs: 4px;
+  --gap-horiz-s: 8px;
+  --gap-horiz-m: 16px;
+  --gap-horiz-lg: 24px;
+  --gap-horiz-xl: 32px;
+  --gap-horiz-xxl: 64px;
+  --gap-vert-0: 0;
+  --gap-vert-xxs: 2px;
+  --gap-vert-xs: 4px;
+  --gap-vert-s: 8px;
+  --gap-vert-m: 16px;
+  --gap-vert-lg: 24px;
+  --gap-vert-xl: 32px;
+
+  /* ───────── PADDING ───────── */
+  /* Figma Dimensions-DS/Padding (не responsive) */
+  --pad-horiz-0: 0;
+  --pad-horiz-2: 2px;
+  --pad-horiz-4: 4px;
+  --pad-horiz-8: 8px;
+  --pad-horiz-16: 16px;
+  --pad-horiz-24: 24px;
+  --pad-horiz-28: 28px;
+  --pad-horiz-32: 32px;
+  --pad-horiz-40: 40px;
+  --pad-horiz-42: 42px;
+  --pad-horiz-44: 44px;
+  --pad-horiz-48: 48px;
+  --pad-vert-0: 0;
+  --pad-vert-2: 2px;
+  --pad-vert-4: 4px;
+  --pad-vert-8: 8px;
+  --pad-vert-16: 16px;
+  --pad-vert-24: 24px;
+  --pad-vert-28: 28px;
+  --pad-vert-32: 32px;
+  --pad-vert-40: 40px;
+  --pad-vert-42: 42px;
+  --pad-vert-44: 44px;
+  --pad-vert-48: 48px;
+
+  /* ───────── SCREEN BREAKPOINTS ───────── */
+  /* Figma Dimensions-DS/Screens */
+  --screen-min-width: 1280px;
+  --screen-max-width: 5000px;
+
+  /* ───────── BUTTONS ───────── */
+  /* Figma Dimensions-DS/Buttons */
+  --btn-primary-min-width: 112px;
+  --btn-primary-min-height: 40px;
+  --btn-primary-max-height: 40px;
+  --btn-rounded-max-height: 40px;
+  --btn-rounded-max-width: 68px;
+  --btn-rounded-min-width: 40px;
+  --btn-rounded-max-height-s: 24px;
+  --btn-rounded-min-height-s: 24px;
+  --btn-rounded-max-width-s: 24px;
+  --btn-rounded-min-width-s: 24px;
+  --btn-tag-max-height: 24px;
+  --btn-tag-min-width: 32px;
+
+  /* ───────── TEXT FIELDS ───────── */
+  /* Figma Dimensions-DS/Text Fields */
+  --text-field-height-l: 32px;
+  --text-field-height-m: 30px;
+  --text-field-min-width: 128px;
+  --text-field-max-width: 808px;
+  --textarea-min-width: 96px;
+  --textarea-min-height: 96px;
+  --textarea-max-width: 1024px;
+  --textarea-max-height: 1024px;
+
+  /* ───────── STATUS TEXT (Badge-Status) ───────── */
+  /* Figma Dimensions-DS/Status-Text */
+  --status-text-min-width: 40px;
+  --status-text-max-width: 112px;
+  --status-text-max-height: 40px;
+  --status-text-mini-min-height: 28px;
+  --status-text-mini-max-height: 28px;
+  --status-text-pad-horiz-4: 4px;
+  --status-text-pad-horiz-8: 8px;
+  --status-text-pad-horiz-16: 16px;
+  --status-text-pad-vert-4: 4px;
+  --status-text-pad-vert-8: 8px;
+  --status-text-pad-vert-16: 16px;
+
+  /* ───────── HEADERS ───────── */
+  /* Figma Dimensions-DS/Headers */
+  --header-min-width: 272px;
+  --header-max-width: 2048px;
+  --header-max-height: 88px;
+  --header-min-height-m: 56px;
+  --header-max-height-m: 64px;
+  --header-s-max-min-height: 40px;
+  --header-max-height-responsive: 112px;
+
+  /* ───────── SUB-HEADERS ───────── */
+  --sub-header-min-max-height: 40px;
+  --sub-header-min-width: 112px;
+  --sub-header-max-width: 2048px;
+
+  /* ───────── NAVIGATION BAR ───────── */
+  --nav-bar-min-width: 1025px;
+  --nav-bar-max-width: 5000px;
+  --nav-bar-max-height: 64px;
+
+  /* ───────── NAVIGATION MENU ───────── */
+  --nav-menu-min-width: 1025px;
+  --nav-menu-max-width: 5000px;
+  --nav-menu-max-height: 64px;
+  --nav-menu-max-width-right-content: 700px;
+
+  /* ───────── SIDE NAVIGATION ───────── */
+  --side-nav-min-max-width: 320px;
+  --side-nav-min-height: 720px;
+  --side-nav-max-height: 2000px;
+  --side-nav-item-width: 272px;
+  --side-nav-item-height: 40px;
+  --side-nav-grand-parent-item-height: 48px;
+
+  /* ───────── TABS ───────── */
+  /* Figma Dimensions-DS/Tabs */
+  --tabs-min-height: 40px;
+  --tabs-max-height: 64px;
+  --tab-bar-max-width: 640px;
+  --tab-bar-max-height-tab: 28px;
+  --tab-bar-min-height-tab: 28px;
+  --tab-bar-min-width-tab: 32px;
+  --tab-bar-max-width-tab: 256px;
+  --tab-bar-max-width-string: 112px;
+  --segment-menu-max-height: 54px;
+  --segment-menu-min-width-segment: 56px;
+  --segment-menu-max-width-segment: 240px;
+  --segment-menu-max-width-menu: 1024px;
+  --segment-menu-max-width-string: 208px;
+
+  /* ───────── LIST ───────── */
+  --list-min-height-cell: 40px;
+
+  /* ───────── MAP ───────── */
+  --map-min-width: 320px;
+  --map-min-height: 120px;
+
+  /* ───────── SEPARATORS ───────── */
+  --separator-width: 1px;
+
+  /* ───────── APP CHROME (не из Figma — внутренние) ───────── */
+  --sidebar-width: 260px;
+  --topbar-height: 56px;
+  --transition: 0.2s ease;
+}
+
+/* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */

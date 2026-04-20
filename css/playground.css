@@ -1,0 +1,201 @@
+/* ═══════════════════════════════════════════
+   ZONE 4: PLAYGROUND UI
+   ═══════════════════════════════════════════ */
+.pg-card {
+  border: var(--border-width-1) solid var(--border);
+  border-radius: var(--radius-12);
+  overflow: hidden;
+  max-width: 720px;
+  background: var(--surface-1);
+}
+/* Wide mode — controls top, preview bottom */
+.pg-card.wide { max-width: 100%; }
+.pg-card.wide .pg-body { flex-direction: column; }
+.pg-card.wide .pg-body > .pg-body-sep { width: 100%; height: 1px; border-radius: 0; }
+.pg-card.wide .pg-controls { min-width: unset; }
+.pg-card.wide .pg-preview { justify-content: flex-start; }
+.pg-card.wide .pg-preview-box { align-items: flex-start; justify-content: flex-start; }
+
+/* Header */
+.pg-header {
+  padding: var(--pad-vert-24) var(--pad-horiz-24) var(--pad-vert-16);
+}
+.pg-title {
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* Body */
+.pg-body {
+  display: flex;
+  min-height: 200px;
+}
+
+/* Left panel — controls */
+.pg-controls {
+  padding: var(--pad-vert-24) var(--pad-horiz-24);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-horiz-lg);
+  min-width: 280px;
+  flex-shrink: 0;
+}
+
+/* Playground select — обёртка DS-компонента sb-sel поверх нативного <select>.
+   Нативный select заходит под .sb-sel как невидимый overlay: клики и выбор работают,
+   визуал полностью из DS (sb-sel-val / sb-sel-right / sb-chevron). */
+.pg-sel-wrap { position: relative; width: 100%; }
+.pg-sel-wrap .sb-sel { width: 100%; cursor: pointer; }
+.pg-sel-native {
+  position: absolute; inset: 0; z-index: 2;
+  width: 100%; height: 100%;
+  opacity: 0; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  border: 0; background: transparent; padding: 0;
+  font: inherit;
+}
+.pg-sel-native:focus { outline: none; }
+.pg-sel-native:focus ~ .sb-sel { border-color: var(--primary); background: var(--background); }
+.pg-sel-native:focus ~ .sb-sel .sb-sel-right { border-left-color: var(--primary); background: var(--background); }
+
+/* Toggles grid */
+.pg-toggles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-horiz-m) 12px;
+}
+/* Vertical divider — используем sb-sep, растягиваем на всю высоту flex-строки */
+.pg-body > .pg-body-sep { align-self: stretch; height: auto; }
+.pg-controls:empty { display: none; }
+.pg-controls:empty + .pg-body-sep { display: none; }
+
+/* Right panel — preview */
+.pg-preview {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad-horiz-24);
+  background: var(--background);
+}
+.pg-preview-box {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-horiz-m);
+  border-radius: var(--radius-10);
+  background: var(--background);
+}
+[id$="-extras"]:empty { display: none; }
+
+/* Footer */
+.pg-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  border-top: var(--border-width-1) solid var(--border);
+}
+.pg-footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+}
+.comp-section-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  margin-top: 12px;
+}
+/* Active state для кнопки Show/Hide Code */
+.sb-btn-secondary.is-active {
+  background: var(--primary-hover);
+  border-color: var(--primary);
+}
+
+/* Checkbox row — показывается внутри превью когда Icon-Only активен */
+.pg-extras-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-m);        /* отступ между группами "2 Icons" и "Small" */
+  margin-top: 14px;
+}
+.pg-cb-group {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);         /* отступ между checkbox и его лейблом */
+}
+.pg-cb-label {
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Code panel */
+.pg-code-panel {
+  border-top: var(--border-width-1) solid var(--border);
+  background: var(--surface-1);
+  display: none;
+}
+.pg-code-panel.open { display: block; }
+
+/* Shared code panel grid — used in .pg-code-panel and .example-code */
+.pg-code-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1px;
+  background: var(--border);
+}
+.pg-code-section {
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-vert-16) var(--pad-horiz-24);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+.pg-code-scroll {
+  overflow: auto;
+  flex: 1;
+}
+.pg-code-scroll pre {
+  margin: 0;
+  font-size: var(--body-font-size-m);
+  color: var(--text-tertiary);
+  white-space: pre;
+  word-break: normal;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  line-height: 1.6;
+}
+/* In playground panels — limit section height */
+.pg-code-panel .pg-code-section { max-height: 280px; }
+.pg-code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding-bottom: var(--pad-vert-8);
+}
+.pg-code-label {
+  color: var(--text-tertiary);
+}
+.pg-code-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-6);
+  border: none;
+  background: transparent;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.pg-code-copy-btn:hover { background: var(--primary-hover); color: var(--primary); }
+.pg-code-copy-btn .sb-icon-wrap svg { width: 18px; height: 18px; display: block; }
+

@@ -1,0 +1,116 @@
+/* --- [SYNC:status] Status Indicator --- */
+.sb-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  font-size: var(--body-font-size-s);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ---- Indicator: Regular 10×10 ---- */
+.sb-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.sb-status-dot.online      { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.sb-status-dot.offline     { background: var(--text-secondary); }
+.sb-status-dot.error       { background: var(--error); box-shadow: 0 0 6px var(--error); }
+.sb-status-dot.warning     { background: var(--warning); }
+.sb-status-dot.maintenance { background: var(--alert); }
+.sb-status-dot.connecting  { background: var(--primary); }
+.sb-status-dot.info        { background: var(--info); }
+
+/* ---- Indicator: Mini — dot + bg-border (for icon badges) ---- */
+.sb-status-dot.mini {
+  width: 6px;
+  height: 6px;
+  border: var(--border-width-2) solid var(--background);
+  box-sizing: content-box;
+  box-shadow: none !important;
+}
+
+.sb-status-dot.pulse { animation: sb-dot-pulse 1.8s ease-in-out infinite; }
+
+@keyframes sb-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.75); }
+}
+
+/* icon badge wrapper for mini demo */
+.sb-icon-badge-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--background);
+  border-radius: var(--radius-6);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+.sb-icon-badge-wrap .sb-status-dot.mini {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* --- Badge-Status --- */
+.sb-badge-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--status-text-max-height);
+  padding: 0 var(--pad-horiz-16);
+  border-radius: var(--radius-8);
+  gap: var(--gap-horiz-s);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.sb-badge-status.mini {
+  height: var(--status-text-mini-max-height);
+  padding: 0 var(--pad-horiz-8);
+  border-radius: var(--radius-6);
+  font-size: var(--body-font-size-s);
+}
+.sb-badge-status.bs-grey    { background: var(--shadow-overlay);  color: var(--text-secondary); }
+.sb-badge-status.bs-green   { background: var(--success-hover);  color: var(--success); }
+.sb-badge-status.bs-blue    { background: var(--primary-hover);     color: var(--info); }
+.sb-badge-status.bs-red     { background: var(--error-hover);    color: var(--error); }
+.sb-badge-status.bs-orange  { background: var(--alert-hover);    color: var(--alert); }
+.sb-badge-status.bs-yellow  { background: var(--warning-hover);  color: var(--warning); }
+
+/* --- Mark --- */
+.sb-mark {
+  display: inline-block;
+  width: 3px;
+  height: var(--status-text-max-height);
+  border-radius: var(--radius-2);
+  flex-shrink: 0;
+}
+.sb-mark.sm {
+  width: 10px;
+  height: 3px;
+  border-radius: var(--radius-2);
+}
+.sb-mark.success { background: var(--success); }
+.sb-mark.error   { background: var(--error); }
+.sb-mark.warning { background: var(--warning); }
+.sb-mark.alert   { background: var(--alert); }
+.sb-mark.info    { background: var(--info); }
+.sb-mark.neutral { background: var(--text-secondary); }
+/* --- [/SYNC:status] --- */
+
+/* --- Antenna --- */
+.sb-antenna-icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+}

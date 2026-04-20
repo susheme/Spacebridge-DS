@@ -1,0 +1,95 @@
+/* --- [SYNC:toggles] Toggle ---
+   Figma: track 56×20px, thumb 24×16px
+   OFF=var(--border), ON=var(--success), Disabled=var(--border)+thumb opacity 20% */
+.sb-toggle-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-m);
+  cursor: pointer;
+  user-select: none;
+}
+.sb-toggle-wrap.sb-toggle-label-left {
+  flex-direction: row-reverse;
+}
+.sb-toggle-wrap.is-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.sb-toggle {
+  position: relative;
+  width: 56px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.sb-toggle input[type=checkbox] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  pointer-events: none;
+}
+.sb-toggle-track {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-6);
+  background: var(--text-secondary);
+  box-shadow:
+     1px  1px 2px 0 var(--shadow-overlay) inset,
+    -1px -1px 2px 0 var(--shadow-lg) inset;
+  transition: background 0.2s ease;
+}
+.sb-toggle input:checked + .sb-toggle-track {
+  background: var(--success);
+}
+.sb-toggle-wrap.is-disabled .sb-toggle {
+  opacity: 0.25;
+}
+.sb-toggle-wrap.is-disabled .sb-toggle-track {
+  background: var(--text-secondary) !important;
+  box-shadow: none !important;
+}
+.sb-toggle-wrap.is-disabled .sb-toggle-thumb {
+  background: var(--border);
+  box-shadow: none;
+}
+.sb-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 16px;
+  border-radius: var(--radius-4);
+  background: var(--surface-1);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+  box-shadow: 0 1px 3px var(--shadow-sm);
+}
+.sb-toggle input:checked ~ .sb-toggle-thumb {
+  transform: translateX(28px);
+}
+.sb-toggle-label-text {
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.4;
+  letter-spacing: var(--letter-spacing);
+  color: var(--text-primary);
+}
+.sb-toggle-wrap.is-disabled .sb-toggle-label-text {
+  opacity: 0.4;
+}
+
+/* Toggle Playground — 2-колоночная сетка контролов */
+.pg-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-horiz-lg) 24px;
+  align-items: center;
+}
+.pg-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--gap-horiz-lg) 24px;
+  align-items: center;
+}
+/* --- [/SYNC:toggles] --- */

@@ -1,0 +1,38 @@
+/* ═══════════════════════════════════════════
+   ZONE 2: RESET & LAYOUT
+   ═══════════════════════════════════════════ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { font-size: var(--body-font-size-m); }
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface-2);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100vh;
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary); }
+
+::selection {
+  background: var(--primary);
+  color: var(--background);
+}
+
+/* Scrollbar (system, вне DS-шкалы) */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; /* 3px — половина 6px thumb, вне Figma */ }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Блокировка transition при переключении темы — чтобы цвета менялись мгновенно, без flash */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after { transition: none !important; }

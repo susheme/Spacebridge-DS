@@ -261,6 +261,7 @@
 
   /* ───────── LIST ───────── */
   --list-min-height-cell: 40px;
+  --list-cell-min-width-standard: 80px;
 
   /* ───────── MAP ───────── */
   --map-min-width: 320px;

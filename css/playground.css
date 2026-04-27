@@ -11,7 +11,7 @@
 /* Wide mode — controls top, preview bottom */
 .pg-card.wide { max-width: 100%; }
 .pg-card.wide .pg-body { flex-direction: column; }
-.pg-card.wide .pg-body > .pg-body-sep { width: 100%; height: 1px; border-radius: 0; }
+.pg-card.wide .pg-body > .sb-sep.sep-v.pg-body-sep { width: 100%; height: 1px; border-radius: 0; }
 .pg-card.wide .pg-controls { min-width: unset; }
 .pg-card.wide .pg-preview { justify-content: flex-start; }
 .pg-card.wide .pg-preview-box { align-items: flex-start; justify-content: flex-start; }
@@ -65,7 +65,7 @@
   gap: var(--gap-horiz-m) 12px;
 }
 /* Vertical divider — используем sb-sep, растягиваем на всю высоту flex-строки */
-.pg-body > .pg-body-sep { align-self: stretch; height: auto; }
+.pg-body > .sb-sep.sep-v.pg-body-sep { align-self: stretch; height: auto; }
 .pg-controls:empty { display: none; }
 .pg-controls:empty + .pg-body-sep { display: none; }
 
@@ -98,7 +98,13 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--pad-vert-8) var(--pad-horiz-16);
-  border-top: var(--border-width-1) solid var(--border);
+}
+/* Separator lines inside pg-card must extend beyond inner content box to reach
+   the outer rounded corner — otherwise border-radius leaves a wedge-shaped gap. */
+.pg-card > .sb-sep.sep-h {
+  width: calc(100% + 2px);
+  margin-left: -1px;
+  margin-right: -1px;
 }
 .pg-footer-right {
   display: flex;
@@ -172,6 +178,8 @@
 }
 /* In playground panels — limit section height */
 .pg-code-panel .pg-code-section { max-height: 280px; }
+/* In example blocks — cap section to panel's max-height so scroll activates */
+.example-code .pg-code-section { max-height: 720px; }
 .pg-code-header {
   display: flex;
   align-items: center;

@@ -11,8 +11,8 @@
 
 window.COLOR_TOKENS = [
   { label: 'Brand', tokens: [
-    { name: '--primary',       light: '#017BF5',             dark: '#0A84FF' },
-    { name: '--secondary',     light: '#2959A3',             dark: '#4A9EFF' },
+    { name: '--primary',       light: '#017BFF',             dark: '#0A84FF' },
+    { name: '--secondary',     light: '#295AA3',             dark: '#4A9EFF' },
     { name: '--tertiary',      light: '#13273F',             dark: '#1C3A5C' },
   ]},
   { label: 'Background', tokens: [
@@ -24,17 +24,17 @@ window.COLOR_TOKENS = [
     { name: '--text-primary',   light: '#1F222C',  dark: '#F0F2F5' },
     { name: '--text-secondary', light: '#8798AD',  dark: '#8899AA' },
     { name: '--text-muted',     light: '#556579',  dark: '#5A6B7F' },
-    { name: '--text-tertiary',  light: '#313D53',  dark: '#6886AA' },
+    { name: '--text-tertiary',  light: '#313D53',  dark: '#6885AA' },
   ]},
   { label: 'Border', tokens: [
     { name: '--border',        light: '#BFC5D2',             dark: '#2A3545' },
   ]},
   { label: 'Status', tokens: [
-    { name: '--error',  light: '#EF0B10',             dark: '#E5484D' },
+    { name: '--error',  light: '#EF0C0F',             dark: '#E5484D' },
     { name: '--warning',light: '#FFC107',             dark: '#FFC107' },
     { name: '--alert',  light: '#FF7300',             dark: '#FF8B3E' },
     { name: '--success',light: '#04C40C',             dark: '#3FC241' },
-    { name: '--info',   light: '#017BFF',             dark: '#2B8EFF' },
+    { name: '--info',   light: '#017BFF',             dark: '#2B8FFF' },
   ]},
   { label: 'Hover', tokens: [
     { name: '--primary-hover', light: 'rgba(1,123,245,0.1)', dark: 'rgba(10,132,255,0.1)' },
@@ -46,7 +46,7 @@ window.COLOR_TOKENS = [
   { label: 'Shadows', tokens: [
     { name: '--shadow-sm',     light: 'rgba(0,0,0,0.08)',          dark: 'rgba(0,0,0,0.2)' },
     { name: '--shadow-md',     light: 'rgba(0,0,0,0.16)',          dark: 'rgba(0,0,0,0.35)' },
-    { name: '--shadow-lg',     light: 'rgba(255,255,255,0.55)',    dark: 'rgba(14,20,29,0.25)' },
+    { name: '--shadow-lg',     light: 'rgba(255,255,255,0.55)',    dark: 'rgba(20,28,41,0.25)' },
     { name: '--shadow-overlay',light: 'rgba(135,152,173,0.3)',     dark: 'rgba(20,28,41,0.5)' },
   ]},
 ];

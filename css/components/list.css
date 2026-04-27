@@ -1,0 +1,137 @@
+/* --- [SYNC:list] List ---
+   Figma: cell 40px height, surface-1 background, padding 8px, gap 8px.
+   Cell variants by position in list: single/top/inside/bottom — only border-radius differs. */
+.sb-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: var(--text-field-min-width);
+  max-width: var(--text-field-max-width);
+}
+.sb-list-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  width: 100%;
+  min-width: var(--text-field-min-width);
+  max-width: var(--text-field-max-width);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  background: var(--surface-1);
+}
+.sb-list-cell.single { border-radius: var(--radius-8); }
+.sb-list-cell.top    { border-radius: var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0); }
+.sb-list-cell.inside { border-radius: var(--radius-0); }
+.sb-list-cell.bottom { border-radius: var(--radius-0) var(--radius-0) var(--radius-8) var(--radius-8); }
+.sb-list-cell-label {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* List-Standard — Profile cell (background + hairline divider) */
+.sb-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--surface-2);
+}
+.sb-profile-cell-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  flex: 1;
+  min-width: 0;
+}
+.sb-profile-cell-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-xs);
+  flex: 1;
+  min-width: 0;
+}
+.sb-profile-cell-text .sb-title-s,
+.sb-profile-cell-text .sb-sub {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.sb-profile-cell-text .sb-title-s { color: var(--text-tertiary); }
+.sb-profile-cell-text .sb-sub     { color: var(--text-secondary); }
+.sb-profile-cell-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  flex-shrink: 0;
+  color: var(--border);
+}
+.sb-profile-cell:hover,
+.sb-profile-cell.is-hover { background: var(--surface-1); }
+.sb-profile-cell.is-disabled { cursor: not-allowed; pointer-events: none; }
+.sb-profile-cell.is-disabled > * { opacity: 0.5; }
+
+/* Standard List — Info cell (notifications, events, alarms — no divider) */
+.sb-info-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-horiz-4) var(--pad-vert-8);
+  background: var(--background);
+  cursor: pointer;
+  user-select: none;
+}
+.sb-info-cell-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-xs);
+  flex: 1;
+  min-width: 0;
+}
+.sb-info-cell-title {
+  color: var(--text-tertiary);
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sb-info-cell-sub { color: var(--text-secondary); }
+.sb-info-cell:hover,
+.sb-info-cell.is-hover { background: var(--surface-1); }
+.sb-info-cell.is-selected {
+  background: var(--primary-hover);
+  border-bottom: var(--border-width-1) solid var(--primary-hover);
+}
+.sb-info-cell.is-disabled { cursor: not-allowed; pointer-events: none; }
+.sb-info-cell.is-disabled > * { opacity: 0.5; }
+/* Indicator subtype — narrower gap so the dot sits close to text */
+.sb-info-cell.has-indicator { gap: var(--gap-vert-s); }
+/* Mark subtype — absolutely positioned 2×38px bar inset 1px top/bottom on the left edge */
+.sb-info-cell.has-mark .sb-mark {
+  position: absolute;
+  top: var(--border-width-1);
+  bottom: var(--border-width-1);
+  left: var(--gap-horiz-0);
+  width: var(--border-width-2);
+  height: auto;
+}
+/* --- [/SYNC:list] --- */

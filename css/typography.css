@@ -9,14 +9,16 @@
 .sb-h6     { font-size: var(--headline-font-size-h6); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-32); letter-spacing: 0.01em; }
 .sb-h7     { font-size: var(--headline-font-size-h7); font-weight: var(--font-weight-black); line-height: 1.3; letter-spacing: 0.01em; }
 .sb-h8     { font-size: var(--headline-font-size-h8); font-weight: var(--font-weight-bold); line-height: 1.3; letter-spacing: 0.01em; }
-.sb-title-l { font-size: var(--title-font-size-l); font-weight: var(--font-weight-medium); line-height: 1.4; }
+.sb-title-l { font-size: var(--title-font-size-l); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-l); letter-spacing: var(--letter-spacing); }
 .sb-title-m { font-size: var(--body-font-size-l); font-weight: var(--font-weight-medium); line-height: 1.4; letter-spacing: var(--letter-spacing); }
-.sb-title-s { font-size: var(--body-font-size-m); font-weight: var(--font-weight-semibold); line-height: 1.4; }
+.sb-title-m-bold { font-size: var(--title-font-size-m); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-s { font-size: var(--title-font-size-s); font-weight: var(--font-weight-bold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-s-regular { font-size: var(--title-font-size-s); font-weight: var(--font-weight-regular); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
 .sb-body-l  { font-size: var(--body-font-size-l); font-weight: var(--font-weight-regular); line-height: var(--headline-line-height-24); }
 .sb-body-m  { font-size: var(--body-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
 .sb-body-s  { font-size: var(--body-font-size-s); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
-.sb-sub     { font-size: var(--badge-font-size); font-weight: var(--font-weight-regular); line-height: var(--button-line-height); }
-.sb-caption { font-size: var(--body-font-size-s); font-weight: var(--font-weight-medium); line-height: 1.4; text-transform: uppercase; letter-spacing: 0.08em; }
+.sb-sub     { font-size: var(--subscription-font-size); font-weight: var(--font-weight-regular); line-height: var(--subscription-line-height); letter-spacing: var(--letter-spacing); }
+.sb-caption { font-size: var(--title-font-size-caption); font-weight: var(--font-weight-medium); line-height: var(--title-line-height-caption); letter-spacing: var(--letter-spacing-l); text-transform: uppercase; }
 .sb-link-l  { font-size: var(--title-font-size-l); font-weight: var(--font-weight-medium); color: var(--primary); text-decoration: underline; }
 .sb-link-m  { font-size: var(--body-font-size-l); font-weight: var(--font-weight-medium); color: var(--primary); text-decoration: underline; }
 .sb-link-s  { font-size: var(--body-font-size-m); font-weight: var(--font-weight-medium); color: var(--primary); text-decoration: underline; }

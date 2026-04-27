@@ -28,6 +28,8 @@ window.SB_COMPONENTS = [
   { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
   { name: 'notifications', file: 'notifications.js',  deps: [] },
   { name: 'table',         file: 'table.js',          deps: [] },
+  { name: 'list',          file: 'list.js',           deps: [] },
+  { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

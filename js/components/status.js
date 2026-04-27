@@ -6,14 +6,18 @@
 
 window.COMP_CSS.status = {
   indicator: `.sb-status { display: inline-flex; align-items: center; gap: var(--gap-horiz-s); font-size: var(--body-font-size-s); font-weight: var(--font-weight-medium); }
-.sb-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
-.sb-status-dot.online      { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.sb-status-dot { position: relative; width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
+.sb-status-dot.online      { background: var(--success); }
 .sb-status-dot.connecting  { background: var(--primary); }
 .sb-status-dot.info        { background: var(--info); }
 .sb-status-dot.warning     { background: var(--warning); }
 .sb-status-dot.maintenance { background: var(--alert); }
-.sb-status-dot.error       { background: var(--error); box-shadow: 0 0 6px var(--error); }
-.sb-status-dot.offline     { background: var(--text-secondary); }`,
+.sb-status-dot.error       { background: var(--error); }
+.sb-status-dot.offline     { background: var(--text-secondary); }
+.sb-status-dot.connecting::before,
+.sb-status-dot.connecting::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: var(--border-width-1) solid var(--primary); animation: sb-dot-ripple 1.6s ease-out infinite; }
+.sb-status-dot.connecting::after { animation-delay: 0.8s; }
+@keyframes sb-dot-ripple { 0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(3); opacity: 0; } }`,
   pulse: `.sb-status-dot.pulse { animation: sb-dot-pulse 1.8s ease-in-out infinite; }
 @keyframes sb-dot-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }

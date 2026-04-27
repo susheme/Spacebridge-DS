@@ -1,0 +1,73 @@
+/* --- [SYNC:context-menu] Context Cell ---
+   Figma: 40px height, padding 8/8, gap 16, justify-content space-between.
+   Title M Bold (16/600/lh 12).
+   Right slot: hover-icon (configurable S, shown on :hover), check S (shown on .is-selected).
+   States: default, :hover/.is-hover, .is-selected, .is-disabled.
+   Modifier: .has-radius — 4px corner radius for standalone use. */
+.sb-ctx-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-m);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  background: var(--background);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  user-select: none;
+}
+.sb-ctx-cell-icon-left {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+.sb-ctx-cell-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Right slot — fixed reserved 16×16 so layout doesn't shift across states */
+.sb-ctx-cell-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+}
+.sb-ctx-cell-icon-hover,
+.sb-ctx-cell-icon-check {
+  display: none;
+  align-items: center;
+}
+
+/* Hover (mouse :hover and explicit .is-hover) — only when not selected/disabled */
+.sb-ctx-cell:hover:not(.is-disabled):not(.is-selected),
+.sb-ctx-cell.is-hover:not(.is-disabled):not(.is-selected) { background: var(--surface-1); }
+.sb-ctx-cell:hover:not(.is-disabled):not(.is-selected) .sb-ctx-cell-icon-hover,
+.sb-ctx-cell.is-hover:not(.is-disabled):not(.is-selected) .sb-ctx-cell-icon-hover { display: inline-flex; }
+
+/* Selected — primary tint, check on right */
+.sb-ctx-cell.is-selected {
+  background: var(--primary-hover);
+  color: var(--primary);
+}
+.sb-ctx-cell.is-selected .sb-ctx-cell-icon-left { color: var(--primary); }
+.sb-ctx-cell.is-selected .sb-ctx-cell-icon-check { display: inline-flex; }
+
+/* Disabled */
+.sb-ctx-cell.is-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.sb-ctx-cell.is-disabled > * { opacity: 0.5; }
+
+/* Standalone — 4px radius for cells outside a flush layout */
+.sb-ctx-cell.has-radius { border-radius: var(--radius-4); }
+/* --- [/SYNC:context-menu] --- */

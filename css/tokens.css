@@ -218,6 +218,10 @@
   --header-max-height-m: 64px;
   --header-s-max-min-height: 40px;
   --header-max-height-responsive: 112px;
+  /* Header XS */
+  --header-xs-max-width: 1024px;
+  --header-xs-min-height: 40px;
+  --header-xs-max-height: 40px;
 
   /* ───────── SUB-HEADERS ───────── */
   --sub-header-min-max-height: 40px;
@@ -271,7 +275,7 @@
   --separator-width: 1px;
 
   /* ───────── APP CHROME (не из Figma — внутренние) ───────── */
-  --sidebar-width: 260px;
+  --sidebar-width: 320px;
   --topbar-height: 56px;
   --transition: 0.2s ease;
 }

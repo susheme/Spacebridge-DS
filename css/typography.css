@@ -12,6 +12,7 @@
 .sb-title-l { font-size: var(--title-font-size-l); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-l); letter-spacing: var(--letter-spacing); }
 .sb-title-m { font-size: var(--body-font-size-l); font-weight: var(--font-weight-medium); line-height: 1.4; letter-spacing: var(--letter-spacing); }
 .sb-title-m-bold { font-size: var(--title-font-size-m); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-m-regular { font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
 .sb-title-s { font-size: var(--title-font-size-s); font-weight: var(--font-weight-bold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
 .sb-title-s-regular { font-size: var(--title-font-size-s); font-weight: var(--font-weight-regular); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
 .sb-body-l  { font-size: var(--body-font-size-l); font-weight: var(--font-weight-regular); line-height: var(--headline-line-height-24); }

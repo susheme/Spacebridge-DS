@@ -104,10 +104,11 @@
   border-right: var(--border-width-1) solid var(--border);
   overflow-y: auto;
   flex-shrink: 0;
-  padding: var(--pad-vert-16) 0;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
 }
 
-.sidebar-section { margin-bottom: 8px; }
+.sidebar-section { margin-bottom: var(--gap-vert-m); }
+.sidebar-section .sb-section-header { margin-bottom: var(--gap-vert-s); }
 
 .sidebar-label {
   padding: var(--pad-vert-8) var(--pad-horiz-24) var(--pad-vert-4);
@@ -118,7 +119,9 @@
   display: flex;
   align-items: center;
   gap: var(--gap-horiz-s);
-  padding: var(--pad-vert-8) var(--pad-horiz-24);
+  min-height: var(--list-min-height-cell);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  border-radius: var(--radius-4);
   color: var(--text-tertiary);
   cursor: pointer;
   transition: var(--transition);

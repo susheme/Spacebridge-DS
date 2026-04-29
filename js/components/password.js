@@ -7,7 +7,7 @@
 window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify-content: space-between; height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width); border-radius: var(--radius-2); border: var(--border-width-1-5) solid var(--border); background: var(--surface-1); overflow: hidden; padding-left: var(--pad-horiz-8); transition: border-color 0.15s, background 0.15s; }
 .sb-pw-left { flex: 1; min-width: 0; height: 100%; display: flex; align-items: center; gap: var(--gap-horiz-s); }
 .sb-pw-lock { flex-shrink: 0; display: flex; align-items: center; color: var(--text-tertiary); }
-.sb-pw-input { flex: 1; min-width: 0; height: 100%; border: none; outline: none; background: transparent; font-size: var(--title-font-size-l); font-weight: var(--font-weight-regular); line-height: 1; font-family: inherit; color: var(--text-tertiary); }
+.sb-pw-input { flex: 1; min-width: 0; height: 100%; border: none; outline: none; background: transparent; font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); font-family: inherit; color: var(--text-tertiary); }
 .sb-pw-input::placeholder { color: var(--text-secondary); }
 .sb-pw-right { flex-shrink: 0; height: 100%; padding: 0 var(--pad-horiz-8); display: flex; align-items: center; background: var(--background); border-left: var(--border-width-1-5) solid var(--border); border-radius: 0 2px 2px 0; }
 .sb-pw-toggle { background: none; border: none; cursor: pointer; display: flex; align-items: center; padding: 0; color: var(--text-tertiary); }

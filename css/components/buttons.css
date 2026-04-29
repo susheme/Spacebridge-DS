@@ -48,7 +48,18 @@
 
 /* ── Icon-only (square: width = height) ── */
 .sb-btn-icon   { min-width: unset; width: var(--btn-primary-min-height); padding: 0; }
-.sb-btn-icon.sb-btn-sm { width: 32px; }
+/* Icon-Only Small — 24×24, radius-4, padding 4/2, gap 0 (Figma Buttons-Rounded-S) */
+.sb-btn-icon.sb-btn-sm {
+  width: var(--btn-rounded-max-width-s);
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: var(--btn-rounded-max-width-s);
+  height: var(--btn-rounded-max-height-s);
+  min-height: var(--btn-rounded-min-height-s);
+  max-height: var(--btn-rounded-max-height-s);
+  padding: var(--pad-horiz-4) var(--pad-vert-2);
+  gap: var(--gap-vert-0);
+  border-radius: var(--radius-4);
+}
 /* ── Icon-only 2 Icons ── */
 .sb-btn-icon-2          { min-width: unset; width: var(--btn-rounded-max-width); padding: var(--pad-horiz-4); gap: var(--gap-horiz-xs); }
 .sb-btn-icon-2.sb-btn-sm { width: 52px; padding: var(--pad-horiz-4); gap: var(--gap-horiz-xs); }

@@ -12,7 +12,7 @@
   flex: 1; height: 100%; border: none; outline: none;
   background: transparent;
   padding: 0 var(--pad-horiz-8) 0 16px;
-  font-size: var(--title-font-size-l); font-weight: var(--font-weight-regular); line-height: 1;
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
   font-family: var(--font-body);
   color: var(--text-primary);
 }

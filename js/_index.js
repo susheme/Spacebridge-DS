@@ -30,6 +30,7 @@ window.SB_COMPONENTS = [
   { name: 'table',         file: 'table.js',          deps: [] },
   { name: 'list',          file: 'list.js',           deps: [] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
+  { name: 'tab-bar',       file: 'tab-bar.js',        deps: [] },
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

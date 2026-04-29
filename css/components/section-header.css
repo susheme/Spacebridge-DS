@@ -1,0 +1,38 @@
+/* --- [SYNC:sectionHeader] Section Header --- */
+.sb-section-header {
+  display: flex;
+  width: 100%;
+  min-width: var(--sub-header-min-width);
+  max-width: var(--sub-header-max-width);
+  height: var(--sub-header-min-max-height);
+  min-height: var(--sub-header-min-max-height);
+  max-height: var(--sub-header-min-max-height);
+  padding: var(--pad-horiz-8) var(--pad-vert-16);
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-6);
+  background: var(--surface-2);
+}
+
+.sb-section-header-left {
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  min-width: 0;
+  color: var(--text-muted);
+}
+
+.sb-section-header-right {
+  display: inline-flex;
+  height: 32px;
+  max-width: var(--nav-menu-max-width-right-content);
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-m);
+}
+
+.sb-section-header[data-slot-left="false"] .sb-section-header-left { display: none; }
+.sb-section-header[data-slot-right="false"] .sb-section-header-right { display: none; }
+/* --- [/SYNC:sectionHeader] --- */

@@ -10,7 +10,7 @@
 .sb-tf-input {
   flex: 1; min-width: 0; height: 100%;
   border: none; outline: none; background: transparent;
-  font-size: var(--title-font-size-l); font-weight: var(--font-weight-regular); line-height: 1;
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
   font-family: var(--font-body);
   color: var(--text-tertiary);
 }
@@ -25,7 +25,7 @@
   transition: border-color 0.15s, background 0.15s;
 }
 .sb-tf-title {
-  font-size: var(--title-font-size-l); font-weight: var(--font-weight-regular); line-height: 1;
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
   font-family: var(--font-body);
   color: var(--text-secondary); white-space: nowrap;
 }

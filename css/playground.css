@@ -38,6 +38,7 @@
   flex-direction: column;
   gap: var(--gap-horiz-lg);
   min-width: 280px;
+  max-width: 280px;
   flex-shrink: 0;
 }
 
@@ -58,11 +59,16 @@
 .pg-sel-native:focus ~ .sb-sel { border-color: var(--primary); background: var(--background); }
 .pg-sel-native:focus ~ .sb-sel .sb-sel-right { border-left-color: var(--primary); background: var(--background); }
 
-/* Toggles grid */
+/* Toggles grid — 2 колонки по умолчанию,
+   но при единственном ребёнке схлопывается в одну колонку (full-width),
+   чтобы длинный лейбл не упирался в 50%-слот и не переносился. */
 .pg-toggles {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--gap-horiz-m) 12px;
+}
+.pg-toggles:has(> :only-child) {
+  grid-template-columns: 1fr;
 }
 /* Vertical divider — используем sb-sep, растягиваем на всю высоту flex-строки */
 .pg-body > .sb-sep.sep-v.pg-body-sep { align-self: stretch; height: auto; }

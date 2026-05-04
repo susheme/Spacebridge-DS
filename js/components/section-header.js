@@ -24,7 +24,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
   height: 24px;
   justify-content: center;
   align-items: center;
-  gap: var(--gap-vert-m);
+  gap: var(--gap-vert-s);
   min-width: 0;
   color: var(--text-muted);
 }
@@ -87,6 +87,27 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
         }),
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="false">
   <div class="sb-section-header-left">
+    <span class="sb-caption">Section title</span>
+  </div>
+</div>`,
+        css: COMP_CSS.sectionHeader,
+      },
+      {
+        title: 'With Symbol Badge',
+        desc: 'В левом слоте перед заголовком — Symbol Badge (24×24). Чаще всего Info Pop-up, реже — Warning / Critical / Check для статуса секции.',
+        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
+          ${mkSectionHeader({
+            slotLeft: `${SB_SVG.infoPop}<span class="sb-caption">Section title</span>`,
+            slotRight: false,
+          })}
+          ${mkSectionHeader({
+            slotLeft: `${SB_SVG.warnLine}<span class="sb-caption">Warning section</span>`,
+            slotRight: false,
+          })}
+        </div>`,
+        html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="false">
+  <div class="sb-section-header-left">
+    <!-- Symbol Badge: infoPop SVG 24×24 -->
     <span class="sb-caption">Section title</span>
   </div>
 </div>`,

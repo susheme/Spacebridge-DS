@@ -149,6 +149,7 @@
 
 .sidebar-item .dot.coming { background: var(--text-secondary); }
 .sidebar-item .dot.in-progress { background: var(--alert); }
+.sidebar-item .dot.incomplete { background: var(--primary); }
 
 /* CONTENT */
 .content {

@@ -1,31 +1,44 @@
 /* ═══════════════════════════════════════════
    ZONE 6: TYPOGRAPHY
    ═══════════════════════════════════════════ */
-.sb-h1     { font-size: var(--headline-font-size-h1); font-weight: 300; line-height: 1.1; letter-spacing: 0.01em; }
-.sb-h2     { font-size: var(--headline-font-size-h2); font-weight: var(--font-weight-black); line-height: 1.1; letter-spacing: 0.01em; }
-.sb-h3     { font-size: var(--headline-font-size-h3); font-weight: var(--font-weight-black); line-height: 1.1; letter-spacing: 0.01em; }
-.sb-h4     { font-size: var(--headline-font-size-h4); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-32); letter-spacing: 0.01em; }
-.sb-h5     { font-size: var(--headline-font-size-h5); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-32); letter-spacing: 0.01em; }
-.sb-h6     { font-size: var(--headline-font-size-h6); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-32); letter-spacing: 0.01em; }
-.sb-h7     { font-size: var(--headline-font-size-h7); font-weight: var(--font-weight-black); line-height: 1.3; letter-spacing: 0.01em; }
-.sb-h8     { font-size: var(--headline-font-size-h8); font-weight: var(--font-weight-bold); line-height: 1.3; letter-spacing: 0.01em; }
-.sb-title-l { font-size: var(--title-font-size-l); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-l); letter-spacing: var(--letter-spacing); }
-.sb-title-m { font-size: var(--body-font-size-l); font-weight: var(--font-weight-medium); line-height: 1.4; letter-spacing: var(--letter-spacing); }
-.sb-title-m-bold { font-size: var(--title-font-size-m); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
-.sb-title-m-regular { font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
-.sb-title-s { font-size: var(--title-font-size-s); font-weight: var(--font-weight-bold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
-.sb-title-s-regular { font-size: var(--title-font-size-s); font-weight: var(--font-weight-regular); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
-.sb-body-l  { font-size: var(--body-font-size-l); font-weight: var(--font-weight-regular); line-height: var(--headline-line-height-24); }
-.sb-body-m  { font-size: var(--body-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
-.sb-body-s  { font-size: var(--body-font-size-s); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
+/* Headlines — все значения из Figma Typography JSON: font-size H1-H8 (96/64/48/32/28/24/22/20),
+   line-height = font-size (display-headlines packed 1.0). */
+.sb-h1 { font-size: var(--headline-font-size-h1); font-weight: var(--font-weight-light); line-height: var(--headline-line-height-96); letter-spacing: var(--letter-spacing); }
+.sb-h2 { font-size: var(--headline-font-size-h2); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-64); letter-spacing: var(--letter-spacing); }
+.sb-h3 { font-size: var(--headline-font-size-h3); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-48); letter-spacing: var(--letter-spacing); }
+.sb-h4 { font-size: var(--headline-font-size-h4); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-32); letter-spacing: var(--letter-spacing); }
+.sb-h5 { font-size: var(--headline-font-size-h5); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-h5);  letter-spacing: var(--letter-spacing); }
+.sb-h6 { font-size: var(--headline-font-size-h6); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-24); letter-spacing: var(--letter-spacing); }
+.sb-h7 { font-size: var(--headline-font-size-h7); font-weight: var(--font-weight-black); line-height: var(--headline-line-height-16); letter-spacing: var(--letter-spacing); }
+.sb-h8 { font-size: var(--headline-font-size-h8); font-weight: var(--font-weight-bold);  line-height: var(--headline-line-height-h8); letter-spacing: var(--letter-spacing); }
+
+/* Titles. Title-M base — semantic токены вместо --body-font-size-l; line-height
+   приведён к --title-line-height-s (12) — как у m-bold/m-regular вариантов. */
+.sb-title-l         { font-size: var(--title-font-size-l); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-l); letter-spacing: var(--letter-spacing); }
+.sb-title-m         { font-size: var(--title-font-size-m); font-weight: var(--font-weight-medium);   line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-m-bold    { font-size: var(--title-font-size-m); font-weight: var(--font-weight-semibold); line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-m-regular { font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular);  line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-s         { font-size: var(--title-font-size-s); font-weight: var(--font-weight-bold);     line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+.sb-title-s-regular { font-size: var(--title-font-size-s); font-weight: var(--font-weight-regular);  line-height: var(--title-line-height-s); letter-spacing: var(--letter-spacing); }
+
+/* Body — единая line-height 20 по Figma Typography JSON (Body/Line-Hight). */
+.sb-body-l { font-size: var(--body-font-size-l); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
+.sb-body-m { font-size: var(--body-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
+.sb-body-s { font-size: var(--body-font-size-s); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); }
+
+/* Subscription / Caption */
 .sb-sub     { font-size: var(--subscription-font-size); font-weight: var(--font-weight-regular); line-height: var(--subscription-line-height); letter-spacing: var(--letter-spacing); }
 .sb-caption { font-size: var(--title-font-size-caption); font-weight: var(--font-weight-medium); line-height: var(--title-line-height-caption); letter-spacing: var(--letter-spacing-l); text-transform: uppercase; }
-.sb-link-l  { font-size: var(--title-font-size-l); font-weight: var(--font-weight-medium); color: var(--primary); text-decoration: underline; }
-.sb-link-m  { font-size: var(--body-font-size-l); font-weight: var(--font-weight-medium); color: var(--primary); text-decoration: underline; }
-.sb-link-s  { font-size: var(--body-font-size-m); font-weight: var(--font-weight-medium); color: var(--primary); text-decoration: underline; }
+
+/* Links — semantic токены --link-font-size-* и общая line-height 14 (--link-line-height). */
+.sb-link-l { font-size: var(--link-font-size-l); font-weight: var(--font-weight-medium); line-height: var(--link-line-height); color: var(--primary); text-decoration: underline; }
+.sb-link-m { font-size: var(--link-font-size-m); font-weight: var(--font-weight-medium); line-height: var(--link-line-height); color: var(--primary); text-decoration: underline; }
+.sb-link-s { font-size: var(--link-font-size-s); font-weight: var(--font-weight-medium); line-height: var(--link-line-height); color: var(--primary); text-decoration: underline; }
+
+/* Mono / Brand / Button text */
 .sb-mono    { font-family: var(--font-mono); }
 .sb-brand   { font-family: var(--font-brand); }
-.sb-btn-text { font-size: var(--button-font-size); font-weight: var(--font-weight-semibold); }
+.sb-btn-text { font-size: var(--button-font-size); font-weight: var(--font-weight-semibold); line-height: var(--button-line-height); }
 
 /* --- Coming Soon --- */
 .coming-soon {

@@ -1,0 +1,121 @@
+/* --- [SYNC:headerS] Header S --- */
+.sb-header-s {
+  display: flex;
+  width: 100%;
+  min-width: var(--header-min-width);
+  max-width: var(--header-s-max-width);
+  min-height: var(--header-s-min-height);
+  max-height: var(--header-s-max-height);
+  padding: var(--pad-horiz-16) var(--pad-vert-16);
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-0);
+  border-radius: var(--radius-16) var(--radius-16) 0 0;
+  background: var(--background);
+}
+
+/* Variant: Top right slot = true. Root становится row-flex с space-between,
+   правый слот рендерится в одной строке с Left slot + Headline. */
+.sb-header-s.top-right {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+
+/* Top row: Left slot + Headline */
+.sb-header-s-top {
+  display: flex;
+  width: 100%;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--header-s-row-height);
+  max-height: var(--header-s-row-height);
+  align-items: center;
+  gap: var(--gap-vert-s);
+  color: var(--text-tertiary);
+}
+
+.sb-header-s-left {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--gap-vert-s);
+}
+
+.sb-header-s-right {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-s);
+}
+
+/* Meta row: ADDITIONAL INFO (caption, left) + actions (status / icon-only buttons, right) */
+.sb-header-s-meta {
+  display: flex;
+  align-self: stretch;
+  max-width: var(--nav-menu-max-width-right-content);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+/* Когда в meta-row только actions (без caption) — толкаем их вправо. */
+.sb-header-s-meta:not(:has(.sb-header-s-meta-info)) {
+  justify-content: flex-end;
+}
+
+.sb-header-s-meta-info {
+  color: var(--text-secondary);
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* sb-caption line-height = 12px, но meta-row высотой 24 (по badge/button).
+     Бампаем до 24, чтобы CAPTION-текст визуально центрировался по той же оси. */
+  line-height: var(--headline-line-height-24);
+}
+
+.sb-header-s-meta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-vert-s);
+  flex-shrink: 0;
+}
+
+/* Tab Bar slot — опциональный нижний слот.
+   Когда он присутствует, padding-bottom у root становится 0 (flush с табами). */
+.sb-header-s:has(.sb-header-s-tabs) {
+  padding-bottom: var(--pad-horiz-0);
+}
+
+.sb-header-s-tabs {
+  display: flex;
+  width: 100%;
+  min-width: 320px;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--tabs-min-height);
+  /* Spec: max-height 120px (--Tabs-Max-Height в Figma). У нас --tabs-max-height = 64
+     для standalone Tab Bar; здесь хардкод 120, согласовать с дизайнером. */
+  max-height: 120px;
+  padding: var(--pad-horiz-16) var(--pad-vert-16);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  border-bottom: var(--border-width-1) solid var(--surface-2);
+  background: var(--background);
+}
+
+.sb-header-s-title {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* sb-h7 даёт font-size 22 / line-height 16 по Figma-спеке Header S.
+     Дополнительный override не нужен. */
+}
+/* --- [/SYNC:headerS] --- */

@@ -1,0 +1,38 @@
+/* --- [SYNC:headerL] Header L --- */
+.sb-header-l {
+  display: flex;
+  width: 100%;
+  min-width: var(--header-min-width);
+  max-width: var(--header-max-width);
+  max-height: var(--header-max-height);
+  padding: var(--pad-horiz-16) var(--pad-vert-0);
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-0) var(--radius-0) 0 0;
+  border-bottom: var(--border-width-1) solid var(--surface-2);
+  background: var(--background);
+}
+
+.sb-header-l-left,
+.sb-header-l-right {
+  display: inline-flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--header-s-max-min-height);
+  max-height: var(--header-s-max-min-height);
+  align-items: center;
+  gap: var(--gap-vert-m);
+  color: var(--text-tertiary);
+}
+
+.sb-header-l-right {
+  justify-content: flex-end;
+}
+
+.sb-header-l-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* --- [/SYNC:headerL] --- */

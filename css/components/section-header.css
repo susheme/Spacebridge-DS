@@ -19,7 +19,7 @@
   height: 24px;
   justify-content: center;
   align-items: center;
-  gap: var(--gap-vert-m);
+  gap: var(--gap-vert-s);
   min-width: 0;
   color: var(--text-muted);
 }

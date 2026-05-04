@@ -222,6 +222,13 @@
   --header-xs-max-width: 1024px;
   --header-xs-min-height: 40px;
   --header-xs-max-height: 40px;
+  /* Header S */
+  --header-s-max-width: 1024px;
+  --header-s-min-height: 40px;
+  --header-s-max-height: 136px;
+  --header-s-row-height: 24px;
+  /* Header M */
+  --header-m-row-height: 40px;
 
   /* ───────── SUB-HEADERS ───────── */
   --sub-header-min-max-height: 40px;

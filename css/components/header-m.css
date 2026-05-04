@@ -1,0 +1,40 @@
+/* --- [SYNC:headerM] Header M --- */
+.sb-header-m {
+  display: flex;
+  width: 100%;
+  min-width: var(--header-min-width);
+  max-width: var(--header-max-width);
+  min-height: var(--header-min-height-m);
+  max-height: var(--header-max-height-m);
+  padding: var(--pad-horiz-8) var(--pad-vert-0);
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-0);
+  background: var(--background);
+}
+
+.sb-header-m-left,
+.sb-header-m-right {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--header-m-row-height);
+  max-height: var(--header-m-row-height);
+  align-items: center;
+  gap: var(--gap-vert-s);
+  color: var(--text-tertiary);
+}
+
+.sb-header-m-right {
+  justify-content: flex-end;
+}
+
+.sb-header-m-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* sb-h6 даёт font-size 24 / line-height 24 по Figma-спеке Header M.
+     Дополнительный override не нужен. */
+}
+/* --- [/SYNC:headerM] --- */

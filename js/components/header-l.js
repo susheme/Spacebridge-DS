@@ -29,8 +29,24 @@ window.COMP_CSS.headerL = `.sb-header-l {
   color: var(--text-tertiary);
 }
 
+/* Left slot fills available space; min-width:0 lets the inner title
+   actually shrink past its content width (otherwise flexbox refuses). */
+.sb-header-l-left {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Right slot is rigid — buttons/badges/caption never compress.
+   When the row gets tight, only the title shrinks/ellipsizes. */
 .sb-header-l-right {
+  flex-shrink: 0;
   justify-content: flex-end;
+}
+
+/* Caption stays single-line. Without this, "ADDITIONAL INFO" wraps
+   to two rows once the right slot is squeezed. */
+.sb-header-l-right .sb-caption {
+  white-space: nowrap;
 }
 
 .sb-header-l-title {

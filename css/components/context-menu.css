@@ -30,6 +30,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* sb-title-m-bold sets line-height 12 by Figma, but inside overflow:hidden
+     that clips descenders ("y","g","p"). Bump to 24 (= reserved label height
+     in the 40px cell after 8/8 padding) so glyphs render fully. */
+  line-height: var(--headline-line-height-24);
 }
 /* Right slot — fixed reserved 16×16 so layout doesn't shift across states */
 .sb-ctx-cell-right {
@@ -70,4 +74,60 @@
 
 /* Standalone — 4px radius for cells outside a flush layout */
 .sb-ctx-cell.has-radius { border-radius: var(--radius-4); }
+
+/* Action mode — cell behaves as a one-shot action button (Copy, Download…),
+   never enters the selected state. Hover background still applies; clicking
+   triggers the user's callback and (for cells inside Header L overflow)
+   closes the parent menu. The check-on-selected indicator is suppressed so
+   even an accidental .is-selected class won't render. */
+.sb-ctx-cell.is-action.is-selected {
+  background: var(--background);
+  color: var(--text-tertiary);
+}
+.sb-ctx-cell.is-action.is-selected .sb-ctx-cell-icon-left { color: var(--text-secondary); }
+.sb-ctx-cell.is-action .sb-ctx-cell-icon-check { display: none; }
+
+/* Context Card — wrapper for grouped cells (dropdown / pop-up).
+   Used by Header L overflow menu and standalone context cards.
+   Radius 12, padding 8/8, gap 8 between cells, soft shadow. */
+.sb-ctx-card {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  min-width: 160px;
+  background: var(--background);
+  border-radius: var(--radius-12);
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+}
+/* Cells inside a card have visible gaps around them — give each its own
+   4px corner radius (matches the .has-radius standalone modifier). */
+.sb-ctx-card > .sb-ctx-cell {
+  border-radius: var(--radius-4);
+}
+
+/* Overflow-menu wrapper — a "More button + dropdown" pairing used across
+   DS (Header L/M/S/Section, etc.). The trigger sits in normal flow; the
+   dropdown is lifted to fixed positioning so it escapes any clipping
+   ancestor. JS computes top/left at open time. */
+.sb-overflow-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+.sb-overflow-menu .sb-ctx-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  transform: scale(0.95);
+  transform-origin: top right;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.sb-overflow-menu.is-open .sb-ctx-card {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
 /* --- [/SYNC:context-menu] --- */

@@ -13,6 +13,9 @@
   gap: var(--gap-horiz-0);
   border-radius: var(--radius-16) var(--radius-16) 0 0;
   background: var(--background);
+  /* Container queries — Header S может реагировать на свою ширину
+     для коллапса inline-actions в overflow-menu. */
+  container-type: inline-size;
 }
 
 /* Variant: Top right slot = true. Root становится row-flex с space-between,
@@ -83,6 +86,17 @@
   justify-content: flex-end;
   gap: var(--gap-vert-s);
   flex-shrink: 0;
+}
+
+/* Overflow-menu trigger — generic behavior in context-menu.css/js. */
+.sb-header-s-more { flex-shrink: 0; }
+.sb-header-s-menu-extra { display: none; }
+
+/* Responsive: < 400px — мобильный сжатый режим, inline-actions
+   правого слота прячутся, всплывают в выпадающем меню под More. */
+@container (max-width: 400px) {
+  .sb-header-s-action     { display: none; }
+  .sb-header-s-menu-extra { display: flex; }
 }
 
 /* Tab Bar slot — опциональный нижний слот.

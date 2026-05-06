@@ -18,6 +18,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   gap: var(--gap-horiz-0);
   border-radius: var(--radius-16) var(--radius-16) 0 0;
   background: var(--background);
+  container-type: inline-size;
 }
 
 .sb-header-s.top-right {
@@ -83,6 +84,14 @@ window.COMP_CSS.headerS = `.sb-header-s {
   flex-shrink: 0;
 }
 
+.sb-header-s-more { flex-shrink: 0; }
+.sb-header-s-menu-extra { display: none; }
+
+@container (max-width: 400px) {
+  .sb-header-s-action     { display: none; }
+  .sb-header-s-menu-extra { display: flex; }
+}
+
 .sb-header-s:has(.sb-header-s-tabs) {
   padding-bottom: var(--pad-horiz-0);
 }
@@ -112,6 +121,9 @@ window.COMP_CSS.headerS = `.sb-header-s {
 }`;
 
 // --- HEADER S ---
+// Overflow-menu open/close, click-outside, scroll-close, and the global
+// SB_DEMO_MORE_ITEMS list live in context-menu.js (generic for any
+// .sb-overflow-menu wrapper).
 (() => {
   function mkHeaderS({ slotLeft, title, slotRight, topRight = false, metaInfo, metaActions, tabs } = {}) {
     const cls = 'sb-header-s' + (topRight ? ' top-right' : '');
@@ -145,10 +157,45 @@ window.COMP_CSS.headerS = `.sb-header-s {
   // Expose helper для будущих хедеров и dev-консоли.
   window.sbMkHeaderS = mkHeaderS;
 
+  // ── Actions builder ──────────────────────────────────────────────
+  // Same shape as mkHeaderL/MActions: inline buttons (Small size — Header S
+  // uses sb-btn-sm) collapse into More dropdown when container narrow.
+  function mkHeaderSActions({ inline = [], more } = {}) {
+    const inlineHtml = inline.map(a => {
+      if (a.type === 'icon') {
+        return `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-header-s-action">${sbIcon(a.icon, 'S')}</button>`;
+      }
+      return `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-header-s-action"><span>${a.label}</span></button>`;
+    }).join('');
+
+    const hasInline = inline.length > 0;
+    const moreItems = (more && more.items) || [];
+    if (!hasInline && moreItems.length === 0) return '';
+
+    const extraCells = inline.map(a => {
+      const iconLeft = a.icon || (a.type === 'icon' ? a.icon : undefined);
+      const cellHtml = sbMkContextCell({ iconLeft, label: a.label, mode: 'action' });
+      return cellHtml.replace('class="sb-ctx-cell', 'class="sb-ctx-cell sb-header-s-menu-extra');
+    }).join('');
+
+    const moreCells = moreItems
+      .map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' }))
+      .join('');
+
+    return inlineHtml + `<div class="sb-header-s-more sb-overflow-menu">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon"
+              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'S')}</button>
+      <div class="sb-ctx-card">${extraCells}${moreCells}</div>
+    </div>`;
+  }
+  window.sbMkHeaderSActions = mkHeaderSActions;
+
+  const DEMO_MORE_ITEMS = window.SB_DEMO_MORE_ITEMS;
+
   sbRegister({
     name: 'header-s',
     title: 'Header S',
-    description: 'Mobile-вариант хедера для основных окон, side-menu и карточек среднего размера. Top corners 16px, нижние 0 (стык с layout). Min-height 40px, max-height 136px (с meta-row + Tab Bar). Заголовок — H6 (24/900). Два режима компоновки: column (default, мобильный) с правым слотом ниже, и .top-right — row-flex с правым слотом инлайн в одной строке с заголовком. Дальше — meta-row (CAPTION + Status mini + actions) и Tab Bar slot.',
+    description: 'Mobile-вариант хедера для основных окон, side-menu и карточек среднего размера. Top corners 16px, нижние 0 (стык с layout). Min-height 40px, max-height 136px (с meta-row + Tab Bar). Заголовок — H6 (24/900). Два режима компоновки: column (default, мобильный) с правым слотом ниже, и .top-right — row-flex с правым слотом инлайн в одной строке с заголовком. Дальше — meta-row (CAPTION + Status mini + actions) и Tab Bar slot. Responsive: при ширине Header S < 400px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).',
     sections: [
       {
         title: 'Top row only — Anatomy',
@@ -174,13 +221,13 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'With Meta row',
-        desc: 'Под верхней строкой добавляется meta-row: ADDITIONAL INFO (caption, слева) + actions group (Status mini badge + Icon-Only Small button с more-2-line, справа). Высота корня растёт автоматически. Если caption отсутствует, actions прижимаются к правому краю.',
+        desc: 'Под верхней строкой добавляется meta-row: ADDITIONAL INFO (caption, слева) + actions group (Status mini badge + More-кнопка с прикреплённым выпадающим меню, справа). Высота корня растёт автоматически. Если caption отсутствует, actions прижимаются к правому краю.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:368px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
             metaInfo: 'Additional info',
-            metaActions: `<span class="sb-badge-status mini bs-grey">Status</span><button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('more-2-line', 'S')}</button>`,
+            metaActions: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderSActions({ more: { items: DEMO_MORE_ITEMS } })}`,
           })}
         </div>`,
         html: `<div class="sb-header-s">
@@ -197,9 +244,15 @@ window.COMP_CSS.headerS = `.sb-header-s {
     <span class="sb-header-s-meta-info sb-caption">Additional info</span>
     <div class="sb-header-s-meta-actions">
       <span class="sb-badge-status mini bs-grey">Status</span>
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-        <!-- more-2-line S -->
-      </button>
+      <div class="sb-header-s-more sb-overflow-menu">
+        <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon"
+                onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+          <!-- more-2-line S -->
+        </button>
+        <div class="sb-ctx-card">
+          <!-- ctx-cells: Copy / Download / Send via email -->
+        </div>
+      </div>
     </div>
   </div>
 </div>`,
@@ -241,13 +294,13 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'Full anatomy — top + meta + tabs',
-        desc: 'Все три слота вместе: верхняя строка, meta-row, Tab Bar slot. Максимальная высота 136px по спеке.',
+        desc: 'Все три слота вместе: верхняя строка, meta-row (с More-кнопкой и выпадающим меню), Tab Bar slot. Максимальная высота 136px по спеке.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
             metaInfo: 'Additional info',
-            metaActions: `<span class="sb-badge-status mini bs-grey">Status</span><button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('more-2-line', 'S')}</button>`,
+            metaActions: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderSActions({ more: { items: DEMO_MORE_ITEMS } })}`,
             tabs: `<div class="sb-tab-bar">
               <button type="button" class="sb-tab-bar-item selected" onclick="sbSelectTab(this)">Tab</button>
               <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
@@ -266,13 +319,13 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'Top right slot — inline (.top-right)',
-        desc: 'Когда правый слот лежит в одной строке с заголовком, добавь модификатор .top-right на root. Root становится row-flex с justify-content: space-between. Левый блок (left + headline) и правый слот разводятся по краям.',
+        desc: 'Когда правый слот лежит в одной строке с заголовком, добавь модификатор .top-right на root. Root становится row-flex с justify-content: space-between. Левый блок (left + headline) и правый слот (More-кнопка с выпадающим меню) разводятся по краям.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:368px">
           ${mkHeaderS({
             topRight: true,
             slotLeft: `${SB_SVG.infoPop}`,
             title: 'Headline',
-            slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('more-2-line', 'S')}</button>`,
+            slotRight: mkHeaderSActions({ more: { items: DEMO_MORE_ITEMS } }),
           })}
         </div>`,
         html: `<div class="sb-header-s top-right">
@@ -283,9 +336,15 @@ window.COMP_CSS.headerS = `.sb-header-s {
     <span class="sb-header-s-title sb-h7">Headline</span>
   </div>
   <div class="sb-header-s-right">
-    <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-      <!-- more-2-line S -->
-    </button>
+    <div class="sb-header-s-more sb-overflow-menu">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon"
+              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+        <!-- more-2-line S -->
+      </button>
+      <div class="sb-ctx-card">
+        <!-- ctx-cells: Copy / Download / Send via email -->
+      </div>
+    </div>
   </div>
 </div>`,
         css: COMP_CSS.headerS,

@@ -11,6 +11,9 @@
   border-radius: var(--radius-0) var(--radius-0) 0 0;
   border-bottom: var(--border-width-1) solid var(--surface-2);
   background: var(--background);
+  /* Enables @container queries below — Header L reacts to its own width,
+     not the viewport, so it works correctly inside narrow side panels. */
+  container-type: inline-size;
 }
 
 .sb-header-l-left,
@@ -50,5 +53,34 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* ── Overflow-menu trigger ─────────────────────────────────────────── */
+/* The "..." (more-2-line) button + dropdown card. Wrapper carries both
+   .sb-header-l-more (component-scoped) and .sb-overflow-menu (generic
+   behavior — positioning, animation, JS toggle, click-outside live in
+   context-menu.css/js). */
+.sb-header-l-more {
+  flex-shrink: 0;
+}
+
+/* Cells that mirror inline actions in the menu — hidden by default,
+   surfaced only at narrow widths via the @container rule below. */
+.sb-header-l-menu-extra {
+  display: none;
+}
+
+/* ── Responsive: < 768px container width ──────────────────────────── */
+@container (max-width: 768px) {
+  .sb-header-l-left,
+  .sb-header-l-right {
+    gap: var(--gap-vert-s);          /* 16 → 8 */
+  }
+  .sb-header-l-action {
+    display: none;                   /* hide inline action buttons */
+  }
+  .sb-header-l-menu-extra {
+    display: flex;                   /* surface them inside the menu */
+  }
 }
 /* --- [/SYNC:headerL] --- */

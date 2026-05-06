@@ -22,6 +22,7 @@ window.COMP_CSS.contextMenu = `.sb-ctx-cell {
 .sb-ctx-cell-label {
   flex: 1; min-width: 0;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  line-height: var(--headline-line-height-24);
 }
 .sb-ctx-cell-right {
   display: flex; align-items: center; justify-content: center;
@@ -39,7 +40,30 @@ window.COMP_CSS.contextMenu = `.sb-ctx-cell {
 .sb-ctx-cell.is-selected .sb-ctx-cell-icon-check { display: inline-flex; }
 .sb-ctx-cell.is-disabled { cursor: not-allowed; pointer-events: none; }
 .sb-ctx-cell.is-disabled > * { opacity: 0.5; }
-.sb-ctx-cell.has-radius { border-radius: var(--radius-4); }`;
+.sb-ctx-cell.has-radius { border-radius: var(--radius-4); }
+.sb-ctx-cell.is-action.is-selected { background: var(--background); color: var(--text-tertiary); }
+.sb-ctx-cell.is-action.is-selected .sb-ctx-cell-icon-left { color: var(--text-secondary); }
+.sb-ctx-cell.is-action .sb-ctx-cell-icon-check { display: none; }
+.sb-ctx-card {
+  display: inline-flex; flex-direction: column;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  min-width: 160px;
+  background: var(--background);
+  border-radius: var(--radius-12);
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+}
+.sb-ctx-card > .sb-ctx-cell { border-radius: var(--radius-4); }
+.sb-overflow-menu { position: relative; flex-shrink: 0; }
+.sb-overflow-menu .sb-ctx-card {
+  position: fixed; top: 0; left: 0; z-index: 1000;
+  transform: scale(0.95); transform-origin: top right;
+  opacity: 0; pointer-events: none;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.sb-overflow-menu.is-open .sb-ctx-card {
+  transform: scale(1); opacity: 1; pointer-events: auto;
+}`;
 
 // Single-select click handler for Context cells — within parent scope.
 window.sbSelectContextCell = function(cell) {
@@ -51,6 +75,75 @@ window.sbSelectContextCell = function(cell) {
   cell.classList.add('is-selected');
 };
 
+// Action click handler — does NOT toggle .is-selected. Closes any open
+// overflow-menu wrapper containing the cell (one-shot action UX: tap →
+// done → close). Works for any wrapper carrying the .sb-overflow-menu class
+// (Header L/M/S/Section overflow buttons all share it).
+window.sbActionContextCell = function(cell) {
+  if (!cell || cell.classList.contains('is-disabled')) return;
+  const wrap = cell.closest('.sb-overflow-menu');
+  if (wrap) wrap.classList.remove('is-open');
+};
+
+// Generic overflow-menu toggle. Used by every "More button + .sb-ctx-card"
+// pair across DS. The trigger button must be a direct child of an element
+// with .sb-overflow-menu (and .sb-overflow-menu must contain a .sb-ctx-card
+// child as the dropdown). Card position is computed in fixed coords from
+// the trigger's bounding rect so it escapes any clipping ancestor.
+window.sbOverflowMenuToggle = function(triggerBtn) {
+  const wrap = triggerBtn.closest('.sb-overflow-menu');
+  if (!wrap) return;
+  const willOpen = !wrap.classList.contains('is-open');
+  // Close every other open overflow menu first.
+  document.querySelectorAll('.sb-overflow-menu.is-open').forEach(el => {
+    if (el !== wrap) el.classList.remove('is-open');
+  });
+  if (willOpen) {
+    const card = wrap.querySelector('.sb-ctx-card');
+    if (card) {
+      // Pre-measure while still hidden (visibility:hidden gives layout).
+      const prev = card.style.cssText;
+      card.style.cssText = prev + ';visibility:hidden;opacity:1;pointer-events:none;transform:none';
+      const cardW = card.offsetWidth;
+      card.style.cssText = prev;
+      const r = triggerBtn.getBoundingClientRect();
+      card.style.top  = (r.bottom + 4) + 'px';
+      card.style.left = Math.max(8, r.right - cardW) + 'px';
+    }
+  }
+  wrap.classList.toggle('is-open', willOpen);
+};
+
+// One-time global listeners — outside-click / Escape / scroll close any
+// open overflow menu across the whole DS.
+if (!window.__sbOverflowMenuBound) {
+  window.__sbOverflowMenuBound = true;
+  const closeAll = () => {
+    document.querySelectorAll('.sb-overflow-menu.is-open')
+      .forEach(el => el.classList.remove('is-open'));
+  };
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.sb-overflow-menu')) return;
+    closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+  // Capture-phase scroll catches every scrolling ancestor (page + nested).
+  // Fixed-position dropdown would otherwise stay glued to its old viewport
+  // location while content under it moves.
+  window.addEventListener('scroll', closeAll, true);
+}
+
+// Default demo items used across header overflow menus (Header M / S / L /
+// Section…) so the same dropdown content reads consistently in docs.
+// Components are free to override with their own items list.
+window.SB_DEMO_MORE_ITEMS = [
+  { icon: 'file-copy-line',  label: 'Copy' },
+  { icon: 'download-2-line', label: 'Download' },
+  { icon: 'mail-line',       label: 'Send via email' },
+];
+
 // --- CONTEXT MENU ---
 (() => {
   function mkContextCell(opts = {}) {
@@ -60,25 +153,30 @@ window.sbSelectContextCell = function(cell) {
       iconRightHover,   // string | undefined — S size icon shown on hover
       state,            // undefined | 'hover' | 'selected' | 'disabled'
       standalone,       // boolean — adds .has-radius
-      clickable = true, // boolean — wires onclick to sbSelectContextCell
+      clickable = true, // boolean — wires onclick handler
+      mode = 'select',  // 'select' (default — toggles .is-selected) | 'action' (one-shot, no selection)
     } = opts;
     const stateCls =
       state === 'hover'    ? ' is-hover'    :
       state === 'selected' ? ' is-selected' :
       state === 'disabled' ? ' is-disabled' : '';
     const radiusCls = standalone ? ' has-radius' : '';
-    const onclickAttr = clickable ? ' onclick="sbSelectContextCell(this)"' : '';
+    const actionCls = mode === 'action' ? ' is-action' : '';
+    const handler   = mode === 'action' ? 'sbActionContextCell' : 'sbSelectContextCell';
+    const onclickAttr = clickable ? ` onclick="${handler}(this)"` : '';
     const iconLeftEl = iconLeft
       ? `<span class="sb-ctx-cell-icon-left">${sbIcon(iconLeft, 'L')}</span>` : '';
     const hoverIconEl = iconRightHover
       ? `<span class="sb-ctx-cell-icon-hover">${sbIcon(iconRightHover, 'S')}</span>` : '';
     const checkEl = `<span class="sb-ctx-cell-icon-check">${sbIcon('check-line', 'S')}</span>`;
-    return `<div class="sb-ctx-cell${stateCls}${radiusCls}"${onclickAttr}>
+    return `<div class="sb-ctx-cell${stateCls}${radiusCls}${actionCls}"${onclickAttr}>
       ${iconLeftEl}
       <span class="sb-ctx-cell-label sb-title-m-bold">${label}</span>
       <span class="sb-ctx-cell-right">${hoverIconEl}${checkEl}</span>
     </div>`;
   }
+  // Expose for other components (Header L overflow menu, etc.).
+  window.sbMkContextCell = mkContextCell;
 
   // Static demo matrix: 4 states × { with iconLeft, without iconLeft }
   function mkStateRow(label, withIconLeft) {
@@ -182,6 +280,28 @@ window.sbSelectContextCell = function(cell) {
         </div>`,
         html: `<div class="sb-ctx-cell has-radius" onclick="sbSelectContextCell(this)">
   ... ячейка тут ...
+</div>`,
+        css: COMP_CSS.contextMenu,
+      },
+      {
+        title: 'Context Card (Dropdown / Pop-up)',
+        desc: 'Карточка-обёртка для группы ячеек — для выпадающих меню (например, overflow-menu в Header L). Radius 12, padding 8/8, gap 8 между ячейками, лёгкая тень (--shadow-sm). До 5 ячеек на карточку — иначе превращай в скроллируемый список. Ячейки в mode:"action" — клик не оставляет .is-selected (one-shot действия), только подсвечивается hover-фон. Если все ячейки в карточке без иконок — все равно без иконок; иконка либо у всех, либо ни у кого.',
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
+          <div class="sb-ctx-card">
+            ${mkContextCell({ iconLeft: 'file-copy-line',  label: 'Copy',          mode: 'action' })}
+            ${mkContextCell({ iconLeft: 'download-2-line', label: 'Download',      mode: 'action' })}
+            ${mkContextCell({ iconLeft: 'mail-line',       label: 'Send via email',mode: 'action' })}
+            ${mkContextCell({ iconLeft: 'loop-left-line',  label: 'Reset',         mode: 'action' })}
+            ${mkContextCell({ iconLeft: 'close-line',      label: 'Remove',        mode: 'action' })}
+          </div>
+        </div>`,
+        html: `<div class="sb-ctx-card">
+  <div class="sb-ctx-cell is-action" onclick="sbActionContextCell(this)">
+    <span class="sb-ctx-cell-icon-left"><!-- file-copy-line L --></span>
+    <span class="sb-ctx-cell-label sb-title-m-bold">Copy</span>
+    <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check"><!-- check-line S --></span></span>
+  </div>
+  <!-- Download / Send via email / Reset / Remove — same pattern with .is-action -->
 </div>`,
         css: COMP_CSS.contextMenu,
       },

@@ -12,6 +12,9 @@
   align-items: center;
   border-radius: var(--radius-6);
   background: var(--surface-2);
+  /* Container queries — Section Header может реагировать на свою ширину
+     для коллапса inline-actions в overflow-menu. */
+  container-type: inline-size;
 }
 
 .sb-section-header-left {
@@ -35,4 +38,15 @@
 
 .sb-section-header[data-slot-left="false"] .sb-section-header-left { display: none; }
 .sb-section-header[data-slot-right="false"] .sb-section-header-right { display: none; }
+
+/* Overflow-menu trigger — generic behavior in context-menu.css/js. */
+.sb-section-header-more { flex-shrink: 0; }
+.sb-section-header-menu-extra { display: none; }
+
+/* Responsive: < 320px — узкие карточки, inline-actions сворачиваются
+   в выпадающее меню под More-кнопкой. */
+@container (max-width: 320px) {
+  .sb-section-header-action     { display: none; }
+  .sb-section-header-menu-extra { display: flex; }
+}
 /* --- [/SYNC:sectionHeader] --- */

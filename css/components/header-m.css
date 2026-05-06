@@ -11,6 +11,8 @@
   align-items: center;
   border-radius: var(--radius-0);
   background: var(--background);
+  /* Enables @container queries below — Header M reacts to its own width. */
+  container-type: inline-size;
 }
 
 .sb-header-m-left,
@@ -24,8 +26,18 @@
   color: var(--text-tertiary);
 }
 
+/* Same shrink-protection pattern as Header L — only the title compresses
+   under pressure; right slot's actions / badges stay rigid. */
+.sb-header-m-left {
+  flex: 1 1 0;
+  min-width: 0;
+}
 .sb-header-m-right {
+  flex-shrink: 0;
   justify-content: flex-end;
+}
+.sb-header-m-right .sb-caption {
+  white-space: nowrap;
 }
 
 .sb-header-m-title {
@@ -34,7 +46,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  /* sb-h6 даёт font-size 24 / line-height 24 по Figma-спеке Header M.
-     Дополнительный override не нужен. */
+  /* sb-h6 даёт font-size 24 / line-height 24 по Figma-спеке Header M. */
+}
+
+/* Overflow-menu trigger — generic behavior in context-menu.css/js. */
+.sb-header-m-more { flex-shrink: 0; }
+.sb-header-m-menu-extra { display: none; }
+
+/* Responsive: when the Header M is narrower than 600 px, hide inline
+   actions and surface them inside the More dropdown. Header M lives in
+   tighter contexts (cards, modals) than Header L, so the breakpoint is
+   smaller. */
+@container (max-width: 600px) {
+  .sb-header-m-action     { display: none; }
+  .sb-header-m-menu-extra { display: flex; }
 }
 /* --- [/SYNC:headerM] --- */

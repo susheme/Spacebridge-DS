@@ -65,7 +65,7 @@ sbRegister({
     title: 'Regular',
     state: { on: false, disabled: false, hasLabel: true, labelPos: 'right' },
     controls(pg) {
-      return `<div class="pg-grid">
+      return `<div class="pg-toggles">
         ${pg.toggle('disabled', 'Disable')}
         ${pg.toggle('hasLabel', 'Label')}
         <div class="sb-radio" data-pg-radio-left onclick="SB_PG.set('toggles','labelPos','left')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Label-Left</span></div>

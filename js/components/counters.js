@@ -36,8 +36,10 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
       title: 'Counter Playground',
       state: { type: 'single', value: 9, max: 9999, empty: false },
       controls(pg) {
-        return `<div class="pg-grid">
+        return `<div class="pg-toggles">
           ${pg.toggle('empty', 'Empty')}
+        </div>
+        <div class="pg-toggles">
           <div class="sb-radio selected" data-cnt-single onclick="SB_PG.set('counters','type','single')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Single</span></div>
           <div class="sb-radio" data-cnt-range onclick="SB_PG.set('counters','type','range')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Range</span></div>
         </div>`;

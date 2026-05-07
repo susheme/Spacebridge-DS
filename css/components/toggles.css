@@ -78,18 +78,4 @@
 .sb-toggle-wrap.is-disabled .sb-toggle-label-text {
   opacity: 0.4;
 }
-
-/* Toggle Playground — 2-колоночная сетка контролов */
-.pg-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--gap-horiz-lg) 24px;
-  align-items: center;
-}
-.pg-grid-3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: var(--gap-horiz-lg) 24px;
-  align-items: center;
-}
 /* --- [/SYNC:toggles] --- */

@@ -102,7 +102,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
         showLabel: false, showSub: false, twoRow: false, showDesc: false,
       },
       controls(pg) {
-        return `<div class="pg-grid-3">
+        return `<div class="pg-toggles-3">
           ${pg.toggle('placeholder', 'Placeholder')}
           ${pg.toggle('selected',   'Selected')}
           ${pg.toggle('critical',   'Critical')}
@@ -125,7 +125,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
           description:  s.showDesc && s.twoRow ? 'Description text' : null,
           twoRow:       s.twoRow && s.showLabel,
         };
-        return mkSelField(selOpts, fOpts, rowOpts);
+        return `<div style="width:100%;max-width:360px">${mkSelField(selOpts, fOpts, rowOpts)}</div>`;
       },
       genCode(s) {
         const selOpts = { placeholder: s.placeholder, selected: s.selected, critical: s.critical, disabled: s.disabled, open: s.open };

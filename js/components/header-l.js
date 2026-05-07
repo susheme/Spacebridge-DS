@@ -209,7 +209,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
         </div>`;
 
         // Правая половина — тоглы 2×2.
-        const togglesHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m);align-content:start">
+        const togglesHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m);align-content:end">
           ${pg.toggle('backButton',   'Back button')}
           ${pg.toggle('rightCaption', 'Caption')}
           ${pg.toggle('actionButton', 'Action button')}

@@ -89,7 +89,7 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
       wide: true,
       state: { placeholder: false, selected: false, critical: false, disabled: false, readOnly: false, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
-        return `<div class="pg-grid-3">
+        return `<div class="pg-toggles-3">
           ${pg.toggle('placeholder', 'Placeholder')}
           ${pg.toggle('selected',   'Selected')}
           ${pg.toggle('critical',   'Critical')}
@@ -108,7 +108,7 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
           description:  s.showDesc && s.twoRow ? 'Description text' : null,
           twoRow:       s.twoRow && s.showLabel,
         };
-        return mkPwField(s, fOpts);
+        return `<div style="width:100%;max-width:360px">${mkPwField(s, fOpts)}</div>`;
       },
       genCode(s) {
         const fOpts = {

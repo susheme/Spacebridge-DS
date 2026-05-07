@@ -16,6 +16,11 @@
 .pg-card.wide .pg-preview { justify-content: flex-start; }
 .pg-card.wide .pg-preview-box { align-items: flex-start; justify-content: flex-start; }
 .pg-card.wide .pg-preview-box > [id$="-preview"] { width: 100%; }
+/* В wide-mode панель тянется на всю ширину карточки. Поднимаем minmax,
+   чтобы длинные лейблы (Placeholder, Read Only, Subscription и т.п.)
+   не вылезали за свою ячейку и не накладывались на соседний тоггл. */
+.pg-card.wide .pg-toggles   { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.pg-card.wide .pg-toggles-3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 
 /* Header */
 .pg-header {
@@ -38,8 +43,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-horiz-lg);
-  min-width: 280px;
-  max-width: 280px;
+  min-width: 320px;
+  max-width: 320px;
   flex-shrink: 0;
 }
 
@@ -60,17 +65,27 @@
 .pg-sel-native:focus ~ .sb-sel { border-color: var(--primary); background: var(--background); }
 .pg-sel-native:focus ~ .sb-sel .sb-sel-right { border-left-color: var(--primary); background: var(--background); }
 
-/* Toggles grid — 2 колонки по умолчанию,
-   но при единственном ребёнке схлопывается в одну колонку (full-width),
-   чтобы длинный лейбл не упирался в 50%-слот и не переносился. */
+/* Toggles grid — auto-fit: 2 колонки если влезают по minmax,
+   иначе самопроизвольно схлопываются в 1 колонку (длинные лейблы,
+   узкая панель). При единственном ребёнке тоже full-width. */
 .pg-toggles {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: var(--gap-horiz-m) 12px;
 }
 .pg-toggles:has(> :only-child) {
   grid-template-columns: 1fr;
 }
+/* 3-колоночный вариант для playground'ов с большим количеством тогглов. */
+.pg-toggles-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--gap-horiz-m) 12px;
+}
+/* Defensive: лейбл тоггла никогда не должен ломаться на 2 строки.
+   Если контент шире ячейки — auto-fit grid сам схлопнет в 1 колонку. */
+.pg-toggles .sb-toggle-label-text,
+.pg-toggles-3 .sb-toggle-label-text { white-space: nowrap; }
 /* Vertical divider — используем sb-sep, растягиваем на всю высоту flex-строки */
 .pg-body > .sb-sep.sep-v.pg-body-sep { align-self: stretch; height: auto; }
 .pg-controls:empty { display: none; }

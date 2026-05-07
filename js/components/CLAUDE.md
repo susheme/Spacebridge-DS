@@ -41,7 +41,7 @@ window.COMP_CSS.<key> = `...`;
 - `COMP_CSS` — словарь CSS-snippets
 - `sbIcon(name, size)`, `sbIconRaw(name, size)` — иконки
 - `boolAttr(name, cond)`, `mlBoolAttr(name, cond)` — булевые атрибуты
-- `ICON_PATHS`, `SB_GLYPHS`, `PG_CHEVRON`
+- `ICON_PATHS`, `SB_GLYPHS`
 - `esc(str)` — экранирование `<`/`>`
 
 ## Запреты

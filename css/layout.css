@@ -107,6 +107,44 @@
   padding: var(--pad-vert-16) var(--pad-horiz-16);
 }
 
+/* ── NAV search (sticky filter) ──────────────────────────────────── */
+/* Wrapper «выезжает» за padding сайдбара (negative margins),
+   чтобы плашка тянулась edge-to-edge. Sticky цепляется сразу под
+   верхний край сайдбара. */
+.sidebar-search {
+  position: sticky;
+  top: calc(-1 * var(--pad-vert-16));
+  z-index: 10;
+  margin: calc(-1 * var(--pad-vert-16)) calc(-1 * var(--pad-horiz-16)) var(--gap-vert-m);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border);
+  display: flex;
+  align-items: center;
+}
+/* В NAV отключаем text-field min-width — бар должен честно сжиматься до ширины
+   сайдбара, иначе он упирается в min-width и слоты «застревают». */
+.sidebar-search > .sb-search { width: 100%; min-width: 0; }
+
+/* На фокусе KBS-подсказка прячется (юзер уже ввёл — visual cue не нужен). */
+.sidebar-search .sb-search:focus-within .sb-search-right-slot { display: none; }
+
+/* Empty state — показывается когда NAV отфильтрован в ноль. */
+.sidebar-empty {
+  display: none;
+  padding: var(--pad-vert-16);
+  color: var(--text-secondary);
+  text-align: center;
+}
+.sidebar-empty.visible { display: block; }
+
+/* Подсветка совпавшей подстроки в названии пункта NAV. */
+.sidebar-item-label .nav-hl {
+  background: transparent;
+  color: inherit;
+  font-weight: var(--font-weight-bold);
+}
+
 .sidebar-section { margin-bottom: var(--gap-vert-m); }
 .sidebar-section .sb-section-header { margin-bottom: var(--gap-vert-s); }
 

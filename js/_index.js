@@ -18,7 +18,8 @@ window.SB_COMPONENTS = [
   { name: 'checkbox',      file: 'checkbox.js',       deps: [] },
   { name: 'radio',         file: 'radio.js',          deps: [] },
   { name: 'counters',      file: 'counters.js',       deps: [] },
-  { name: 'search-bar',    file: 'search-bar.js',     deps: [] },
+  { name: 'kbd',           file: 'kbd.js',            deps: [] },                    // keyboard shortcut hint, used by search-bar
+  { name: 'search-bar',    file: 'search-bar.js',     deps: ['kbd'] },               // uses sbMkKbd / sbMkKbdGroup in sections
   { name: 'input',         file: 'input.js',          deps: [] },                    // defines inputField + inputFieldWrap
   { name: 'textarea',      file: 'textarea.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'password',      file: 'password.js',       deps: ['input'] },             // uses inputFieldWrap

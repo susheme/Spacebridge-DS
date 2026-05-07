@@ -41,7 +41,7 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
       title: 'Radio Playground',
       state: { selected: false, hover: false, disabled: false, hasLabel: false, labelLeft: false },
       controls(pg) {
-        return `<div class="pg-grid">
+        return `<div class="pg-toggles">
           ${pg.toggle('selected',  'Selected')}
           ${pg.toggle('hover',     'Hover')}
           ${pg.toggle('disabled',  'Disable')}

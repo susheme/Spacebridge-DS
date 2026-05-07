@@ -92,7 +92,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       wide: true,
       state: { placeholder: false, selected: false, critical: false, disabled: false, readOnly: false, lineView: false, showTitle: true, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
-        return `<div class="pg-grid-3">
+        return `<div class="pg-toggles-3">
           ${pg.toggle('placeholder', 'Placeholder')}
           ${pg.toggle('selected',   'Selected')}
           ${pg.toggle('critical',   'Critical')}
@@ -113,7 +113,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
           description:  s.showDesc && s.twoRow ? 'Description text' : null,
           twoRow:       s.twoRow && s.showLabel,
         };
-        return mkField(s, fOpts);
+        return `<div style="width:100%;max-width:360px">${mkField(s, fOpts)}</div>`;
       },
       genCode(s) {
         const fOpts = {

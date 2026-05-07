@@ -9,7 +9,7 @@
   transition: border-color 0.15s, background 0.15s;
 }
 .sb-search-input {
-  flex: 1; height: 100%; border: none; outline: none;
+  flex: 1; min-width: 0; height: 100%; border: none; outline: none;
   background: transparent;
   padding: 0 var(--pad-horiz-8) 0 16px;
   font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
@@ -70,5 +70,12 @@
 .sb-search-icon-left {
   position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
   color: var(--text-tertiary); display: flex; align-items: center; pointer-events: none;
+}
+/* Right slot — для KBS-подсказок, clear-кнопок и т.п.
+   Используется в icon-left варианте вместо .sb-search-btn. */
+.sb-search-right-slot {
+  flex-shrink: 0; display: flex; align-items: center;
+  padding: 0 var(--pad-vert-8) 0 var(--pad-vert-8);
+  color: var(--text-secondary);
 }
 /* --- [/SYNC:search-bar] --- */

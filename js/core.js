@@ -64,11 +64,10 @@ const NAV = [
   { category: 'Utility', items: [
     { id: 'icons', label: 'Icons' },
     { id: 'tooltips', label: 'Tooltips' },
-    { id: 'contextual-menu', label: 'Contextual Menu' },
+    { id: 'kbd', label: 'Keyboard Shortcut', ready: true },
   ]},
 ];
 
-const PG_CHEVRON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="6 9 12 15 18 9"/></svg>`;
 const ICON_PATHS = {
   'code-s-slash-line': 'M24 12L18.3431 17.6569L16.9289 16.2426L21.1716 12L16.9289 7.75736L18.3431 6.34315L24 12ZM2.82843 12L7.07107 16.2426L5.65685 17.6569L0 12L5.65685 6.34315L7.07107 7.75736L2.82843 12ZM9.78845 21H7.66009L14.2116 3H16.3399L9.78845 21Z',
   'file-copy-line': 'M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM5.00242 8L5.00019 20H14.9998V8H5.00242ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z',
@@ -131,12 +130,28 @@ function esc(s) { return s.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 function renderSidebar() {
   const sb = document.getElementById('sidebar');
-  let html = '';
+
+  // Сохраняем текущий search-query, чтобы при re-render (по navigate)
+  // не потерять введённое.
+  const prevInput = document.getElementById('navSearchInput');
+  const prevQuery = prevInput ? prevInput.value : '';
+
+  // Sticky search-плашка наверху сайдбара. Использует наш .sb-search
+  // в icon-left варианте + KBS-подсказку ⌘+K в right-slot. Никаких
+  // ручных полу-разметок — всё через sbMkSearch / sbMkKbdGroup.
+  let html = `<div class="sidebar-search">
+    ${sbMkSearch({
+      iconLeft: true,
+      placeholder: 'Search components',
+      inputId: 'navSearchInput',
+      rightSlot: sbMkKbdGroup(['⌘','K']),
+    })}
+  </div>
+  <div class="sidebar-empty"><span class="sb-body-m">Nothing found</span></div>`;
+
   NAV.forEach(group => {
-    html += '<div class="sidebar-section">';
+    html += `<div class="sidebar-section" data-category="${group.category || ''}">`;
     if (group.category) {
-      // Эксперимент: NAV-категория = Section Header (left slot, без правого слота).
-      // 16px-отступы от краёв сайдбара даёт сам .sidebar (padding-horiz: 16).
       html += sbMkSectionHeader({
         slotLeft: `<span class="sb-caption">${group.category}</span>`,
         slotRight: false,
@@ -150,14 +165,83 @@ function renderSidebar() {
         : item.incomplete
           ? ' <span class="sb-badge sb-badge-primary">Incomplete</span>'
           : '';
-      html += `<div class="sidebar-item sb-title-s${active ? ' active' : ''}" data-page="${item.id}" onclick="navigate('${item.id}')">
+      html += `<div class="sidebar-item sb-title-s${active ? ' active' : ''}" data-page="${item.id}" data-search="${item.label.toLowerCase()}" onclick="navigate('${item.id}')">
         <span class="dot ${dotCls}"></span>
-        ${item.label}${badge}
+        <span class="sidebar-item-label" data-label="${item.label}">${item.label}</span>${badge}
       </div>`;
     });
     html += '</div>';
   });
   sb.innerHTML = html;
+
+  // Восстанавливаем search-state и подключаем live-фильтр.
+  const input = document.getElementById('navSearchInput');
+  if (input) {
+    input.value = prevQuery;
+    input.addEventListener('input', e => filterNav(e.target.value));
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        input.value = '';
+        filterNav('');
+        input.blur();
+      }
+    });
+    if (prevQuery) filterNav(prevQuery);
+  }
+}
+
+// Live-фильтр пунктов NAV. Категория без матчей скрывается целиком.
+// Подсветка совпавшей подстроки — bold через <mark class="nav-hl">.
+function filterNav(query) {
+  const q = (query || '').trim().toLowerCase();
+  const sb = document.getElementById('sidebar');
+  if (!sb) return;
+  let anyMatch = false;
+
+  sb.querySelectorAll('.sidebar-section').forEach(sec => {
+    let sectionMatch = false;
+    sec.querySelectorAll('.sidebar-item').forEach(item => {
+      const haystack = item.dataset.search || '';
+      const match = !q || haystack.includes(q);
+      item.style.display = match ? '' : 'none';
+      if (match) { sectionMatch = true; anyMatch = true; }
+
+      // Highlight matched substring в лейбле.
+      const labelEl = item.querySelector('.sidebar-item-label');
+      if (labelEl) {
+        const orig = labelEl.dataset.label || '';
+        if (q && orig.toLowerCase().includes(q)) {
+          const i = orig.toLowerCase().indexOf(q);
+          labelEl.innerHTML = esc(orig.slice(0, i))
+            + '<mark class="nav-hl">' + esc(orig.slice(i, i + q.length)) + '</mark>'
+            + esc(orig.slice(i + q.length));
+        } else {
+          labelEl.textContent = orig;
+        }
+      }
+    });
+    sec.style.display = sectionMatch ? '' : 'none';
+  });
+
+  const empty = sb.querySelector('.sidebar-empty');
+  if (empty) empty.classList.toggle('visible', q && !anyMatch);
+}
+
+// Глобальные хоткеи: «/» и «cmd/ctrl+K» фокусят NAV-поиск.
+// Биндимся один раз глобально (renderSidebar вызывается многократно).
+if (!window.__navHotkeyBound) {
+  window.__navHotkeyBound = true;
+  document.addEventListener('keydown', (e) => {
+    const t = e.target;
+    const isTyping = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+    const isCmdK = (e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey);
+    const isSlash = e.key === '/' && !isTyping;
+    if (isCmdK || isSlash) {
+      e.preventDefault();
+      const i = document.getElementById('navSearchInput');
+      if (i) { i.focus(); i.select(); }
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -442,7 +526,7 @@ const SB_PG = {
           </select>
           <div class="sb-sel">
             <span class="sb-sel-val">${currentOpt?.label ?? ''}</span>
-            <div class="sb-sel-right"><div class="sb-chevron mini">${sbIcon('arrow-down-s-line','S')}</div></div>
+            <div class="sb-sel-right"><div class="sb-chevron">${sbIcon('arrow-down-s-line','L')}</div></div>
           </div>
         </div>`;
         if (label) {

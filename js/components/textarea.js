@@ -57,7 +57,7 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
       wide: true,
       state: { placeholder: false, selected: false, critical: false, disabled: false, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
-        return `<div class="pg-grid-3">
+        return `<div class="pg-toggles-3">
           ${pg.toggle('placeholder', 'Placeholder')}
           ${pg.toggle('selected',   'Selected')}
           ${pg.toggle('critical',   'Critical')}

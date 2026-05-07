@@ -1,0 +1,32 @@
+/* --- [SYNC:kbd] Keyboard Shortcut --- */
+.sb-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 20px;
+  padding: var(--pad-horiz-2) var(--pad-vert-8);
+  background: var(--surface-2);
+  border-radius: var(--radius-4);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--subscription-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--subscription-line-height);
+  letter-spacing: var(--letter-spacing);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Group helper — для последовательностей вроде "⌘ + K".
+   Просто inline-flex с маленьким gap'ом. */
+.sb-kbd-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-vert-xxs);
+  color: var(--text-secondary);
+}
+.sb-kbd-group .sb-kbd-sep {
+  font-size: var(--subscription-font-size);
+  user-select: none;
+}
+/* --- [/SYNC:kbd] --- */

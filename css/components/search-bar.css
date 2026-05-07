@@ -3,7 +3,7 @@
   display: flex; align-items: center;
   height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width);
   border-radius: var(--radius-100);
-  border: var(--border-width-1-5) solid var(--background);
+  border: var(--border-width-1-5) solid var(--border);
   background: var(--surface-1);
   position: relative; overflow: hidden;
   transition: border-color 0.15s, background 0.15s;
@@ -16,12 +16,12 @@
   font-family: var(--font-body);
   color: var(--text-primary);
 }
-.sb-search-input::placeholder { color: var(--border); }
+.sb-search-input::placeholder { color: var(--text-secondary); }
 .sb-search-btn {
   flex-shrink: 0; height: 100%; width: var(--btn-rounded-min-width);
   display: flex; align-items: center; justify-content: center;
   background: var(--surface-1);
-  border: none; border-left: var(--border-width-1-5) solid var(--background);
+  border: none; border-left: var(--border-width-1-5) solid var(--border);
   cursor: pointer;
   color: var(--text-tertiary);
   transition: color 0.15s, background 0.15s, border-color 0.15s;
@@ -58,10 +58,13 @@
 .sb-search.line-view:focus-within .sb-search-btn {
   background: transparent; color: var(--primary);
 }
-/* Disabled */
-.sb-search.disabled {
-  opacity: 0.5; pointer-events: none; cursor: not-allowed;
-}
+/* Disabled — паттерн как у Input/Password/Textarea/Selector: серый текст
+   --border, серый правый блок --surface-1, без opacity. */
+.sb-search.disabled { pointer-events: none; cursor: not-allowed; }
+.sb-search.disabled .sb-search-input,
+.sb-search.disabled .sb-search-input::placeholder { color: var(--border); }
+.sb-search.disabled .sb-search-btn { background: var(--surface-1); color: var(--border); }
+.sb-search.disabled .sb-search-icon-left { color: var(--border); }
 /* Critical */
 .sb-search.critical { border-color: var(--error); }
 .sb-search.critical .sb-search-btn { border-left-color: var(--error); color: var(--error); }

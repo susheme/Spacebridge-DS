@@ -10,7 +10,7 @@
   padding: var(--pad-vert-2) var(--pad-horiz-4); gap: 0;
   border-radius: var(--radius-16); background: var(--background);
 }
-.sb-tag-placeholder { color: var(--border); }
+.sb-tag-placeholder { color: var(--text-secondary); }
 .sb-tag.input-mode .sb-tag-label { color: var(--text-tertiary); }
 .sb-tag.input-mode.critical .sb-tag-label { color: var(--error); }
 .sb-tag-caret {
@@ -57,5 +57,5 @@
   font-size: var(--body-font-size-m); font-weight: var(--font-weight-bold); font-family: inherit;
   color: var(--text-tertiary); min-width: 80px; height: 20px;
 }
-.sb-tag-input-field::placeholder { color: var(--border); font-weight: var(--font-weight-regular); }
+.sb-tag-input-field::placeholder { color: var(--text-secondary); font-weight: var(--font-weight-regular); }
 /* --- [/SYNC:tags] --- */

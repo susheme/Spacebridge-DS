@@ -6,7 +6,7 @@
 
 window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: var(--btn-tag-max-height); min-width: var(--status-text-min-width); font-size: var(--body-font-size-m); font-weight: var(--font-weight-bold); line-height: var(--button-line-height); font-family: inherit; white-space: nowrap; cursor: default; }
 .sb-tag.input-mode { padding: var(--pad-vert-2) var(--pad-horiz-4); gap: 0; border-radius: var(--radius-16); background: var(--background); }
-.sb-tag-placeholder { color: var(--border); }
+.sb-tag-placeholder { color: var(--text-secondary); }
 .sb-tag.input-mode .sb-tag-label { color: var(--text-tertiary); }
 .sb-tag.input-mode.critical .sb-tag-label { color: var(--error); }
 .sb-tag-caret { display: inline-block; flex-shrink: 0; width: 1.5px; height: 16px; background: var(--primary); border-radius: var(--radius-1); }
@@ -22,7 +22,7 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
 .sb-tag-input-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-horiz-xs); padding: var(--pad-vert-8) 0; min-height: var(--status-text-max-height); cursor: text; border-bottom: var(--border-width-1-5) solid var(--border); background: transparent; transition: border-color 0.15s; }
 .sb-tag-input-wrap:focus-within { border-bottom-color: var(--primary); }
 .sb-tag-input-field { border: none; outline: none; background: transparent; flex: 1; font-size: var(--body-font-size-m); font-weight: var(--font-weight-bold); font-family: inherit; color: var(--text-tertiary); min-width: 80px; height: 20px; }
-.sb-tag-input-field::placeholder { color: var(--border); font-weight: var(--font-weight-regular); }`;
+.sb-tag-input-field::placeholder { color: var(--text-secondary); font-weight: var(--font-weight-regular); }`;
 
 // --- TAGS ---
 (() => {

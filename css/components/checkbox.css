@@ -58,6 +58,6 @@
   white-space: nowrap;
 }
 .sb-checkbox.disabled .sb-checkbox-label {
-  color: var(--text-secondary);
+  color: var(--border);
 }
 /* --- [/SYNC:checkbox] --- */

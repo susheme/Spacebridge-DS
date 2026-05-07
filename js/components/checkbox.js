@@ -23,7 +23,7 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
 .sb-checkbox.disabled .sb-checkbox-box { border-color: transparent; background: var(--surface-1); }
 .sb-checkbox.disabled.checked .sb-checkbox-box { background: var(--surface-1); border-color: transparent; }
 .sb-checkbox-label { font-size: var(--body-font-size-m); font-weight: var(--font-weight-bold); line-height: 1.4; color: var(--text-primary); white-space: nowrap; }
-.sb-checkbox.disabled .sb-checkbox-label { color: var(--text-secondary); }`;
+.sb-checkbox.disabled .sb-checkbox-label { color: var(--border); }`;
 
 // --- CHECKBOX ---
 (() => {

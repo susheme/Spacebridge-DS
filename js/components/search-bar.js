@@ -4,17 +4,20 @@
 //  При правке стилей — обновить ОБА места (window.COMP_CSS и CSS-файл).
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center; height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width); border-radius: var(--radius-100); border: var(--border-width-1-5) solid var(--background); background: var(--surface-1); position: relative; overflow: hidden; transition: border-color 0.15s, background 0.15s; }
+window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center; height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width); border-radius: var(--radius-100); border: var(--border-width-1-5) solid var(--border); background: var(--surface-1); position: relative; overflow: hidden; transition: border-color 0.15s, background 0.15s; }
 .sb-search-input { flex: 1; min-width: 0; height: 100%; border: none; outline: none; background: transparent; padding: 0 var(--pad-horiz-8) 0 16px; font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); font-family: inherit; color: var(--text-primary); }
-.sb-search-input::placeholder { color: var(--border); }
-.sb-search-btn { flex-shrink: 0; height: 100%; width: var(--btn-rounded-min-width); display: flex; align-items: center; justify-content: center; background: var(--surface-1); border: none; border-left: var(--border-width-1-5) solid var(--background); cursor: pointer; color: var(--text-tertiary); transition: color 0.15s, background 0.15s; }
+.sb-search-input::placeholder { color: var(--text-secondary); }
+.sb-search-btn { flex-shrink: 0; height: 100%; width: var(--btn-rounded-min-width); display: flex; align-items: center; justify-content: center; background: var(--surface-1); border: none; border-left: var(--border-width-1-5) solid var(--border); cursor: pointer; color: var(--text-tertiary); transition: color 0.15s, background 0.15s; }
 .sb-search:focus-within { background: var(--background); border-color: var(--primary); }
 .sb-search:focus-within .sb-search-btn { background: var(--background); border-left-color: var(--primary); color: var(--primary); }
 .sb-search:focus-within .sb-search-input { background: var(--background); }
 .sb-search.line-view { background: transparent; border: none; border-radius: 0; border-bottom: var(--border-width-1-5) solid var(--border); }
 .sb-search.line-view .sb-search-btn { background: transparent; border-left: none; }
 .sb-search.line-view:focus-within { background: transparent; border-bottom-color: var(--primary); }
-.sb-search.disabled { opacity: 0.5; pointer-events: none; }
+.sb-search.disabled { pointer-events: none; cursor: not-allowed; }
+.sb-search.disabled .sb-search-input, .sb-search.disabled .sb-search-input::placeholder { color: var(--border); }
+.sb-search.disabled .sb-search-btn { background: var(--surface-1); color: var(--border); }
+.sb-search.disabled .sb-search-icon-left { color: var(--border); }
 .sb-search.critical { border-color: var(--error); }
 .sb-search.icon-left .sb-search-input { padding-left: var(--pad-horiz-40); }
 .sb-search-icon-left { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); display: flex; align-items: center; pointer-events: none; }

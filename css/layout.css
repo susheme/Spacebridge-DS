@@ -117,8 +117,7 @@
   z-index: 10;
   margin: calc(-1 * var(--pad-vert-16)) calc(-1 * var(--pad-horiz-16)) var(--gap-vert-m);
   padding: var(--pad-vert-16) var(--pad-horiz-16);
-  background: var(--background);
-  border-bottom: var(--border-width-1) solid var(--border);
+  background: var(--surface-1);
   display: flex;
   align-items: center;
 }
@@ -146,7 +145,19 @@
 }
 
 .sidebar-section { margin-bottom: var(--gap-vert-m); }
-.sidebar-section .sb-section-header { margin-bottom: var(--gap-vert-s); }
+.sidebar-section .sb-section-header {
+  margin-bottom: var(--gap-vert-s);
+  /* Stacking / push-off: каждый header sticky внутри своего .sidebar-section
+     (containing block). Когда секция уезжает наверх — её header вылезает из
+     контейнинга и физически уезжает следом, освобождая место для header'а
+     следующей секции. Чистый CSS, без JS.
+     top = нижний край .sidebar-search в её sticky-состоянии:
+       bar height (32) + padding-bottom (16) = 48 (negative top -16 съедает padding-top).
+     Background НЕ оверрайдим — компонент сам ставит --surface-2, этого хватает. */
+  position: sticky;
+  top: calc(var(--text-field-height-l) + var(--pad-vert-16));
+  z-index: 5;
+}
 
 .sidebar-label {
   padding: var(--pad-vert-8) var(--pad-horiz-24) var(--pad-vert-4);

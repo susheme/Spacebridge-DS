@@ -12,9 +12,9 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
 .sb-radio.disabled { cursor: not-allowed; pointer-events: none; }
 .sb-radio.disabled .sb-radio-circle { border-color: transparent; background: var(--surface-1); }
 .sb-radio.disabled.selected .sb-radio-circle { background: var(--surface-1); border-color: transparent; }
-.sb-radio.disabled.selected .sb-radio-dot { background: var(--text-secondary); }
+.sb-radio.disabled.selected .sb-radio-dot { background: var(--border); }
 .sb-radio-label { font-size: var(--body-font-size-m); font-weight: var(--font-weight-bold); line-height: 1.4; color: var(--text-primary); white-space: nowrap; }
-.sb-radio.disabled .sb-radio-label { color: var(--text-secondary); }
+.sb-radio.disabled .sb-radio-label { color: var(--border); }
 .sb-radio.label-left { flex-direction: row-reverse; }`;
 
 // --- RADIO ---
@@ -27,7 +27,7 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
     if (disabled)  cls += ' disabled';
     if (labelLeft) cls += ' label-left';
     const dot = selected && disabled
-      ? `<div class="sb-radio-dot" style="background:var(--text-secondary)"></div>`
+      ? `<div class="sb-radio-dot" style="background:var(--border)"></div>`
       : `<div class="sb-radio-dot"></div>`;
     const lbl = label ? `<span class="sb-radio-label">${label}</span>` : '';
     return `<div class="${cls}"><div class="sb-radio-circle">${dot}</div>${lbl}</div>`;
@@ -65,7 +65,7 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
         if (s.disabled)  cls += ' disabled';
         if (s.labelLeft) cls += ' label-left';
         const dot = (s.selected && s.disabled)
-          ? `<div class="sb-radio-dot" style="background:var(--text-secondary)"></div>`
+          ? `<div class="sb-radio-dot" style="background:var(--border)"></div>`
           : `<div class="sb-radio-dot"></div>`;
         const lbl = s.hasLabel ? `<span class="sb-radio-label">Title</span>` : '';
         const click = !s.disabled

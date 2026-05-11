@@ -24,6 +24,7 @@ const NAV = [
     { id: 'breadcrumbs', label: 'Breadcrumbs' },
     { id: 'tabs', label: 'Tabs' },
     { id: 'tab-bar', label: 'Tab Bar', inProgress: true },
+    { id: 'toc', label: 'Sticky Table of Contents', ready: true },
     { id: 'pagination', label: 'Pagination' },
     { id: 'bottom-bars', label: 'Bottom Bars' },
     { id: 'nav-bar', label: 'Nav Bar' },
@@ -127,6 +128,14 @@ function sbIconRaw(name, size = 'L') {
 }
 
 function esc(s) { return s.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// Slugify для якорей секций. Латиница + кириллица → kebab-case.
+// Используется в renderComponentPage для генерации id="sec-..." на .comp-section.
+function slugify(s) {
+  return String(s).toLowerCase()
+    .replace(/[^a-z0-9а-яё]+/gi, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 function renderSidebar() {
   const sb = document.getElementById('sidebar');
@@ -338,25 +347,44 @@ function renderComponentPage(name) {
   // Полностью кастомная страница (например table)
   if (comp.renderPage) return comp.renderPage();
 
+  // Якоря секций для TOC. Каждый .comp-section получает id, по которому:
+  //   1) IntersectionObserver в init.js trackает active state;
+  //   2) клик по TOC-ссылке скроллит к ней через scrollIntoView.
+  const tocItems = [];
+
   // Стандартная сборка: заголовок + playground? + sections
-  let out = `<div class="page fade-in">
+  let pageHTML = `<div class="page fade-in">
     <h1 class="page-title sb-h4">${comp.title}</h1>
     <p class="page-desc sb-body-l">${comp.description}</p>`;
 
   if (comp.playground) {
-    out += `<div class="comp-section">${SB_PG.buildHTML(name)}</div>`;
+    const id = 'sec-playground';
+    tocItems.push({ id, label: 'Playground' });
+    pageHTML += `<div class="comp-section" id="${id}">${SB_PG.buildHTML(name)}</div>`;
   }
 
-  for (const sec of (comp.sections || [])) {
-    out += `<div class="comp-section">
+  (comp.sections || []).forEach((sec, i) => {
+    const baseId = `sec-${slugify(sec.title) || `${i}`}`;
+    // Защита от коллизий: если slug уже занят (повторяющиеся title) — суффикс.
+    let id = baseId;
+    let n = 1;
+    while (tocItems.some(t => t.id === id)) id = `${baseId}-${++n}`;
+    tocItems.push({ id, label: sec.title });
+    pageHTML += `<div class="comp-section" id="${id}">
       <h2 class="comp-title sb-title-l">${sec.title}</h2>
       ${sec.desc ? `<p class="comp-desc sb-body-m">${sec.desc}</p>` : ''}
       ${exampleBox(sec.preview, sec.html, sec.css, { col: sec.col, interactive: sec.interactive, footer: sec.footer })}
     </div>`;
-  }
+  });
 
-  out += '</div>';
-  return out;
+  pageHTML += '</div>';
+
+  // TOC показываем только на страницах с 3+ якорями. Остальные рендерим как раньше,
+  // без .page-shell обёртки — чтобы не было пустой 220px-колонки справа.
+  if (tocItems.length >= 3 && typeof sbMkToc === 'function') {
+    return `<div class="page-shell">${pageHTML}<aside class="page-toc">${sbMkToc(tocItems)}</aside></div>`;
+  }
+  return pageHTML;
 }
 
 function comingSoonPage(title) {

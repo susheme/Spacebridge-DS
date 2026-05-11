@@ -211,6 +211,32 @@
 
 .page { max-width: 960px; position: relative; z-index: 2; }
 
+/* Page-shell — flex-обёртка, появляется только на страницах с TOC.
+   Слева — основной .page (max-width 960), справа — sticky .page-toc.
+   На страницах без TOC (sections.length < 3) shell не используется,
+   .page рендерится напрямую как раньше. */
+.page-shell {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+}
+.page-shell > .page {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.page-toc {
+  flex: 0 0 220px;
+  position: sticky;
+  top: 32px;
+  align-self: flex-start;
+  z-index: 2;
+}
+/* Узкий экран — TOC прячем, основной контент берёт всю ширину. */
+@media (max-width: 1024px) {
+  .page-toc { display: none; }
+}
+
 .page-title {
   margin-bottom: 8px;
 }

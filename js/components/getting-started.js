@@ -83,23 +83,32 @@ sbRegister({
     });
     typoHTML += '</div>';
 
-    return `<div class="page fade-in">
+    // TOC-якоря: эта страница рендерится кастомно (renderPage), поэтому
+    // TOC встраиваем вручную — стандартный auto-build из renderComponentPage
+    // здесь не работает.
+    const tocItems = [
+      { id: 'sec-color-palette', label: 'Color Palette' },
+      { id: 'sec-typography',    label: 'Typography' },
+      { id: 'sec-effect-styles', label: 'Effect Styles' },
+    ];
+
+    return `<div class="page-shell"><div class="page fade-in">
       <h1 class="page-title sb-h4">Getting Started</h1>
       <p class="page-desc sb-body-l">Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision, and 24/7 operational environments.</p>
 
-      <div class="comp-section">
+      <div class="comp-section" id="sec-color-palette">
         <h2 class="comp-title sb-title-l">Color Palette</h2>
         <p class="comp-desc sb-body-m">Semantic color tokens that adapt between light and dark themes. Currently showing ${isDark ? 'dark' : 'light'} theme values.</p>
         ${colorHTML}
       </div>
 
-      <div class="comp-section">
+      <div class="comp-section" id="sec-typography">
         <h2 class="comp-title sb-title-l">Typography</h2>
         <p class="comp-desc sb-body-m">Roboto is used across all Spacebridge products. The type scale ranges from 96px display to 12px captions.</p>
         ${typoHTML}
       </div>
 
-      <div class="comp-section">
+      <div class="comp-section" id="sec-effect-styles">
         <h2 class="comp-title sb-title-l">Effect Styles</h2>
         <p class="comp-desc sb-body-m">Тени и эффекты, адаптированные под тёмную и светлую тему через CSS-токены.</p>
         <div class="typo-scale">
@@ -148,7 +157,7 @@ sbRegister({
           }).join('')}
         </div>
       </div>
-    </div>`;
+    </div><aside class="page-toc">${sbMkToc(tocItems)}</aside></div>`;
   },
 });
 

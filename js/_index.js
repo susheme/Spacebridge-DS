@@ -32,6 +32,7 @@ window.SB_COMPONENTS = [
   { name: 'list',          file: 'list.js',           deps: [] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'tab-bar',       file: 'tab-bar.js',        deps: [] },
+  { name: 'toc',           file: 'toc.js',            deps: [] },                    // sticky in-page nav, used by core.js renderComponentPage
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

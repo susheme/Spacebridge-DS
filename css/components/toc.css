@@ -1,0 +1,38 @@
+/* --- [SYNC:toc] Sticky Table of Contents --- */
+.sb-toc {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--pad-horiz-16);
+  border-left: var(--border-width-1-5) solid var(--border);
+}
+.sb-toc-item {
+  display: block;
+  position: relative;
+  padding: var(--pad-vert-4) 0;
+  color: var(--text-secondary);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--body-line-height);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.sb-toc-item:hover { color: var(--text-tertiary); }
+.sb-toc-item.is-active {
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-bold);
+}
+/* Акцентная полоска слева у активного пункта — перекрывает border-left
+   родительского .sb-toc цветом --primary. */
+.sb-toc-item.is-active::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--pad-horiz-16) - var(--border-width-1-5));
+  top: 0;
+  bottom: 0;
+  width: var(--border-width-1-5);
+  background: var(--primary);
+}
+/* --- [/SYNC:toc] --- */

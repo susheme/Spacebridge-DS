@@ -40,6 +40,27 @@
 .sb-brand   { font-family: var(--font-brand); }
 .sb-btn-text { font-size: var(--button-font-size); font-weight: var(--font-weight-semibold); line-height: var(--button-line-height); }
 
+/* ── TITLE-CASE ENFORCEMENT ──────────────────────────────────────────
+   Все хедлайны, тайтлы, секционные лейблы и кнопочный текст в DS
+   рендерятся в Title Case (первая буква каждого слова — заглавная).
+   Источник в JS может оставаться lowercase ('alignment', 'left slot') —
+   браузер сам капитализирует через text-transform.
+   Capitalize не трогает уже заглавные буквы → акронимы (KBS, URL, API)
+   сохраняются. .sb-caption намеренно НЕ в списке (он uppercase).
+   Опт-аут: `text-transform: none` на конкретном элементе. */
+.sb-h1, .sb-h2, .sb-h3, .sb-h4, .sb-h5, .sb-h6, .sb-h7, .sb-h8,
+.sb-title-l, .sb-title-l-regular,
+.sb-title-m, .sb-title-m-bold, .sb-title-m-regular,
+.sb-title-s, .sb-title-s-regular,
+.sb-field-label,
+.sb-btn-text,
+.sb-toggle-label-text,
+.sb-radio-label,
+.sb-checkbox-label,
+.sb-nav-btn-label {
+  text-transform: capitalize;
+}
+
 /* --- Coming Soon --- */
 .coming-soon {
   display: flex;

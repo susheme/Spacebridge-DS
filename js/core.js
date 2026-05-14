@@ -27,7 +27,7 @@ const NAV = [
     { id: 'toc', label: 'Sticky Table of Contents', ready: true },
     { id: 'pagination', label: 'Pagination' },
     { id: 'bottom-bars', label: 'Bottom Bars' },
-    { id: 'nav-bar', label: 'Nav Bar' },
+    { id: 'nav-bar', label: 'Nav Bar', ready: true },
   ]},
   { category: 'Data Display', items: [
     { id: 'table', label: 'Table', inProgress: true },
@@ -88,6 +88,10 @@ const ICON_PATHS = {
   'arrow-left-s-line':  'M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z',
   'arrow-right-s-line': 'M13.1717 12.0007L8.22192 7.05093L9.63614 5.63672L16.0001 12.0007L9.63614 18.3646L8.22192 16.9504L13.1717 12.0007Z',
   'notification-3-line': 'M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2zm6-6V11a6 6 0 1 0-12 0v5l-2 2v1h16v-1l-2-2z',
+  'notification-3-fill': 'M20 17H22V19H2V17H4V10C4 5.58172 7.58172 2 12 2C16.4183 2 20 5.58172 20 10V17ZM9 21H15V23H9V21Z',
+  'menu-line': 'M3 7H21V9H3V7ZM3 11H21V13H3V11ZM3 15H21V17H3V15Z',
+  'side-bar-line': 'M3 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3ZM8 5H4V19H8V5ZM10 5V19H20V5H10Z',
+  'search-line': 'M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z',
   'eye-line': 'M12.0003 3C17.3924 3 21.8784 6.87976 22.8189 12C21.8784 17.1202 17.3924 21 12.0003 21C6.60812 21 2.12215 17.1202 1.18164 12C2.12215 6.87976 6.60812 3 12.0003 3ZM12.0003 19C16.2359 19 19.8603 16.052 20.7777 12C19.8603 7.94803 16.2359 5 12.0003 5C7.7646 5 4.14022 7.94803 3.22278 12C4.14022 16.052 7.7646 19 12.0003 19ZM12.0003 16.5C9.51498 16.5 7.50026 14.4853 7.50026 12C7.50026 9.51472 9.51498 7.5 12.0003 7.5C14.4855 7.5 16.5003 9.51472 16.5003 12C16.5003 14.4853 14.4855 16.5 12.0003 16.5ZM12.0003 14.5C13.381 14.5 14.5003 13.3807 14.5003 12C14.5003 10.6193 13.381 9.5 12.0003 9.5C10.6196 9.5 9.50026 10.6193 9.50026 12C9.50026 13.3807 10.6196 14.5 12.0003 14.5Z',
   'eye-close-line': 'M9.34268 18.7819L7.41083 18.2642L8.1983 15.3254C7.00919 14.8874 5.91661 14.2498 4.96116 13.4534L2.80783 15.6067L1.39362 14.1925L3.54695 12.0392C2.35581 10.6103 1.52014 8.87466 1.17578 6.96818L3.14386 6.61035C3.90289 10.8126 7.57931 14.0001 12.0002 14.0001C16.4211 14.0001 20.0976 10.8126 20.8566 6.61035L22.8247 6.96818C22.4803 8.87466 21.6446 10.6103 20.4535 12.0392L22.6068 14.1925L21.1926 15.6067L19.0393 13.4534C18.0838 14.2498 16.9912 14.8874 15.8021 15.3254L16.5896 18.2642L14.6578 18.7819L13.87 15.8418C13.2623 15.9459 12.6376 16.0001 12.0002 16.0001C11.3629 16.0001 10.7381 15.9459 10.1305 15.8418L9.34268 18.7819Z',
   'close-circle-fill': 'M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2ZM16.7071 7.29289C17.0976 7.68342 17.0976 8.31658 16.7071 8.70711L13.4142 12L16.7071 15.2929C17.0976 15.6834 17.0976 16.3166 16.7071 16.7071C16.3166 17.0976 15.6834 17.0976 15.2929 16.7071L12 13.4142L8.70711 16.7071C8.31658 17.0976 7.68342 17.0976 7.29289 16.7071C6.90237 16.3166 6.90237 15.6834 7.29289 15.2929L10.5858 12L7.29289 8.70711C6.90237 8.31658 6.90237 7.68342 7.29289 7.29289C7.68342 6.90237 8.31658 6.90237 8.70711 7.29289L12 10.5858L15.2929 7.29289C15.6834 6.90237 16.3166 6.90237 16.7071 7.29289Z',
@@ -379,9 +383,12 @@ function renderComponentPage(name) {
 
   pageHTML += '</div>';
 
-  // TOC показываем только на страницах с 3+ якорями. Остальные рендерим как раньше,
-  // без .page-shell обёртки — чтобы не было пустой 220px-колонки справа.
-  if (tocItems.length >= 3 && typeof sbMkToc === 'function') {
+  // TOC показываем только на страницах с 3+ якорями. Opt-out флаг noToc:true
+  // в sbRegister — для широких компонентов (Nav Bar / Top Bar / Side Nav),
+  // где TOC съедает ~260px ширины и playground не помещается в реальных размерах.
+  // Остальные рендерим как раньше, без .page-shell обёртки.
+  const showToc = !comp.noToc && tocItems.length >= 3 && typeof sbMkToc === 'function';
+  if (showToc) {
     return `<div class="page-shell">${pageHTML}<aside class="page-toc">${sbMkToc(tocItems)}</aside></div>`;
   }
   return pageHTML;
@@ -441,7 +448,28 @@ const SB_PG = {
     if (!cfg) return;
 
     const previewEl = document.getElementById(`pg-${name}-preview`);
+
+    // Перед innerHTML-replace снимаем scrollLeft/Top у элементов с
+    // [data-pg-preserve-scroll]. После replace'а восстанавливаем по индексу.
+    // Нужно для playground'ов с горизонтальным/вертикальным скроллом превью
+    // (Nav Bar wide stage), чтобы scroll не сбрасывался при каждом toggle.
+    const scrollSnap = [];
+    if (previewEl) {
+      previewEl.querySelectorAll('[data-pg-preserve-scroll]').forEach(el => {
+        scrollSnap.push({ left: el.scrollLeft, top: el.scrollTop });
+      });
+    }
+
     if (previewEl) previewEl.innerHTML = cfg.render(s, this._api(name));
+
+    if (previewEl && scrollSnap.length) {
+      previewEl.querySelectorAll('[data-pg-preserve-scroll]').forEach((el, i) => {
+        if (scrollSnap[i]) {
+          el.scrollLeft = scrollSnap[i].left;
+          el.scrollTop  = scrollSnap[i].top;
+        }
+      });
+    }
 
     const extrasEl = document.getElementById(`pg-${name}-extras`);
     if (extrasEl) extrasEl.innerHTML = cfg.extraPreview ? cfg.extraPreview(s, this._api(name)) : '';

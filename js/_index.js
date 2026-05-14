@@ -33,6 +33,7 @@ window.SB_COMPONENTS = [
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'tab-bar',       file: 'tab-bar.js',        deps: [] },
   { name: 'toc',           file: 'toc.js',            deps: [] },                    // sticky in-page nav, used by core.js renderComponentPage
+  { name: 'nav-bar',       file: 'nav-bar.js',        deps: ['buttons', 'avatar', 'search-bar', 'kbd', 'context-menu'] }, // top bar (avatar opens overflow-menu)
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

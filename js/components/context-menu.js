@@ -63,6 +63,14 @@ window.COMP_CSS.contextMenu = `.sb-ctx-cell {
 }
 .sb-overflow-menu.is-open .sb-ctx-card {
   transform: scale(1); opacity: 1; pointer-events: auto;
+}
+.sb-ctx-card.with-tip::before {
+  content: '';
+  position: absolute;
+  top: -6px; right: 16px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--background);
 }`;
 
 // Single-select click handler for Context cells — within parent scope.
@@ -302,6 +310,27 @@ window.SB_DEMO_MORE_ITEMS = [
     <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check"><!-- check-line S --></span></span>
   </div>
   <!-- Download / Send via email / Reset / Remove — same pattern with .is-action -->
+</div>`,
+        css: COMP_CSS.contextMenu,
+      },
+      {
+        title: 'Context Card with Tip',
+        desc: 'Modifier <code>.with-tip</code> — карточка получает треугольник сверху-справа, «указывающий» на триггер. Используется для callout-меню над аватаром, kebab-кнопкой, tooltip\'ами с действиями. Right-offset треугольника = 16px (попадает примерно в центр 32-40px иконочного триггера). Цвет триангла = фон карточки → шёва не видно.',
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
+          <div class="sb-ctx-card with-tip" style="position:relative">
+            ${mkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' })}
+            ${mkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' })}
+          </div>
+        </div>`,
+        html: `<!-- Card с tip — используется в паре с триггером выше (avatar, kebab-кнопка),
+     который JS позиционирует через sbOverflowMenuToggle(triggerEl) -->
+<div class="sb-overflow-menu">
+  <div class="sb-avatar" onclick="sbOverflowMenuToggle(this)">
+    <div class="sb-avatar-circle"><span class="sb-avatar-initials">VS</span></div>
+  </div>
+  <div class="sb-ctx-card with-tip">
+    <!-- sb-ctx-cell .is-action items -->
+  </div>
 </div>`,
         css: COMP_CSS.contextMenu,
       },

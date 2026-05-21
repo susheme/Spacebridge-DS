@@ -14,7 +14,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
   justify-content: space-between;
   align-items: center;
   border-radius: var(--radius-0) var(--radius-0) 0 0;
-  border-bottom: var(--border-width-1) solid var(--surface-2);
+  border-bottom: var(--border-width-1) solid var(--border);
   background: var(--background);
   container-type: inline-size;
 }

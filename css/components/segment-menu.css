@@ -1,0 +1,141 @@
+/* --- [SYNC:segment-menu] Segment Menu --- */
+/* Сегментный таб-бар. Используется внутри Headers, Cards, Modals, Side Menu
+   и любого layout-контейнера. Не путать с Mobile Tab Bar (отдельный компонент,
+   будет в Phase 2 — с табами + опциональным Status mini indicator).
+
+   Три варианта content в табе (по Figma):
+     1) text only            — только label
+     2) icon L left + label  — иконка слева от label (row flex)
+     3) icon L top + label   — иконка над label (column flex, default layout)
+
+   Состояния: Default / Hover / Selected / Disabled.
+
+   ── Indicator ───────────────────────────────────────────────────────
+   Selected — НЕ через border-bottom-color, а через отдельный элемент
+   .sb-segment-menu-indicator, который JS позиционирует под текущим
+   selected item-ом через transform: translateX(X) + width. Это даёт
+   smooth-slide между табами (transform/width on GPU). Border-bottom
+   2px solid background на каждом item-е остаётся — резервирует высоту,
+   чтобы layout не прыгал. */
+
+.sb-segment-menu {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  /* Indicator позиционируется absolute относительно контейнера. */
+  position: relative;
+}
+
+.sb-segment-menu-item {
+  /* Layout per Figma: column flex с gap для icon-top варианта.
+     Для text-only single child центрируется как обычно.
+     Для icon-left — переключаем в row через модификатор на контейнере. */
+  display: inline-flex;
+  height: 40px;
+  min-width: var(--segment-menu-min-width-segment);
+  max-width: var(--segment-menu-max-width-segment);
+  min-height: 32px;
+  max-height: 40px;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-xs);
+
+  /* Style */
+  border: none;
+  border-radius: var(--radius-0);
+  /* Невидимая 2px полоса — резервирует высоту под indicator.
+     Indicator (separate element) рисует реальную линию поверх. */
+  border-bottom: var(--border-width-2) solid var(--background);
+  background: var(--background);
+
+  /* Typography per Figma — Button (15/600/12/0). */
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--button-font-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--button-line-height);
+  letter-spacing: var(--letter-spacing);
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Только color transition — индикатор имеет собственный transition. */
+  transition: color 0.15s ease;
+}
+
+/* Icon-left модификатор — items становятся row-flex (icon слева от label).
+   Размеры/padding/gap идентичны Default (по Figma), наследуются из базы:
+   gap остаётся var(--gap-vert-xs)=4px — Figma в icon-left specs тоже
+   использует gap-vert-xs (один token на обе ориентации). */
+.sb-segment-menu.icon-left .sb-segment-menu-item {
+  flex-direction: row;
+}
+
+/* Icon-top модификатор — таб выше базового (icon над label).
+   По Figma: height: auto (hug content), max-height: 56px. Контент 56px =
+   8 pad-top + 24 icon + 4 gap + 12 label line-height + 8 pad-bot.
+   flex-direction: column наследуется из базы. */
+.sb-segment-menu.icon-top .sb-segment-menu-item {
+  height: auto;
+  max-height: 56px;
+}
+
+/* ── States ─────────────────────────────────────────────────────────── */
+
+/* Hover — text --primary (только color меняется, layout идентичен Default).
+   .is-hover — force-hover для статичных state-демо в docs (нельзя триггернуть
+   real :hover из HTML). Совпадает с :hover'ом по эффекту. */
+.sb-segment-menu-item:hover:not(.is-disabled):not(.selected),
+.sb-segment-menu-item.is-hover:not(.is-disabled):not(.selected) {
+  color: var(--primary);
+}
+
+/* Selected — text primary. Visual bottom-line рисует .sb-segment-menu-indicator. */
+.sb-segment-menu-item.selected {
+  color: var(--primary);
+}
+
+/* Disabled — text --border, не кликается. NO opacity (по Figma — только color). */
+.sb-segment-menu-item.is-disabled {
+  color: var(--border);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Indicator ──────────────────────────────────────────────────────── */
+/* Поверх border-bottom item-а. JS управляет transform/width через
+   positionIndicator() в segment-menu.js. transition: none на старте,
+   включается классом .is-positioned после первого painting — чтобы при
+   initial mount индикатор появлялся под selected item-ом БЕЗ slide-from-zero. */
+.sb-segment-menu-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: var(--border-width-2);
+  background: var(--primary);
+  width: 0;
+  transform: translateX(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+  /* GPU-hint для slide-анимации. */
+  will-change: transform, width;
+}
+.sb-segment-menu.has-indicator .sb-segment-menu-indicator {
+  opacity: 1;
+}
+.sb-segment-menu.is-positioned .sb-segment-menu-indicator {
+  transition:
+    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    width     0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity   0.2s ease;
+}
+
+/* --- [/SYNC:segment-menu] --- */

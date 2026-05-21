@@ -1,0 +1,188 @@
+/* --- [SYNC:sub-nav] Sub Nav --- */
+/* Контейнер-полоса под Nav Bar / любым Header'ом. Holds:
+   Segment Menu / Tab Bar / LED-панель / любой custom-контент.
+   Sticky-positioned как «второй слой» под Nav Bar (z-index 9 < nav-bar 10).
+
+   Figma spec — Desktop centered variant:
+     min-width 780, max-width 5000 (--screens-max-screen-width)
+     min-height 40 (--tabs-min-height), max-height 64 (--navigation-menu-max-height)
+     padding-top 8 (без bottom — content прижат к низу через align-items: flex-end)
+     justify-content: center, gap 16 (--gap-vert-m)
+     background --background, border-bottom 1px --surface-2 (NOT --border).
+
+   --sub-nav-top CSS-переменная — смещение от верха при sticky.
+   Default 0. Consumer ставит 56px (под обычной Nav Bar) или 88px
+   (под Nav Bar floating с margin:16) и т.п.
+
+   TODO: multi-row layout, slot system (left/center/right) — придут с
+   мобильными и комбинированными вариантами от пользователя. */
+
+.sb-sub-nav {
+  display: flex;
+  width: 100%;
+  /* min-width: max-content — Sub Nav при узком parent'е НЕ сжимает свой
+     контент. Когда parent шире content — width:100% адаптирует к parent.
+     Когда parent уже content — Sub Nav остаётся at content-width, overflow'ит
+     parent, и outer scroll-wrapper подхватывает горизонтальным scroll'ом. */
+  min-width: max-content;
+  max-width: var(--screens-max-screen-width);
+  /* Desktop height: фиксированный 58px (min=max). Tablet (≤1024) и Mobile
+     (≤670) breakpoints — другая высота, придут позже. */
+  min-height: 58px;
+  max-height: 58px;
+  /* Padding: top/bottom 0 (Sub Nav фикс 58px — без vertical padding, чтобы
+     icon-top Segment Menu (56) + border (1) умещались. Контент align'ится
+     к bottom через align-items: flex-end / end). Left/right 24 (sync с Nav
+     Bar desktop). */
+  padding: 0 var(--pad-horiz-24);
+  justify-content: center; /* default: centered. align-left/right через модификатор */
+  align-items: flex-end;
+  gap: var(--gap-vert-m);
+
+  border-radius: var(--radius-0);
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border);
+
+  box-sizing: border-box;
+}
+
+/* Sticky-режим — opt-in. Прилипает под Nav Bar / Header при скролле.
+   В docs не активируется по умолчанию (иначе все 6 демо-баров пытаются
+   быть sticky одновременно → лаги). В real-app: sbMkSubNav({sticky:true}). */
+.sb-sub-nav.sticky {
+  position: sticky;
+  top: var(--sub-nav-top, 0);
+  z-index: 9;
+}
+
+/* Alignment модификаторы для single-content режима. */
+.sb-sub-nav.align-left  { justify-content: flex-start; }
+.sb-sub-nav.align-right { justify-content: flex-end; }
+
+/* Content variant: LED Panel. Когда контент — LED Panel, бар центрирует
+   его по вертикали (align-items: center) вместо flex-end. Высота
+   фиксирована 58 в базе — нет нужды в дополнительном vertical padding.
+   Horizontal padding 24 наследуется из базы. */
+.sb-sub-nav.led {
+  align-items: center;
+}
+
+/* ── Multi-slot mode (.has-slots) ──────────────────────────────────────
+   Включается когда нужно расположить ДВА+ независимых элемента в одной
+   полосе: LED Panel на левом крае + Segment Menu по центру и т.п.
+   Grid minmax(auto, 1fr) / auto / minmax(auto, 1fr) — center-слот труly
+   центрируется относительно бара (sized to content), боковые колонки
+   занимают остаток пространства но НЕ схлопываются меньше content min-width
+   (поэтому LED Panel не клипается).
+   gap 64 (--gap-horiz-xxl) — минимум визуального расстояния между
+   соседними слотами (хотя бы 48 по дизайну).
+   padding-left/right 24 — отступ от краёв бара, чтобы LED/контент не
+   клеились ко краю.
+   max-height: none — снимаем 64px-капу базы, multi-slot контент может
+   быть выше (LED + Segment вместе занимают больше высоты). */
+.sb-sub-nav.has-slots {
+  display: grid;
+  /* minmax(max-content, 1fr) — боковые колонки СТРОГО не сжимаются ниже
+     max-content (LED Panel не клипается). align-items: end — default для
+     слотов: center и right прижаты к низу бара (как Figma спека). Левый
+     слот override'ит через align-self: stretch (ниже). */
+  grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
+  align-items: end;
+  gap: var(--gap-horiz-xxl);
+}
+/* Left slot — растягивается на всю высоту бара (58 desktop), content
+   внутри слота центрируется по вертикали относительно слота. */
+.sb-sub-nav-slot-left {
+  justify-self: start;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+/* Center slot — truly X-centered (через grid-template), Y по дефолту end
+   (touches bar's bottom border, как Figma — segment indicator align'ится). */
+.sb-sub-nav-slot-center { justify-self: center; }
+/* Right slot — прижат к правому краю, инхеритит align-items: end
+   от grid-контейнера → content привязан к низу бара. */
+.sb-sub-nav-slot-right  { justify-self: end; }
+
+/* ── Tablet mode ────────────────────────────────────────────────────
+   Sub Nav переключается на column-flex: контент стэкается вертикально,
+   анкорится к низу бара (justify-content: flex-end), X-centered.
+   Высота расширяется до 114 чтобы 2-row layouts (LED row сверху +
+   Segment row снизу) умещались. Padding/gap = 0 — rows touch без зазора.
+   Multi-slot (.has-slots) переключается с grid на flex column —
+   слоты стэкаются вертикально в HTML-порядке: left → center → right.
+   В combined-варианте (left=LED, right=Segment): LED наверху, Segment
+   внизу (Segment ВСЕГДА у нижней границы — flex-end + HTML-порядок).
+
+   Активация двумя путями:
+     1) Модификатор .tablet — ручной override (для docs/демо). Применяется
+        через sbMkSubNav({ mode: 'tablet' }).
+     2) @media (max-width: 1024px) — автоматический responsive в real-app
+        при достижении viewport breakpoint'а. */
+.sb-sub-nav.tablet,
+@media (max-width: 1024px) {
+  /* Note: ниже идёт media query — селектор .sb-sub-nav.tablet, выше — для
+     media query. Дублируем правила для обоих случаев (CSS не позволяет
+     OR'ить media query с обычным селектором). */
+}
+.sb-sub-nav.tablet {
+  min-height: 58px;
+  max-height: 114px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0;
+  gap: 0;
+}
+.sb-sub-nav.tablet.has-slots {
+  display: flex;
+  grid-template-columns: none;
+}
+.sb-sub-nav.tablet .sb-sub-nav-slot-left {
+  align-self: auto;
+  padding-top: var(--pad-vert-8);
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* hardcoded — нет токена для 10px */
+}
+
+/* LED-alone в Tablet — overrride: row-flex с центрированием по обеим осям
+   (вместо column-stack base'а .tablet). Figma spec: justify-content/
+   align-items: center, flex-direction default (row). LED панель сидит в
+   центре бара по X и Y. */
+.sb-sub-nav.tablet.led {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .sb-sub-nav {
+    min-height: 58px;
+    max-height: 114px;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+    gap: 0;
+  }
+  .sb-sub-nav.has-slots {
+    display: flex;
+    grid-template-columns: none;
+  }
+  .sb-sub-nav-slot-left {
+    align-self: auto;
+    padding-top: var(--pad-vert-8);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .sb-sub-nav.led {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/* --- [/SYNC:sub-nav] --- */

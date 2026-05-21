@@ -1,46 +1,33 @@
-/* --- [SYNC:tab-bar] Tab Bar (Segment Control) ---
-   Текстовый сегмент-контрол. Auto-width по контенту, ellipsis при переполнении.
-   Selected — primary text + 2px primary underline.
-   Под всем баром hairline-разделитель --border 1px. */
+/* --- [SYNC:tab-bar] Tab Bar --- */
+/* Container для табов (см. tabs.css/.js — sbMkTab).
+   От 2 до 6 табов внутри. Табы flex:1 — делят ширину контейнера поровну.
+   Высота 32px, padding 2/2 (узкая рамка вокруг табов), Pressed inset
+   shadow создаёт эффект «вдавленного» контейнера.
+
+   Использование: side menu, модалки на маленьких окнах, мобилки.
+   Не путать с Segment Menu — другой компонент. */
+
 .sb-tab-bar {
   display: flex;
-  width: 100%;
-  border-bottom: var(--border-width-1) solid var(--border);
-}
-.sb-tab-bar-item {
-  flex: 0 1 auto;
-  min-width: 0;
-  max-width: 200px;
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
-  background: transparent;
-  border: none;
-  border-bottom: var(--border-width-2) solid transparent;
-  margin-bottom: calc(-1 * var(--border-width-1));
-  color: var(--text-secondary);
-  font-family: var(--font-family);
-  font-size: var(--button-font-size);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--button-line-height);
-  letter-spacing: var(--letter-spacing);
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: var(--transition);
-}
-.sb-tab-bar-item:hover:not(.is-disabled):not(.selected) {
-  color: var(--text-primary);
+  height: 32px;
+  padding: var(--pad-vert-2) var(--pad-horiz-2);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-xs);
+  border-radius: var(--radius-6);
   background: var(--surface-1);
+  box-sizing: border-box;
+  /* Pressed inset shadow — bar выглядит «вдавленным» внутрь, табы
+     внутри как приподнятые пилюли (особенно selected с Shadow-S). */
+  box-shadow:
+     1px  1px 2px 0 var(--shadow-overlay) inset,
+    -1px -1px 2px 0 var(--shadow-lg)      inset;
 }
-.sb-tab-bar-item.selected {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
+
+/* Tabs внутри Tab Bar делят ширину поровну.
+   .sb-tab имеет min-width:32 / max-width:256 — границы соблюдаются. */
+.sb-tab-bar .sb-tab {
+  flex: 1 1 0%;
 }
-.sb-tab-bar-item.is-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  pointer-events: none;
-}
+
 /* --- [/SYNC:tab-bar] --- */

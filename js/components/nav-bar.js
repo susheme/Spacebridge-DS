@@ -923,7 +923,8 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         title: 'Left slot — composition (responsive)',
         desc: 'Структурный API: <code>button</code> / <code>logo</code> / <code>logoCompact</code> / <code>logoTitle</code> / <code>badge</code> — отдельные пропсы. CSS container query переключает между wide и compact: при container <1024px tabs прячутся, full-logo / title / badge → compact-logo. Button всегда виден, но иконка внутри swap\'ается (side-bar-line в wide, menu-line в compact). Ниже — два примера на одной ширине.',
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
-          <span class="sb-caption" style="color:var(--text-tertiary)">Wide (container > 1024px) — горизонтальный скролл для full-view</span>
+          ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Wide (container > 1024px)</span>` })}
+          <span class="sb-body-m" style="color:var(--text-tertiary);padding:0 var(--pad-horiz-16)">Горизонтальный скролл для full-view</span>
           <div style="width:100%;overflow-x:auto">
             <div style="width:1200px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
               button: DEMO_BUTTON,
@@ -939,7 +940,8 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
               rightSlot: [DEMO_BELL, DEMO_AVATAR],
             })}</div>
           </div>
-          <span class="sb-caption" style="color:var(--text-tertiary)">Compact (container < 1024px) — tabs уходят в side menu, иконка кнопки swap'ается на menu-line</span>
+          ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Compact (container &lt; 1024px)</span>` })}
+          <span class="sb-body-m" style="color:var(--text-tertiary);padding:0 var(--pad-horiz-16)">Tabs уходят в side menu, иконка кнопки swap'ается на menu-line</span>
           <div style="width:100%;max-width:560px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
             button: DEMO_BUTTON,
             logo: DEMO_LOGO,

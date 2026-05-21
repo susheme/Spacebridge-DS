@@ -1,0 +1,39 @@
+/* --- [SYNC:led-panel] LED Panel (Status Indicators Panel) --- */
+/* Горизонтальный bar c LED-item-ами. Каждый item — NAME сверху +
+   Status Indicator Regular снизу. Имитирует real-device LED-панель.
+   Используется внутри Sub Nav или standalone в layout'е.
+
+   Panel:    inline-flex, padding 8/8, gap 24 (lg), radius 8, surface-1 bg
+   Item:     column flex, gap 4 (xs), padding 0, NAME — sb-caption (12/500/
+             12/2px letter-spacing/uppercase) text-secondary
+   Indicator: переиспользуем .sb-status-dot (regular size, без .mini)
+              из status.css. Статусы: online/offline/error/warning/
+              maintenance/connecting/info. */
+
+.sb-led-panel {
+  /* inline-flex — bar shrink-to-fit content. block-flex заполнял бы
+     parent на 100%, что не подходит для inline-вставок в Sub Nav слоты. */
+  display: inline-flex;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-lg);
+  border-radius: var(--radius-8);
+  background: var(--surface-1);
+}
+
+.sb-led-panel-item {
+  display: flex;
+  padding: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  border-radius: var(--radius-0);
+  /* NAME label получает text-secondary через container (inherit).
+     Typography NAME — на HTML-уровне через .sb-caption класс
+     (12/500/12/letter-spacing-l/uppercase). */
+  color: var(--text-secondary);
+}
+
+/* --- [/SYNC:led-panel] --- */

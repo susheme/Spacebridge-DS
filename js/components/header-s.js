@@ -108,7 +108,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   justify-content: center;
   align-items: center;
   gap: var(--gap-vert-s);
-  border-bottom: var(--border-width-1) solid var(--surface-2);
+  border-bottom: var(--border-width-1) solid var(--border);
   background: var(--background);
 }
 
@@ -265,10 +265,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
-            tabs: `<div class="sb-tab-bar">
-              <button type="button" class="sb-tab-bar-item selected" onclick="sbSelectTab(this)">Tab</button>
-              <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
-              <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
+            tabs: `<div class="sb-segment-menu">
+              <button type="button" class="sb-segment-menu-item selected" onclick="sbSelectSegmentItem(this)">Tab</button>
+              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
+              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
             </div>`,
           })}
         </div>`,
@@ -283,10 +283,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
     <span class="sb-header-s-title sb-h7">Headline</span>
   </div>
   <div class="sb-header-s-tabs">
-    <div class="sb-tab-bar">
-      <button type="button" class="sb-tab-bar-item selected" onclick="sbSelectTab(this)">Tab</button>
-      <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
-      <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
+    <div class="sb-segment-menu">
+      <button type="button" class="sb-segment-menu-item selected" onclick="sbSelectSegmentItem(this)">Tab</button>
+      <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
+      <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
     </div>
   </div>
 </div>`,
@@ -301,10 +301,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
             title: 'Headline',
             metaInfo: 'Additional info',
             metaActions: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderSActions({ more: { items: DEMO_MORE_ITEMS } })}`,
-            tabs: `<div class="sb-tab-bar">
-              <button type="button" class="sb-tab-bar-item selected" onclick="sbSelectTab(this)">Tab</button>
-              <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
-              <button type="button" class="sb-tab-bar-item" onclick="sbSelectTab(this)">Tab</button>
+            tabs: `<div class="sb-segment-menu">
+              <button type="button" class="sb-segment-menu-item selected" onclick="sbSelectSegmentItem(this)">Tab</button>
+              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
+              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
             </div>`,
           })}
         </div>`,
@@ -312,7 +312,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   <div class="sb-header-s-top">…</div>
   <div class="sb-header-s-meta">…</div>
   <div class="sb-header-s-tabs">
-    <div class="sb-tab-bar">…</div>
+    <div class="sb-segment-menu">…</div>
   </div>
 </div>`,
         css: COMP_CSS.headerS,

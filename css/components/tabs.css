@@ -1,0 +1,69 @@
+/* --- [SYNC:tabs] Tabs --- */
+/* Single tab button. Используется внутри Tab Bar (см. tab-bar.css/.js).
+   Состояния: Default / Hover / Selected / Disabled.
+   Опциональный Status Mini indicator слева от label (придёт в след. итерации). */
+
+.sb-tab {
+  display: flex;
+  height: 28px;
+  min-width: var(--tab-bar-min-width-tab);
+  max-width: var(--tab-bar-max-width-tab);
+  min-height: var(--tab-bar-min-height-tab);
+  max-height: var(--tab-bar-max-height-tab);
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-xs);
+
+  /* Style */
+  border: none;
+  border-radius: var(--radius-4);
+  background: var(--surface-1);
+
+  /* Typography per Figma — Button (15/600/12/0). */
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-size: var(--button-font-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--button-line-height);
+  letter-spacing: var(--letter-spacing);
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Item name layout — min-height 12px из Figma. */
+.sb-tab-label {
+  min-height: 12px;
+}
+
+/* Hover — text --primary (bg тот же, что у Default).
+   .is-hover — статичная демонстрация в docs (real :hover тоже работает). */
+.sb-tab:hover:not(.is-disabled):not(.selected),
+.sb-tab.is-hover:not(.is-disabled):not(.selected) {
+  color: var(--primary);
+}
+
+/* Selected — bg --background + Shadow-S + text --primary. */
+.sb-tab.selected {
+  background: var(--background);
+  color: var(--primary);
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+}
+
+/* Disabled — bg --surface-2, text --border, не кликается. */
+.sb-tab.is-disabled {
+  background: var(--surface-2);
+  color: var(--border);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- [/SYNC:tabs] --- */

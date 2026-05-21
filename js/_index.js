@@ -31,9 +31,13 @@ window.SB_COMPONENTS = [
   { name: 'table',         file: 'table.js',          deps: [] },
   { name: 'list',          file: 'list.js',           deps: [] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
-  { name: 'tab-bar',       file: 'tab-bar.js',        deps: [] },
+  { name: 'segment-menu',  file: 'segment-menu.js',   deps: [] },
+  { name: 'tabs',          file: 'tabs.js',           deps: ['status'] },            // building block для Tab Bar (Status Mini indicator)
+  { name: 'tab-bar',       file: 'tab-bar.js',        deps: ['tabs'] },              // container, юзает sbMkTab из tabs.js
   { name: 'toc',           file: 'toc.js',            deps: [] },                    // sticky in-page nav, used by core.js renderComponentPage
   { name: 'nav-bar',       file: 'nav-bar.js',        deps: ['buttons', 'avatar', 'search-bar', 'kbd', 'context-menu'] }, // top bar (avatar opens overflow-menu)
+  { name: 'led-panel',     file: 'led-panel.js',      deps: ['status'] },            // Status Indicators Panel, NAME + Status dot. ДОЛЖЕН быть до sub-nav.js (он юзает sbMkLedPanel в demo)
+  { name: 'sub-nav',       file: 'sub-nav.js',        deps: ['segment-menu', 'led-panel'] }, // sub-bar под Nav Bar; demo юзает sbMkSegmentMenu + sbMkLedPanel
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

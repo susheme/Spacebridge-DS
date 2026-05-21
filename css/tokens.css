@@ -258,6 +258,8 @@
   /* Figma Dimensions-DS/Tabs */
   --tabs-min-height: 40px;
   --tabs-max-height: 64px;
+  --navigation-menu-max-height: 64px;
+  --screens-max-screen-width: 5000px;
   --tab-bar-max-width: 640px;
   --tab-bar-max-height-tab: 28px;
   --tab-bar-min-height-tab: 28px;

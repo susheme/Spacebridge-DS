@@ -1,8 +1,66 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  DOCS HELPERS — toggleCode, copyCodeSection, codeGrid, exampleBox,
-//  resetPreview, dismissBanner, copyColor, copyTypo.
+//  resetPreview, dismissBanner, copyColor, copyTypo, sbMkPreviewStage.
 //  Загружается после core.js, до компонентов.
 // ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * sbMkPreviewStage(content, opts) — стандартная preview-обёртка для wide-
+ * компонентов (Nav Bar, Sub Nav, Tab Bar, Segment Menu, и любых других где
+ * контент шире preview area).
+ *
+ * Решает chicken-egg проблему: `overflow-x:auto` резервирует горизонтальный
+ * scrollbar (~15px) внутри wrapper'а → effective vertical area уменьшается
+ * → vertical overflow → ВЕРТИКАЛЬНЫЙ scrollbar появляется без причины.
+ * Inner-stage с padding 16 по периметру создаёт buffer, который поглощает
+ * scrollbar reservation. Результат: только горизонтальный скролл, vertical
+ * НЕ появляется (если только content реально не выше stage'а).
+ *
+ * opts: {
+ *   stageWidth      — 'auto' (default, content-sized) | '1200px' | '100%' | etc.
+ *   framed          — обводка + radius + background (default true)
+ *   padded          — 16px padding по периметру (default true). КРИТИЧНО для
+ *                     anti-vertical-scrollbar behavior — без неё vertical
+ *                     scroll появится. Отключай только если уверен.
+ *   preserveScroll  — добавляет data-pg-preserve-scroll для playground (default true).
+ *                     В section preview (статичные секции) можно ставить false.
+ * }
+ *
+ * Использование:
+ *   preview: sbMkPreviewStage(sbMkNavBar({...}), { stageWidth: '1200px' })
+ *   preview: sbMkPreviewStage(sbMkSubNav({...}))
+ *   render(s) { return sbMkPreviewStage(sbMkSomeComponent(s), { stageWidth: '...' }); }
+ */
+function sbMkPreviewStage(content, opts = {}) {
+  const {
+    stageWidth     = 'auto',
+    framed         = true,
+    preserveScroll = true,
+  } = opts;
+  // Outer scroll-wrapper ВСЕГДА с padding-bottom 16 — поглощает резервацию
+  // горизонтального scrollbar'а (~15px), без неё появляется паразитный
+  // вертикальный scrollbar (chicken-egg).
+  const outerStyle = 'width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)';
+  const outerAttrs = preserveScroll ? ' data-pg-preserve-scroll' : '';
+  // Inner stage с рамкой — для компонентов БЕЗ собственного visual frame'а
+  // (Nav Bar и т.п.). Для компонентов с собственным border'ом (Sub Nav) —
+  // framed:false, тогда inner-stage НЕ оборачивается, content рендерится
+  // напрямую и его border визуально не перекрывается чужой рамкой.
+  if (!framed && stageWidth === 'auto') {
+    return `<div${outerAttrs} style="${outerStyle}">${content}</div>`;
+  }
+  const innerStyles = [];
+  if (stageWidth !== 'auto') innerStyles.push(`width:${stageWidth}`);
+  if (framed) {
+    innerStyles.push('padding:var(--pad-vert-16)');
+    innerStyles.push('border-radius:var(--radius-12)');
+    innerStyles.push('border:var(--border-width-1) solid var(--border)');
+    innerStyles.push('background:var(--background)');
+  }
+  return `<div${outerAttrs} style="${outerStyle}">
+    <div style="${innerStyles.join(';')}">${content}</div>
+  </div>`;
+}
 
 // ═══════════════════════════════════════
 //  ZONE B: DOCUMENTATION HELPERS

@@ -44,9 +44,13 @@
 <link rel="stylesheet" href="css/components/table.css">
 <link rel="stylesheet" href="css/components/list.css">
 <link rel="stylesheet" href="css/components/context-menu.css">
+<link rel="stylesheet" href="css/components/segment-menu.css">
+<link rel="stylesheet" href="css/components/tabs.css">
 <link rel="stylesheet" href="css/components/tab-bar.css">
 <link rel="stylesheet" href="css/components/toc.css">
 <link rel="stylesheet" href="css/components/nav-bar.css">
+<link rel="stylesheet" href="css/components/sub-nav.css">
+<link rel="stylesheet" href="css/components/led-panel.css">
 <link rel="stylesheet" href="css/components/section-header.css">
 <link rel="stylesheet" href="css/components/header-xs.css">
 <link rel="stylesheet" href="css/components/header-s.css">
@@ -116,14 +120,25 @@
 <script src="js/components/table.js"></script>
 <script src="js/components/list.js"></script>
 <script src="js/components/context-menu.js"></script>
+<!-- section-header — зависит от sbMkContextCell, поэтому ПОСЛЕ context-menu.
+     Но должен идти ДО segment-menu / nav-bar, которые юзают sbMkSectionHeader в превью. -->
+<script src="js/components/section-header.js"></script>
+<script src="js/components/segment-menu.js"></script>
+<!-- tabs (building block) — должен идти ДО tab-bar.js, который юзает sbMkTab. -->
+<script src="js/components/tabs.js"></script>
 <script src="js/components/tab-bar.js"></script>
 <script src="js/components/toc.js"></script>
-<script src="js/components/section-header.js"></script>
 <script src="js/components/header-xs.js"></script>
 <script src="js/components/header-s.js"></script>
 <script src="js/components/header-m.js"></script>
 <script src="js/components/header-l.js"></script>
 <script src="js/components/nav-bar.js"></script>
+<!-- led-panel — переиспользует .sb-status-dot из status.css. status.js
+     уже загружен выше. ВАЖНО: грузим ДО sub-nav.js, потому что sub-nav
+     юзает sbMkLedPanel в demo-секциях. -->
+<script src="js/components/led-panel.js"></script>
+<!-- sub-nav зависит от sbMkSegmentMenu И sbMkLedPanel (демо внутри). -->
+<script src="js/components/sub-nav.js"></script>
 <script src="js/components/getting-started.js"></script>
 
 <script src="js/init.js"></script>

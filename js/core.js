@@ -21,7 +21,7 @@ const NAV = [
     { id: 'header-m', label: 'Header M', incomplete: true },
     { id: 'header-l', label: 'Header L', incomplete: true },
     { id: 'side-navigation', label: 'Side Navigation' },
-    { id: 'breadcrumbs', label: 'Breadcrumbs' },
+    { id: 'breadcrumbs', label: 'Breadcrumbs', ready: true },
     { id: 'tab-bar', label: 'Tab Bar', inProgress: true },
     { id: 'segment-menu', label: 'Segment Menu', inProgress: true },
     { id: 'toc', label: 'Sticky Table of Contents', ready: true },
@@ -358,8 +358,15 @@ function renderComponentPage(name) {
   //   2) клик по TOC-ссылке скроллит к ней через scrollIntoView.
   const tocItems = [];
 
-  // Стандартная сборка: заголовок + playground? + sections
+  // Page-level breadcrumbs: Design System › Category › Component.
+  // sbBuildPageBreadcrumbs живёт в breadcrumbs.js; ' ' fallback если
+  // компонент ещё не загружен. inline margin-bottom — page-context spacing.
+  const bcHtml = (typeof sbBuildPageBreadcrumbs === 'function') ? sbBuildPageBreadcrumbs(name) : '';
+  const bcBlock = bcHtml ? `<div style="margin-bottom: var(--pad-vert-16)">${bcHtml}</div>` : '';
+
+  // Стандартная сборка: breadcrumbs + заголовок + playground? + sections
   let pageHTML = `<div class="page fade-in">
+    ${bcBlock}
     <h1 class="page-title sb-h4">${comp.title}</h1>
     <p class="page-desc sb-body-l">${comp.description}</p>`;
 
@@ -396,9 +403,19 @@ function renderComponentPage(name) {
   return pageHTML;
 }
 
-function comingSoonPage(title) {
+function comingSoonPage(id) {
+  // id может быть как реальным id из NAV, так и произвольной строкой.
+  // Ищем NAV-label чтобы вывести человеческое имя вместо raw "side-navigation".
+  let label = id;
+  for (const sec of NAV) {
+    const found = (sec.items || []).find(it => it.id === id);
+    if (found) { label = found.label; break; }
+  }
+  const bcHtml = (typeof sbBuildPageBreadcrumbs === 'function') ? sbBuildPageBreadcrumbs(id) : '';
+  const bcBlock = bcHtml ? `<div style="margin-bottom: var(--pad-vert-16)">${bcHtml}</div>` : '';
   return `<div class="page fade-in">
-    <h1 class="page-title sb-h4">${title}</h1>
+    ${bcBlock}
+    <h1 class="page-title sb-h4">${label}</h1>
     <div class="coming-soon">
       <div class="coming-soon-icon">&#128752;</div>
       <h3 class="sb-title-l">Coming Soon</h3>

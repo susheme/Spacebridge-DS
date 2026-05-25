@@ -1,0 +1,67 @@
+/* --- [SYNC:breadcrumbs] Breadcrumbs ---
+   Path-style навигация: цепочка ссылок-предков, разделённых chevron'ом,
+   последний элемент — current page (без линка, bold).
+   Типографика синхронна с Sticky ToC: body-m regular, default
+   --text-secondary, hover/current --text-tertiary, current bold. */
+.sb-breadcrumbs {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-horiz-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.sb-breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--body-line-height);
+  text-decoration: none;
+  transition: color 0.15s;
+  /* Ellipsis для одиночного длинного item'а — max-width задаётся
+     по месту (style="max-width: 200px"), здесь только overflow-стек. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Hover/cursor — ТОЛЬКО для линков. Item без href (статичная категория)
+   рендерится как <span class="sb-breadcrumb-item"> и НЕ ведёт себя
+   как кнопка. */
+a.sb-breadcrumb-item { cursor: pointer; }
+a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
+.sb-breadcrumb-item.is-current {
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-bold);
+  cursor: default;
+  pointer-events: none;
+}
+/* Separator между item'ами — chevron-right иконка, окраска как у
+   неактивного item'а. flex-shrink: 0 чтобы при overflow усыхали item'ы,
+   а не разделители. */
+.sb-breadcrumb-sep {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+/* Иконка-слот внутри item'а (например, home-иконка для корневого
+   крошкохлеба). Inherit color от item'а — меняется на hover/current. */
+.sb-breadcrumb-item .sb-icon-wrap {
+  flex-shrink: 0;
+  margin-right: var(--gap-horiz-xs);
+}
+/* Overflow-ellipsis item: для «…» когда цепочка слишком длинная и
+   средние ноды коллапсируются. Те же цвета, не интерактивный. */
+.sb-breadcrumb-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-secondary);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--body-line-height);
+  cursor: default;
+}
+/* --- [/SYNC:breadcrumbs] --- */

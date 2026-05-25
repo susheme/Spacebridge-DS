@@ -92,7 +92,12 @@ sbRegister({
       { id: 'sec-effect-styles', label: 'Effect Styles' },
     ];
 
+    // Page-level breadcrumbs (site-wide pattern, см. core.js renderComponentPage).
+    const bcHtml = (typeof sbBuildPageBreadcrumbs === 'function') ? sbBuildPageBreadcrumbs('getting-started') : '';
+    const bcBlock = bcHtml ? `<div style="margin-bottom: var(--pad-vert-16)">${bcHtml}</div>` : '';
+
     return `<div class="page-shell"><div class="page fade-in">
+      ${bcBlock}
       <h1 class="page-title sb-h4">Getting Started</h1>
       <p class="page-desc sb-body-l">Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision, and 24/7 operational environments.</p>
 

@@ -28,6 +28,7 @@ window.COLOR_TOKENS = [
   ]},
   { label: 'Border', tokens: [
     { name: '--border',        light: '#BFC5D2',             dark: '#2A3545' },
+    { name: '--border-soft',   light: '#E7EBF1',             dark: '#263141' },
   ]},
   { label: 'Status', tokens: [
     { name: '--error',  light: '#EF0C0F',             dark: '#E5484D' },

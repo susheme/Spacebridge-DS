@@ -4,7 +4,7 @@
 .sb-sep.sep-h.sep-l { height: 2px; }
 .sb-sep.sep-h.sep-m { height: 1.5px; }
 .sb-sep.sep-h.sep-s { height: 1px; }
-.sb-sep.sep-v { border-radius: var(--radius-100); }
+.sb-sep.sep-v { border-radius: var(--radius-100); background: var(--border-soft); }
 .sb-sep.sep-v.sep-l { width: 2px;   height: 23px; }
 .sb-sep.sep-v.sep-m { width: 1.5px; height: 23px; }
 .sb-sep.sep-v.sep-s { width: 1px;   height: 23px; }

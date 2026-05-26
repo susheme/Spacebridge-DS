@@ -11,68 +11,141 @@
   font-size: var(--body-font-size-m);
 }
 
+/* ── HEADER ROW ────────────────────────────────────────────────────────────
+   Figma: header всегда 40px (плотность не влияет).
+   Typography — задаётся consumer'ом через `class="sb-caption"` на th
+   (12/medium/2px letter-spacing/uppercase из typography.css). Здесь только
+   layout + color + bg + border.
+   Padding — асимметричный 8/2/8/8 (T R B L): меньший right-pad оставляет
+   место под inline sort-icon без лишнего воздуха справа.
+   Min-width 80 — минимальная ширина колонки для читаемости caption-текста. */
 .sb-table th {
+  height: 40px;
+  min-width: 80px;
   text-align: left;
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--body-font-size-s);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-muted);
+  padding: var(--pad-vert-8) var(--pad-horiz-2) var(--pad-vert-8) var(--pad-horiz-8);
+  color: var(--text-secondary);
   background: var(--background);
   border-bottom: var(--border-width-1) solid var(--border);
-  cursor: pointer;
   user-select: none;
   white-space: nowrap;
+  vertical-align: middle;
 }
 
-.sb-table th:hover { color: var(--text-primary); }
+/* ── SORT INDICATOR ────────────────────────────────────────────────────────
+   24x24 inline-icon рядом с title. Default — arrow-up-s-fill в цвете
+   --border (subtle/ghost). На sorted-th'е переключается на --primary.
+   Direction (asc/desc) переключается сменой иконки в JS, не CSS rotate'ом —
+   проще для скрин-ридеров и предсказуемее визуально. */
+.sb-table th .sb-sort-icon {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: var(--gap-horiz-xs);
+  color: var(--border);
+  transition: color 0.15s;
+}
+.sb-table th.sorted .sb-sort-icon { color: var(--primary); }
 
-.sb-table th .sort-icon { display: inline-block; margin-left: 4px; opacity: 0.3; }
-.sb-table th.sorted .sort-icon { opacity: 1; color: var(--primary); }
-
+/* ── INTER-CELL VERTICAL SEPARATORS ────────────────────────────────────────
+   Figma: между ячейками шапки и строк — vertical Separator (1px × 23px pill,
+   --border). Реализуется через переиспользование <span class="sb-sep sep-v sep-s">
+   (см. css/components/separator.css), вставленного как абсолютно-позиционированный
+   ребёнок ячейки. Padding-right ячейки = 2px (см. th-base) задаёт зазор между
+   контентом и сепаратором.
+   Применяется ко всем ячейкам кроме последней в строке (последняя — у границы
+   wrap'а, отдельный сепаратор там не нужен). */
+.sb-table th,
 .sb-table td {
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
-  border-bottom: var(--border-width-1) solid var(--border);
-  color: var(--text-primary);
+  position: relative;
+}
+.sb-table th > .sb-sep.sep-v,
+.sb-table td > .sb-sep.sep-v {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.sb-table tr:last-child td { border-bottom: none; }
+/* ── CONTROL CELLS ─────────────────────────────────────────────────────────
+   Figma spec: первая/последняя ячейка строки с control-контентом (checkbox,
+   drag-icon, 3-dots, chevron, toggle, selector) — квадрат 40x40, padding 8/8,
+   центр по обеим осям. Применяется и к th, и к td.
+   Class names:
+     .cell-checkbox  — legacy/specific (для check-all / row-select)
+     .cell-control   — generic (универсальное имя для любого solo-control'а) */
+.sb-table .cell-checkbox,
+.sb-table .cell-control {
+  width: 40px;
+  min-width: 40px;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  text-align: center;
+}
 
-.sb-table tr:hover td { background: var(--surface-2); }
+/* ── CORNER RADII (header row) ─────────────────────────────────────────────
+   Первая и последняя th в шапке получают внешние 8px-радиусы — соответствует
+   wrap'у .sb-table-wrap. Совмещается с overflow:hidden на wrap'е (belt +
+   suspenders): если wrap отсутствует или его радиус изменён — углы шапки
+   всё равно правильные. */
+.sb-table thead tr:first-child th:first-child { border-top-left-radius: var(--radius-8); }
+.sb-table thead tr:first-child th:last-child  { border-top-right-radius: var(--radius-8); }
 
-.sb-table .cell-checkbox { width: 40px; }
-
-.sb-table .cell-status { display: flex; align-items: center; gap: var(--gap-horiz-s); }
-
-.table-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
+/* ── BODY CELLS ────────────────────────────────────────────────────────────
+   Figma spec (Table-Cell-40px-Text):
+     height 40 (row L), width 200 (default), min-width 80,
+     padding 8/0/8/8 (T R B L) — right=0 чтобы контент вплотную к sb-sep,
+     color --text-tertiary,
+     vertical-align middle.
+   Typography — задаётся consumer'ом через `class="sb-title-m sb-fw-semibold"`
+   на td (16/600/lh-12 из typography.css). Здесь только layout + color + bg + border.
+   States:
+     default  — bg --background
+     hover    — bg --surface-1
+     selected — bg --primary-hover (синий tint 10%)
+   Control-cells (.cell-checkbox/.cell-control) переопределяют padding и width. */
+.sb-table td {
+  height: 40px;
+  width: 200px;
+  min-width: 80px;
+  padding: var(--pad-vert-8) var(--pad-horiz-0) var(--pad-vert-8) var(--pad-horiz-8);
+  color: var(--text-tertiary);
   background: var(--background);
-  border-top: var(--border-width-1) solid var(--border);
-  font-size: var(--body-font-size-s);
-  color: var(--text-tertiary);
+  border-bottom: var(--border-width-1) solid var(--border);
+  vertical-align: middle;
+  /* Truncation by default — single line + ellipsis при переполнении. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sb-table tr:last-child td { border-bottom: none; }
+.sb-table tr:hover td { background: var(--surface-1); }
+.sb-table tr.selected td { background: var(--primary-hover); }
+
+/* ── CELL TEXT MODES ───────────────────────────────────────────────────────
+   Default — truncate с ellipsis (см. .sb-table td выше).
+   .cell-wrap     — allow free-flow text wrap (no clamp, no ellipsis).
+   .cell-clamp-2  — clamp до 2-х строк + ellipsis в конце. Применяется на
+                    INNER span'е (не td), потому что webkit-box ломает
+                    нативный display: table-cell у td.
+   Math: 2 строки × line-height 12 = 24px контента + padding 8/8 = 40px
+   (точно высота row L). Если контент >2 строк → ellipsis в конце 2-й. */
+.sb-table td.cell-wrap {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+.sb-table .cell-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
-.table-pagination .pages { display: flex; gap: var(--gap-horiz-xs); }
-
-.page-btn {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-4);
-  border: var(--border-width-1) solid var(--border);
-  background: var(--surface-1);
-  color: var(--text-tertiary);
-  cursor: pointer;
-  font-size: var(--body-font-size-s);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-}
-
-.page-btn:hover { border-color: var(--primary); color: var(--primary); }
-.page-btn.active { background: var(--primary); color: var(--background); border-color: var(--primary); }
+/* Status-cell helper: dot + label через flex. Для cells вида
+   "<span class='sb-status-dot online'></span> Online". */
+.sb-table .cell-status { display: flex; align-items: center; gap: var(--gap-horiz-s); }
+/* Pagination и Footer вынесены в отдельные компоненты:
+   - css/components/pagination.css (.sb-pagination)
+   - css/components/table-footer.css (.sb-table-footer) */
 /* --- [/SYNC:table] --- */

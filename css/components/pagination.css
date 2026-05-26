@@ -1,0 +1,54 @@
+/* --- [SYNC:pagination] Pagination ---
+   Page-навигация: prev-arrow + page-numbers + next-arrow.
+   Info-текст (Visible X of Y) и Jump-input — отдельные атомы, рендерятся
+   consumer'ом (обычно через Table Footer слоты). Pagination = controls only.
+
+   Контролы — на базе Button-Secondary Small:
+     - page-numbers   : sb-btn-secondary + .sb-pagination-page (override min-width 80→32)
+     - current page   : sb-btn-primary (визуальная активность)
+     - prev/next      : sb-btn-secondary.sb-btn-icon с arrow-drop-left/right-line (S=16) */
+.sb-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+}
+/* Квадратная page-кнопка: переопределяет sb-btn-sm min-width 80 → 32.
+   Padding 8 (а не 16) — чтобы 2- и 3-значные номера были одинаковой ширины. */
+.sb-pagination-page {
+  min-width: 32px;
+  padding: 0 var(--pad-horiz-8);
+}
+/* «…» между неcмежными номерами. Та же высота (32) и min-width (32) — выравнивание по сетке. */
+.sb-pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  color: var(--text-secondary);
+  font-size: var(--body-font-size-m);
+  user-select: none;
+}
+
+/* ── Jump-to-page input — отдельный атом, рендерится через sbMkPaginationJump.
+   Built on sb-tf (Input Field), shrink min-width 128 → 64. Спиннеры скрыты —
+   ввод цифрой + Enter. Специфичность .sb-tf.sb-pagination-jump (0,2,0)
+   перебивает .sb-tf (0,1,0). */
+.sb-tf.sb-pagination-jump {
+  min-width: 64px;
+  width: 64px;
+}
+.sb-tf.sb-pagination-jump .sb-tf-input {
+  text-align: center;
+  padding: 0;
+}
+.sb-tf.sb-pagination-jump .sb-tf-input::-webkit-inner-spin-button,
+.sb-tf.sb-pagination-jump .sb-tf-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sb-tf.sb-pagination-jump .sb-tf-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+/* --- [/SYNC:pagination] --- */

@@ -1,0 +1,36 @@
+/* --- [SYNC:table-footer] Table Footer ---
+   Универсальная нижняя полоса для Table (позже — и для List). Три слота:
+     left   — counters / bulk-actions / summary
+     center — jump-input / utility-controls
+     right  — Pagination
+
+   Layout: flex + space-between + flex-wrap. Слоты получают натуральную
+   ширину контента, при нехватке места — оборачиваются на следующую строку.
+   Center сидит между left и right; если все три не помещаются — center
+   уходит на отдельную строку (грационная деградация).
+
+   NOT grid 1fr auto 1fr — потому что 1fr-колонки крушат содержимое
+   (overflow / text-wrap) когда контент шире своей доли.
+
+   Радиусы НЕ задаются — Footer полагается на parent `.sb-table-wrap
+   { overflow: hidden; border-radius: 8 }` для клиппинга нижних углов. */
+.sb-table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--gap-horiz-m);
+  min-height: 48px;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  background: var(--background);
+  border-top: var(--border-width-1) solid var(--border);
+  box-sizing: border-box;
+}
+.sb-table-footer-left,
+.sb-table-footer-center,
+.sb-table-footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+}
+/* --- [/SYNC:table-footer] --- */

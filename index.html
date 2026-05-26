@@ -49,6 +49,8 @@
 <link rel="stylesheet" href="css/components/tab-bar.css">
 <link rel="stylesheet" href="css/components/toc.css">
 <link rel="stylesheet" href="css/components/breadcrumbs.css">
+<link rel="stylesheet" href="css/components/pagination.css">
+<link rel="stylesheet" href="css/components/table-footer.css">
 <link rel="stylesheet" href="css/components/nav-bar.css">
 <link rel="stylesheet" href="css/components/sub-nav.css">
 <link rel="stylesheet" href="css/components/led-panel.css">
@@ -130,6 +132,11 @@
 <script src="js/components/tab-bar.js"></script>
 <script src="js/components/toc.js"></script>
 <script src="js/components/breadcrumbs.js"></script>
+<!-- pagination: зависит от sb-btn-secondary (buttons.css/.js загружены первыми)
+     и sb-tf (input.js загружен в Inputs-блоке выше). -->
+<script src="js/components/pagination.js"></script>
+<!-- table-footer: использует sbMkPagination в demo-секциях → должен грузиться ПОСЛЕ pagination.js. -->
+<script src="js/components/table-footer.js"></script>
 <script src="js/components/header-xs.js"></script>
 <script src="js/components/header-s.js"></script>
 <script src="js/components/header-m.js"></script>

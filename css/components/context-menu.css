@@ -30,7 +30,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  /* sb-title-m-bold sets line-height 12 by Figma, but inside overflow:hidden
+  /* sb-title-m sb-fw-semibold sets line-height 12 by Figma, but inside overflow:hidden
      that clips descenders ("y","g","p"). Bump to 24 (= reserved label height
      in the 40px cell after 8/8 padding) so glyphs render fully. */
   line-height: var(--headline-line-height-24);

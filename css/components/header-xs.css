@@ -34,7 +34,7 @@
 .sb-header-xs-title {
   flex: 1 1 0;
   min-width: 0;
-  /* line-height из .sb-title-m-bold = 12px (по Figma).
+  /* line-height из .sb-title-m sb-fw-semibold = 12px (по Figma).
      Перебиваем до 24px (= высота слота), иначе overflow:hidden
      ниже клипает descender'ы и восклицательные. */
   line-height: var(--headline-line-height-24);

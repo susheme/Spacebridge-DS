@@ -157,7 +157,7 @@ window.sbSelectInfoCell = function(cell) {
     return `<div class="sb-info-cell${modCls}${stateCls}" onclick="sbSelectInfoCell(this)">
       ${markEl}${indicatorEl}
       <div class="sb-info-cell-text">
-        <span class="sb-title-s-regular sb-info-cell-title">${title}</span>
+        <span class="sb-title-s sb-fw-regular sb-info-cell-title">${title}</span>
         <span class="sb-caption sb-info-cell-sub">${subtitle}</span>
       </div>
     </div>`;
@@ -356,7 +356,7 @@ window.sbSelectInfoCell = function(cell) {
             : '';
           const html = `<div class="sb-info-cell${modCls}${stateCls}">${markLine}${dotLine}
   <div class="sb-info-cell-text">
-    <span class="sb-title-s-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
+    <span class="sb-title-s sb-fw-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
     <span class="sb-caption sb-info-cell-sub">2025-03-01|08:12:21</span>
   </div>
 </div>`;
@@ -477,7 +477,7 @@ window.sbSelectInfoCell = function(cell) {
         html: `<!-- Default -->
 <div class="sb-info-cell">
   <div class="sb-info-cell-text">
-    <span class="sb-title-s-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
+    <span class="sb-title-s sb-fw-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
     <span class="sb-caption sb-info-cell-sub">2025-03-01|08:12:21</span>
   </div>
 </div>
@@ -509,7 +509,7 @@ window.sbSelectInfoCell = function(cell) {
 <div class="sb-info-cell has-indicator">
   <span class="sb-status-dot online"></span>
   <div class="sb-info-cell-text">
-    <span class="sb-title-s-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
+    <span class="sb-title-s sb-fw-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
     <span class="sb-caption sb-info-cell-sub">2025-03-01|08:12:21</span>
   </div>
 </div>
@@ -545,7 +545,7 @@ window.sbSelectInfoCell = function(cell) {
         html: `<div class="sb-info-cell has-mark">
   <span class="sb-mark error"></span>
   <div class="sb-info-cell-text">
-    <span class="sb-title-s-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
+    <span class="sb-title-s sb-fw-regular sb-info-cell-title">NMS: "Witness Terminal Name"</span>
     <span class="sb-caption sb-info-cell-sub">2025-03-01|08:12:21</span>
   </div>
 </div>

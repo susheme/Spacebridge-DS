@@ -38,7 +38,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
 .sb-header-xs-title {
   flex: 1 1 0;
   min-width: 0;
-  /* line-height из .sb-title-m-bold = 12px (по Figma).
+  /* line-height из .sb-title-m sb-fw-semibold = 12px (по Figma).
      Перебиваем до 24px (= высота слота), иначе overflow:hidden
      ниже клипает descender'ы и восклицательные. */
   line-height: var(--headline-line-height-24);
@@ -154,7 +154,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
       },
       render(s) {
         const leftEl = LEFT_BUILDERS[s.leftType]();
-        const titleEl = `<span class="sb-header-xs-title sb-title-m-bold">${TITLE_TEXT[s.titleText]}</span>`;
+        const titleEl = `<span class="sb-header-xs-title sb-title-m sb-fw-semibold">${TITLE_TEXT[s.titleText]}</span>`;
         const slotLeft = leftEl + titleEl;
         const slotRight = RIGHT_BUILDERS[s.rightType]();
         // Стейдж 360px → header внутри = 312px (после 24×2 padding'а), как в sections.
@@ -165,7 +165,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
       genCode(s) {
         const cls = 'sb-header-xs' + (s.flushRight ? ' flush-right' : '');
         const leftLine = LEFT_CODE_COMMENT[s.leftType];
-        const titleLine = `<span class="sb-header-xs-title sb-title-m-bold">${TITLE_TEXT[s.titleText]}</span>`;
+        const titleLine = `<span class="sb-header-xs-title sb-title-m sb-fw-semibold">${TITLE_TEXT[s.titleText]}</span>`;
         const leftInner = (leftLine ? `    ${leftLine}\n` : '') + `    ${titleLine}`;
         const rightCode = RIGHT_CODE[s.rightType];
         const rightBlock = rightCode ? '\n  ' + rightCode.replace(/\n/g, '\n  ') : '';
@@ -183,13 +183,13 @@ ${leftInner}
         desc: 'Корневой контейнер 40px / background / radius 12 12 0 0 / padding 8/8 / gap 2px. Левый слот: flex-grow, 24px высота, gap 8px. Правый слот без обёртки — Icon-Only Small Button / Chevron кладётся прямо в корень.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
-            slotLeft: `<span class="sb-header-xs-title sb-title-m-bold">Header XS</span>`,
+            slotLeft: `<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Header XS</span>`,
             slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
           })}
         </div>`,
         html: `<div class="sb-header-xs">
   <div class="sb-header-xs-left">
-    <span class="sb-header-xs-title sb-title-m-bold">Header XS</span>
+    <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Header XS</span>
   </div>
   <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
     <!-- close-line S -->
@@ -202,14 +202,14 @@ ${leftInner}
         desc: 'Типичный кейс: Symbol Badge (warning) + Title M + Close-кнопка. Контент карточки рендерится отдельно ниже хедера.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
-            slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m-bold">Warning!</span>`,
+            slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>`,
             slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
           })}
         </div>`,
         html: `<div class="sb-header-xs">
   <div class="sb-header-xs-left">
     <!-- Symbol Badge: warnLine SVG 24×24 -->
-    <span class="sb-header-xs-title sb-title-m-bold">Warning!</span>
+    <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>
   </div>
   <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
     <!-- close-line S -->
@@ -222,14 +222,14 @@ ${leftInner}
         desc: 'Вместо Symbol Badge в левый слот ставится крутилка 24×24. Та же sb-spin-анимация, что у кнопок-лоадеров. Полезно для toast-ов с длительной операцией ("Saving…", "Connecting…").',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
-            slotLeft: `<span class="sb-header-xs-loader" aria-label="Loading"></span><span class="sb-header-xs-title sb-title-m-bold">Saving…</span>`,
+            slotLeft: `<span class="sb-header-xs-loader" aria-label="Loading"></span><span class="sb-header-xs-title sb-title-m sb-fw-semibold">Saving…</span>`,
             slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
           })}
         </div>`,
         html: `<div class="sb-header-xs">
   <div class="sb-header-xs-left">
     <span class="sb-header-xs-loader" aria-label="Loading"></span>
-    <span class="sb-header-xs-title sb-title-m-bold">Saving…</span>
+    <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Saving…</span>
   </div>
   <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
     <!-- close-line S -->
@@ -243,14 +243,14 @@ ${leftInner}
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             flushRight: true,
-            slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m-bold">Warning!</span>`,
+            slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>`,
             slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
           })}
         </div>`,
         html: `<div class="sb-header-xs flush-right">
   <div class="sb-header-xs-left">
     <!-- Symbol Badge: warnLine SVG 24×24 -->
-    <span class="sb-header-xs-title sb-title-m-bold">Warning!</span>
+    <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>
   </div>
   <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
     <!-- close-line S -->
@@ -263,14 +263,14 @@ ${leftInner}
         desc: 'Альтернатива close-кнопке в правом слоте — Chevron из DS (collapsible toast).',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
-            slotLeft: `<span class="sb-status-dot online"></span><span class="sb-header-xs-title sb-title-m-bold">Connection</span>`,
+            slotLeft: `<span class="sb-status-dot online"></span><span class="sb-header-xs-title sb-title-m sb-fw-semibold">Connection</span>`,
             slotRight: `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
           })}
         </div>`,
         html: `<div class="sb-header-xs">
   <div class="sb-header-xs-left">
     <span class="sb-status-dot online"></span>
-    <span class="sb-header-xs-title sb-title-m-bold">Connection</span>
+    <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Connection</span>
   </div>
   <div class="sb-chevron">
     <!-- arrow-down-s-line L -->

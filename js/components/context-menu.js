@@ -179,7 +179,7 @@ window.SB_DEMO_MORE_ITEMS = [
     const checkEl = `<span class="sb-ctx-cell-icon-check">${sbIcon('check-line', 'S')}</span>`;
     return `<div class="sb-ctx-cell${stateCls}${radiusCls}${actionCls}"${onclickAttr}>
       ${iconLeftEl}
-      <span class="sb-ctx-cell-label sb-title-m-bold">${label}</span>
+      <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">${label}</span>
       <span class="sb-ctx-cell-right">${hoverIconEl}${checkEl}</span>
     </div>`;
   }
@@ -249,7 +249,7 @@ window.SB_DEMO_MORE_ITEMS = [
         const hoverIconInner = s.iconRightHover !== 'none'
           ? `<span class="sb-ctx-cell-icon-hover"><!-- ${s.iconRightHover} S --></span>` : '';
         const html = `<div class="sb-ctx-cell${stateCls}${radiusCls}"${onclickAttr}>${iconLeftLine}
-  <span class="sb-ctx-cell-label sb-title-m-bold">Name</span>
+  <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">Name</span>
   <span class="sb-ctx-cell-right">${hoverIconInner}<span class="sb-ctx-cell-icon-check"><!-- check-line S --></span></span>
 </div>`;
         return { html, css: COMP_CSS.contextMenu };
@@ -266,7 +266,7 @@ window.SB_DEMO_MORE_ITEMS = [
         html: `<!-- Default -->
 <div class="sb-ctx-cell" onclick="sbSelectContextCell(this)">
   <span class="sb-ctx-cell-icon-left"><!-- gemini-fill L --></span>
-  <span class="sb-ctx-cell-label sb-title-m-bold">Name</span>
+  <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">Name</span>
   <span class="sb-ctx-cell-icon-hover"><!-- file-copy-line S --></span>
   <span class="sb-ctx-cell-icon-check"><!-- check-line S --></span>
 </div>
@@ -306,7 +306,7 @@ window.SB_DEMO_MORE_ITEMS = [
         html: `<div class="sb-ctx-card">
   <div class="sb-ctx-cell is-action" onclick="sbActionContextCell(this)">
     <span class="sb-ctx-cell-icon-left"><!-- file-copy-line L --></span>
-    <span class="sb-ctx-cell-label sb-title-m-bold">Copy</span>
+    <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">Copy</span>
     <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check"><!-- check-line S --></span></span>
   </div>
   <!-- Download / Send via email / Reset / Remove — same pattern with .is-action -->

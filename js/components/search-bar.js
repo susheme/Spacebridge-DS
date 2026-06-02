@@ -76,13 +76,27 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
       minPreview: 360,  // Search Bar wrapper max-width:360 — нужна полная ширина чтобы не сжимался
       state: { selected: false, lineView: false, disabled: false, critical: false, iconLeft: false },
       controls(pg) {
-        return `<div class="pg-toggles">
-          ${pg.toggle('selected',  'Selected')}
-          ${pg.toggle('lineView',  'Line View')}
-          ${pg.toggle('disabled',  'Disable')}
-          ${pg.toggle('critical',  'Critical')}
-          ${pg.toggle('iconLeft',  'Icon Left')}
-        </div>`;
+        // 2 группы (State / Style) укладываются в pg-controls grid
+        // через `.pg-card.wide .pg-controls:has(> .pg-group)` правило.
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">State</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('selected',  'Selected')}
+                ${pg.toggle('disabled',  'Disable')}
+                ${pg.toggle('critical',  'Critical')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Style</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('lineView',  'Line View')}
+                ${pg.toggle('iconLeft',  'Icon Left')}
+              </div>
+            </div>
+          </div>`;
       },
       render(s) { return `<div style="width:100%;max-width:360px">${mkSearch(s)}</div>`; },
       genCode(s) { return { html: mkSearch(s), css: COMP_CSS["search-bar"] }; },

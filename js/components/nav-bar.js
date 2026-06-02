@@ -593,45 +593,51 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         if (key === 'showAvatar'  && value) state.showPrimary = false;
       },
       controls(pg) {
-        return `<div class="pg-groups-row">
-            <div class="pg-group">
-              <div class="pg-group-title sb-field-label">Left Slot</div>
-              <div class="pg-group-body">
-                <div class="pg-toggles">
-                  ${pg.toggle('showButton',    'Button')}
-                  ${pg.toggle('showLogo',      'Logo')}
-                  ${pg.toggle('showLogoTitle', 'Logo Title')}
-                  ${pg.toggle('showBadge',     'Badge')}
-                </div>
-              </div>
-            </div>
-            <div class="pg-group">
-              <div class="pg-group-title sb-field-label">Right Slot</div>
-              <div class="pg-group-body">
-                <div class="pg-toggles">
-                  ${pg.toggle('showSearch',  'Search')}
-                  ${pg.toggle('showBell',    'Bell')}
-                  ${pg.toggle('showPrimary', 'Login')}
-                  ${pg.toggle('showAvatar',  'Avatar')}
-                </div>
-              </div>
-            </div>
-            <div class="pg-group">
-              <div class="pg-group-title sb-field-label">Tabs</div>
-              <div class="pg-group-body">
-                ${pg.select('align', [
-                  { value: 'center', label: 'Center' },
-                  { value: 'right',  label: 'Right'  },
-                ], { label: 'alignment' })}
-                <div class="pg-toggles">
-                  ${pg.toggle('disabledOnTabs', 'disabled')}
-                </div>
+        // 4 группы укладываются в 2×2 grid через `.pg-card.wide .pg-controls:has(> .pg-group)`
+        // правило в playground.css (cell minmax 320, 1fr). Row 1: Left Slot | Right Slot.
+        // Row 2: Tabs | Bar (Floating/Compact).
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">Left Slot</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('showButton',    'Button')}
+                ${pg.toggle('showLogo',      'Logo')}
+                ${pg.toggle('showLogoTitle', 'Logo Title')}
+                ${pg.toggle('showBadge',     'Badge')}
               </div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:var(--gap-horiz-m)">
-            ${pg.toggle('floating', 'Floating')}
-            ${pg.toggle('compact',  'Compact')}
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Right Slot</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('showSearch',  'Search')}
+                ${pg.toggle('showBell',    'Bell')}
+                ${pg.toggle('showPrimary', 'Login')}
+                ${pg.toggle('showAvatar',  'Avatar')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Tabs</div>
+            <div class="pg-group-body">
+              ${pg.select('align', [
+                { value: 'center', label: 'Center' },
+                { value: 'right',  label: 'Right'  },
+              ], { label: 'alignment' })}
+              <div class="pg-toggles">
+                ${pg.toggle('disabledOnTabs', 'disabled')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Bar</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('floating', 'Floating')}
+                ${pg.toggle('compact',  'Compact')}
+              </div>
+            </div>
           </div>`;
       },
       render(s) {

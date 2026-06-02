@@ -57,16 +57,29 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
       wide: true,
       state: { placeholder: false, selected: false, critical: false, disabled: false, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
-        return `<div class="pg-toggles-3">
-          ${pg.toggle('placeholder', 'Placeholder')}
-          ${pg.toggle('selected',   'Selected')}
-          ${pg.toggle('critical',   'Critical')}
-          ${pg.toggle('disabled',   'Disable')}
-          ${pg.toggle('showLabel',  'Label')}
-          ${pg.toggle('showSub',    'Subscription')}
-          ${pg.toggle('twoRow',     '2 Rows',      { requires: 'showLabel' })}
-          ${pg.toggle('showDesc',   'Description', { requires: 'showLabel' })}
-        </div>`;
+        // 2 группы (State / Anatomy) — Textarea без отдельных Style-вариаций.
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">State</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('placeholder', 'Placeholder')}
+                ${pg.toggle('selected',   'Selected')}
+                ${pg.toggle('critical',   'Critical')}
+                ${pg.toggle('disabled',   'Disable')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Anatomy</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('showLabel',  'Label')}
+                ${pg.toggle('showSub',    'Subscription')}
+                ${pg.toggle('twoRow',     '2 Rows',      { requires: 'showLabel' })}
+                ${pg.toggle('showDesc',   'Description', { requires: 'showLabel' })}
+              </div>
+            </div>
+          </div>`;
       },
       render(s) {
         const fOpts = {

@@ -92,19 +92,40 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       wide: true,
       state: { placeholder: false, selected: false, critical: false, disabled: false, readOnly: false, lineView: false, showTitle: true, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
-        return `<div class="pg-toggles-3">
-          ${pg.toggle('placeholder', 'Placeholder')}
-          ${pg.toggle('selected',   'Selected')}
-          ${pg.toggle('critical',   'Critical')}
-          ${pg.toggle('disabled',   'Disable')}
-          ${pg.toggle('readOnly',   'Read Only')}
-          ${pg.toggle('lineView',   'Line View')}
-          ${pg.toggle('showTitle',  'Title')}
-          ${pg.toggle('showLabel',  'Label')}
-          ${pg.toggle('showSub',    'Subscription')}
-          ${pg.toggle('twoRow',     '2 Rows',       { requires: 'showLabel' })}
-          ${pg.toggle('showDesc',   'Description',  { requires: 'showLabel' })}
-        </div>`;
+        // 3 группы (State / Style / Anatomy) укладываются в pg-controls grid
+        // через `.pg-card.wide .pg-controls:has(> .pg-group)` правило.
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">State</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('placeholder', 'Placeholder')}
+                ${pg.toggle('selected',   'Selected')}
+                ${pg.toggle('critical',   'Critical')}
+                ${pg.toggle('disabled',   'Disable')}
+                ${pg.toggle('readOnly',   'Read Only')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Style</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('lineView',   'Line View')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Anatomy</div>
+            <div class="pg-group-body">
+              <div class="pg-toggles">
+                ${pg.toggle('showTitle',  'Title')}
+                ${pg.toggle('showLabel',  'Label')}
+                ${pg.toggle('showSub',    'Subscription')}
+                ${pg.toggle('twoRow',     '2 Rows',       { requires: 'showLabel' })}
+                ${pg.toggle('showDesc',   'Description',  { requires: 'showLabel' })}
+              </div>
+            </div>
+          </div>`;
       },
       render(s) {
         const fOpts = {

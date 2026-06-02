@@ -8,19 +8,64 @@
   max-width: 720px;
   background: var(--surface-1);
 }
-/* Wide mode — controls top, preview bottom */
-.pg-card.wide { max-width: 100%; }
-.pg-card.wide .pg-body { flex-direction: column; }
-.pg-card.wide .pg-body > .sb-sep.sep-v.pg-body-sep { width: 100%; height: 1px; border-radius: 0; }
-.pg-card.wide .pg-controls { min-width: unset; max-width: unset; width: 100%; }
-.pg-card.wide .pg-preview { justify-content: flex-start; }
-.pg-card.wide .pg-preview-box { align-items: flex-start; justify-content: flex-start; }
-.pg-card.wide .pg-preview-box > [id$="-preview"] { width: 100%; }
-/* В wide-mode панель тянется на всю ширину карточки. Поднимаем minmax,
-   чтобы длинные лейблы (Placeholder, Read Only, Subscription и т.п.)
-   не вылезали за свою ячейку и не накладывались на соседний тоггл. */
-.pg-card.wide .pg-toggles   { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-.pg-card.wide .pg-toggles-3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+/* Wide mode — controls top, preview bottom.
+   Два class'а одинаково триггерят wide-layout:
+   - .wide       — force через cfg.wide:true (всегда wide, не зависит от размера)
+   - .wide-auto  — авто-режим (SB_PG._autoDetectWide, ResizeObserver).
+                   Ставится когда контент превью overflow'ит narrow preview-box. */
+.pg-card.wide,
+.pg-card.wide-auto { max-width: 100%; }
+.pg-card.wide .pg-body,
+.pg-card.wide-auto .pg-body { flex-direction: column; }
+.pg-card.wide .pg-body > .sb-sep.sep-v.pg-body-sep,
+.pg-card.wide-auto .pg-body > .sb-sep.sep-v.pg-body-sep { width: 100%; height: 1px; border-radius: 0; }
+.pg-card.wide .pg-controls,
+.pg-card.wide-auto .pg-controls {
+  min-width: unset; max-width: unset; width: 100%;
+  /* В wide-mode переходим с flex-column на grid: контролы укладываются
+     в сетку 220-320px колонок (auto-fit), а не растягиваются на всю ширину
+     панели. При 1 контроле он остаётся ~320px (как в narrow), не разъезжается.
+     justify-content:start — лишнее место уходит вправо, контролы прижаты
+     к левому краю panel'а. */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 320px));
+  gap: var(--gap-horiz-lg);
+  align-items: start;
+  justify-content: start;
+}
+/* .pg-toggles / .pg-toggles-3 / .pg-groups-row — занимают целый ряд в
+   pg-controls grid. У них собственный внутренний layout (auto-fit grid /
+   flex), который сам распределит контент по ширине ряда. Если их зажать
+   в одну cell'у (220-320px), внутренний контент схлопывается в столбик. */
+.pg-card.wide .pg-controls > .pg-toggles,
+.pg-card.wide .pg-controls > .pg-toggles-3,
+.pg-card.wide .pg-controls > .pg-groups-row,
+.pg-card.wide-auto .pg-controls > .pg-toggles,
+.pg-card.wide-auto .pg-controls > .pg-toggles-3,
+.pg-card.wide-auto .pg-controls > .pg-groups-row {
+  grid-column: 1 / -1;
+}
+/* .pg-group — обычная cell'a в pg-controls grid (НЕ на весь ряд),
+   чтобы 2-3 группы могли лежать рядом. Если в pg-controls есть pg-group'ы,
+   переключаемся на более крупные cell'ы (minmax 320, 1fr). */
+.pg-card.wide .pg-controls:has(> .pg-group),
+.pg-card.wide-auto .pg-controls:has(> .pg-group) {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+.pg-card.wide .pg-preview,
+.pg-card.wide-auto .pg-preview { justify-content: flex-start; }
+.pg-card.wide .pg-preview-box,
+.pg-card.wide-auto .pg-preview-box { align-items: flex-start; justify-content: flex-start; }
+.pg-card.wide .pg-preview-box > [id$="-preview"],
+.pg-card.wide-auto .pg-preview-box > [id$="-preview"] { width: 100%; }
+/* В wide-mode .pg-toggles/.pg-toggles-3 на всю ширину pg-controls.
+   Используем 1fr — cell'ы делят ширину между собой, образуя плотную сетку.
+   Min подняли (180/160 вместо base 130/110) чтобы лейблы тогглов
+   точно влезали без переноса в широких playground'ах. */
+.pg-card.wide .pg-toggles,
+.pg-card.wide-auto .pg-toggles   { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.pg-card.wide .pg-toggles-3,
+.pg-card.wide-auto .pg-toggles-3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
 
 /* Header */
 .pg-header {

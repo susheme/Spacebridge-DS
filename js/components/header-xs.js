@@ -122,6 +122,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
     description: 'Самый компактный из header-семейства (40px). Применяется в Toast Notifications и небольших Cards. Левый слот (24px высота, до 700px ширины): Symbol Badge / Status / Loader + Title M (semibold). Правый слот без обёртки — туда кладётся одна Icon-Only Small Button или Chevron. Скруглены только верхние углы 12px (нижние 0 — внизу всегда соседний блок карточки). Для toast-варианта с accent-полосой справа добавь .flush-right — top-right угол станет 0.',
     playground: {
       title: 'Header XS Playground',
+      minPreview: 400,  // stage 360 + padding 24×2 = 408, нужно ~400 чтобы header не clip'нулся
       state: {
         leftType: 'warnLine',
         titleText: 'warning',

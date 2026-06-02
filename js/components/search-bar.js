@@ -73,6 +73,7 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
     description: 'Поле поиска. Высота 32px, border-radius 100px. Варианты: Filled (с фоном) и LineView (только нижняя линия). Состояния: Default, Selected, Disabled, Critical. Опции: Icon Left (лупа в overlay слева вместо правой кнопки) + опциональный right-slot для KBS-подсказок («⌘+K») или clear-кнопок.',
     playground: {
       title: 'Search Bar Playground',
+      minPreview: 360,  // Search Bar wrapper max-width:360 — нужна полная ширина чтобы не сжимался
       state: { selected: false, lineView: false, disabled: false, critical: false, iconLeft: false },
       controls(pg) {
         return `<div class="pg-toggles">

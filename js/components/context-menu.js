@@ -204,6 +204,7 @@ window.SB_DEMO_MORE_ITEMS = [
     description: 'Ячейки для контекстных меню, dropdown\'ов, pop-up карточек. Высота 40px, опциональная иконка слева (L), опциональная hover-иконка справа (S, configurable). Selected подсвечивает фон --primary-hover, текст --primary, и показывает check справа. Клик настраиваемый: по умолчанию single-select, галочка sticky (остаётся при повторном открытии меню).',
     playground: {
       title: 'Context Cell Playground',
+      minPreview: 320,  // context cell ~280-320px широта — нужно ~320 чтобы не схлопывалось
       state: {
         hasIconLeft: true,
         iconRightHover: 'file-copy-line',  // 'file-copy-line' | 'eye-line' | 'none'

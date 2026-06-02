@@ -65,6 +65,7 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
     description: 'Контейнер для табов (sbMkTab). От 2 до 6 табов внутри, табы flex:1 — делят ширину контейнера поровну. Высота 32px, padding 2/2, radius 6, фон --surface-1 с Pressed inset shadow («вдавленный» вид). Используется в side menu, модалках на маленьких окнах, мобилках. Не путать с Segment Menu — другой компонент с другой визуальной моделью.',
     playground: {
       title: 'Tab Bar Playground',
+      minPreview: 360,  // Tab Bar демо-stage 360px → нужно столько же в preview-box
       state: {
         tabCount: 3,
         withIndicator: false,
@@ -137,11 +138,11 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
       },
       {
         title: 'Tab states',
-        desc: 'Single tab кнопка — building block для Tab Bar. Default — surface-1 bg, text-secondary. Hover — text-primary (фон не меняется). Selected — background bg + Shadow-S + text-primary (вид «приподнятой» пилюли). Disabled — surface-2 bg + text --border, без интеракции. В демо Hover показан статично через .is-hover (real :hover тоже работает). Опциональный indicator слева от label — переиспользуем готовый Status Mini (.sb-status-dot.mini).',
+        desc: 'Single tab кнопка — building block для Tab Bar. Default — surface-1 bg, text-secondary. Hover — text-primary (фон не меняется). Selected — background bg + Shadow-S + text-primary (вид «приподнятой» пилюли). Disabled — surface-2 bg + text --border, без интеракции. В демо Hover показан статично через .is-hover. Tabs в этой секции — display-only specimens (pointer-events: none), интерактивность отключена чтобы не путать. Опциональный indicator слева от label — переиспользуем готовый Status Mini (.sb-status-dot.mini).',
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m);width:100%">
           <div style="display:flex;flex-direction:column;gap:var(--gap-vert-m)">
             ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Without indicator</span>` })}
-            <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start">
+            <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start;pointer-events:none">
               ${sbMkTab({ label: 'Default' })}
               ${sbMkTab({ label: 'Hover',    hover: true })}
               ${sbMkTab({ label: 'Selected', selected: true })}
@@ -150,7 +151,7 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
           </div>
           <div style="display:flex;flex-direction:column;gap:var(--gap-vert-m)">
             ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">With indicator (online)</span>` })}
-            <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start">
+            <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start;pointer-events:none">
               ${sbMkTab({ label: 'Default',  indicator: 'online' })}
               ${sbMkTab({ label: 'Hover',    indicator: 'online', hover: true })}
               ${sbMkTab({ label: 'Selected', indicator: 'online', selected: true })}

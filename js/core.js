@@ -438,6 +438,8 @@ const SB_PG = {
   _inits: {},
   _configs: {},
   _codeOpen: {},
+  // Per-name ResizeObserver'ы для авто-детекта wide-mode (см. _autoDetectWide).
+  _resizeObservers: {},
 
   register(name, pgConfig) {
     this._configs[name] = pgConfig;
@@ -500,6 +502,69 @@ const SB_PG = {
 
     this._syncControls(name);
     if (this._codeOpen[name]) this._fillCode(name);
+
+    // Авто-детект wide-mode: если контент превью переполняет preview-box
+    // в narrow layout — переключаем .pg-card в wide. cfg.wide: true остаётся
+    // force-флагом (всегда wide, observer не нужен).
+    this._autoDetectWide(name);
+  },
+
+  // ResizeObserver-based авто wide-mode. Триггеры (любой):
+  // 1) scrollWidth контента > clientWidth narrow preview-box'а → overflow.
+  //    Ловит hard-width контейнеры (Header XS `width:360px` без max-width:100%).
+  // 2) cfg.minPreview задан и clientWidth narrow preview-box'а < minPreview →
+  //    компонент опт-инит «мне нужно минимум N px чтобы не выглядеть кримся».
+  //    Используется для playground'ов с `max-width:100%` wrapper'ами
+  //    (Tab Bar, Search Bar — там max-width маскирует overflow, контент
+  //    схлопывается визуально, но scrollWidth ≈ clientWidth).
+  // Anti-flap: при замере временно снимаем .wide-auto, читаем narrow-метрики,
+  // решаем, ставить ли обратно. measuring-флаг защищает от RO-loop'а.
+  // cfg.wide:true — force, observer не вешаем.
+  _autoDetectWide(name) {
+    const cfg = this._configs[name];
+    if (!cfg || cfg.wide) return;
+    const previewEl = document.getElementById(`pg-${name}-preview`);
+    if (!previewEl) return;
+    const cardEl = previewEl.closest('.pg-card');
+    const previewBox = previewEl.parentElement;
+    if (!cardEl || !previewBox) return;
+
+    if (this._resizeObservers[name]) {
+      this._resizeObservers[name].disconnect();
+    }
+
+    const minPreview = cfg.minPreview || 0;
+
+    // В narrow-mode pg-controls фиксированный 320px + 2px separator +
+    // 24px padding с каждой стороны pg-preview = 370px overhead. Остаток
+    // от cardEl.clientWidth — реально доступная ширина preview-box'а.
+    // previewBox.clientWidth НЕ подходит для замера: при overflow он
+    // распирается контентом и показывает post-overflow размер, а не
+    // реальное место.
+    const NARROW_OVERHEAD = 320 + 2 + 24 + 24;
+    let measuring = false;
+    const measure = () => {
+      if (measuring) return;
+      measuring = true;
+      const wasAuto = cardEl.classList.contains('wide-auto');
+      if (wasAuto) cardEl.classList.remove('wide-auto');
+      const cardW = cardEl.clientWidth;
+      const narrowPreviewAvail = cardW - NARROW_OVERHEAD;
+      const contentW = previewEl.scrollWidth;
+      const overflow = contentW > narrowPreviewAvail + 1;
+      const tooNarrow = minPreview > 0 && narrowPreviewAvail < minPreview;
+      if (overflow || tooNarrow) cardEl.classList.add('wide-auto');
+      requestAnimationFrame(() => { measuring = false; });
+    };
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(previewBox);
+    ro.observe(cardEl);
+    this._resizeObservers[name] = ro;
+    // Double-RAF: первый RAF гарантирует что innerHTML обработан, второй —
+    // что layout settle'нулся. Single-RAF иногда возвращает clientWidth=0
+    // на свежесмонтированном content'е.
+    requestAnimationFrame(() => requestAnimationFrame(measure));
   },
 
   reset(name) {

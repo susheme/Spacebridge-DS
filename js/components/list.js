@@ -232,6 +232,7 @@ window.sbSelectInfoCell = function(cell) {
     description: 'Списки из ячеек 40px высотой. Standard List — ячейки с контентом на фоне --background. Profile Cell — с аватаром, hairline-разделители. Info Cell — для уведомлений/алармов, без разделителей, поддерживает Selected-состояние. Control List — ячейки с title + toggle на фоне --surface-1, 4 варианта по позиции.',
     playground: {
       title: 'Standard List Cell Playground',
+      minPreview: 360,  // list cell с аватаром + субтитлом — нужно ~360 для нормального layout'а
       state: {
         cellType: 'profile',
         // Profile-specific

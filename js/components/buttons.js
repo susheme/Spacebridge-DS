@@ -51,19 +51,37 @@ sbRegister({
     title: 'Regular',
     state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false },
     controls(pg) {
-      return `${pg.select('type', [
-        { value: 'primary', label: 'Primary' },
-        { value: 'secondary', label: 'Secondary' },
-        { value: 'text', label: 'Text' },
-      ])}
-      <div class="pg-toggles">
-        ${pg.toggle('iconL', 'Icon-L')}
-        ${pg.toggle('iconR', 'Icon-R')}
-        ${pg.toggle('disabled', 'Disable')}
-        ${pg.toggle('loading', 'Loading')}
-        ${pg.toggle('critical', 'Critical')}
-        ${pg.toggle('iconOnly', 'Icon-Only')}
-      </div>`;
+      // 3 группы: Variant (тип кнопки) / Modifiers (визуальные модификаторы) / State.
+      return `<div class="pg-group">
+          <div class="pg-group-title sb-field-label">Variant</div>
+          <div class="pg-group-body">
+            ${pg.select('type', [
+              { value: 'primary', label: 'Primary' },
+              { value: 'secondary', label: 'Secondary' },
+              { value: 'text', label: 'Text' },
+            ])}
+          </div>
+        </div>
+        <div class="pg-group">
+          <div class="pg-group-title sb-field-label">Modifiers</div>
+          <div class="pg-group-body">
+            <div class="pg-toggles">
+              ${pg.toggle('iconL',    'Icon-L')}
+              ${pg.toggle('iconR',    'Icon-R')}
+              ${pg.toggle('iconOnly', 'Icon-Only')}
+            </div>
+          </div>
+        </div>
+        <div class="pg-group">
+          <div class="pg-group-title sb-field-label">State</div>
+          <div class="pg-group-body">
+            <div class="pg-toggles">
+              ${pg.toggle('disabled', 'Disable')}
+              ${pg.toggle('loading',  'Loading')}
+              ${pg.toggle('critical', 'Critical')}
+            </div>
+          </div>
+        </div>`;
     },
     onControlChange(key, val, s) {
       if (key === 'iconOnly') {

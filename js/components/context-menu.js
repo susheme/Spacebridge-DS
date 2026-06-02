@@ -213,24 +213,20 @@ window.SB_DEMO_MORE_ITEMS = [
         clickable: true,
       },
       controls(pg) {
-        // 3 группы: State (cellState) / Icons (left icon + hover-right icon) / Behavior.
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">State</div>
-            <div class="pg-group-body">
-              ${pg.select('cellState', [
-                { value: 'default',  label: 'Default' },
-                { value: 'hover',    label: 'Hover' },
-                { value: 'selected', label: 'Selected' },
-                { value: 'disabled', label: 'Disabled' },
-              ])}
-            </div>
-          </div>
+        // State — одиночный select с label'ом (без pg-group обёртки).
+        // Icons и Behavior — настоящие группы с несколькими контролами.
+        return `${pg.select('cellState', [
+            { value: 'default',  label: 'Default'  },
+            { value: 'hover',    label: 'Hover'    },
+            { value: 'selected', label: 'Selected' },
+            { value: 'disabled', label: 'Disabled' },
+          ], { label: 'State' })}
           <div class="pg-group">
             <div class="pg-group-title sb-field-label">Icons</div>
             <div class="pg-group-body">
               ${pg.select('iconRightHover', [
                 { value: 'file-copy-line', label: 'Hover icon: Copy' },
-                { value: 'eye-line',       label: 'Hover icon: Eye' },
+                { value: 'eye-line',       label: 'Hover icon: Eye'  },
                 { value: 'none',           label: 'Hover icon: None' },
               ])}
               <div class="pg-toggles">
@@ -242,8 +238,8 @@ window.SB_DEMO_MORE_ITEMS = [
             <div class="pg-group-title sb-field-label">Behavior</div>
             <div class="pg-group-body">
               <div class="pg-toggles">
-                ${pg.toggle('standalone',  'Radius 4px')}
-                ${pg.toggle('clickable',   'Clickable')}
+                ${pg.toggle('standalone', 'Radius 4px')}
+                ${pg.toggle('clickable',  'Clickable')}
               </div>
             </div>
           </div>`;

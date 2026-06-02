@@ -92,8 +92,9 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       wide: true,
       state: { placeholder: false, selected: false, critical: false, disabled: false, readOnly: false, lineView: false, showTitle: true, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
-        // 3 группы (State / Style / Anatomy) укладываются в pg-controls grid
-        // через `.pg-card.wide .pg-controls:has(> .pg-group)` правило.
+        // 2 группы: State (включая Line View — визуальный вариант) / Anatomy.
+        // Style-группу с одним Line View сложили в State, чтобы не плодить
+        // микро-группу из одного контрола.
         return `<div class="pg-group">
             <div class="pg-group-title sb-field-label">State</div>
             <div class="pg-group-body">
@@ -103,13 +104,6 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
                 ${pg.toggle('critical',   'Critical')}
                 ${pg.toggle('disabled',   'Disable')}
                 ${pg.toggle('readOnly',   'Read Only')}
-              </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Style</div>
-            <div class="pg-group-body">
-              <div class="pg-toggles">
                 ${pg.toggle('lineView',   'Line View')}
               </div>
             </div>

@@ -51,17 +51,14 @@ sbRegister({
     title: 'Regular',
     state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false },
     controls(pg) {
-      // 3 группы: Variant (тип кнопки) / Modifiers (визуальные модификаторы) / State.
-      return `<div class="pg-group">
-          <div class="pg-group-title sb-field-label">Variant</div>
-          <div class="pg-group-body">
-            ${pg.select('type', [
-              { value: 'primary', label: 'Primary' },
-              { value: 'secondary', label: 'Secondary' },
-              { value: 'text', label: 'Text' },
-            ])}
-          </div>
-        </div>
+      // Variant — одиночный select с label'ом (без обёртки в pg-group: один
+      // контрол в группе — избыточная декорация). Modifiers / State — pg-group'ы
+      // с 3 toggle'ами каждый.
+      return `${pg.select('type', [
+          { value: 'primary',   label: 'Primary'   },
+          { value: 'secondary', label: 'Secondary' },
+          { value: 'text',      label: 'Text'      },
+        ], { label: 'Variant' })}
         <div class="pg-group">
           <div class="pg-group-title sb-field-label">Modifiers</div>
           <div class="pg-group-body">

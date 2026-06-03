@@ -8,4 +8,8 @@
 .sb-sep.sep-v.sep-l { width: 2px;   height: 23px; }
 .sb-sep.sep-v.sep-m { width: 1.5px; height: 23px; }
 .sb-sep.sep-v.sep-s { width: 1px;   height: 23px; }
+/* Opt-in модификатор — фон --border-soft. У вертикальных sep'ов
+   --border-soft уже дефолт (визуально не меняется); модификатор актуален
+   в первую очередь для горизонтальных, когда нужен «мягкий» вид. */
+.sb-sep.soft { background: var(--border-soft); }
 /* [/SYNC:separator] */

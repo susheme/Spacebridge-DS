@@ -103,7 +103,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   max-width: var(--nav-menu-max-width-right-content);
   min-height: var(--tabs-min-height);
   max-height: 120px;
-  padding: var(--pad-horiz-16) var(--pad-vert-16);
+  padding: var(--pad-vert-16) var(--pad-horiz-0);
   flex-direction: column;
   justify-content: center;
   align-items: center;

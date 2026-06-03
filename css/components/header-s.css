@@ -114,7 +114,9 @@
   /* Spec: max-height 120px (--Tabs-Max-Height в Figma). У нас --tabs-max-height = 64
      для standalone Tab Bar; здесь хардкод 120, согласовать с дизайнером. */
   max-height: 120px;
-  padding: var(--pad-horiz-16) var(--pad-vert-16);
+  /* Padding: vertical 16, horizontal 0 — Tab Bar внутри слота выравнивается
+     по горизонтали с title/meta content'ом (отступы 16 уже даёт root .sb-header-s). */
+  padding: var(--pad-vert-16) var(--pad-horiz-0);
   flex-direction: column;
   justify-content: center;
   align-items: center;

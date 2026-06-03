@@ -195,7 +195,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   sbRegister({
     name: 'header-s',
     title: 'Header S',
-    description: 'Mobile-вариант хедера для основных окон, side-menu и карточек среднего размера. Top corners 16px, нижние 0 (стык с layout). Min-height 40px, max-height 136px (с meta-row + Tab Bar). Заголовок — H6 (24/900). Два режима компоновки: column (default, мобильный) с правым слотом ниже, и .top-right — row-flex с правым слотом инлайн в одной строке с заголовком. Дальше — meta-row (CAPTION + Status mini + actions) и Tab Bar slot. Responsive: при ширине Header S < 400px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).',
+    description: 'Mobile-вариант хедера для основных окон, side-menu и карточек среднего размера. Top corners 16px, нижние 0 (стык с layout). Min-height 40px, max-height 136px (с meta-row + Sub-nav). Заголовок — H6 (24/900). Два режима компоновки: column (default, мобильный) с правым слотом ниже, и .top-right — row-flex с правым слотом инлайн в одной строке с заголовком. Дальше — meta-row (CAPTION + Status mini + actions) и Sub-nav slot. В sub-nav слоте всегда используем Tab Bar — Segment Menu может не поместиться по ширине в узких контекстах (мобила, узкий card). Responsive: при ширине Header S < 400px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).',
     sections: [
       {
         title: 'Top row only — Anatomy',
@@ -259,17 +259,13 @@ window.COMP_CSS.headerS = `.sb-header-s {
         css: COMP_CSS.headerS,
       },
       {
-        title: 'With Tab Bar slot',
-        desc: 'Опциональный нижний Tab Bar slot. Min-height 40px, max-height 120px. Имеет border-bottom (1px solid surface-2). Когда слот присутствует, padding-bottom у root становится 0 — слот flush с низом.',
+        title: 'With Sub-nav slot (Tab Bar)',
+        desc: 'Опциональный нижний sub-nav slot. Внутри — Tab Bar (sbMkTabBar). Сегмент-меню не используем: на узкой ширине Header S оно не помещается. Slot min-height 40px, max-height 120px, имеет border-bottom (1px solid border). Когда слот присутствует, padding-bottom у root становится 0 — слот flush с низом.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
-            tabs: `<div class="sb-segment-menu">
-              <button type="button" class="sb-segment-menu-item selected" onclick="sbSelectSegmentItem(this)">Tab</button>
-              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
-              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
-            </div>`,
+            tabs: sbMkTabBar(['Tab', 'Tab', 'Tab'], { selectedIndex: 0 }),
           })}
         </div>`,
         html: `<div class="sb-header-s">
@@ -283,36 +279,38 @@ window.COMP_CSS.headerS = `.sb-header-s {
     <span class="sb-header-s-title sb-h7">Headline</span>
   </div>
   <div class="sb-header-s-tabs">
-    <div class="sb-segment-menu">
-      <button type="button" class="sb-segment-menu-item selected" onclick="sbSelectSegmentItem(this)">Tab</button>
-      <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
-      <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
+    <div class="sb-tab-bar">
+      <button type="button" class="sb-tab selected" onclick="sbSelectTab(this)">
+        <span class="sb-tab-label">Tab</span>
+      </button>
+      <button type="button" class="sb-tab" onclick="sbSelectTab(this)">
+        <span class="sb-tab-label">Tab</span>
+      </button>
+      <button type="button" class="sb-tab" onclick="sbSelectTab(this)">
+        <span class="sb-tab-label">Tab</span>
+      </button>
     </div>
   </div>
 </div>`,
         css: COMP_CSS.headerS,
       },
       {
-        title: 'Full anatomy — top + meta + tabs',
-        desc: 'Все три слота вместе: верхняя строка, meta-row (с More-кнопкой и выпадающим меню), Tab Bar slot. Максимальная высота 136px по спеке.',
+        title: 'Full anatomy — top + meta + sub-nav',
+        desc: 'Все три слота вместе: верхняя строка, meta-row (с More-кнопкой и выпадающим меню), sub-nav slot с Tab Bar. Максимальная высота 136px по спеке.',
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
             metaInfo: 'Additional info',
             metaActions: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderSActions({ more: { items: DEMO_MORE_ITEMS } })}`,
-            tabs: `<div class="sb-segment-menu">
-              <button type="button" class="sb-segment-menu-item selected" onclick="sbSelectSegmentItem(this)">Tab</button>
-              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
-              <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">Tab</button>
-            </div>`,
+            tabs: sbMkTabBar(['Tab', 'Tab', 'Tab'], { selectedIndex: 0 }),
           })}
         </div>`,
         html: `<div class="sb-header-s">
   <div class="sb-header-s-top">…</div>
   <div class="sb-header-s-meta">…</div>
   <div class="sb-header-s-tabs">
-    <div class="sb-segment-menu">…</div>
+    <div class="sb-tab-bar">…</div>
   </div>
 </div>`,
         css: COMP_CSS.headerS,

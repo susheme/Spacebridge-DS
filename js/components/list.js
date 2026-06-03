@@ -43,7 +43,7 @@ window.COMP_CSS.list = `.sb-list {
   height: var(--list-min-height-cell);
   padding: var(--pad-horiz-8) var(--pad-vert-8);
   background: var(--background);
-  border-bottom: var(--border-width-1) solid var(--border);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
 }
 .sb-profile-cell-left {
   display: flex; align-items: center; gap: var(--gap-vert-s);

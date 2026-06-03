@@ -10,6 +10,7 @@
 
 window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
   display: flex;
+  width: 100%;
   height: 32px;
   padding: var(--pad-vert-2) var(--pad-horiz-2);
   justify-content: center;

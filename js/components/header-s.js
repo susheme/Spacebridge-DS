@@ -200,7 +200,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
       {
         title: 'Top row only — Anatomy',
         desc: 'Минимальный вариант: верхняя строка (24px) с Left slot и Headline. Без правого слота, без табов. Root — column-flex.',
-        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:368px">
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
@@ -222,7 +222,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
       {
         title: 'With Meta row',
         desc: 'Под верхней строкой добавляется meta-row: ADDITIONAL INFO (caption, слева) + actions group (Status mini badge + More-кнопка с прикреплённым выпадающим меню, справа). Высота корня растёт автоматически. Если caption отсутствует, actions прижимаются к правому краю.',
-        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:368px">
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
@@ -261,7 +261,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
       {
         title: 'With Sub-nav slot (Tab Bar)',
         desc: 'Опциональный нижний sub-nav slot. Внутри — Tab Bar (sbMkTabBar). Сегмент-меню не используем: на узкой ширине Header S оно не помещается. Slot min-height 40px, max-height 120px, имеет border-bottom (1px solid border). Когда слот присутствует, padding-bottom у root становится 0 — слот flush с низом.',
-        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
@@ -297,7 +297,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
       {
         title: 'Full anatomy — top + meta + sub-nav',
         desc: 'Все три слота вместе: верхняя строка, meta-row (с More-кнопкой и выпадающим меню), sub-nav slot с Tab Bar. Максимальная высота 136px по спеке.',
-        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
             title: 'Headline',
@@ -318,7 +318,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
       {
         title: 'Top right slot — inline (.top-right)',
         desc: 'Когда правый слот лежит в одной строке с заголовком, добавь модификатор .top-right на root. Root становится row-flex с justify-content: space-between. Левый блок (left + headline) и правый слот (More-кнопка с выпадающим меню) разводятся по краям.',
-        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:368px">
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({
             topRight: true,
             slotLeft: `${SB_SVG.infoPop}`,

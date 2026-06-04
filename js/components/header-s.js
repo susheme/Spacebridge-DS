@@ -100,7 +100,6 @@ window.COMP_CSS.headerS = `.sb-header-s {
   display: flex;
   width: 100%;
   min-width: 320px;
-  max-width: var(--nav-menu-max-width-right-content);
   min-height: var(--tabs-min-height);
   max-height: 120px;
   padding: var(--pad-vert-16) var(--pad-horiz-0);

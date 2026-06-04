@@ -109,7 +109,9 @@
   display: flex;
   width: 100%;
   min-width: 320px;
-  max-width: var(--nav-menu-max-width-right-content);
+  /* max-width не задаём — слот всегда заполняет content area Header S.
+     Tab Bar внутри (width:100%) тоже фуллит. Иначе на широких Header S
+     слот capил по 700 и пилюля визуально «не доходила» до края. */
   min-height: var(--tabs-min-height);
   /* Spec: max-height 120px (--Tabs-Max-Height в Figma). У нас --tabs-max-height = 64
      для standalone Tab Bar; здесь хардкод 120, согласовать с дизайнером. */

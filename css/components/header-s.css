@@ -126,6 +126,11 @@
   border-bottom: var(--border-width-1) solid var(--border);
   background: var(--background);
 }
+/* В Header S sub-nav слоте Tab Bar должен заполнять Header S по ширине.
+   Базовый .sb-tab имеет max-width 256px (стандартный cap для standalone
+   Tab Bar в узких контекстах) — 3 таба capят пилюлю на 3×256=768px,
+   и при широком Header S справа остаётся пустота. Снимаем cap локально. */
+.sb-header-s-tabs .sb-tab { max-width: none; }
 
 .sb-header-s-title {
   flex: 1 1 0;

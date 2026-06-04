@@ -110,6 +110,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   border-bottom: var(--border-width-1) solid var(--border);
   background: var(--background);
 }
+.sb-header-s-tabs .sb-tab { max-width: none; }
 
 .sb-header-s-title {
   flex: 1 1 0;

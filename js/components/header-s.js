@@ -7,7 +7,7 @@
 window.COMP_CSS.headerS = `.sb-header-s {
   display: flex;
   width: 100%;
-  min-width: var(--header-min-width);
+  min-width: 320px;
   max-width: var(--header-s-max-width);
   min-height: var(--header-s-min-height);
   max-height: var(--header-s-max-height);

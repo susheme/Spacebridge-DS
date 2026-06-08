@@ -544,17 +544,22 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 
   // ── Language Switcher ──────────────────────────────────────────────
   // Secondary кнопка с chevron-down (icon-R). По hover открывается
-  // .sb-ctx-card с 4 языками (EN/RU/FR/ES — ISO 639-1, 2-буквенные коды).
-  // Клик по cell обновляет лейбл кнопки и закрывает меню. Сейчас демо —
-  // реального переключения языков ещё нет, но UX-паттерн и DOM готовы
-  // для будущего wiring'а.
-  const LANG_OPTIONS = ['EN', 'RU', 'FR', 'ES'];
+  // .sb-ctx-card с 4 языками (EN/RU/FR/ES — ISO 639-1, 2-буквенные коды
+  // на кнопке; в меню — полные endonyms: English / Русский / Français /
+  // Español). Клик по cell обновляет лейбл кнопки и закрывает меню.
+  // Сейчас демо — реального переключения языков ещё нет.
+  const LANG_OPTIONS = [
+    { code: 'EN', name: 'English'  },
+    { code: 'RU', name: 'Русский'  },
+    { code: 'FR', name: 'Français' },
+    { code: 'ES', name: 'Español'  },
+  ];
   function mkLangSwitcher(opts = {}) {
     const selected = opts.selected || 'EN';
-    const cells = LANG_OPTIONS.map(code => {
+    const cells = LANG_OPTIONS.map(({ code, name }) => {
       const cls = code === selected ? 'sb-ctx-cell is-selected' : 'sb-ctx-cell';
       return `<div class="${cls}" onclick="sbNavBarLangPick(this, '${code}')">
-        <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">${code}</span>
+        <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">${name}</span>
         <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check">${sbIcon('check-line', 'S')}</span></span>
       </div>`;
     }).join('');

@@ -559,13 +559,15 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     return `<div class="sb-overflow-menu sb-nav-lang-switcher"
          onmouseenter="sbNavBarLangOpen(this)"
          onmouseleave="sbNavBarLangClose(this)">
-      <button class="sb-btn sb-btn-secondary sb-btn-sm sb-nav-lang-btn" type="button"
+      <button class="sb-btn sb-btn-secondary sb-nav-lang-btn" type="button"
               onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
         <span class="sb-nav-lang-label">${selected}</span>${sbIcon('arrow-drop-down-line', 'L')}
       </button>
       <div class="sb-ctx-card">${cells}</div>
     </div>`;
   }
+
+  window.sbMkLangSwitcher = mkLangSwitcher;
 
   // Hover-intent handlers для lang switcher'а (аналог sbNavBarDropdownOpen/Close
   // но targets .sb-nav-lang-btn). Open после 100ms, close после 200ms — чтобы
@@ -656,8 +658,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         showBell: true,
         showPrimary: false,
         showAvatar: true,
-        showLang: true,        // language switcher в right slot (Secondary btn + dropdown)
-        lang: 'ENG',           // выбранный язык — ENG / RUS / FRA / ESP
+        lang: 'ENG',           // выбранный язык в lang switcher'е (always shown в demo)
       },
       // Login XOR Avatar — вкл один, второй автоматически выкл (визуально снимается).
       onControlChange(key, value, state) {
@@ -687,7 +688,6 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
                 ${pg.toggle('showBell',    'Bell')}
                 ${pg.toggle('showPrimary', 'Login')}
                 ${pg.toggle('showAvatar',  'Avatar')}
-                ${pg.toggle('showLang',    'Language')}
               </div>
             </div>
           </div>
@@ -735,8 +735,9 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           });
         }
         // Login XOR Avatar — взаимоисключающие. Если Login вкл → Avatar скрыт.
+        // Lang switcher всегда показан (нет toggle'а — это просто кнопка).
         const right = [
-          s.showLang    ? mkLangSwitcher({ selected: s.lang }) : null,
+          mkLangSwitcher({ selected: s.lang }),
           s.showBell    ? DEMO_BELL    : null,
           s.showPrimary ? DEMO_PRIMARY : null,
           (!s.showPrimary && s.showAvatar) ? DEMO_AVATAR : null,

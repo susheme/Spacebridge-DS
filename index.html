@@ -82,7 +82,8 @@
       <span class="sb-nav-bar-badge"><span class="sb-badge-status mini bs-blue">v1.0.0</span></span>
     </div>
     <div class="sb-nav-bar-center"></div>
-    <div class="sb-nav-bar-right">
+    <div class="sb-nav-bar-right" id="dsNavRight">
+      <!-- Language switcher injected here on init() через sbMkLangSwitcher. -->
       <button class="sb-btn sb-btn-secondary sb-btn-icon" onclick="toggleTheme()" title="Toggle theme" id="themeBtn"></button>
     </div>
   </header>
@@ -151,5 +152,19 @@
 <script src="js/components/getting-started.js"></script>
 
 <script src="js/init.js"></script>
+
+<!-- Inject lang switcher в DS chrome right slot. После init.js потому что
+     sbMkLangSwitcher экспортится из nav-bar.js (загружается выше). Switcher
+     обёрнут в IIFE — без top-level переменных и DOM-listener'ов. -->
+<script>
+(function(){
+  var right = document.getElementById('dsNavRight');
+  if (!right || typeof sbMkLangSwitcher !== 'function') return;
+  var tmp = document.createElement('div');
+  tmp.innerHTML = sbMkLangSwitcher();
+  var switcher = tmp.firstElementChild;
+  right.insertBefore(switcher, right.firstChild);
+})();
+</script>
 </body>
 </html>

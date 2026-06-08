@@ -543,13 +543,14 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   const DEMO_PRIMARY = `<button class="sb-btn sb-btn-primary" type="button">Login</button>`;
 
   // ── Language Switcher ──────────────────────────────────────────────
-  // Secondary Small кнопка с chevron-down (icon-R). По hover открывается
-  // .sb-ctx-card с 4 языками (ENG/RUS/FRA/ESP). Клик по cell обновляет
-  // лейбл кнопки и закрывает меню. Сейчас демо — реального переключения
-  // языков ещё нет, но UX-паттерн и DOM готовы для будущего wiring'а.
-  const LANG_OPTIONS = ['ENG', 'RUS', 'FRA', 'ESP'];
+  // Secondary кнопка с chevron-down (icon-R). По hover открывается
+  // .sb-ctx-card с 4 языками (EN/RU/FR/ES — ISO 639-1, 2-буквенные коды).
+  // Клик по cell обновляет лейбл кнопки и закрывает меню. Сейчас демо —
+  // реального переключения языков ещё нет, но UX-паттерн и DOM готовы
+  // для будущего wiring'а.
+  const LANG_OPTIONS = ['EN', 'RU', 'FR', 'ES'];
   function mkLangSwitcher(opts = {}) {
-    const selected = opts.selected || 'ENG';
+    const selected = opts.selected || 'EN';
     const cells = LANG_OPTIONS.map(code => {
       const cls = code === selected ? 'sb-ctx-cell is-selected' : 'sb-ctx-cell';
       return `<div class="${cls}" onclick="sbNavBarLangPick(this, '${code}')">
@@ -659,7 +660,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         showBell: true,
         showPrimary: false,
         showAvatar: true,
-        lang: 'ENG',           // выбранный язык в lang switcher'е (always shown в demo)
+        lang: 'EN',            // выбранный язык в lang switcher'е (always shown в demo)
       },
       // Login XOR Avatar — вкл один, второй автоматически выкл (визуально снимается).
       onControlChange(key, value, state) {

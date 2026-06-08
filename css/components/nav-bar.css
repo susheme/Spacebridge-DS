@@ -326,7 +326,10 @@
 }
 .sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }
 
-/* Language switcher — chevron поворот когда dropdown открыт. */
+/* Language switcher — компактная Secondary кнопка: без min-width 112,
+   ширина под контент (3 буквы + chevron). Chevron поворачивается на 180°
+   когда dropdown открыт. */
+.sb-nav-lang-btn { min-width: auto; }
 .sb-nav-lang-switcher.is-open .sb-nav-lang-btn svg { transform: rotate(180deg); }
 .sb-nav-lang-btn svg { transition: transform 0.15s ease; }
 /* --- [/SYNC:nav-bar] --- */

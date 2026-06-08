@@ -61,6 +61,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 .sb-nav-bar-search-overlay-content { position: absolute; top: 12px; left: 50%; transform: translate(-50%, -8px); width: calc(100% - var(--pad-horiz-32)); max-width: 600px; display: flex; align-items: center; gap: var(--gap-horiz-s); opacity: 0; transition: transform 0.2s ease, opacity 0.2s ease; }
 .sb-nav-bar-search-overlay.is-open .sb-nav-bar-search-overlay-content { transform: translate(-50%, 0); opacity: 1; }
 .sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }
+.sb-nav-lang-btn { min-width: auto; }
 .sb-nav-lang-switcher.is-open .sb-nav-lang-btn svg { transform: rotate(180deg); }
 .sb-nav-lang-btn svg { transition: transform 0.15s ease; }`;
 

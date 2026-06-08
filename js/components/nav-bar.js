@@ -10,7 +10,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 .sb-nav-bar-button-icon-wide    { display: inline-flex; align-items: center; }
 .sb-nav-bar-logo-compact { display: none; }
 .sb-nav-bar-logo-full, .sb-nav-bar-logo-title, .sb-nav-bar-badge { display: inline-flex; align-items: center; }
-.sb-nav-bar-left { display: flex; align-items: center; gap: var(--gap-horiz-s); flex-shrink: 0; min-width: 0; padding-left: var(--pad-horiz-24); }
+.sb-nav-bar-left { display: flex; align-items: center; gap: var(--gap-horiz-m); flex-shrink: 0; min-width: 0; padding-left: var(--pad-horiz-24); }
 .sb-nav-bar-center { display: flex; flex: 1 1 auto; align-items: center; justify-content: center; min-width: 0; }
 .sb-nav-bar.align-right .sb-nav-bar-center { justify-content: flex-end; }
 .sb-nav-bar.align-right .sb-nav-bar-tabs { margin-right: var(--pad-horiz-24); }

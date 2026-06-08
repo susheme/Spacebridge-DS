@@ -45,7 +45,7 @@
 .sb-nav-bar-left {
   display: flex;
   align-items: center;
-  gap: var(--gap-horiz-s);
+  gap: var(--gap-horiz-m);
   flex-shrink: 0;
   min-width: 0;
   padding-left: var(--pad-horiz-24);

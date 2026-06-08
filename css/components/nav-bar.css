@@ -325,4 +325,8 @@
   opacity: 1;
 }
 .sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }
+
+/* Language switcher — chevron поворот когда dropdown открыт. */
+.sb-nav-lang-switcher.is-open .sb-nav-lang-btn svg { transform: rotate(180deg); }
+.sb-nav-lang-btn svg { transition: transform 0.15s ease; }
 /* --- [/SYNC:nav-bar] --- */

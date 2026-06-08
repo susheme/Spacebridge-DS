@@ -60,7 +60,9 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 .sb-nav-bar-search-overlay-backdrop { position: absolute; inset: 0; background: var(--shadow-overlay); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 .sb-nav-bar-search-overlay-content { position: absolute; top: 12px; left: 50%; transform: translate(-50%, -8px); width: calc(100% - var(--pad-horiz-32)); max-width: 600px; display: flex; align-items: center; gap: var(--gap-horiz-s); opacity: 0; transition: transform 0.2s ease, opacity 0.2s ease; }
 .sb-nav-bar-search-overlay.is-open .sb-nav-bar-search-overlay-content { transform: translate(-50%, 0); opacity: 1; }
-.sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }`;
+.sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }
+.sb-nav-lang-switcher.is-open .sb-nav-lang-btn svg { transform: rotate(180deg); }
+.sb-nav-lang-btn svg { transition: transform 0.15s ease; }`;
 
 // --- NAV BAR ---
 (() => {
@@ -539,6 +541,74 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   </div>`;
   const DEMO_PRIMARY = `<button class="sb-btn sb-btn-primary" type="button">Login</button>`;
 
+  // ── Language Switcher ──────────────────────────────────────────────
+  // Secondary Small кнопка с chevron-down (icon-R). По hover открывается
+  // .sb-ctx-card с 4 языками (ENG/RUS/FRA/ESP). Клик по cell обновляет
+  // лейбл кнопки и закрывает меню. Сейчас демо — реального переключения
+  // языков ещё нет, но UX-паттерн и DOM готовы для будущего wiring'а.
+  const LANG_OPTIONS = ['ENG', 'RUS', 'FRA', 'ESP'];
+  function mkLangSwitcher(opts = {}) {
+    const selected = opts.selected || 'ENG';
+    const cells = LANG_OPTIONS.map(code => {
+      const cls = code === selected ? 'sb-ctx-cell is-selected' : 'sb-ctx-cell';
+      return `<div class="${cls}" onclick="sbNavBarLangPick(this, '${code}')">
+        <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">${code}</span>
+        <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check">${sbIcon('check-line', 'S')}</span></span>
+      </div>`;
+    }).join('');
+    return `<div class="sb-overflow-menu sb-nav-lang-switcher"
+         onmouseenter="sbNavBarLangOpen(this)"
+         onmouseleave="sbNavBarLangClose(this)">
+      <button class="sb-btn sb-btn-secondary sb-btn-sm sb-nav-lang-btn" type="button"
+              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+        <span class="sb-nav-lang-label">${selected}</span>${sbIcon('arrow-drop-down-line', 'L')}
+      </button>
+      <div class="sb-ctx-card">${cells}</div>
+    </div>`;
+  }
+
+  // Hover-intent handlers для lang switcher'а (аналог sbNavBarDropdownOpen/Close
+  // но targets .sb-nav-lang-btn). Open после 100ms, close после 200ms — чтобы
+  // меню не «прыгало» при случайном проходе мышью.
+  window.sbNavBarLangOpen = function(wrap) {
+    clearTimeout(wrap._langCloseTimer); wrap._langCloseTimer = null;
+    if (wrap.classList.contains('is-open') || wrap._langOpenTimer) return;
+    wrap._langOpenTimer = setTimeout(() => {
+      wrap._langOpenTimer = null;
+      if (wrap.classList.contains('is-open')) return;
+      const trigger = wrap.querySelector('.sb-nav-lang-btn');
+      if (trigger) sbOverflowMenuToggle(trigger);
+    }, 100);
+  };
+  window.sbNavBarLangClose = function(wrap) {
+    clearTimeout(wrap._langOpenTimer); wrap._langOpenTimer = null;
+    if (!wrap.classList.contains('is-open') || wrap._langCloseTimer) return;
+    wrap._langCloseTimer = setTimeout(() => {
+      wrap._langCloseTimer = null;
+      wrap.classList.remove('is-open');
+    }, 200);
+  };
+  // Pick: обновляем выбранный cell + лейбл кнопки + закрываем dropdown.
+  // Если внутри playground'а (есть SB_PG state с ключом 'lang') — синкаем
+  // туда, чтобы re-render после toggle controls'ов сохранил выбор.
+  window.sbNavBarLangPick = function(cell, code) {
+    const card = cell.parentElement;
+    if (card) {
+      card.querySelectorAll('.sb-ctx-cell').forEach(c => c.classList.remove('is-selected'));
+    }
+    cell.classList.add('is-selected');
+    const wrap = cell.closest('.sb-overflow-menu');
+    if (!wrap) return;
+    const label = wrap.querySelector('.sb-nav-lang-label');
+    if (label) label.textContent = code;
+    wrap.classList.remove('is-open');
+    // Sync into playground state if we're inside one. SB_PG — top-level const
+    // в core.js, не на window — поэтому проверяем через typeof.
+    if (typeof SB_PG !== 'undefined' && SB_PG._states && SB_PG._states['nav-bar']) {
+      SB_PG._states['nav-bar'].lang = code;
+    }
+  };
+
   sbRegister({
     name: 'nav-bar',
     title: 'Nav Bar (Top Bar)',
@@ -586,6 +656,8 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         showBell: true,
         showPrimary: false,
         showAvatar: true,
+        showLang: true,        // language switcher в right slot (Secondary btn + dropdown)
+        lang: 'ENG',           // выбранный язык — ENG / RUS / FRA / ESP
       },
       // Login XOR Avatar — вкл один, второй автоматически выкл (визуально снимается).
       onControlChange(key, value, state) {
@@ -615,6 +687,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
                 ${pg.toggle('showBell',    'Bell')}
                 ${pg.toggle('showPrimary', 'Login')}
                 ${pg.toggle('showAvatar',  'Avatar')}
+                ${pg.toggle('showLang',    'Language')}
               </div>
             </div>
           </div>
@@ -663,6 +736,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         }
         // Login XOR Avatar — взаимоисключающие. Если Login вкл → Avatar скрыт.
         const right = [
+          s.showLang    ? mkLangSwitcher({ selected: s.lang }) : null,
           s.showBell    ? DEMO_BELL    : null,
           s.showPrimary ? DEMO_PRIMARY : null,
           (!s.showPrimary && s.showAvatar) ? DEMO_AVATAR : null,

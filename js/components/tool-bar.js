@@ -44,29 +44,90 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   align-items: center;
   gap: var(--gap-vert-m);
   flex-shrink: 0;
-}`;
+}
+.sb-tool-bar.bottom {
+  border-bottom: none;
+  border-top: var(--border-width-1-5) solid var(--border-soft);
+}
+.sb-tool-bar.floating {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: calc(100% - 2 * var(--pad-horiz-16));
+  margin: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-12);
+  border-bottom: none;
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+  transition: margin 0.25s ease, width 0.25s ease, border-radius 0.25s ease, box-shadow 0.25s ease;
+}
+.sb-tool-bar.floating.is-stuck {
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: 0 4px 16px 0 var(--shadow-md);
+}
+.sb-tool-bar-sentinel { height: 1px; flex-shrink: 0; }`;
 
 // --- TOOL BAR ---
 (() => {
   /**
-   * mkToolBar({ left, center, right })
-   *   left   — HTML-строка для левого слота (icon-only Secondary buttons +
-   *            опционально label через .sb-btn-with-label обёртку).
-   *   center — HTML-строка для центра (Tab Bar / любой контент).
-   *   right  — HTML-строка для правого слота (search bar, icon-only buttons,
-   *            label-обёрнутые кнопки).
-   * Все слоты опциональны. Пустой слот рендерится как пустой div чтобы
-   * space-between корректно распределял оставшиеся.
+   * mkToolBar({ left, center, right, bottom, floating })
+   *   left/center/right — HTML-строки для слотов (опционально).
+   *   bottom   — boolean. Bottom Tool Bar: border сверху, не снизу.
+   *              Подходит для прилипания к низу карточки (Save/Undo
+   *              actions при редактировании).
+   *   floating — boolean. Floating mode: sticky к верху scroll-контейнера,
+   *              отрывается от краёв (margin + radius + shadow). При скролле
+   *              получает .is-stuck (через JS wireFloating ниже) и
+   *              схлопывается до full-width. Аналог Nav Bar floating.
    */
   function mkToolBar(opts = {}) {
-    const { left = '', center = '', right = '' } = opts;
-    return `<div class="sb-tool-bar">
+    const { left = '', center = '', right = '', bottom = false, floating = false } = opts;
+    let cls = 'sb-tool-bar';
+    if (bottom)   cls += ' bottom';
+    if (floating) cls += ' floating';
+    return `<div class="${cls}">
       <div class="sb-tool-bar-left">${left}</div>
       <div class="sb-tool-bar-center">${center}</div>
       <div class="sb-tool-bar-right">${right}</div>
     </div>`;
   }
   window.sbMkToolBar = mkToolBar;
+
+  /**
+   * sbWireToolBarFloating(scrollRoot, toolBar) — IntersectionObserver wiring
+   * для floating Tool Bar'а. Аналог sbWireNavBarFloating, но с собственным
+   * sentinel-классом чтобы не конфликтовать с Nav Bar'ом на одной странице.
+   * Возвращает dispose() для cleanup'а.
+   */
+  function wireFloating(scrollRoot, toolBar) {
+    if (!scrollRoot || !toolBar) return () => {};
+    const barInside = scrollRoot.contains(toolBar);
+    let sentinel;
+    if (barInside) {
+      sentinel = toolBar.previousElementSibling;
+      if (!sentinel || !sentinel.classList.contains('sb-tool-bar-sentinel')) {
+        sentinel = document.createElement('div');
+        sentinel.className = 'sb-tool-bar-sentinel';
+        toolBar.parentNode.insertBefore(sentinel, toolBar);
+      }
+    } else {
+      sentinel = scrollRoot.firstElementChild;
+      if (!sentinel || !sentinel.classList.contains('sb-tool-bar-sentinel')) {
+        sentinel = document.createElement('div');
+        sentinel.className = 'sb-tool-bar-sentinel';
+        sentinel.style.width = '100%';
+        scrollRoot.insertBefore(sentinel, scrollRoot.firstChild);
+      }
+    }
+    const obs = new IntersectionObserver(
+      ([entry]) => toolBar.classList.toggle('is-stuck', !entry.isIntersecting),
+      { root: scrollRoot === document.body ? null : scrollRoot, threshold: 0 }
+    );
+    obs.observe(sentinel);
+    return () => { obs.disconnect(); sentinel.remove(); };
+  }
+  window.sbWireToolBarFloating = wireFloating;
 
   // ── Demo-конструкторы ───────────────────────────────────────────────
   // icon-only Secondary с опциональным label через .sb-btn-with-label.
@@ -177,6 +238,70 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
 </div>`,
         css: COMP_CSS["tool-bar"],
       },
+      {
+        title: 'Bottom Tool Bar',
+        desc: 'Modifier <code>.bottom</code> — Tool Bar для нижней части карточки. Border сверху вместо снизу (разделяет от контента над ним). Типичные сценарии: actions редактирования (Save / Cancel / Undo) появляются снизу когда юзер вносит изменения; в формах footer с CTA-кнопкой.',
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;overflow-x:auto"><div style="min-width:1100px">
+          ${mkToolBar({
+            bottom: true,
+            left: `${demoIconBtn({ icon: 'arrow-go-back-line', label: 'Undo', labelPos: 'right' })}`,
+            right: `<button type="button" class="sb-btn sb-btn-secondary">Cancel</button><button type="button" class="sb-btn sb-btn-primary">Save</button>`,
+          })}
+        </div></div>`,
+        html: `<div class="sb-tool-bar bottom">
+  <div class="sb-tool-bar-left">
+    <span class="sb-btn-with-label">
+      <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+      <span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Undo</span>
+    </span>
+  </div>
+  <div class="sb-tool-bar-center"></div>
+  <div class="sb-tool-bar-right">
+    <button class="sb-btn sb-btn-secondary">Cancel</button>
+    <button class="sb-btn sb-btn-primary">Save</button>
+  </div>
+</div>`,
+        css: COMP_CSS["tool-bar"],
+      },
+      {
+        title: 'Floating',
+        desc: 'Modifier <code>.floating</code> — Tool Bar отрывается от краёв (margin 16, radius 12, shadow-sm). При скролле <code>.is-stuck</code> класс переключает в full-width без отступов с глубокой тенью. Транзишн плавный (0.25s). Реализация: <code>position: sticky</code> + IntersectionObserver через <code>sbWireToolBarFloating(scrollRoot, bar)</code>. Демо — попробуй проскроллить превью.',
+        preview: `<div style="background:var(--surface-1);border-radius:var(--radius-12);overflow:hidden;height:280px;display:flex;flex-direction:column" id="tool-bar-floating-demo">
+          ${mkToolBar({
+            floating: true,
+            left: `${demoIconBtn({ icon: 'add-line' })}${demoIconBtn({ icon: 'add-line', label: 'Title', labelPos: 'right' })}`,
+            center: DEMO_CENTER_TABS,
+            right: `${demoIconBtn({ icon: 'add-line' })}`,
+          })}
+          <div data-tool-bar-scroll style="flex:1;overflow-y:auto;padding:var(--pad-vert-16) var(--pad-horiz-24)">
+            ${Array.from({length:8}).map((_,i) => `<p class="sb-body-m" style="margin:0 0 12px;color:var(--text-tertiary)">Scrollable content block ${i+1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et erat at ipsum interdum lobortis.</p>`).join('')}
+          </div>
+        </div>`,
+        html: `<div class="sb-tool-bar floating">
+  <div class="sb-tool-bar-left">…</div>
+  <div class="sb-tool-bar-center">…</div>
+  <div class="sb-tool-bar-right">…</div>
+</div>
+
+<!-- Wire через JS чтобы получать .is-stuck при скролле: -->
+<script>
+  const bar = document.querySelector('.sb-tool-bar.floating');
+  const scrollRoot = bar.parentNode;  // или scroll-контейнер
+  sbWireToolBarFloating(scrollRoot, bar);
+</script>`,
+        css: COMP_CSS["tool-bar"],
+      },
     ],
+    // После рендера — wire'аем floating Tool Bar в демо-секции.
+    // Bar лежит СНАРУЖИ скролл-области (sibling сверху), scroll-area = root.
+    onMount() {
+      const demo = document.getElementById('tool-bar-floating-demo');
+      if (!demo) return;
+      const bar = demo.querySelector('.sb-tool-bar.floating');
+      const scrollArea = demo.querySelector('[data-tool-bar-scroll]');
+      if (!bar || !scrollArea) return;
+      if (window.__toolBarDisposeFloating) window.__toolBarDisposeFloating();
+      window.__toolBarDisposeFloating = wireFloating(scrollArea, bar);
+    },
   });
 })();

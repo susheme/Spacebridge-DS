@@ -53,4 +53,36 @@
   gap: var(--gap-vert-m);
   flex-shrink: 0;
 }
+
+/* ── BOTTOM variant ──────────────────────────────────────────────────
+   Tool Bar в нижней части карточки. Разделительная линия сверху
+   (отделяет от контента над собой), не снизу. */
+.sb-tool-bar.bottom {
+  border-bottom: none;
+  border-top: var(--border-width-1-5) solid var(--border-soft);
+}
+
+/* ── FLOATING variant ────────────────────────────────────────────────
+   Bar отрывается от краёв (margin 16, radius 12, shadow-sm). При скролле
+   получает .is-stuck (через JS IntersectionObserver) — схлопывается до
+   full-width без отступов с глубокой тенью. Транзишн плавный (0.25s).
+   Wire через sbWireToolBarFloating(scrollRoot, bar). */
+.sb-tool-bar.floating {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: calc(100% - 2 * var(--pad-horiz-16));
+  margin: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-12);
+  border-bottom: none;
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+  transition: margin 0.25s ease, width 0.25s ease, border-radius 0.25s ease, box-shadow 0.25s ease;
+}
+.sb-tool-bar.floating.is-stuck {
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: 0 4px 16px 0 var(--shadow-md);
+}
+.sb-tool-bar-sentinel { height: 1px; flex-shrink: 0; }
 /* --- [/SYNC:tool-bar] --- */

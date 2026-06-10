@@ -13,6 +13,7 @@ const NAV = [
   { category: 'Layout', items: [
     { id: 'grid-system', label: 'Grid System' },
     { id: 'separators', label: 'Separators', ready: true },
+    { id: 'tool-bar', label: 'Tool Bar', inProgress: true },
   ]},
   { category: 'Navigation', items: [
     { id: 'section-header', label: 'Header Section', ready: true },
@@ -29,7 +30,6 @@ const NAV = [
     { id: 'bottom-bars', label: 'Bottom Bars' },
     { id: 'nav-bar', label: 'Nav Bar', ready: true },
     { id: 'sub-nav', label: 'Sub Nav', inProgress: true },
-    { id: 'tool-bar', label: 'Tool Bar', inProgress: true },
   ]},
   { category: 'Data Display', items: [
     { id: 'table', label: 'Table', inProgress: true },

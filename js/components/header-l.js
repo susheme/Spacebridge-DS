@@ -182,6 +182,8 @@ window.COMP_CSS.headerL = `.sb-header-l {
         rightExtra: 'none',
         iconCount: '0',
         actionButton: false,
+        subNavEnable: false,
+        toolBarEnable: false,
       },
       controls(pg) {
         // Левая половина — селекты 2×2.
@@ -210,9 +212,11 @@ window.COMP_CSS.headerL = `.sb-header-l {
 
         // Правая половина — тоглы 2×2.
         const togglesHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m);align-content:end">
-          ${pg.toggle('backButton',   'Back button')}
-          ${pg.toggle('rightCaption', 'Caption')}
-          ${pg.toggle('actionButton', 'Action button')}
+          ${pg.toggle('backButton',    'Back button')}
+          ${pg.toggle('rightCaption',  'Caption')}
+          ${pg.toggle('actionButton',  'Action button')}
+          ${pg.toggle('subNavEnable',  'Sub Nav')}
+          ${pg.toggle('toolBarEnable', 'Tool Bar')}
         </div>`;
 
         // Внешний grid: при широкой панели — две колонки (селекты | тоглы),
@@ -263,8 +267,22 @@ window.COMP_CSS.headerL = `.sb-header-l {
         const actionsHtml = mkHeaderLActions({ inline, more: { items: DEMO_MORE_ITEMS } });
         const slotRight = staticParts.join('') + actionsHtml;
 
+        // Optional Sub Nav + Tool Bar для дoгфуда композиции (Header L
+        // обычно соседствует с этими полосами в реальных страницах).
+        const subNavHtml = s.subNavEnable && typeof sbMkSubNav === 'function' && typeof sbMkTabBar === 'function'
+          ? sbMkSubNav(`<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`)
+          : '';
+        const toolBarHtml = s.toolBarEnable && typeof sbMkToolBar === 'function'
+          ? sbMkToolBar({
+              left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+              right: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('search-line', 'L')}</button>`,
+            })
+          : '';
+
         return `<div style="background:var(--surface-1);padding:var(--pad-vert-16);border-radius:var(--radius-12);width:100%;box-sizing:border-box">
           ${mkHeaderL({ slotLeft, title: TITLE_TEXT_L[s.titleText], slotRight })}
+          ${subNavHtml}
+          ${toolBarHtml}
         </div>`;
       },
       genCode(s) {

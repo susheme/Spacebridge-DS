@@ -347,6 +347,33 @@ window.COMP_CSS.headerS = `.sb-header-s {
 </div>`,
         css: COMP_CSS.headerS,
       },
+      {
+        title: 'Composition: + Tool Bar',
+        desc: 'Header S с собственным sub-nav слотом (Tab Bar) + Tool Bar снизу. Стандартная композиция для secondary-страниц приложения: navigation сверху, actions ниже.',
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
+          ${mkHeaderS({
+            slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
+            title: 'Headline',
+            tabs: sbMkTabBar(['Tab', 'Tab', 'Tab'], { selectedIndex: 0 }),
+          })}
+          ${(typeof sbMkToolBar === 'function') ? sbMkToolBar({
+            left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+            right: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('search-line', 'L')}</button>`,
+          }) : ''}
+        </div>`,
+        html: `<div class="sb-header-s">
+  <div class="sb-header-s-top">…</div>
+  <div class="sb-header-s-tabs">
+    <div class="sb-tab-bar">…</div>
+  </div>
+</div>
+<div class="sb-tool-bar">
+  <div class="sb-tool-bar-left">…</div>
+  <div class="sb-tool-bar-center"></div>
+  <div class="sb-tool-bar-right">…</div>
+</div>`,
+        css: COMP_CSS.headerS,
+      },
     ],
   });
 })();

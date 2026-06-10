@@ -247,6 +247,34 @@ window.COMP_CSS.headerM = `.sb-header-m {
 </div>`,
         css: COMP_CSS.headerM,
       },
+      {
+        title: 'Composition: + Sub Nav + Tool Bar',
+        desc: 'Header M в композиции с Sub Nav и Tool Bar — стандартный chrome для основных рабочих страниц приложения: заголовок, навигация по разделам, action-полоска.',
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;box-sizing:border-box">
+          ${mkHeaderM({
+            slotLeft: SB_SVG.infoPop,
+            title: 'Headline',
+            slotRight: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderMActions({ more: { items: DEMO_MORE_ITEMS } })}`,
+          })}
+          ${(typeof sbMkSubNav === 'function' && typeof sbMkTabBar === 'function')
+            ? sbMkSubNav(`<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`)
+            : ''}
+          ${(typeof sbMkToolBar === 'function') ? sbMkToolBar({
+            left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+            right: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('search-line', 'L')}</button>`,
+          }) : ''}
+        </div>`,
+        html: `<div class="sb-header-m">…</div>
+<header class="sb-sub-nav">
+  <!-- sbMkTabBar([...]) -->
+</header>
+<div class="sb-tool-bar">
+  <div class="sb-tool-bar-left">…</div>
+  <div class="sb-tool-bar-center"></div>
+  <div class="sb-tool-bar-right">…</div>
+</div>`,
+        css: COMP_CSS.headerM,
+      },
     ],
   });
 })();

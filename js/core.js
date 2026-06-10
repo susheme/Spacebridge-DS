@@ -29,6 +29,7 @@ const NAV = [
     { id: 'bottom-bars', label: 'Bottom Bars' },
     { id: 'nav-bar', label: 'Nav Bar', ready: true },
     { id: 'sub-nav', label: 'Sub Nav', inProgress: true },
+    { id: 'tool-bar', label: 'Tool Bar', inProgress: true },
   ]},
   { category: 'Data Display', items: [
     { id: 'table', label: 'Table', inProgress: true },

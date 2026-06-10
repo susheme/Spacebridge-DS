@@ -191,4 +191,17 @@
   color: var(--text-tertiary);
   white-space: nowrap;
 }
+/* Composition wrapper: icon-only Secondary button + label рядом. Используется
+   в Tool Bar / Header / любых slot'ах где icon-only кнопке нужен текстовый
+   контекст. Label кладётся слева или справа от кнопки (контролится HTML-порядком). */
+.sb-btn-with-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-0) var(--pad-horiz-0);
+}
+.sb-btn-with-label-text {
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
 /* --- [/SYNC:buttons] --- */

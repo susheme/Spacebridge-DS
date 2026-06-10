@@ -29,6 +29,16 @@ window.COMP_CSS.buttons = `.sb-btn {
 .sb-btn-text {
   background: transparent;
   color: var(--primary);
+}
+.sb-btn-with-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-0) var(--pad-horiz-0);
+}
+.sb-btn-with-label-text {
+  color: var(--text-tertiary);
+  white-space: nowrap;
 }`;
 
 // --- BUTTONS ---
@@ -49,7 +59,7 @@ sbRegister({
   description: 'Компонент Basic из Figma. Типы: Primary, Secondary, Text. Состояния: Hover, Disable, Loading, Critical. Иконки: Icon-L, Icon-R, Icon-Only. Размеры: L (40px) / S (32px).',
   playground: {
     title: 'Regular',
-    state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false },
+    state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false, labelLeft: false, labelRight: false },
     controls(pg) {
       // Variant — одиночный select с label'ом (без обёртки в pg-group: один
       // контрол в группе — избыточная декорация). Modifiers / State — pg-group'ы
@@ -112,7 +122,19 @@ sbRegister({
         inner += 'Button';
         if (s.iconR) inner += ' ' + iR;
       }
-      return `<button class="${cls}"${attrs}>${inner}</button>`;
+      const btnHtml = `<button class="${cls}"${attrs}>${inner}</button>`;
+      // Label composition: только для icon-only кнопок. Label-левый и -правый
+      // независимы — обе галки = label с обеих сторон.
+      if (s.iconOnly && (s.labelLeft || s.labelRight)) {
+        const lbl = '<span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Label</span>';
+        const parts = [
+          s.labelLeft ? lbl : '',
+          btnHtml,
+          s.labelRight ? lbl : '',
+        ].filter(Boolean).join('');
+        return `<span class="sb-btn-with-label">${parts}</span>`;
+      }
+      return btnHtml;
     },
     extraPreview(s) {
       if (!s.iconOnly) return '';
@@ -124,6 +146,14 @@ sbRegister({
         <div class="pg-cb-group">
           <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-small"${boolAttr('checked', s.small)} onchange="SB_PG.set('buttons','small',this.checked)">
           <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-small">Small</label>
+        </div>
+        <div class="pg-cb-group">
+          <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-labelL"${boolAttr('checked', s.labelLeft)} onchange="SB_PG.set('buttons','labelLeft',this.checked)">
+          <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-labelL">Label Left</label>
+        </div>
+        <div class="pg-cb-group">
+          <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-labelR"${boolAttr('checked', s.labelRight)} onchange="SB_PG.set('buttons','labelRight',this.checked)">
+          <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-labelR">Label Right</label>
         </div>
       </div>`;
     },
@@ -142,7 +172,16 @@ sbRegister({
         if (s.iconR) inner += `\n  ${IR}`;
         inner += '\n';
       }
-      const html = `<button class="${cls}"${attrs}>${inner}</button>`;
+      let html = `<button class="${cls}"${attrs}>${inner}</button>`;
+      if (s.iconOnly && (s.labelLeft || s.labelRight)) {
+        const lbl = '\n  <span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Label</span>';
+        const parts = [
+          s.labelLeft ? lbl : '',
+          '\n  ' + html.replace(/\n/g, '\n  '),
+          s.labelRight ? lbl : '',
+        ].filter(Boolean).join('');
+        html = `<span class="sb-btn-with-label">${parts}\n</span>`;
+      }
       return { html, css: COMP_CSS.buttons };
     },
   },

@@ -138,7 +138,9 @@ sbRegister({
     },
     extraPreview(s) {
       if (!s.iconOnly) return '';
-      return `<div class="pg-extras-row">
+      // 4 чекбокса в сетке 2×2 (2 столбца). Inline-style чтобы не плодить
+      // буттон-специфичный класс в playground.css.
+      return `<div class="pg-extras-row" style="display:grid;grid-template-columns:auto auto;gap:var(--gap-vert-s) var(--gap-horiz-lg);justify-content:center">
         <div class="pg-cb-group">
           <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-2icons"${boolAttr('checked', s.twoIcons)} onchange="SB_PG.set('buttons','twoIcons',this.checked)">
           <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-2icons">2 Icons</label>

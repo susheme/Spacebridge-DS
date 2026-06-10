@@ -1,0 +1,56 @@
+/* --- [SYNC:tool-bar] Tool Bar (Top) --- */
+/* Top Tool Bar — горизонтальная полоска инструментов под Header'ами /
+   Sub Nav'ом. Содержит 3 слота: Left (action buttons), Center (Tab Bar
+   или контент), Right (поиск + actions). Размеры/отступы по Figma спеке.
+   Bottom Tool Bar — отдельный вариант, будет добавлен позже.
+
+   Border-color: используем --border-soft (light #E7EBF1) вместо
+   изначально предложенного --surface-2 (#E7EAEF) — визуально идентично
+   (1px diff), но --border-soft работает в dark mode (surface-2 невидим).
+   См. memory: feedback_border_token_rule.md. */
+.sb-tool-bar {
+  display: flex;
+  width: 100%;
+  max-width: var(--screens-max-screen-width);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-horiz-m);
+  border-radius: 0;
+  border-bottom: var(--border-width-1-5) solid var(--border-soft);
+  background: var(--background);
+  box-sizing: border-box;
+}
+
+/* Left slot — actions слева. По Figma фикс-width 165, но в реальном
+   использовании контент варьируется → используем flex-shrink:0 и
+   shrink-to-content, ограничивая max-width согласно nav-menu cap. */
+.sb-tool-bar-left {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  align-items: center;
+  gap: var(--gap-vert-m);
+  flex-shrink: 0;
+}
+
+/* Center slot — Tab Bar или любой контент. Flex:1 чтобы занять
+   оставшееся пространство между left и right. justify-content: center
+   центрирует контент. */
+.sb-tool-bar-center {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Right slot — actions справа. Прижат к правому краю. */
+.sb-tool-bar-right {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  flex-shrink: 0;
+}
+/* --- [/SYNC:tool-bar] --- */

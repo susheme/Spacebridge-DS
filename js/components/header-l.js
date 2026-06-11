@@ -270,7 +270,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
         // Optional Sub Nav + Tool Bar для дoгфуда композиции (Header L
         // обычно соседствует с этими полосами в реальных страницах).
         const subNavHtml = s.subNavEnable && typeof sbMkSubNav === 'function' && typeof sbMkTabBar === 'function'
-          ? sbMkSubNav(`<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`)
+          ? sbMkSubNav({ content: `<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`, variant: 'tab-bar' })
           : '';
         const toolBarHtml = s.toolBarEnable && typeof sbMkToolBar === 'function'
           ? sbMkToolBar({

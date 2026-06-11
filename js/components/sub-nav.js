@@ -36,6 +36,9 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
 .sb-sub-nav.led {
   align-items: center;
 }
+.sb-sub-nav.tab-bar {
+  align-items: center;
+}
 .sb-sub-nav.has-slots {
   display: grid;
   grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr);
@@ -143,11 +146,12 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
     // Single-content mode
     const { content = '', align = 'center' } = opts;
     let cls = 'sb-sub-nav';
-    if (align === 'left')   cls += ' align-left';
-    if (align === 'right')  cls += ' align-right';
-    if (variant === 'led')  cls += ' led';
-    if (mode === 'tablet')  cls += ' tablet';
-    if (sticky)             cls += ' sticky';
+    if (align === 'left')      cls += ' align-left';
+    if (align === 'right')     cls += ' align-right';
+    if (variant === 'led')     cls += ' led';
+    if (variant === 'tab-bar') cls += ' tab-bar';
+    if (mode === 'tablet')     cls += ' tablet';
+    if (sticky)                cls += ' sticky';
     return `<header class="${cls}">${content}</header>`;
   }
 
@@ -216,6 +220,27 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
     </button>
     <!-- ... ещё segments ... -->
     <div class="sb-segment-menu-indicator"></div>
+  </div>
+</header>`,
+        css: COMP_CSS["sub-nav"],
+      },
+      {
+        title: 'Desktop — Tab Bar centered',
+        desc: 'Sub Nav с Tab Bar по центру. variant:\'tab-bar\' включает align-items: center (Tab Bar центрируется по Y, в отличие от Segment Menu который flex-end). X-центрирование наследуется из базы (justify-content: center). Tab Bar должен быть обёрнут в фикс-ширину контейнер (default Tab Bar = width:100% растягивается). API: sbMkSubNav({ content: <wrapped Tab Bar>, variant: \'tab-bar\' }).',
+        preview: sbMkPreviewStage(
+          (typeof sbMkTabBar === 'function')
+            ? mkSubNav({ content: `<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`, variant: 'tab-bar' })
+            : '',
+          { framed: false, preserveScroll: false }
+        ),
+        html: `<header class="sb-sub-nav tab-bar">
+  <div style="width:360px">
+    <div class="sb-tab-bar">
+      <button class="sb-tab selected" onclick="sbSelectTab(this)">
+        <span class="sb-tab-label">Section</span>
+      </button>
+      <!-- ... ещё tabs ... -->
+    </div>
   </div>
 </header>`,
         css: COMP_CSS["sub-nav"],

@@ -67,6 +67,16 @@
   align-items: center;
 }
 
+/* Content variant: Tab Bar. Tab Bar — пилюлевидный контрол, по дизайну
+   центрируется по обеим осям внутри Sub Nav (в отличие от Segment Menu,
+   который flex-end / прижат к низу). justify-content: center даёт X-center
+   (наследуется из базы), align-items: center даёт Y-center. Tab Bar внутри
+   должен быть обёрнут в фикс-ширину контейнер (default Tab Bar = width:100%
+   и растягивается на всю Sub Nav). */
+.sb-sub-nav.tab-bar {
+  align-items: center;
+}
+
 /* ── Multi-slot mode (.has-slots) ──────────────────────────────────────
    Включается когда нужно расположить ДВА+ независимых элемента в одной
    полосе: LED Panel на левом крае + Segment Menu по центру и т.п.

@@ -257,7 +257,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
             slotRight: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderMActions({ more: { items: DEMO_MORE_ITEMS } })}`,
           })}
           ${(typeof sbMkSubNav === 'function' && typeof sbMkTabBar === 'function')
-            ? sbMkSubNav(`<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`)
+            ? sbMkSubNav({ content: `<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`, variant: 'tab-bar' })
             : ''}
           ${(typeof sbMkToolBar === 'function') ? sbMkToolBar({
             left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,

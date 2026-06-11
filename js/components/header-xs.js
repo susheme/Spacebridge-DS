@@ -51,7 +51,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
-  border: var(--border-width-2) solid var(--border);
+  border: var(--border-width-2) solid var(--border-soft);
   border-top-color: var(--primary);
   border-radius: 50%;
   animation: sb-spin 0.6s linear infinite;

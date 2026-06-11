@@ -107,7 +107,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
   justify-content: center;
   align-items: center;
   gap: var(--gap-vert-s);
-  border-bottom: var(--border-width-1) solid var(--border);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
   background: var(--background);
 }
 .sb-header-s-tabs .sb-tab { max-width: none; }

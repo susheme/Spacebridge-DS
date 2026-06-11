@@ -10,7 +10,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
   min-width: var(--header-min-width);
   max-width: var(--header-max-width);
   max-height: var(--header-max-height);
-  padding: var(--pad-horiz-16) var(--pad-vert-0);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
   justify-content: space-between;
   align-items: center;
   border-radius: var(--radius-0) var(--radius-0) 0 0;

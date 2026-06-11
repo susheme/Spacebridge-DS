@@ -10,7 +10,7 @@
   max-width: var(--header-s-max-width);
   min-height: var(--header-s-min-height);
   max-height: var(--header-s-max-height);
-  padding: var(--pad-horiz-16) var(--pad-vert-16);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;

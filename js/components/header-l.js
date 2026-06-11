@@ -182,49 +182,61 @@ window.COMP_CSS.headerL = `.sb-header-l {
         rightExtra: 'none',
         iconCount: '0',
         actionButton: false,
-        subNavEnable: false,
+        subNav: 'none',          // none | segment | tab-bar | led
         toolBarEnable: false,
       },
       controls(pg) {
-        // Левая половина — селекты 2×2.
-        const selectsHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m)">
-          ${pg.select('leftSymbol', [
-            { value: 'none',      label: 'None' },
-            { value: 'infoPop',   label: 'Info Pop-up' },
-            { value: 'indicator', label: 'Indicator' },
-          ], { label: 'Left symbol' })}
-          ${pg.select('rightExtra', [
-            { value: 'none',      label: 'None' },
-            { value: 'badge',     label: 'Badge-Status' },
-            { value: 'indicator', label: 'Indicator' },
-          ], { label: 'Right badge' })}
-          ${pg.select('titleText', [
-            { value: 'short',  label: 'Short' },
-            { value: 'medium', label: 'Medium' },
-            { value: 'long',   label: 'Long' },
-          ], { label: 'Headline' })}
-          ${pg.select('iconCount', [
-            { value: '0', label: '0' },
-            { value: '1', label: '1' },
-            { value: '2', label: '2' },
-          ], { label: 'Icon-only btns' })}
-        </div>`;
-
-        // Правая половина — тоглы 2×2.
-        const togglesHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m);align-content:end">
-          ${pg.toggle('backButton',    'Back button')}
-          ${pg.toggle('rightCaption',  'Caption')}
-          ${pg.toggle('actionButton',  'Action button')}
-          ${pg.toggle('subNavEnable',  'Sub Nav')}
-          ${pg.toggle('toolBarEnable', 'Tool Bar')}
-        </div>`;
-
-        // Внешний grid: при широкой панели — две колонки (селекты | тоглы),
-        // при узкой — auto-fit перекладывает их вертикально.
-        return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:var(--gap-horiz-lg)">
-          ${selectsHalf}
-          ${togglesHalf}
-        </div>`;
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">Left Slot</div>
+            <div class="pg-group-body">
+              ${pg.select('leftSymbol', [
+                { value: 'none',      label: 'None' },
+                { value: 'infoPop',   label: 'Info Pop-up' },
+                { value: 'indicator', label: 'Indicator' },
+              ], { label: 'Symbol' })}
+              ${pg.select('titleText', [
+                { value: 'short',  label: 'Short'  },
+                { value: 'medium', label: 'Medium' },
+                { value: 'long',   label: 'Long'   },
+              ], { label: 'Headline' })}
+              <div class="pg-toggles">
+                ${pg.toggle('backButton', 'Back button')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Right Slot</div>
+            <div class="pg-group-body">
+              ${pg.select('rightExtra', [
+                { value: 'none',      label: 'None' },
+                { value: 'badge',     label: 'Badge-Status' },
+                { value: 'indicator', label: 'Indicator' },
+              ], { label: 'Badge / Indicator' })}
+              ${pg.select('iconCount', [
+                { value: '0', label: '0' },
+                { value: '1', label: '1' },
+                { value: '2', label: '2' },
+              ], { label: 'Icon-only btns' })}
+              <div class="pg-toggles">
+                ${pg.toggle('rightCaption', 'Caption')}
+                ${pg.toggle('actionButton', 'Action btn')}
+              </div>
+            </div>
+          </div>
+          <div class="pg-group">
+            <div class="pg-group-title sb-field-label">Composition</div>
+            <div class="pg-group-body">
+              ${pg.select('subNav', [
+                { value: 'none',    label: 'None' },
+                { value: 'segment', label: 'Segment Menu' },
+                { value: 'tab-bar', label: 'Tab Bar' },
+                { value: 'led',     label: 'LED Panel' },
+              ], { label: 'Sub Nav' })}
+              <div class="pg-toggles">
+                ${pg.toggle('toolBarEnable', 'Tool Bar')}
+              </div>
+            </div>
+          </div>`;
       },
       render(s) {
         // Constraints:
@@ -267,11 +279,25 @@ window.COMP_CSS.headerL = `.sb-header-l {
         const actionsHtml = mkHeaderLActions({ inline, more: { items: DEMO_MORE_ITEMS } });
         const slotRight = staticParts.join('') + actionsHtml;
 
-        // Optional Sub Nav + Tool Bar для дoгфуда композиции (Header L
-        // обычно соседствует с этими полосами в реальных страницах).
-        const subNavHtml = s.subNavEnable && typeof sbMkSubNav === 'function' && typeof sbMkTabBar === 'function'
-          ? sbMkSubNav({ content: `<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`, variant: 'tab-bar' })
-          : '';
+        // Optional Sub Nav (4 варианта контента) + Tool Bar — дoгфуд
+        // композиции с компонентами под Header'ом.
+        const subNavHtml = (() => {
+          if (s.subNav === 'none' || typeof sbMkSubNav !== 'function') return '';
+          if (s.subNav === 'segment' && typeof sbMkSegmentMenu === 'function') {
+            return sbMkSubNav({ content: sbMkSegmentMenu(['Item', 'Item', 'Item'], { selectedIndex: 1 }) });
+          }
+          if (s.subNav === 'tab-bar' && typeof sbMkTabBar === 'function') {
+            return sbMkSubNav({ content: `<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`, variant: 'tab-bar' });
+          }
+          if (s.subNav === 'led' && typeof sbMkLedPanel === 'function') {
+            return sbMkSubNav({ content: sbMkLedPanel([
+              { name: 'CPU',   status: 'online'  },
+              { name: 'NET',   status: 'warning' },
+              { name: 'FAULT', status: 'error'   },
+            ]), variant: 'led' });
+          }
+          return '';
+        })();
         const toolBarHtml = s.toolBarEnable && typeof sbMkToolBar === 'function'
           ? sbMkToolBar({
               left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,

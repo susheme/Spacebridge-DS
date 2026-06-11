@@ -6,7 +6,7 @@
   max-width: var(--header-max-width);
   min-height: var(--header-min-height-m);
   max-height: var(--header-max-height-m);
-  padding: var(--pad-horiz-8) var(--pad-vert-0);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
   justify-content: space-between;
   align-items: center;
   border-radius: var(--radius-0);

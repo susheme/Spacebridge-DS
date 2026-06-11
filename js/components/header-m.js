@@ -11,7 +11,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
   max-width: var(--header-max-width);
   min-height: var(--header-min-height-m);
   max-height: var(--header-max-height-m);
-  padding: var(--pad-horiz-8) var(--pad-vert-0);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
   justify-content: space-between;
   align-items: center;
   border-radius: var(--radius-0);
@@ -113,10 +113,114 @@ window.COMP_CSS.headerM = `.sb-header-m {
 
   const DEMO_MORE_ITEMS = window.SB_DEMO_MORE_ITEMS;
 
+  // ── Title text presets — short/medium/long для playground'а. ─────────
+  const HM_TITLE = {
+    short:  'Headline',
+    medium: 'Section Headline',
+    long:   'Very Long Section Headline With Many Words',
+  };
+
   sbRegister({
     name: 'header-m',
     title: 'Header M',
     description: 'Используется для Page Blocks, Modals и Cards. Горизонтальный наладдер 56-64px высотой без border-radius (живёт внутри других контейнеров). Два свободных слота — Left и Right (max 700px каждый, gap 8). Заголовок — H6 (24/900). Между слотами — justify-content: space-between. Responsive: при ширине Header M < 600px inline-кнопки правого слота автоматически сворачиваются в выпадающее меню под More-кнопкой (⋯). Caption и Status остаются видимыми.',
+    playground: {
+      title: 'Header M Playground',
+      wide: true,
+      state: {
+        backButton:    false,
+        leftSymbol:    'infoPop',  // 'none' | 'infoPop'
+        titleText:     'short',
+        rightStatus:   true,
+        iconCount:     '0',  // '0' | '1' | '2'
+        actionButton:  false,
+        chevron:       false,
+        subNavEnable:  false,
+        toolBarEnable: false,
+      },
+      controls(pg) {
+        // Левая половина — селекты 2×2.
+        const selectsHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m)">
+          ${pg.select('leftSymbol', [
+            { value: 'none',    label: 'None' },
+            { value: 'infoPop', label: 'Info Pop-up' },
+          ], { label: 'Left symbol' })}
+          ${pg.select('titleText', [
+            { value: 'short',  label: 'Short'  },
+            { value: 'medium', label: 'Medium' },
+            { value: 'long',   label: 'Long'   },
+          ], { label: 'Headline' })}
+          ${pg.select('iconCount', [
+            { value: '0', label: '0' },
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
+          ], { label: 'Icon-only btns' })}
+        </div>`;
+
+        // Правая половина — тоглы 2×3.
+        const togglesHalf = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-vert-m) var(--gap-horiz-m);align-content:end">
+          ${pg.toggle('backButton',    'Back button')}
+          ${pg.toggle('rightStatus',   'Status')}
+          ${pg.toggle('actionButton',  'Action button')}
+          ${pg.toggle('chevron',       'Chevron')}
+          ${pg.toggle('subNavEnable',  'Sub Nav')}
+          ${pg.toggle('toolBarEnable', 'Tool Bar')}
+        </div>`;
+
+        return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:var(--gap-horiz-lg)">
+          ${selectsHalf}
+          ${togglesHalf}
+        </div>`;
+      },
+      render(s) {
+        const wantIcons  = parseInt(s.iconCount, 10) || 0;
+        const wantAction = !!s.actionButton;
+        const totalBtns  = Math.min(3, wantIcons + (wantAction ? 1 : 0));
+        const useAction  = wantAction && totalBtns > 0;
+        const useIcons   = totalBtns - (useAction ? 1 : 0);
+
+        // ── Left slot ──
+        const leftParts = [];
+        if (s.backButton) leftParts.push(`<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>`);
+        if (s.leftSymbol === 'infoPop') leftParts.push(SB_SVG.infoPop);
+        const slotLeft = leftParts.join('');
+
+        // ── Right slot ──
+        const staticParts = [];
+        if (s.rightStatus) staticParts.push(`<span class="sb-badge-status mini bs-grey">Status</span>`);
+        const inline = [];
+        for (let i = 0; i < useIcons; i++) {
+          inline.push({ type: 'icon', icon: i === 0 ? 'add-line' : 'more-2-line', label: i === 0 ? 'Add' : 'More' });
+        }
+        if (useAction) inline.push({ type: 'text', label: 'Action', icon: 'arrow-right-s-line' });
+        const actionsHtml = mkHeaderMActions({ inline, more: { items: DEMO_MORE_ITEMS } });
+        const chevronHtml = s.chevron ? `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>` : '';
+        const slotRight = staticParts.join('') + actionsHtml + chevronHtml;
+
+        // ── Optional Sub Nav + Tool Bar ──
+        const subNavHtml = s.subNavEnable && typeof sbMkSubNav === 'function' && typeof sbMkTabBar === 'function'
+          ? sbMkSubNav({ content: `<div style="width:360px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`, variant: 'tab-bar' })
+          : '';
+        const toolBarHtml = s.toolBarEnable && typeof sbMkToolBar === 'function'
+          ? sbMkToolBar({
+              left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+              right: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('search-line', 'L')}</button>`,
+            })
+          : '';
+
+        return `<div style="background:var(--surface-1);padding:var(--pad-vert-16);border-radius:var(--radius-12);width:100%;box-sizing:border-box">
+          ${mkHeaderM({ slotLeft, title: HM_TITLE[s.titleText], slotRight })}
+          ${subNavHtml}
+          ${toolBarHtml}
+        </div>`;
+      },
+      genCode(s) {
+        return {
+          html: `<!-- См. js/components/header-m.js — sbMkHeaderM({ slotLeft, title, slotRight }) + опционально sbMkSubNav + sbMkToolBar ниже. -->`,
+          css: COMP_CSS.headerM,
+        };
+      },
+    },
     sections: [
       {
         title: 'Anatomy',

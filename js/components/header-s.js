@@ -357,6 +357,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
             tabs: sbMkTabBar(['Tab', 'Tab', 'Tab'], { selectedIndex: 0 }),
           })}
           ${(typeof sbMkToolBar === 'function') ? sbMkToolBar({
+            compact: true,
             left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
             right: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('search-line', 'L')}</button>`,
           }) : ''}
@@ -367,7 +368,8 @@ window.COMP_CSS.headerS = `.sb-header-s {
     <div class="sb-tab-bar">…</div>
   </div>
 </div>
-<div class="sb-tool-bar">
+<!-- В Header S контексте Tool Bar в compact mode — мобильный chrome. -->
+<div class="sb-tool-bar compact">
   <div class="sb-tool-bar-left">…</div>
   <div class="sb-tool-bar-center"></div>
   <div class="sb-tool-bar-right">…</div>

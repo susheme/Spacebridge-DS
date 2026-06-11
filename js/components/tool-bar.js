@@ -45,6 +45,24 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   gap: var(--gap-vert-m);
   flex-shrink: 0;
 }
+.sb-tool-bar.compact {
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  gap: var(--gap-horiz-s);
+}
+.sb-tool-bar.compact .sb-tool-bar-left,
+.sb-tool-bar.compact .sb-tool-bar-right { gap: var(--gap-vert-s); }
+.sb-tool-bar.compact .sb-btn-icon {
+  width: var(--btn-rounded-max-width-s);
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: var(--btn-rounded-max-width-s);
+  height: var(--btn-rounded-max-height-s);
+  min-height: var(--btn-rounded-min-height-s);
+  max-height: var(--btn-rounded-max-height-s);
+  padding: var(--pad-horiz-4) var(--pad-vert-2);
+  gap: var(--gap-vert-0);
+  border-radius: var(--radius-4);
+}
+.sb-tool-bar.compact .sb-btn-icon svg { width: 16px; height: 16px; }
 .sb-tool-bar.bottom {
   border-bottom: none;
   border-top: var(--border-width-1-5) solid var(--border-soft);
@@ -80,12 +98,16 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
    *              отрывается от краёв (margin + radius + shadow). При скролле
    *              получает .is-stuck (через JS wireFloating ниже) и
    *              схлопывается до full-width. Аналог Nav Bar floating.
+   *   compact  — boolean. Compact mode для мобилок / узких контекстов
+   *              (Header S, sidebar). Icon-only buttons → 24×24, paddings
+   *              уменьшены. Без auto-responsive (включается явно).
    */
   function mkToolBar(opts = {}) {
-    const { left = '', center = '', right = '', bottom = false, floating = false } = opts;
+    const { left = '', center = '', right = '', bottom = false, floating = false, compact = false } = opts;
     let cls = 'sb-tool-bar';
     if (bottom)   cls += ' bottom';
     if (floating) cls += ' floating';
+    if (compact)  cls += ' compact';
     return `<div class="${cls}">
       <div class="sb-tool-bar-left">${left}</div>
       <div class="sb-tool-bar-center">${center}</div>
@@ -233,6 +255,29 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   <div class="sb-tool-bar-center"></div>
   <div class="sb-tool-bar-right">
     <!-- Search Bar (sbMkSearch) -->
+    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+  </div>
+</div>`,
+        css: COMP_CSS["tool-bar"],
+      },
+      {
+        title: 'Compact',
+        desc: 'Modifier <code>.compact</code> — для мобилок / узких слотов (sidebar, Header S). Icon-only Secondary кнопки уменьшаются до 24×24 (Buttons-Rounded-S), padding Tool Bar\'а сжимается до 4/8. Реальный auto-responsive с overflow-menu collapse (как в Header L) — следующая итерация.',
+        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
+          ${mkToolBar({
+            compact: true,
+            left: `${demoIconBtn({ icon: 'add-line' })}${demoIconBtn({ icon: 'more-2-line' })}`,
+            right: `${demoIconBtn({ icon: 'search-line' })}${demoIconBtn({ icon: 'more-2-line' })}`,
+          })}
+        </div>`,
+        html: `<div class="sb-tool-bar compact">
+  <div class="sb-tool-bar-left">
+    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+  </div>
+  <div class="sb-tool-bar-center"></div>
+  <div class="sb-tool-bar-right">
+    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
     <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
   </div>
 </div>`,

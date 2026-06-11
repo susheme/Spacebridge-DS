@@ -54,6 +54,39 @@
   flex-shrink: 0;
 }
 
+/* ── COMPACT variant ─────────────────────────────────────────────────
+   Для узких контекстов (мобила, Header S / sidebar). Уменьшенные паддинги
+   Tool Bar'а, icon-only Secondary кнопки переходят в Small (24×24 по
+   Figma Buttons-Rounded-S). Текстовые label'ы остаются sb-title-m;
+   опционально консьюмер может применить sb-title-s для ещё меньших.
+
+   Auto-responsive (container query / overflow-menu collapse) — TODO,
+   следующая итерация. Сейчас compact включается явно через
+   sbMkToolBar({ compact: true }) или класс .sb-tool-bar.compact. */
+.sb-tool-bar.compact {
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  gap: var(--gap-horiz-s);
+}
+.sb-tool-bar.compact .sb-tool-bar-left,
+.sb-tool-bar.compact .sb-tool-bar-right {
+  gap: var(--gap-vert-s);
+}
+/* Icon-only Secondary внутри compact Tool Bar становятся Small (24×24).
+   Мимикрит .sb-btn-icon.sb-btn-sm правила без необходимости проставлять
+   sb-btn-sm на каждую кнопку в потребительском коде. */
+.sb-tool-bar.compact .sb-btn-icon {
+  width: var(--btn-rounded-max-width-s);
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: var(--btn-rounded-max-width-s);
+  height: var(--btn-rounded-max-height-s);
+  min-height: var(--btn-rounded-min-height-s);
+  max-height: var(--btn-rounded-max-height-s);
+  padding: var(--pad-horiz-4) var(--pad-vert-2);
+  gap: var(--gap-vert-0);
+  border-radius: var(--radius-4);
+}
+.sb-tool-bar.compact .sb-btn-icon svg { width: 16px; height: 16px; }
+
 /* ── BOTTOM variant ──────────────────────────────────────────────────
    Tool Bar в нижней части карточки. Разделительная линия сверху
    (отделяет от контента над собой), не снизу. */

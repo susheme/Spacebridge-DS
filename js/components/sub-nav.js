@@ -23,7 +23,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
   gap: var(--gap-vert-m);
   border-radius: var(--radius-0);
   background: var(--background);
-  border-bottom: var(--border-width-1) solid var(--border);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
   box-sizing: border-box;
 }
 .sb-sub-nav.sticky {

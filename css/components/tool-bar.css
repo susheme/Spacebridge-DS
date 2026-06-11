@@ -20,7 +20,16 @@
   border-bottom: var(--border-width-1-5) solid var(--border-soft);
   background: var(--background);
   box-sizing: border-box;
+  /* Container query — auto-responsive compact + actions collapse. */
+  container-type: inline-size;
+  container-name: tool-bar;
 }
+
+/* Inline action кнопки (.sb-tool-bar-action) — видимы в wide режиме,
+   при container width <= threshold скрываются и появляются как extra
+   cells в overflow menu. Менюшные дубликаты (.sb-tool-bar-menu-extra) —
+   скрыты в wide, видимы в narrow. См. mkToolBarActions builder. */
+.sb-tool-bar-menu-extra { display: none; }
 
 /* Left slot — actions слева. По Figma фикс-width 165, но в реальном
    использовании контент варьируется → используем flex-shrink:0 и
@@ -118,4 +127,38 @@
   box-shadow: 0 4px 16px 0 var(--shadow-md);
 }
 .sb-tool-bar-sentinel { height: 1px; flex-shrink: 0; }
+
+/* ── AUTO-RESPONSIVE ──────────────────────────────────────────────────
+   При container width ≤ 600px:
+   - применяются compact-стили (padding, button sizes)
+   - inline actions (.sb-tool-bar-action) скрываются
+   - дубликаты в overflow menu (.sb-tool-bar-menu-extra) — показываются
+   Override: .sb-tool-bar.compact-disabled — отключает auto (например для
+   embedded use внутри fixed-layout'а). */
+@container tool-bar (max-width: 600px) {
+  .sb-tool-bar:not(.compact-disabled) {
+    padding: var(--pad-vert-4) var(--pad-horiz-8);
+    gap: var(--gap-horiz-s);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-tool-bar-left,
+  .sb-tool-bar:not(.compact-disabled) .sb-tool-bar-right {
+    gap: var(--gap-vert-s);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-btn-icon {
+    width: var(--btn-rounded-max-width-s);
+    min-width: var(--btn-rounded-min-width-s);
+    max-width: var(--btn-rounded-max-width-s);
+    height: var(--btn-rounded-max-height-s);
+    min-height: var(--btn-rounded-min-height-s);
+    max-height: var(--btn-rounded-max-height-s);
+    padding: var(--pad-horiz-4) var(--pad-vert-2);
+    gap: var(--gap-vert-0);
+    border-radius: var(--radius-4);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-btn-icon svg { width: 16px; height: 16px; }
+
+  /* Actions collapse. */
+  .sb-tool-bar-action     { display: none; }
+  .sb-tool-bar-menu-extra { display: flex; }
+}
 /* --- [/SYNC:tool-bar] --- */

@@ -22,7 +22,10 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   border-bottom: var(--border-width-1-5) solid var(--border-soft);
   background: var(--background);
   box-sizing: border-box;
+  container-type: inline-size;
+  container-name: tool-bar;
 }
+.sb-tool-bar-menu-extra { display: none; }
 .sb-tool-bar-left {
   display: flex;
   max-width: var(--nav-menu-max-width-right-content);
@@ -84,7 +87,29 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   border-radius: 0;
   box-shadow: 0 4px 16px 0 var(--shadow-md);
 }
-.sb-tool-bar-sentinel { height: 1px; flex-shrink: 0; }`;
+.sb-tool-bar-sentinel { height: 1px; flex-shrink: 0; }
+@container tool-bar (max-width: 600px) {
+  .sb-tool-bar:not(.compact-disabled) {
+    padding: var(--pad-vert-4) var(--pad-horiz-8);
+    gap: var(--gap-horiz-s);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-tool-bar-left,
+  .sb-tool-bar:not(.compact-disabled) .sb-tool-bar-right { gap: var(--gap-vert-s); }
+  .sb-tool-bar:not(.compact-disabled) .sb-btn-icon {
+    width: var(--btn-rounded-max-width-s);
+    min-width: var(--btn-rounded-min-width-s);
+    max-width: var(--btn-rounded-max-width-s);
+    height: var(--btn-rounded-max-height-s);
+    min-height: var(--btn-rounded-min-height-s);
+    max-height: var(--btn-rounded-max-height-s);
+    padding: var(--pad-horiz-4) var(--pad-vert-2);
+    gap: var(--gap-vert-0);
+    border-radius: var(--radius-4);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-btn-icon svg { width: 16px; height: 16px; }
+  .sb-tool-bar-action     { display: none; }
+  .sb-tool-bar-menu-extra { display: flex; }
+}`;
 
 // --- TOOL BAR ---
 (() => {
@@ -115,6 +140,50 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
     </div>`;
   }
   window.sbMkToolBar = mkToolBar;
+
+  /**
+   * mkToolBarActions({ inline, more }) — auto-responsive action group для
+   * Tool Bar слота. Wide: inline buttons видимы, More-кнопка с dropdown'ом
+   * содержит only more.items. Narrow (container query): inline buttons
+   * скрываются (.sb-tool-bar-action display:none), их дубликаты в menu
+   * (.sb-tool-bar-menu-extra) показываются.
+   *
+   * inline: [{ icon, label }, ...] — icon-only Secondary кнопки.
+   * more: { items: [{ icon, label }] } — постоянные пункты в dropdown'е.
+   *
+   * Возвращает HTML-строку с inline buttons + More-кнопкой + ctx-card'ом.
+   * Пустой массив inline + пустой more → ''.
+   */
+  function mkToolBarActions({ inline = [], more } = {}) {
+    const moreItems = (more && more.items) || [];
+    if (inline.length === 0 && moreItems.length === 0) return '';
+
+    const inlineHtml = inline.map(a =>
+      `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">${sbIcon(a.icon, 'L')}</button>`
+    ).join('');
+
+    // Все inline items дублируем в overflow card как menu-extra cells —
+    // CSS показывает их когда action-кнопки скрыты (compact mode).
+    const extraCells = inline.map(a => {
+      const cellHtml = sbMkContextCell({ iconLeft: a.icon, label: a.label, mode: 'action' });
+      return cellHtml.replace('class="sb-ctx-cell', 'class="sb-ctx-cell sb-tool-bar-menu-extra');
+    }).join('');
+    const moreCells = moreItems
+      .map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' }))
+      .join('');
+
+    // More-кнопка показывается всегда (нет смысла в Tool Bar action group без
+    // overflow). Если только inline без more — More-кнопку всё равно рендерим,
+    // потому что в compact это единственный способ доступа к actions.
+    const moreBtn = `<div class="sb-overflow-menu">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
+              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'L')}</button>
+      <div class="sb-ctx-card">${extraCells}${moreCells}</div>
+    </div>`;
+
+    return inlineHtml + moreBtn;
+  }
+  window.sbMkToolBarActions = mkToolBarActions;
 
   /**
    * sbWireToolBarFloating(scrollRoot, toolBar) — IntersectionObserver wiring
@@ -256,6 +325,73 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   <div class="sb-tool-bar-right">
     <!-- Search Bar (sbMkSearch) -->
     <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+  </div>
+</div>`,
+        css: COMP_CSS["tool-bar"],
+      },
+      {
+        title: 'Auto-responsive (container query)',
+        desc: 'Tool Bar имеет <code>container-type: inline-size</code>. При ширине контейнера ≤ 600px автоматически применяется compact mode (24×24 icon кнопки) И inline action-кнопки сворачиваются в More dropdown (⋯) с дубликатами действий. Демо: два Tool Bar\'а в широком и узком враппере. Использует <code>mkToolBarActions({ inline, more })</code> builder.',
+        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-horiz-lg);width:100%">
+          <div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;overflow-x:auto">
+            <div style="min-width:900px">
+              ${mkToolBar({
+                left: `${demoIconBtn({ icon: 'add-line' })}`,
+                center: DEMO_CENTER_TABS,
+                right: mkToolBarActions({
+                  inline: [
+                    { icon: 'add-line',    label: 'Add' },
+                    { icon: 'search-line', label: 'Search' },
+                    { icon: 'eye-line',    label: 'View' },
+                  ],
+                  more: {
+                    items: [
+                      { icon: 'file-copy-line', label: 'Copy' },
+                      { icon: 'mail-line',      label: 'Send via email' },
+                    ]
+                  }
+                }),
+              })}
+            </div>
+            <p class="sb-body-s" style="color:var(--text-secondary);margin:var(--pad-vert-8) 0 0">↑ Wide (>600px): все inline buttons видны, More содержит только Copy/Download.</p>
+          </div>
+          <div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
+            ${mkToolBar({
+              left: `${demoIconBtn({ icon: 'add-line' })}`,
+              right: mkToolBarActions({
+                inline: [
+                  { icon: 'add-line',    label: 'Add' },
+                  { icon: 'search-line', label: 'Search' },
+                  { icon: 'eye-line',    label: 'View' },
+                ],
+                more: {
+                  items: [
+                    { icon: 'file-copy-line', label: 'Copy' },
+                    { icon: 'mail-line',      label: 'Send via email' },
+                  ]
+                }
+              }),
+            })}
+            <p class="sb-body-s" style="color:var(--text-secondary);margin:var(--pad-vert-8) 0 0">↑ Narrow (≤600px): inline скрыты, More содержит Add/Search/View + Copy/Mail.</p>
+          </div>
+        </div>`,
+        html: `<!-- Используй sbMkToolBarActions для responsive action group: -->
+<div class="sb-tool-bar-right">
+  <!-- Visible @wide, hidden @narrow: -->
+  <button class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">…</button>
+  <button class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">…</button>
+
+  <!-- Always visible — More button + dropdown: -->
+  <div class="sb-overflow-menu">
+    <button class="sb-btn sb-btn-secondary sb-btn-icon"
+            onclick="sbOverflowMenuToggle(this)">…</button>
+    <div class="sb-ctx-card">
+      <!-- Inline duplicates (hidden @wide, visible @narrow): -->
+      <div class="sb-ctx-cell is-action sb-tool-bar-menu-extra">…</div>
+      <div class="sb-ctx-cell is-action sb-tool-bar-menu-extra">…</div>
+      <!-- Permanent more items: -->
+      <div class="sb-ctx-cell is-action">…</div>
+    </div>
   </div>
 </div>`,
         css: COMP_CSS["tool-bar"],

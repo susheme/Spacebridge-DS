@@ -66,6 +66,16 @@
 .pg-card.wide-auto .pg-toggles   { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 .pg-card.wide .pg-toggles-3,
 .pg-card.wide-auto .pg-toggles-3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+/* …но внутри .pg-group-body wide-min 180/160 рассчитан на full-width ряд —
+   в теле группы (~285px при minmax 320) он схлопывает grid в одну колонку
+   и тогглы стэкаются столбиком, тратя вертикаль. Возвращаем компактный
+   min 110: короткие лейблы (одно слово — см. правило) ложатся по 2-3 в ряд. */
+.pg-card.wide .pg-group-body .pg-toggles,
+.pg-card.wide-auto .pg-group-body .pg-toggles,
+.pg-card.wide .pg-group-body .pg-toggles-3,
+.pg-card.wide-auto .pg-group-body .pg-toggles-3 {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
 
 /* Header */
 .pg-header {

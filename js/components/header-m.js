@@ -137,6 +137,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
         chevron:       false,
         subNav:        'none',  // none | segment | tab-bar | led
         toolBarEnable: false,
+        compact:       false,   // false → wide stage 1200px; true → 480px (триггерит @container < 600)
       },
       controls(pg) {
         return `<div class="pg-group">
@@ -182,6 +183,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
               ], { label: 'Sub Nav' })}
               <div class="pg-toggles">
                 ${pg.toggle('toolBarEnable', 'Tool Bar')}
+                ${pg.toggle('compact', 'Compact')}
               </div>
             </div>
           </div>`;
@@ -236,10 +238,19 @@ window.COMP_CSS.headerM = `.sb-header-m {
             })
           : '';
 
-        return `<div style="background:var(--surface-1);padding:var(--pad-vert-16);border-radius:var(--radius-12);width:100%;box-sizing:border-box">
-          ${mkHeaderM({ slotLeft, title: HM_TITLE[s.titleText], slotRight })}
-          ${subNavHtml}
-          ${toolBarHtml}
+        // Stage — паттерн Nav Bar (см. header-l.js / nav-bar.js):
+        //   compact=false → фикс 1200px, горизонтальный скролл через wrapper.
+        //   compact=true  → 480px по центру (< 600px container breakpoint) —
+        //                   inline-кнопки сворачиваются в More.
+        const stageStyle = s.compact
+          ? 'width:100%;max-width:480px;margin:0 auto;'
+          : 'width:1200px;';
+        return `<div data-pg-preserve-scroll style="width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)">
+          <div style="${stageStyle}background:var(--surface-1);padding:var(--pad-vert-16);border-radius:var(--radius-12);box-sizing:border-box">
+            ${mkHeaderM({ slotLeft, title: HM_TITLE[s.titleText], slotRight })}
+            ${subNavHtml}
+            ${toolBarHtml}
+          </div>
         </div>`;
       },
       genCode(s) {
@@ -332,7 +343,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
       {
         title: 'Full slot composition',
         desc: 'Максимальное наполнение: слева Back + Indicator + Info Pop-up + Headline; справа Caption + Status + inline Add (icon) + inline Action (text) + More-кнопка с дополнительным набором + Chevron. При сжатии Header M < 600px — Add и Action автоматически сворачиваются в выпадающее меню под More.',
-        preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:900px">
+        preview: `<div style="width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)"><div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:900px">
           ${mkHeaderM({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button><span class="sb-status-dot online"></span>${SB_SVG.infoPop}`,
             title: 'Headline',
@@ -344,7 +355,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
               more: { items: DEMO_MORE_ITEMS },
             })}<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
           })}
-        </div>`,
+        </div></div>`,
         html: `<div class="sb-header-m">
   <div class="sb-header-m-left">
     <button type="button" class="sb-btn sb-btn-secondary">

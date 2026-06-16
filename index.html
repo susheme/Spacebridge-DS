@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="css/components/header-s.css">
 <link rel="stylesheet" href="css/components/header-m.css">
 <link rel="stylesheet" href="css/components/header-l.css">
+<link rel="stylesheet" href="css/components/side-navigation.css">
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
@@ -152,6 +153,9 @@
 <script src="js/components/sub-nav.js"></script>
 <!-- tool-bar — демо юзает sbMkTabBar, sbMkSearch → должен грузиться после них. -->
 <script src="js/components/tool-bar.js"></script>
+<!-- side-navigation — композит: демо/render юзают sbMkHeaderM, sbMkSearch,
+     sbMkSubNav, sbMkTabBar → должен грузиться ПОСЛЕ всех них. -->
+<script src="js/components/side-navigation.js"></script>
 <script src="js/components/getting-started.js"></script>
 
 <script src="js/init.js"></script>

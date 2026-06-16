@@ -1,0 +1,328 @@
+/* --- [SYNC:sideNav] Side Navigation --- */
+/* Вертикальный навигационный сайдбар. Композиция готовых компонентов:
+   Header M (chrome сверху) + опц. Sub Nav (tab-bar) + опц. Tool Bar (Search) +
+   рекурсивное дерево (Section / Group / Item) + опц. Footer.
+
+   Дерево — три роли, рекурсивно вложенные на любую глубину:
+     • section (Grand Parent) — UPPERCASE-лейбл, постоянный левый accent-stroke
+       (синяя полоса), range-counter, chevron раскрытия. Внешний контейнер.
+     • group   (Parent)       — folder-иконка (закрытая/раскрытая), counter,
+       chevron; selected = залитая пилюля; дети получают серую guide-линию.
+     • item    (Single/Child) — опц. иконка / status-dot, label, badge, counter,
+       правый chevron (навигация). Selection контекстный: top-level → пилюля,
+       вложенный → левая accent-полоска (см. .sb-side-nav-children override).
+
+   Размеры из токенов: width 320 (--side-nav-min-max-width), item-row 40
+   (--side-nav-item-height), section-row 48 (--side-nav-grand-parent-item-height).
+
+   MVP: только expanded-режим. Collapsed-рельса, mobile drawer, hover edit/delete
+   на Group, анимация search-with-filter — отдельными заходами. */
+
+.sb-side-nav {
+  position: relative; /* для overlay-футера */
+  display: flex;
+  flex-direction: column;
+  width: var(--side-nav-min-max-width);
+  height: 100%;
+  background: var(--background);
+  border: var(--border-width-1) solid var(--border-soft);
+  border-radius: var(--radius-12);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Chrome-зоны — не сжимаются, body забирает остаток и скроллится. */
+.sb-side-nav-header,
+.sb-side-nav-subnav,
+.sb-side-nav-toolbar,
+.sb-side-nav-footer { flex-shrink: 0; }
+
+.sb-side-nav-toolbar { padding: var(--pad-vert-8) var(--pad-horiz-16); }
+/* Search Bar в toolbar-зоне тянется на всю ширину сайдбара. */
+.sb-side-nav-toolbar .sb-search { width: 100%; }
+/* Footer — OVERLAY поверх контента (absolute), а не в потоке: включение/
+   выключение не двигает и не сжимает body (нет «скачка»). Свой фон перекрывает
+   контент, уезжающий под него. */
+.sb-side-nav-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-top: var(--border-width-1) solid var(--border-soft);
+  padding: var(--pad-vert-16);
+  background: var(--background);
+}
+
+.sb-side-nav-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* Резервируем место под скроллбар всегда — иначе при включении Footer body
+     сжимается и контент «скачет» по горизонтали (как в Nav Bar scroll-area). */
+  scrollbar-gutter: stable;
+  /* horiz 16 — вровень с Header M / Search (панель-padding по спеке Side Menu).
+     Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал. */
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-vert-xxs);
+}
+
+/* ── Row (общая строка для всех трёх ролей) ──────────────────────────── */
+/* Figma-спека ячейки: height 40, padding 8/8/8/16 (top/right/bottom/left —
+   ведущий край шире), gap 8, radius 4, bg background. */
+.sb-side-nav-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  height: var(--side-nav-item-height);
+  padding: var(--pad-vert-8) var(--pad-horiz-8) var(--pad-vert-8) var(--pad-horiz-16);
+  border-radius: var(--radius-4);
+  /* transparent (а не --background): визуально = фон сайдбара, но прозрачность
+     не даёт соседним ячейкам перекрывать hover-тень соседа сверху/снизу. */
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+  box-sizing: border-box;
+  transition: box-shadow var(--transition), background var(--transition), color var(--transition);
+}
+/* Hover — drop Shadow-S + синий текст (--primary). К disabled не применяется. */
+.sb-side-nav-row:hover:not(.is-disabled) {
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+  color: var(--primary);
+}
+.sb-side-nav-row.is-section { height: var(--side-nav-grand-parent-item-height); }
+
+/* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
+   Nav Bar / Tab Bar) + синий текст (--primary). */
+.sb-side-nav-row.is-selected {
+  background: var(--surface-1);
+  color: var(--primary);
+  box-shadow:
+     1px  1px 2px 0 var(--shadow-overlay) inset,
+    -1px -1px 2px 0 var(--shadow-lg) inset;
+}
+
+/* Disabled — серый текст (--border). Hover-эффекты к нему не применяются. */
+.sb-side-nav-row.is-disabled { color: var(--border); cursor: not-allowed; }
+/* status-dot тоже глушим в --border — иначе яркий индикатор при сером тексте
+   выглядит «наполовину выключенным». */
+.sb-side-nav-row.is-disabled .sb-status-dot { background: var(--border); }
+
+.sb-side-nav-row-lead {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  /* Иконка наследует цвет строки: default --text-secondary, hover/selected
+     --primary, disabled --border. status-dot не зависит (свой background). */
+  color: inherit;
+}
+.sb-side-nav-row-label {
+  flex: 1 0 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* line-height Title S = 12px < font-size 14 → overflow:hidden режет
+     descender'ы (g/p/y). Берём --body-line-height (20), как в Nav Bar.
+     На одну строку визуально не влияет — текст центрируется в 40px ряду. */
+  line-height: var(--body-line-height);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.sb-side-nav-row-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  flex-shrink: 0;
+}
+.sb-side-nav-row-chevron {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: inherit; /* следует за цветом строки (см. lead) */
+}
+
+/* Section label — UPPERCASE (override Title-Case capitalize из typography.css,
+   побеждает по порядку загрузки). */
+.sb-side-nav-section-label {
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-l);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-tertiary);
+}
+
+/* ── Раскрытие / сворачивание ────────────────────────────────────────── */
+/* Expand-chevron крутится на 180° при .expanded (nav-chevron у item'а — нет). */
+.sb-side-nav-row-chevron.toggle { transition: transform var(--transition); }
+.sb-side-nav-node.expanded > .sb-side-nav-row .sb-side-nav-row-chevron.toggle {
+  transform: rotate(180deg);
+}
+
+/* Раскрытие/сворачивание — анимация высоты через CSS Grid 0fr↔1fr (плавно в обе
+   стороны, без magic max-height). Outer .sb-side-nav-children — грид-аниматор;
+   inner — клипается (overflow:hidden) и держит весь layout детей. */
+.sb-side-nav-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden; /* подстраховка: клипаем к высоте трека (0 в свёрнутом) */
+  transition: grid-template-rows var(--transition);
+}
+.sb-side-nav-node.expanded > .sb-side-nav-children { grid-template-rows: 1fr; }
+/* inner — БЛОЧНЫЙ (не flex): flex-grid-айтем в ряде браузеров не коллапсит
+   трек 0fr до нуля → у свёрнутых Parent торчал кусок Child. Строки стакаются
+   вертикально сами; для menu это даёт нужный gap 0 (рельса непрерывна). */
+.sb-side-nav-children-inner {
+  overflow: hidden;
+  min-height: 0;
+  /* Отступ вложенности. */
+  margin-left: var(--pad-horiz-16);
+  padding-left: var(--pad-horiz-8);
+}
+
+/* Group: дети получают серую вертикальную guide-линию (дерево). */
+.sb-side-nav-node.is-group > .sb-side-nav-children > .sb-side-nav-children-inner {
+  border-left: var(--border-width-1) solid var(--border-soft);
+}
+
+/* Folder-иконка: closed по умолчанию, open при раскрытии группы. */
+.sb-side-nav-folder-closed { display: inline-flex; align-items: center; }
+.sb-side-nav-folder-open { display: none; }
+.sb-side-nav-node.is-group.expanded > .sb-side-nav-row .sb-side-nav-folder-closed { display: none; }
+.sb-side-nav-node.is-group.expanded > .sb-side-nav-row .sb-side-nav-folder-open  { display: inline-flex; }
+
+/* ── Section accent-stroke ───────────────────────────────────────────── */
+/* Постоянная синяя полоса слева (в свёрнутом — высотой строки, в раскрытом —
+   на весь блок). Раскрытый — с лёгкой подложкой. */
+.sb-side-nav-node.is-section {
+  box-shadow: inset var(--border-width-4) 0 0 var(--primary);
+  border-radius: var(--radius-8);
+}
+.sb-side-nav-node.is-section.expanded { background: var(--surface-1); }
+
+/* ── Selection: Group / Child (провизорно до их отдельных спек) ────────── */
+/* Базовый is-selected (Pressed-пилюля) задан выше в блоке .sb-side-nav-row
+   по спеке Single Item. Ниже — провизорные оверрайды для ещё неспеканных
+   ролей, чтобы соответствовать скринам; уточним при спеке Group/Child. */
+
+/* Group selected — синяя folder-иконка. */
+.sb-side-nav-row.is-group.is-selected .sb-side-nav-folder-closed,
+.sb-side-nav-row.is-group.is-selected .sb-side-nav-folder-open { color: var(--primary); }
+
+/* Вложенный Child selected — БЕЗ левой обводки и без своей пилюли (он уже
+   лежит внутри Pressed-группы Parent'а). Выделение = только синий текст/чеврон.
+   Нейтрализуем generic surface-1 + Pressed-inset. status-dot остаётся цветным
+   (у него свой background, не color). */
+.sb-side-nav-children .sb-side-nav-row.is-selected {
+  background: transparent;
+  box-shadow: none;
+  color: var(--primary);
+}
+.sb-side-nav-children .sb-side-nav-row.is-selected .sb-side-nav-row-lead,
+.sb-side-nav-children .sb-side-nav-row.is-selected .sb-side-nav-row-chevron { color: var(--primary); }
+
+/* ══ Variant: SIDE MENU ═══════════════════════════════════════════════════
+   Overlay-меню (замена меню Nav Bar в компакте). Read-only: Single Item +
+   Parent (раскрывается инлайн) + Child. Без Grand-Parent / edit-delete.
+   Панель — Shadow-L (всплывающая), без бордера. */
+.sb-side-nav.is-menu {
+  border: none;
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay); /* Shadow-L */
+}
+
+/* Parent-ячейка — gap 16 (шире, чем у Item, по спеке). */
+.sb-side-nav-row.is-parent { gap: var(--gap-vert-m); }
+
+/* Chevron раскрытия — наш Chevron Button (.sb-chevron, серый кружок).
+   Ротация на 180° при раскрытии (down → up). */
+.sb-side-nav-chev {
+  flex-shrink: 0;
+  transition: transform var(--transition), background var(--transition), color var(--transition);
+}
+.sb-side-nav-node.is-parent.expanded > .sb-side-nav-row .sb-side-nav-chev {
+  transform: rotate(180deg);
+  background: transparent;
+  color: var(--primary);
+}
+
+/* Раскрытая Parent-группа — surface-1 карточка + Shadow-S, синий заголовок,
+   дети с непрерывной полоской слева (1.5px) + отступом (из generic-правила
+   .expanded > .sb-side-nav-children). */
+/* Плавность Pressed-фона/тени синхронно с grid-анимацией раскрытия. */
+.sb-side-nav-node.is-parent {
+  transition: background var(--transition), box-shadow var(--transition);
+}
+.sb-side-nav-node.is-parent.expanded {
+  background: var(--surface-1);
+  border-radius: var(--radius-4);
+  /* 16px снизу — внутри Pressed-группы, под детьми. На node (не на inner),
+     чтобы не ломать схлопывание грид-трека; у свёрнутого .expanded нет → 0. */
+  padding-bottom: var(--pad-vert-16);
+  /* Pressed-inset (тот же эффект, что у активной ячейки) — область детей
+     выглядит «вдавленной». */
+  box-shadow:
+     1px  1px 2px 0 var(--shadow-overlay) inset,
+    -1px -1px 2px 0 var(--shadow-lg) inset;
+}
+.sb-side-nav-node.is-parent.expanded > .sb-side-nav-row { color: var(--primary); }
+
+/* Спека области детей: ширина stretch (≈288 = body content), gap 0 (дети
+   вплотную → сепаратор ::before становится НЕПРЕРЫВНЫМ), padding ТОЛЬКО снизу
+   16. Левый отступ контента живёт В САМОЙ ячейке (row padding-left 16), а не в
+   контейнере — поэтому контейнер без left/top padding и без margin. */
+.sb-side-nav.is-menu .sb-side-nav-children-inner {
+  margin-left: 0;
+  /* БЕЗ вертикального padding — padding добавляется к min-content грид-айтема,
+     из-за чего трек 0fr не схлопывался в 0 (торчал 16px-сливер Child).
+     16px снизу перенесены на .is-parent.expanded (ниже). */
+  padding: 0;
+  position: relative; /* для рельсы ::before */
+}
+
+/* Контент Child сдвинут вправо ЗА рельсу: рельса на 16 от края ячейки (::before),
+   поэтому padding-left ячейки = 24 (16 до рельсы + ~8 до контента). Иначе dot
+   налезает на рельсу. (Рельса — ::before, не flex-элемент, отсюда компенсация.) */
+.sb-side-nav.is-menu .sb-side-nav-children .sb-side-nav-row {
+  padding-left: var(--pad-horiz-24);
+}
+
+/* Рельса детей — НЕПРЕРЫВНАЯ серая линия со скруглёнными концами на всю высоту
+   блока детей. Один элемент на КОНТЕЙНЕРЕ (а не по ячейкам) — чтобы скруглялись
+   только крайние концы рельсы, без «бусин» на стыках. */
+.sb-side-nav.is-menu .sb-side-nav-node.is-parent > .sb-side-nav-children > .sb-side-nav-children-inner::before {
+  content: "";
+  position: absolute;
+  left: var(--pad-horiz-16);
+  top: 0;
+  bottom: 0; /* рельса на всю высоту детей (нижний 16px теперь на node) */
+  width: var(--border-width-1-5);
+  border-radius: var(--radius-100);
+  background: var(--border-soft);
+}
+/* Selected Child — синяя скруглённая ПИЛЮЛЯ поверх рельсы, инсет по вертикали
+   (короче ячейки → серая рельса видна выше и ниже неё). */
+.sb-side-nav.is-menu .sb-side-nav-children .sb-side-nav-row.is-selected::before {
+  content: "";
+  position: absolute;
+  left: var(--pad-horiz-16);
+  top: 0;
+  bottom: 0;
+  width: var(--border-width-1-5);
+  border-radius: var(--radius-100);
+  background: var(--primary);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────── */
+.sb-side-nav-empty {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-vert-s);
+  text-align: center;
+  padding: var(--pad-vert-48) var(--pad-horiz-16);
+  color: var(--text-tertiary);
+}
+/* --- [/SYNC:sideNav] --- */

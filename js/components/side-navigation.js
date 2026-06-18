@@ -65,17 +65,15 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   /* transparent (а не --background): визуально = фон сайдбара, но прозрачность
      не даёт соседним ячейкам перекрывать hover-тень соседа сверху/снизу. */
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   cursor: pointer;
   user-select: none;
   box-sizing: border-box;
   transition: box-shadow var(--transition), background var(--transition), color var(--transition);
 }
 /* Hover — drop Shadow-S + синий текст (--primary). К disabled не применяется. */
-.sb-side-nav-row:hover:not(.is-disabled) {
-  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
-  color: var(--primary);
-}
+.sb-side-nav-row:hover:not(.is-disabled) { box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
+.sb-side-nav.is-menu .sb-side-nav-row:hover:not(.is-disabled) { color: var(--primary); }
 .sb-side-nav-row.is-section { height: var(--side-nav-grand-parent-item-height); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
@@ -126,8 +124,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 .sb-side-nav-section-label {
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-l);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-tertiary);
+  color: var(--text-muted);
 }
 
 .sb-side-nav-row-chevron.toggle { transition: transform var(--transition); }
@@ -145,12 +142,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 .sb-side-nav-children-inner {
   overflow: hidden;
   min-height: 0;
-  margin-left: var(--pad-horiz-16);
-  padding-left: var(--pad-horiz-8);
-}
-
-.sb-side-nav-node.is-group > .sb-side-nav-children > .sb-side-nav-children-inner {
-  border-left: var(--border-width-1) solid var(--border-soft);
+  position: relative;
 }
 
 .sb-side-nav-folder-closed { display: inline-flex; align-items: center; }
@@ -159,10 +151,32 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 .sb-side-nav-node.is-group.expanded > .sb-side-nav-row .sb-side-nav-folder-open  { display: inline-flex; }
 
 .sb-side-nav-node.is-section {
-  box-shadow: inset var(--border-width-4) 0 0 var(--primary);
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-4);
+  border-left: var(--border-width-4) solid var(--primary);
+  background: var(--background);
+  transition: background var(--transition), box-shadow var(--transition);
 }
-.sb-side-nav-node.is-section.expanded { background: var(--surface-1); }
+.sb-side-nav-node.is-section:has(> .sb-side-nav-row:hover) {
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+.sb-side-nav-node.is-section:has(> .sb-side-nav-row.is-selected) {
+  background: var(--surface-1);
+}
+.sb-side-nav-row.is-section.is-selected { background: transparent; box-shadow: none; }
+.sb-side-nav-node.is-section.is-disabled { border-left-color: var(--border); }
+.sb-side-nav-node.is-section.is-disabled .sb-side-nav-section-label { color: var(--border); }
+
+.sb-side-nav-row.is-group.is-selected { box-shadow: none; }
+.sb-side-nav-row-actions {
+  display: none;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  flex-shrink: 0;
+}
+.sb-side-nav.is-bar .sb-side-nav-row.is-group:hover:not(.is-disabled) .sb-side-nav-row-actions { display: flex; }
+.sb-side-nav.is-bar .sb-side-nav-row.is-group:hover:not(.is-disabled) .sb-side-nav-row-meta { display: none; }
+.sb-side-nav-edit   { color: var(--primary); }
+.sb-side-nav-delete { color: var(--error); }
 
 /* Базовый is-selected (Pressed-пилюля) задан выше по спеке Single Item.
    Ниже — провизорные оверрайды для ещё неспеканных Group/Child (скрины). */
@@ -187,15 +201,18 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   flex-shrink: 0;
   transition: transform var(--transition), background var(--transition), color var(--transition);
 }
+.sb-side-nav-node.expanded > .sb-side-nav-row .sb-side-nav-chev { transform: rotate(180deg); }
 .sb-side-nav-node.is-parent.expanded > .sb-side-nav-row .sb-side-nav-chev {
-  transform: rotate(180deg);
   background: transparent;
   color: var(--primary);
 }
-.sb-side-nav-node.is-parent {
+.sb-side-nav-node.is-parent,
+.sb-side-nav-node.is-group {
   transition: background var(--transition), box-shadow var(--transition);
 }
-.sb-side-nav-node.is-parent.expanded {
+.sb-side-nav-node.is-parent.expanded,
+.sb-side-nav-node.is-section.expanded,
+.sb-side-nav-node.is-group.expanded {
   background: var(--surface-1);
   border-radius: var(--radius-4);
   padding-bottom: var(--pad-vert-16);
@@ -203,34 +220,42 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
      1px  1px 2px 0 var(--shadow-overlay) inset,
     -1px -1px 2px 0 var(--shadow-lg) inset;
 }
-.sb-side-nav-node.is-parent.expanded > .sb-side-nav-row { color: var(--primary); }
-.sb-side-nav.is-menu .sb-side-nav-children-inner {
-  margin-left: 0;
-  padding: 0;
-  position: relative;
+.sb-side-nav-node.is-parent.expanded > .sb-side-nav-row,
+.sb-side-nav-node.is-group.expanded > .sb-side-nav-row { color: var(--primary); }
+.sb-side-nav-node.is-section > .sb-side-nav-children > .sb-side-nav-children-inner > * + * {
+  margin-top: var(--gap-horiz-s);
 }
-.sb-side-nav.is-menu .sb-side-nav-children .sb-side-nav-row {
+.sb-side-nav.is-menu .sb-side-nav-children .sb-side-nav-row.is-item {
   padding-left: var(--pad-horiz-24);
 }
-.sb-side-nav.is-menu .sb-side-nav-node.is-parent > .sb-side-nav-children > .sb-side-nav-children-inner::before {
+.sb-side-nav.is-bar .sb-side-nav-children .sb-side-nav-row.is-item {
+  padding-left: var(--sn-item-pad, var(--pad-horiz-24));
+}
+.sb-side-nav.is-bar .sb-side-nav-row.is-group {
+  padding-left: var(--sn-group-pad, var(--pad-horiz-16));
+}
+.sb-side-nav-node.is-parent > .sb-side-nav-children > .sb-side-nav-children-inner::before,
+.sb-side-nav-node.is-group  > .sb-side-nav-children > .sb-side-nav-children-inner::before {
   content: "";
   position: absolute;
-  left: var(--pad-horiz-16);
+  left: var(--sn-rail, var(--pad-horiz-16));
   top: 0;
   bottom: 0;
   width: var(--border-width-1-5);
   border-radius: var(--radius-100);
   background: var(--border-soft);
+  transform: translateX(-50%);
 }
-.sb-side-nav.is-menu .sb-side-nav-children .sb-side-nav-row.is-selected::before {
+.sb-side-nav-children .sb-side-nav-row.is-item.is-selected::before {
   content: "";
   position: absolute;
-  left: var(--pad-horiz-16);
+  left: var(--sn-rail, var(--pad-horiz-16));
   top: 0;
   bottom: 0;
   width: var(--border-width-1-5);
   border-radius: var(--radius-100);
   background: var(--primary);
+  transform: translateX(-50%);
 }
 
 .sb-side-nav-empty {
@@ -277,6 +302,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   function cnt(counter) {
     if (counter == null) return '';
     if (typeof counter === 'object') {
+      if (counter.empty) return `<div class="sb-counter range empty">--/--</div>`;
       return `<div class="sb-counter range"><span class="sb-counter-online">${counter.value}</span><span class="sb-counter-sep">/</span><span class="sb-counter-total">${counter.max}</span></div>`;
     }
     return `<div class="sb-counter">${counter}</div>`;
@@ -291,10 +317,10 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   // Роли по типам Side Navigation:
   //   menu: item (Single/Child) + parent (раскрывается инлайн)
   //   bar : item + group (folder) + section (Grand-Parent) — основа, в работе
-  function renderNode(node) {
+  function renderNode(node, depth = 0) {
     const role = node.role || 'item';
     if (role === 'parent') return renderParent(node);
-    if (role === 'section' || role === 'group') return renderBranch(node, role);
+    if (role === 'section' || role === 'group') return renderBranch(node, role, depth);
     return renderItem(node);
   }
 
@@ -322,7 +348,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   // навигации, не selectable; «активность» = синий заголовок при expanded).
   function renderParent(node) {
     const exp = node.expanded ? ' expanded' : '';
-    const kids = (node.children || []).map(renderNode).join('');
+    const kids = (node.children || []).map(c => renderNode(c, 0)).join('');
     const chev = `<div class="sb-chevron sb-side-nav-chev">${sbIcon('arrow-down-s-line', 'L')}</div>`;
     const lead = node.icon ? `<span class="sb-side-nav-row-lead">${sbIcon(node.icon, 'L')}</span>` : '';
     return `<div class="sb-side-nav-node is-parent${exp}">
@@ -333,19 +359,29 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     </div>`;
   }
 
-  function renderBranch(node, role) {
+  function renderBranch(node, role, depth = 0) {
     const exp = node.expanded ? ' expanded' : '';
     const sel = node.selected ? ' is-selected' : '';
-    const kids = (node.children || []).map(renderNode).join('');
+    // Ступенчатая вложенность: section → дети на depth 0 (top-level группы).
+    // group → item-дети на своём depth, group-дети (sub-group) глубже (depth+1).
+    const kids = (node.children || []).map(c => {
+      const cd = (role === 'section') ? 0 : ((c.role === 'group') ? depth + 1 : depth);
+      return renderNode(c, cd);
+    }).join('');
     const childrenEl = `<div class="sb-side-nav-children"><div class="sb-side-nav-children-inner">${kids}</div></div>`;
-    const toggleChev = `<span class="sb-side-nav-row-chevron toggle">${sbIcon('arrow-down-s-line', 'L')}</span>`;
 
     if (role === 'section') {
-      // section не «выбирается» — только раскрывается (это контейнер).
-      return `<div class="sb-side-nav-node is-section${exp}">
-        <div class="sb-side-nav-row is-section" onclick="sbSideNavRow(this, true, false)">
+      // Grand-Parent: шеврон — Chevron Button (кружок). Кликабельна (expand +
+      // select). Counter опционален. Disabled — без onclick.
+      const chevBtn = `<div class="sb-chevron sb-side-nav-chev">${sbIcon('arrow-down-s-line', 'L')}</div>`;
+      const dis = node.disabled ? ' is-disabled' : '';
+      const selRow = node.selected ? ' is-selected' : '';
+      const onclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, true)"';
+      const metaEl = node.counter != null ? `<span class="sb-side-nav-row-meta">${cnt(node.counter)}</span>` : '';
+      return `<div class="sb-side-nav-node is-section${exp}${dis}">
+        <div class="sb-side-nav-row is-section${selRow}"${onclick}>
           <span class="sb-side-nav-row-label sb-side-nav-section-label sb-caption">${node.label}</span>
-          <span class="sb-side-nav-row-meta">${cnt(node.counter)}</span>${toggleChev}
+          ${metaEl}${chevBtn}
         </div>
         ${childrenEl}
       </div>`;
@@ -356,11 +392,28 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         <span class="sb-side-nav-folder-closed">${sbIcon('folder-line', 'L')}</span>
         <span class="sb-side-nav-folder-open">${sbIcon('folder-open-line', 'L')}</span>
       </span>`;
-    const meta = badge(node.badge) + cnt(node.counter);
-    const metaEl = meta ? `<span class="sb-side-nav-row-meta">${meta}</span>` : '';
-    return `<div class="sb-side-nav-node is-group${exp}">
-      <div class="sb-side-nav-row is-group${sel}" onclick="sbSideNavRow(this, true, true)">
-        ${folder}<span class="sb-side-nav-row-label sb-title-m">${node.label}</span>${metaEl}${toggleChev}
+    // group (Parent / Sub-group): folder + name; правый слот — counter (default)
+    // / edit+delete по hover (icon-only-small). Раскрытие по клику (folder swap),
+    // без chevron-кнопки. Selected → surface-1, hover → Shadow-S.
+    const gMeta = node.counter != null ? `<span class="sb-side-nav-row-meta">${cnt(node.counter)}</span>` : '';
+    const gActions = `<span class="sb-side-nav-row-actions">
+        <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-side-nav-edit" onclick="event.stopPropagation()">${sbIcon('pencil-line', 'S')}</button>
+        <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-side-nav-delete" onclick="event.stopPropagation()">${sbIcon('delete-bin-line', 'S')}</button>
+      </span>`;
+    const gDis = node.disabled ? ' is-disabled' : '';
+    const gOnclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, true)"';
+    // Позиции уровня (всё от depth, в CSS — без магических px):
+    //   --sn-group-pad = 16 + depth*32       — отступ Group/Parent (16, 48, …)
+    //   --sn-rail      = group-pad + 12       — колонка рельсы = ЦЕНТР папки родителя
+    //                                           (12 = половина 24px-иконки): 28, 60, …
+    //   --sn-item-pad  = rail + 8 (gap-vert-s) — контент Child на 8px ПРАВЕЕ рельсы,
+    //                                           между ними зазор 8px: 36, 68, …
+    const groupPad = 16 + depth * 32;
+    const railCol  = groupPad + 12;
+    const itemPad  = railCol + 8;
+    return `<div class="sb-side-nav-node is-group${exp}" style="--sn-group-pad:${groupPad}px;--sn-item-pad:${itemPad}px;--sn-rail:${railCol}px">
+      <div class="sb-side-nav-row is-group${sel}${gDis}"${gOnclick}>
+        ${folder}<span class="sb-side-nav-row-label sb-title-s">${node.label}</span>${gMeta}${gActions}
       </div>
       ${childrenEl}
     </div>`;
@@ -384,7 +437,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         <span class="sb-sub">${empty.subText || 'Subscription Text'}</span>
       </div>`;
     } else {
-      bodyInner = tree.map(renderNode).join('');
+      bodyInner = tree.map(n => renderNode(n, 0)).join('');
     }
     const bodyEl = `<div class="sb-side-nav-body">${bodyInner}</div>`;
 
@@ -454,8 +507,15 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     ] },
     { role: 'group', label: 'Parent', counter: 9 },
   ];
+  // Grand-Parent состояния (без детей — изолируем ячейку).
+  const TREE_GP_STATES = [
+    { role: 'section', label: 'Grand Parent', counter: 9 },
+    { role: 'section', label: 'Grand Parent', counter: 9, selected: true },
+    { role: 'section', label: 'Grand Parent', counter: { value: 30, max: 40 } },
+    { role: 'section', label: 'Grand Parent', counter: { empty: true }, disabled: true },
+  ];
   const TREE_DEEP = [
-    { role: 'section', label: 'Grand Parent', counter: { value: 9, max: 9 } },
+    { role: 'section', label: 'Grand Parent', counter: 9 },
     { role: 'section', label: 'Grand Parent', counter: { value: 30, max: 40 }, expanded: true, children: [
       { role: 'group', label: 'Parent', counter: 9 },
       { role: 'group', label: 'Parent', counter: 9 },
@@ -470,7 +530,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       ] },
       { role: 'group', label: 'Parent', counter: 9 },
     ] },
-    { role: 'section', label: 'Grand Parent', counter: { value: 9, max: 9 } },
+    { role: 'section', label: 'Grand Parent', counter: 9 },
   ];
 
   function treeFor(content) {
@@ -607,6 +667,17 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
           tree:    TREE_MENU,
         }), 600),
         html: `<!-- tree:[ {role:'parent', label:'Parent', expanded:true, children:[ {role:'item', label:'Child', status:'online', navigable:true}, ... ]} ] -->`,
+        css: COMP_CSS.sideNav,
+      },
+      {
+        title: 'Side Bar — Grand-Parent (states)',
+        desc: 'Grand-Parent: CAPTION-лейбл (12/500, uppercase, --text-muted), акцент-полоска слева (border-left 4px --primary, растягивается на детей при раскрытии), counter single/range, Chevron Button. Состояния: Default → Hover (Shadow-S) → Selected (surface-1) → Disabled (серый stroke + текст --border, counter --/--).',
+        preview: stage(mkSideNav({
+          variant: 'bar',
+          header:  demoHeader('headline'),
+          tree:    TREE_GP_STATES,
+        }), 360),
+        html: `<!-- variant:'bar' — { role:'section', label, counter: 9 | {value,max} | {empty:true}, selected?, disabled? } -->`,
         css: COMP_CSS.sideNav,
       },
       {

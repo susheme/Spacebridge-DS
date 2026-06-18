@@ -12,8 +12,8 @@
        правый chevron (навигация). Selection контекстный: top-level → пилюля,
        вложенный → левая accent-полоска (см. .sb-side-nav-children override).
 
-   Размеры из токенов: width 320 (--side-nav-min-max-width), item-row 40
-   (--side-nav-item-height), section-row 48 (--side-nav-grand-parent-item-height).
+   Размеры из токенов: width 320 (--side-nav-min-max-width), все строки 40
+   (--side-nav-item-height).
 
    MVP: только expanded-режим. Collapsed-рельса, mobile drawer, hover edit/delete
    на Group, анимация search-with-filter — отдельными заходами. */
@@ -22,7 +22,16 @@
   position: relative; /* для overlay-футера */
   display: flex;
   flex-direction: column;
+  /* Figma --Layout: ширина фикс 320. Высота заполняет контейнер (height:100%);
+     диапазон 720–2000 из Figma — это констрейнт прикладного фрейма, а не
+     компонента: хардкод min-height ломает любой контейнер ниже 720 (демо-стейджи
+     короче) — высоту задаёт потребитель.
+     Горизонт. padding 16 и vertical gap 16 из Figma распределены по зонам
+     (Header M / toolbar / body несут свой padding) — на контейнер их вешать
+     нельзя, иначе Header M (свой 16) разъедется с body. */
   width: var(--side-nav-min-max-width);
+  min-width: var(--side-nav-min-max-width);
+  max-width: var(--side-nav-min-max-width);
   height: 100%;
   background: var(--background);
   border: var(--border-width-1) solid var(--border-soft);
@@ -65,8 +74,11 @@
   padding: var(--pad-vert-8) var(--pad-horiz-16);
   display: flex;
   flex-direction: column;
-  gap: var(--gap-vert-xxs);
+  /* Side Menu: gap 16 между Single Item / Parent. */
+  gap: var(--gap-vert-m);
 }
+/* Side Bar: между Grand Parent ячейками gap 8. */
+.sb-side-nav.is-bar .sb-side-nav-body { gap: var(--gap-vert-s); }
 
 /* ── Row (общая строка для всех трёх ролей) ──────────────────────────── */
 /* Figma-спека ячейки: height 40, padding 8/8/8/16 (top/right/bottom/left —
@@ -94,7 +106,8 @@
    hover: Shadow-S + edit/delete, без перекраски текста). К disabled не применяется. */
 .sb-side-nav-row:hover:not(.is-disabled) { box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
 .sb-side-nav.is-menu .sb-side-nav-row:hover:not(.is-disabled) { color: var(--primary); }
-.sb-side-nav-row.is-section { height: var(--side-nav-grand-parent-item-height); }
+/* Grand Parent: высота как у всех (40, базовый item), отличается только gap 0. */
+.sb-side-nav-row.is-section { gap: var(--gap-vert-0); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
    Nav Bar / Tab Bar) + синий текст (--primary). */

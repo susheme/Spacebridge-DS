@@ -14,6 +14,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   display: flex;
   flex-direction: column;
   width: var(--side-nav-min-max-width);
+  min-width: var(--side-nav-min-max-width);
+  max-width: var(--side-nav-min-max-width);
   height: 100%;
   background: var(--background);
   border: var(--border-width-1) solid var(--border-soft);
@@ -49,8 +51,9 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   padding: var(--pad-vert-8) var(--pad-horiz-16);
   display: flex;
   flex-direction: column;
-  gap: var(--gap-vert-xxs);
+  gap: var(--gap-vert-m);
 }
+.sb-side-nav.is-bar .sb-side-nav-body { gap: var(--gap-vert-s); }
 
 /* Figma-спека ячейки: height 40, padding 8/8/8/16 (top/right/bottom/left —
    ведущий край шире), gap 8, radius 4, bg background. */
@@ -74,7 +77,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 /* Hover — drop Shadow-S + синий текст (--primary). К disabled не применяется. */
 .sb-side-nav-row:hover:not(.is-disabled) { box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
 .sb-side-nav.is-menu .sb-side-nav-row:hover:not(.is-disabled) { color: var(--primary); }
-.sb-side-nav-row.is-section { height: var(--side-nav-grand-parent-item-height); }
+.sb-side-nav-row.is-section { gap: var(--gap-vert-0); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
    Nav Bar / Tab Bar) + синий текст (--primary). */
@@ -495,43 +498,56 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     { role: 'parent', label: 'Parent', children: MENU_CHILDREN },
     { role: 'parent', label: 'Parent', expanded: true, children: MENU_CHILDREN },
   ];
-  const TREE_GROUPS = [
-    { role: 'group', label: 'Parent', counter: 9 },
-    { role: 'group', label: 'Parent', counter: 9 },
-    { role: 'group', label: 'Parent', counter: 5, expanded: true, children: [
-      { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true },
-      { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true },
-      { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true, selected: true },
-      { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true },
-      { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true },
+  // Counter = число прямых детей ячейки (0, если детей нет). Объект-counter'ы
+  // ({value,max} range / {empty}) — отдельная семантика (не счёт детей), их
+  // сохраняем. Узлы без counter (Single Item в Side Menu) не трогаем.
+  function withCounts(nodes) {
+    return nodes.map(n => {
+      const node = { ...n };
+      if (n.children) node.children = withCounts(n.children);
+      if (n.counter != null && typeof n.counter !== 'object') {
+        node.counter = n.children ? n.children.length : 0;
+      }
+      return node;
+    });
+  }
+  const TREE_GROUPS = withCounts([
+    { role: 'group', label: 'Parent', counter: 0 },
+    { role: 'group', label: 'Parent', counter: 0 },
+    { role: 'group', label: 'Parent', counter: 0, expanded: true, children: [
+      { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true },
+      { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true },
+      { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true, selected: true },
+      { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true },
+      { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true },
     ] },
-    { role: 'group', label: 'Parent', counter: 9 },
-  ];
-  // Grand-Parent состояния (без детей — изолируем ячейку).
-  const TREE_GP_STATES = [
-    { role: 'section', label: 'Grand Parent', counter: 9 },
-    { role: 'section', label: 'Grand Parent', counter: 9, selected: true },
+    { role: 'group', label: 'Parent', counter: 0 },
+  ]);
+  // Grand-Parent состояния (без детей — изолируем ячейку → counter 0).
+  const TREE_GP_STATES = withCounts([
+    { role: 'section', label: 'Grand Parent', counter: 0 },
+    { role: 'section', label: 'Grand Parent', counter: 0, selected: true },
     { role: 'section', label: 'Grand Parent', counter: { value: 30, max: 40 } },
     { role: 'section', label: 'Grand Parent', counter: { empty: true }, disabled: true },
-  ];
-  const TREE_DEEP = [
-    { role: 'section', label: 'Grand Parent', counter: 9 },
+  ]);
+  const TREE_DEEP = withCounts([
+    { role: 'section', label: 'Grand Parent', counter: 0 },
     { role: 'section', label: 'Grand Parent', counter: { value: 30, max: 40 }, expanded: true, children: [
-      { role: 'group', label: 'Parent', counter: 9 },
-      { role: 'group', label: 'Parent', counter: 9 },
-      { role: 'group', label: 'Parent', counter: 9, expanded: true, children: [
-        { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true },
-        { role: 'item', label: 'Child', status: 'online', counter: 9, navigable: true },
-        { role: 'group', label: 'Great-Grand-Parent', counter: 9, expanded: true, children: [
-          { role: 'item', label: 'Grand-Child', status: 'online', counter: 9, navigable: true },
-          { role: 'item', label: 'Grand-Child', status: 'online', counter: 9, navigable: true, selected: true },
-          { role: 'item', label: 'Grand-Child', status: 'online', counter: 9, navigable: true },
+      { role: 'group', label: 'Parent', counter: 0 },
+      { role: 'group', label: 'Parent', counter: 0 },
+      { role: 'group', label: 'Parent', counter: 0, expanded: true, children: [
+        { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true },
+        { role: 'item', label: 'Child', status: 'online', counter: 0, navigable: true },
+        { role: 'group', label: 'Great-Grand-Parent', counter: 0, expanded: true, children: [
+          { role: 'item', label: 'Grand-Child', status: 'online', counter: 0, navigable: true },
+          { role: 'item', label: 'Grand-Child', status: 'online', counter: 0, navigable: true, selected: true },
+          { role: 'item', label: 'Grand-Child', status: 'online', counter: 0, navigable: true },
         ] },
       ] },
-      { role: 'group', label: 'Parent', counter: 9 },
+      { role: 'group', label: 'Parent', counter: 0 },
     ] },
-    { role: 'section', label: 'Grand Parent', counter: 9 },
-  ];
+    { role: 'section', label: 'Grand Parent', counter: 0 },
+  ]);
 
   function treeFor(content) {
     if (content === 'flat')   return TREE_FLAT;

@@ -49,6 +49,11 @@
 .sb-side-nav-toolbar { padding: var(--pad-vert-8) var(--pad-horiz-16); }
 /* Search Bar в toolbar-зоне тянется на всю ширину сайдбара. */
 .sb-side-nav-toolbar .sb-search { width: 100%; }
+/* Toolbar-зона (внутри — Search): нижний divider, пока toolbar присутствует —
+   он всегда нижняя chrome-зона перед body. Header / Sub Nav рисуют свой divider
+   сами через sbMkHeaderM({divider}) / sbMkSubNav({divider}) — «умно» включает
+   нижнюю зону demoChrome(). */
+.sb-side-nav-toolbar { border-bottom: var(--border-width-1) solid var(--border-soft); }
 /* Footer — OVERLAY поверх контента (absolute), а не в потоке: включение/
    выключение не двигает и не сжимает body (нет «скачка»). Свой фон перекрывает
    контент, уезжающий под него. */
@@ -70,8 +75,9 @@
      сжимается и контент «скачет» по горизонтали (как в Nav Bar scroll-area). */
   scrollbar-gutter: stable;
   /* horiz 16 — вровень с Header M / Search (панель-padding по спеке Side Menu).
-     Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал. */
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
+     Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал.
+     top 16 — отступ ячеек от вышестоящей зоны (Header / Sub Nav / Search). */
+  padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8);
   display: flex;
   flex-direction: column;
   /* Side Menu: gap 16 между Single Item / Parent. */
@@ -106,8 +112,9 @@
    hover: Shadow-S + edit/delete, без перекраски текста). К disabled не применяется. */
 .sb-side-nav-row:hover:not(.is-disabled) { box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
 .sb-side-nav.is-menu .sb-side-nav-row:hover:not(.is-disabled) { color: var(--primary); }
-/* Grand Parent: высота как у всех (40, базовый item), отличается только gap 0. */
-.sb-side-nav-row.is-section { gap: var(--gap-vert-0); }
+/* Grand Parent: высота как у всех (40, базовый item). Правый слот
+   (counter ↔ chevron) — стандартный gap базовой строки (--gap-horiz-s, 8px). */
+.sb-side-nav-row.is-section { gap: var(--gap-horiz-s); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
    Nav Bar / Tab Bar) + синий текст (--primary). */
@@ -376,6 +383,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: var(--gap-vert-s);
+  text-align: center;
+  padding: var(--pad-vert-48) var(--pad-horiz-16);
+  color: var(--text-tertiary);
+}
+/* Плейсхолдер пустой ветки (раскрытый Grand-Parent без детей). В отличие от
+   full-body empty — живёт внутри области раскрытия, высоту держит padding'ом
+   (не flex:1, грид-трек 1fr не растягивает на всю панель). */
+.sb-side-nav-branch-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: var(--gap-vert-s);
   text-align: center;
   padding: var(--pad-vert-48) var(--pad-horiz-16);

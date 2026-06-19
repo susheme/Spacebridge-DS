@@ -31,6 +31,11 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 
 .sb-side-nav-toolbar { padding: var(--pad-vert-8) var(--pad-horiz-16); }
 .sb-side-nav-toolbar .sb-search { width: 100%; }
+/* Toolbar-зона (внутри — Search): нижний divider, пока toolbar присутствует —
+   он всегда нижняя chrome-зона перед body. Header / Sub Nav рисуют свой divider
+   сами через sbMkHeaderM({divider}) / sbMkSubNav({divider}) — «умно» включает
+   нижнюю зону demoChrome(). */
+.sb-side-nav-toolbar { border-bottom: var(--border-width-1) solid var(--border-soft); }
 .sb-side-nav-footer {
   position: absolute;
   left: 0;
@@ -47,8 +52,9 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   overflow-y: auto;
   scrollbar-gutter: stable;
   /* horiz 16 — вровень с Header M / Search (панель-padding по спеке Side Menu).
-     Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал. */
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
+     Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал.
+     top 16 — отступ ячеек от вышестоящей зоны (Header / Sub Nav / Search). */
+  padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8);
   display: flex;
   flex-direction: column;
   gap: var(--gap-vert-m);
@@ -77,7 +83,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 /* Hover — drop Shadow-S + синий текст (--primary). К disabled не применяется. */
 .sb-side-nav-row:hover:not(.is-disabled) { box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
 .sb-side-nav.is-menu .sb-side-nav-row:hover:not(.is-disabled) { color: var(--primary); }
-.sb-side-nav-row.is-section { gap: var(--gap-vert-0); }
+.sb-side-nav-row.is-section { gap: var(--gap-horiz-s); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
    Nav Bar / Tab Bar) + синий текст (--primary). */
@@ -271,6 +277,18 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   text-align: center;
   padding: var(--pad-vert-48) var(--pad-horiz-16);
   color: var(--text-tertiary);
+}
+/* Плейсхолдер пустой ветки (раскрытый Grand-Parent без детей). В отличие от
+   full-body empty — живёт внутри области раскрытия, высоту держит padding'ом
+   (не flex:1, грид-трек 1fr не растягивает на всю панель). */
+.sb-side-nav-branch-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  text-align: center;
+  padding: var(--pad-vert-48) var(--pad-horiz-16);
+  color: var(--text-tertiary);
 }`;
 
 // --- SIDE NAVIGATION ---
@@ -314,6 +332,15 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     if (!b) return '';
     const tone = b.tone || 'grey';
     return `<span class="sb-badge-status mini bs-${tone}">${b.text}</span>`;
+  }
+  // Плейсхолдер пустой ветки (Grand-Parent без детей): Button + Subscription
+  // Text внутри области раскрытия. Лейблы переопределяются node.placeholder.
+  function emptyBranch(node) {
+    const ph = node.placeholder || {};
+    return `<div class="sb-side-nav-branch-empty">
+      <button type="button" class="sb-btn sb-btn-secondary"><span class="sb-btn-text">${ph.buttonLabel || 'Button'}</span></button>
+      <span class="sb-sub">${ph.subText || 'Subscription Text'}</span>
+    </div>`;
   }
 
   // ── Рендер узлов (рекурсивно) ────────────────────────────────────────
@@ -367,19 +394,24 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     const sel = node.selected ? ' is-selected' : '';
     // Ступенчатая вложенность: section → дети на depth 0 (top-level группы).
     // group → item-дети на своём depth, group-дети (sub-group) глубже (depth+1).
-    const kids = (node.children || []).map(c => {
+    const hasKids = !!(node.children && node.children.length);
+    const kids = hasKids ? node.children.map(c => {
       const cd = (role === 'section') ? 0 : ((c.role === 'group') ? depth + 1 : depth);
       return renderNode(c, cd);
-    }).join('');
-    const childrenEl = `<div class="sb-side-nav-children"><div class="sb-side-nav-children-inner">${kids}</div></div>`;
+    }).join('') : '';
+    // Пустой Grand-Parent: при раскрытии — плейсхолдер (Button + Subscription
+    // Text) внутри области раскрытия, а не пустая зона.
+    const inner = (!hasKids && role === 'section') ? emptyBranch(node) : kids;
+    const childrenEl = `<div class="sb-side-nav-children"><div class="sb-side-nav-children-inner">${inner}</div></div>`;
 
     if (role === 'section') {
-      // Grand-Parent: шеврон — Chevron Button (кружок). Кликабельна (expand +
-      // select). Counter опционален. Disabled — без onclick.
+      // Grand-Parent: шеврон — Chevron Button (кружок). Клик = ТОЛЬКО раскрытие
+      // (контейнер навигации, не selectable — иначе ячейка залипает в surface-1
+      // после сворачивания). Selected-визуал доступен через data (states-демо).
       const chevBtn = `<div class="sb-chevron sb-side-nav-chev">${sbIcon('arrow-down-s-line', 'L')}</div>`;
       const dis = node.disabled ? ' is-disabled' : '';
       const selRow = node.selected ? ' is-selected' : '';
-      const onclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, true)"';
+      const onclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, false)"';
       const metaEl = node.counter != null ? `<span class="sb-side-nav-row-meta">${cnt(node.counter)}</span>` : '';
       return `<div class="sb-side-nav-node is-section${exp}${dis}">
         <div class="sb-side-nav-row is-section${selRow}"${onclick}>
@@ -452,19 +484,32 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   const BRAND = `<span class="sb-brand">SPACEBRIDGE</span>`;
   const ADD_BTN = `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>`;
 
-  function demoHeader(variant) {
+  function demoHeader(variant, divider = false) {
     if (variant === 'headline') {
-      return sbMkHeaderM({ title: 'Headline', slotRight: ADD_BTN + ADD_BTN });
+      return sbMkHeaderM({ title: 'Headline', slotRight: ADD_BTN + ADD_BTN, divider });
     }
-    return sbMkHeaderM({ slotLeft: BRAND });
+    return sbMkHeaderM({ slotLeft: BRAND, divider });
   }
   function demoSearch() { return sbMkSearch({ iconLeft: true, placeholder: 'Search' }); }
-  function demoSubNav() {
+  function demoSubNav(divider = true) {
     if (typeof sbMkSubNav !== 'function' || typeof sbMkTabBar !== 'function') return '';
     return sbMkSubNav({
       content: `<div style="width:272px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`,
       variant: 'tab-bar',
+      divider,
     });
+  }
+  // «Умный» divider: линия только у НИЖНЕЙ chrome-зоны перед body
+  // (toolbar → иначе subnav → иначе header) — одна чистая граница над списком.
+  // Toolbar-зона рисует divider зонным CSS (внутри неё Search, а не Tool Bar),
+  // поэтому ей prop не нужен. Возвращает {header, subNav, toolBar} для mkSideNav.
+  function demoChrome({ headerStyle = 'logo', subNav = false, search = false } = {}) {
+    const bottom = search ? 'toolbar' : (subNav ? 'subnav' : 'header');
+    return {
+      header:  demoHeader(headerStyle, bottom === 'header'),
+      subNav:  subNav ? demoSubNav(bottom === 'subnav') : '',
+      toolBar: search ? demoSearch() : '',
+    };
   }
   // Device-info footer (как на мобильном скрине). sb-caption-строки.
   const DEMO_FOOTER = `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xxs)">
@@ -549,12 +594,57 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     { role: 'section', label: 'Grand Parent', counter: 0 },
   ]);
 
+  // Playground (Content = Grand Parent): реалистичное наполнение —
+  // Grand-Parent → Parent → Great-Grand-Parent → Child. Каунтеры не пишем
+  // руками: withCounts считает число прямых детей, поэтому цифра в ячейке
+  // всегда = реальному содержимому (в т.ч. у свёрнутых веток). По дефолту все
+  // Grand-Parent'ы СВЁРНУТЫ — раскрывает юзер. Последний пуст → при раскрытии
+  // показывает плейсхолдер (см. renderBranch / emptyBranch).
+  const mkItem  = (label = 'Child') => ({ role: 'item', label, status: 'online', navigable: true });
+  const mkItems = (n, label) => Array.from({ length: n }, () => mkItem(label));
+  const TREE_BAR_REAL = withCounts([
+    { role: 'section', label: 'Grand Parent', counter: 0, children: [
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(4) },
+      { role: 'group', label: 'Parent', counter: 0, children: [
+        { role: 'group', label: 'Great-Grand-Parent', counter: 0, children: mkItems(3, 'Grand-Child') },
+        ...mkItems(2),
+      ] },
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(5) },
+    ] },
+    { role: 'section', label: 'Grand Parent', counter: 0, children: [
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(3) },
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(2) },
+    ] },
+    { role: 'section', label: 'Grand Parent', counter: 0, children: [
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(2) },
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(4) },
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(1) },
+      { role: 'group', label: 'Parent', counter: 0, children: mkItems(3) },
+    ] },
+    { role: 'section', label: 'Grand Parent', counter: 0 },
+  ]);
+
   function treeFor(content) {
-    if (content === 'flat')   return TREE_FLAT;
-    if (content === 'menu')   return TREE_MENU;
-    if (content === 'groups') return TREE_GROUPS;
+    if (content === 'flat')    return TREE_FLAT;
+    if (content === 'menu')    return TREE_MENU;
+    if (content === 'section') return TREE_BAR_REAL;
+    if (content === 'groups')  return TREE_GROUPS;
     return TREE_DEEP;
   }
+
+  // Content-пресеты зависят от variant. Side Menu стартует с Single Item
+  // (flat) или Single + Parent (menu). Side Bar Single Item'ов НЕ содержит —
+  // наполнение начинается с Grand-Parent (section) либо Parent-групп (groups).
+  const CONTENT_OPTS = {
+    menu: [
+      { value: 'flat', label: 'Flat (Single Items)' },
+      { value: 'menu', label: 'Menu (+ Parents)' },
+    ],
+    bar: [
+      { value: 'section', label: 'Grand Parent' },
+      { value: 'groups',  label: 'Groups (+ Parents)' },
+    ],
+  };
 
   // Тогл "Icon": leading-иконка в top-level ячейках (Parent + Single Item).
   // У детей остаётся status-dot (renderItem приоритезирует status над icon).
@@ -597,10 +687,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
                 { value: 'menu', label: 'Side Menu' },
                 { value: 'bar',  label: 'Side Bar (WIP)' },
               ], { label: 'Variant' })}
-              ${pg.select('content', [
-                { value: 'flat', label: 'Flat (Single Items)' },
-                { value: 'menu', label: 'Menu (+ Parents)' },
-              ], { label: 'Content' })}
+              ${pg.select('content', CONTENT_OPTS[SB_PG.state(pg.name)?.variant || 'menu'], { label: 'Content' })}
               <div class="pg-toggles">
                 ${pg.toggle('icon',  'Icon')}
                 ${pg.toggle('empty', 'Empty')}
@@ -627,9 +714,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         if (s.icon) tree = withIcons(tree);
         return stage(mkSideNav({
           variant: s.variant,
-          header:  demoHeader(s.headerStyle),
-          subNav:  s.subNav ? demoSubNav() : '',
-          toolBar: s.search ? demoSearch() : '',
+          ...demoChrome({ headerStyle: s.headerStyle, subNav: s.subNav, search: s.search }),
           tree,
           footer:  s.footer ? DEMO_FOOTER : '',
           empty:   s.empty,
@@ -641,13 +726,34 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
           css: COMP_CSS.sideNav,
         };
       },
+      // variant ↔ content связаны: у Side Menu и Side Bar разные наборы контента.
+      // При смене типа переключаем content на дефолт нового типа.
+      onControlChange(key, val, s) {
+        if (key === 'variant') {
+          s.content = val === 'bar' ? 'section' : 'menu';
+        }
+      },
+      // Content-дропдаун зависит от variant — пересобираем его опции под текущий тип.
+      syncControls(s, container) {
+        const sel = container.querySelector('select[data-pg-ctrl="content"]');
+        if (!sel) return;
+        const opts = CONTENT_OPTS[s.variant] || CONTENT_OPTS.menu;
+        const need = opts.map(o => o.value).join(',');
+        const have = Array.from(sel.options).map(o => o.value).join(',');
+        if (need !== have) {
+          sel.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+        }
+        sel.value = s.content;
+        const valEl = sel.closest('.pg-sel-wrap')?.querySelector('.sb-sel-val');
+        if (valEl && sel.options[sel.selectedIndex]) valEl.textContent = sel.options[sel.selectedIndex].text;
+      },
     },
     sections: [
       {
         title: 'Single Item — states',
         desc: 'Ячейка 272×40, padding 8/8/8/16, radius 4. Item name — Title S (14/700), цвет --text-secondary. Default → bg --background. Hover → drop Shadow-S (наведи курсор). Selected → surface-1 + Pressed-inset shadow. Disabled → текст --border. Вариант + Icon — то же с leading-иконкой.',
         preview: stage(mkSideNav({
-          header: demoHeader('logo'),
+          header: demoHeader('logo', true),
           tree: [
             { role: 'item', label: 'Single Item' },
             { role: 'item', label: 'Single Item — Selected', selected: true },
@@ -690,7 +796,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         desc: 'Grand-Parent: CAPTION-лейбл (12/500, uppercase, --text-muted), акцент-полоска слева (border-left 4px --primary, растягивается на детей при раскрытии), counter single/range, Chevron Button. Состояния: Default → Hover (Shadow-S) → Selected (surface-1) → Disabled (серый stroke + текст --border, counter --/--).',
         preview: stage(mkSideNav({
           variant: 'bar',
-          header:  demoHeader('headline'),
+          header:  demoHeader('headline', true),
           tree:    TREE_GP_STATES,
         }), 360),
         html: `<!-- variant:'bar' — { role:'section', label, counter: 9 | {value,max} | {empty:true}, selected?, disabled? } -->`,
@@ -738,7 +844,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         preview: stage(mkSideNav({
           variant: 'menu',
           header:  demoHeader('headline'),
-          subNav:  demoSubNav(),
+          subNav:  demoSubNav(false),
           toolBar: demoSearch(),
           tree:    TREE_MENU,
           footer:  DEMO_FOOTER,

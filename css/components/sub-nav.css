@@ -41,10 +41,12 @@
 
   border-radius: var(--radius-0);
   background: var(--background);
-  border-bottom: var(--border-width-1) solid var(--border-soft);
 
   box-sizing: border-box;
 }
+/* divider — нижний бордер (separator). Default ON через sbMkSubNav (класс
+   has-divider добавляется по умолчанию); гасится sbMkSubNav({divider:false}). */
+.sb-sub-nav.has-divider { border-bottom: var(--border-width-1) solid var(--border-soft); }
 
 /* Sticky-режим — opt-in. Прилипает под Nav Bar / Header при скролле.
    В docs не активируется по умолчанию (иначе все 6 демо-баров пытаются

@@ -18,6 +18,8 @@ window.COMP_CSS.headerM = `.sb-header-m {
   background: var(--background);
   container-type: inline-size;
 }
+/* divider — опциональный нижний бордер (separator). Toggled через sbMkHeaderM({divider:true}). */
+.sb-header-m.has-divider { border-bottom: var(--border-width-1) solid var(--border-soft); }
 
 .sb-header-m-left,
 .sb-header-m-right {
@@ -61,7 +63,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
 // SB_DEMO_MORE_ITEMS list live in context-menu.js (generic for any
 // .sb-overflow-menu wrapper).
 (() => {
-  function mkHeaderM({ slotLeft, title, slotRight } = {}) {
+  function mkHeaderM({ slotLeft, title, slotRight, divider = false } = {}) {
     const hasLeft  = slotLeft  != null && slotLeft  !== false && slotLeft  !== '';
     const hasTitle = title     != null && title     !== false && title     !== '';
     const hasRight = slotRight != null && slotRight !== false && slotRight !== '';
@@ -71,7 +73,10 @@ window.COMP_CSS.headerM = `.sb-header-m {
     const left = leftInner ? `<div class="sb-header-m-left">${leftInner}</div>` : '';
     const right = hasRight ? `<div class="sb-header-m-right">${slotRight}</div>` : '';
 
-    return `<div class="sb-header-m">${left}${right}</div>`;
+    // divider — нижний бордер (separator). Default OFF: Header M живёт внутри
+    // разных контейнеров, линия включается потребителем по месту.
+    const cls = 'sb-header-m' + (divider ? ' has-divider' : '');
+    return `<div class="${cls}">${left}${right}</div>`;
   }
 
   // Expose helper для будущих хедеров и dev-консоли.

@@ -23,9 +23,9 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
   gap: var(--gap-vert-m);
   border-radius: var(--radius-0);
   background: var(--background);
-  border-bottom: var(--border-width-1) solid var(--border-soft);
   box-sizing: border-box;
 }
+.sb-sub-nav.has-divider { border-bottom: var(--border-width-1) solid var(--border-soft); }
 .sb-sub-nav.sticky {
   position: sticky;
   top: var(--sub-nav-top, 0);
@@ -126,15 +126,18 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
    */
   function mkSubNav(opts = '') {
     if (typeof opts === 'string') {
-      return `<header class="sb-sub-nav">${opts}</header>`;
+      return `<header class="sb-sub-nav has-divider">${opts}</header>`;
     }
     const sticky = opts.sticky === true;
     const variant = opts.variant; // 'led' для LED-content layout
     const mode = opts.mode;       // 'tablet' для force-Tablet layout (docs/демо)
+    // divider — нижний бордер (separator). Default ON (так Sub Nav жил исторически);
+    // потребитель гасит через sbMkSubNav({divider:false}).
+    const dividerCls = opts.divider === false ? '' : ' has-divider';
     const hasSlots = ('left' in opts) || ('center' in opts) || ('right' in opts);
     if (hasSlots) {
       const { left = '', center = '', right = '' } = opts;
-      let cls = 'sb-sub-nav has-slots';
+      let cls = 'sb-sub-nav has-slots' + dividerCls;
       if (mode === 'tablet') cls += ' tablet';
       if (sticky)            cls += ' sticky';
       return `<header class="${cls}">
@@ -145,7 +148,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
     }
     // Single-content mode
     const { content = '', align = 'center' } = opts;
-    let cls = 'sb-sub-nav';
+    let cls = 'sb-sub-nav' + dividerCls;
     if (align === 'left')      cls += ' align-left';
     if (align === 'right')     cls += ' align-right';
     if (variant === 'led')     cls += ' led';

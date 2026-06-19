@@ -14,6 +14,8 @@
   /* Enables @container queries below — Header M reacts to its own width. */
   container-type: inline-size;
 }
+/* divider — опциональный нижний бордер (separator). Toggled через sbMkHeaderM({divider:true}). */
+.sb-header-m.has-divider { border-bottom: var(--border-width-1) solid var(--border-soft); }
 
 .sb-header-m-left,
 .sb-header-m-right {

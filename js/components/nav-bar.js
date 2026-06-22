@@ -4,7 +4,7 @@
 //  При правке стилей — обновить ОБА места (window.COMP_CSS и CSS-файл).
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; width: 100%; height: 56px; max-height: var(--nav-bar-max-height); min-width: 320px; padding: 0; background: var(--surface-1); border-bottom: var(--border-width-1) solid var(--border); gap: var(--gap-horiz-m); box-sizing: border-box; container-type: inline-size; container-name: navbar; }
+window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; width: 100%; height: 56px; max-height: var(--nav-bar-max-height); min-width: 320px; padding: 0; background: var(--background); border-bottom: var(--border-width-1) solid var(--border); gap: var(--gap-horiz-m); box-sizing: border-box; container-type: inline-size; container-name: navbar; }
 .sb-nav-bar-button { display: inline-flex; align-items: center; }
 .sb-nav-bar-button-icon-compact { display: none; }
 .sb-nav-bar-button-icon-wide    { display: inline-flex; align-items: center; }
@@ -771,7 +771,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           ? 'width:100%;max-width:600px;margin:0 auto;'
           : 'width:1200px;';
         return `<div data-pg-preserve-scroll style="width:100%;overflow-x:auto">
-          <div style="${innerStyle}padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${navBar}</div>
+          <div style="${innerStyle}padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${navBar}</div>
         </div>`;
       },
       genCode(s) {
@@ -808,7 +808,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       {
         title: 'Anatomy',
         desc: 'Три слота: левый (logo + extras), центральный (tabs), правый (actions). Высота 56px по дефолту, до 64px. Padding 24px по бокам (16 на мобиле). На < 640px центральные tabs прячутся.',
-        preview: `<div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+        preview: `<div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
           logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT, logoTitle: DEMO_LOGO_TITLE,
           tabs: [
             { label: 'Item', selected: true },
@@ -865,7 +865,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         title: 'Center align vs Right align',
         desc: 'По умолчанию tabs центрируются в свободной зоне между left и right слотами. Modifier .align-right прижимает их к правому слоту с зазором 24px. Выбирается дизайнером per-app.',
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [
               { label: 'Item' }, { label: 'Item', selected: true }, { label: 'Item' },
@@ -873,7 +873,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
             rightSlot: [DEMO_BELL, DEMO_AVATAR],
             align: 'center',
           })}</div>
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [
               { label: 'Item' }, { label: 'Item', selected: true }, { label: 'Item' },
@@ -893,18 +893,18 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         title: 'Right slot — composition',
         desc: 'До 4 элементов: Button Secondary icon-only, Primary Button (Login), Avatar, Search Bar. Сверх 4 — обрезаем + console.warn. Для overflow используй more-button с Context Menu / Bottom Sheet (mobile).',
         preview: `<div class="sec-col" style="gap:var(--gap-vert-s)">
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [{ label: 'Item', selected: true }, { label: 'Item' }],
             rightSlot: [DEMO_BELL, DEMO_AVATAR],
           })}</div>
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [{ label: 'Item', selected: true }, { label: 'Item' }],
             search: DEMO_SEARCH,
             rightSlot: [DEMO_BELL, DEMO_AVATAR],
           })}</div>
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [],
             rightSlot: [DEMO_PRIMARY],
@@ -1014,7 +1014,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Wide (container > 1024px)</span>` })}
           <span class="sb-body-m" style="color:var(--text-tertiary);padding:0 var(--pad-horiz-16)">Горизонтальный скролл для full-view</span>
           <div style="width:100%;overflow-x:auto">
-            <div style="width:1200px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+            <div style="width:1200px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
               button: DEMO_BUTTON,
               logo: DEMO_LOGO,
               logoCompact: DEMO_LOGO_COMPACT,
@@ -1030,7 +1030,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           </div>
           ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Compact (container &lt; 1024px)</span>` })}
           <span class="sb-body-m" style="color:var(--text-tertiary);padding:0 var(--pad-horiz-16)">Tabs уходят в side menu, иконка кнопки swap'ается на menu-line</span>
-          <div style="width:100%;max-width:560px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--background)">${mkNavBar({
+          <div style="width:100%;max-width:560px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             button: DEMO_BUTTON,
             logo: DEMO_LOGO,
             logoCompact: DEMO_LOGO_COMPACT,

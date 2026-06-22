@@ -16,7 +16,7 @@
      потому что @container не умеет стилизовать сам container, только
      его descendants. */
   padding: 0;
-  background: var(--surface-1);
+  background: var(--background);
   border-bottom: var(--border-width-1) solid var(--border);
   gap: var(--gap-horiz-m);
   box-sizing: border-box;

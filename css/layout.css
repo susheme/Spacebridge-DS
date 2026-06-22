@@ -100,11 +100,16 @@
 /* SIDEBAR */
 .sidebar {
   width: var(--sidebar-width);
-  background: var(--surface-1);
+  /* --background (а не surface-1): embedded Side Nav рендерит свои родные
+     состояния (selected = surface-1) — им нужен фон-панель для контраста.
+     Сепаратор от контента — border-right (без всплывающей тени). */
+  background: var(--background);
   border-right: var(--border-width-1) solid var(--border);
   overflow-y: auto;
   flex-shrink: 0;
-  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  /* Горизонтальный padding 0 — Side Nav занимает всю ширину 320 (inset ячеек
+     даёт padding самого компонента). Вертикальный 16 — для sticky search. */
+  padding: var(--pad-vert-16) 0;
 }
 
 /* ── NAV search (sticky filter) ──────────────────────────────────── */
@@ -115,9 +120,9 @@
   position: sticky;
   top: calc(-1 * var(--pad-vert-16));
   z-index: 10;
-  margin: calc(-1 * var(--pad-vert-16)) calc(-1 * var(--pad-horiz-16)) var(--gap-vert-m);
+  margin: calc(-1 * var(--pad-vert-16)) 0 var(--gap-vert-m);
   padding: var(--pad-vert-16) var(--pad-horiz-16);
-  background: var(--surface-1);
+  background: var(--background);
   display: flex;
   align-items: center;
 }
@@ -138,67 +143,43 @@
 .sidebar-empty.visible { display: block; }
 
 /* Подсветка совпавшей подстроки в названии пункта NAV. */
-.sidebar-item-label .nav-hl {
+.sidebar .nav-hl {
   background: transparent;
   color: inherit;
   font-weight: var(--font-weight-bold);
 }
 
-.sidebar-section { margin-bottom: var(--gap-vert-m); }
-.sidebar-section .sb-section-header {
-  margin-bottom: var(--gap-vert-s);
-  /* Stacking / push-off: каждый header sticky внутри своего .sidebar-section
-     (containing block). Когда секция уезжает наверх — её header вылезает из
-     контейнинга и физически уезжает следом, освобождая место для header'а
-     следующей секции. Чистый CSS, без JS.
-     top = нижний край .sidebar-search в её sticky-состоянии:
-       bar height (32) + padding-bottom (16) = 48 (negative top -16 съедает padding-top).
-     Background НЕ оверрайдим — компонент сам ставит --surface-2, этого хватает. */
+/* ── Тело NAV — НАШ Side Nav в embedded-режиме. Рейка тематизирует его под свой
+   фон (--surface-1): плотный gap, sticky section-header'ы, hover/active под фон
+   рейки (компонентный surface-1-selected на surface-1-рейке был бы невидим). ── */
+.sidebar .sb-side-nav-body { gap: 0; }
+
+/* Категория = Section Header. Sticky-стэкинг: каждый header липнет под search;
+   когда секция уезжает — следующий header выталкивает предыдущий (flat siblings
+   с одним top толкают друг друга естественно, без per-section контейнинга).
+   top = высота search-бара (32) + его padding (16) = 48. */
+.sidebar .sb-side-nav-body > .sb-section-header {
+  margin: var(--gap-vert-m) 0 var(--gap-vert-s);
   position: sticky;
   top: calc(var(--text-field-height-l) + var(--pad-vert-16));
   z-index: 5;
 }
 
-.sidebar-label {
-  padding: var(--pad-vert-8) var(--pad-horiz-24) var(--pad-vert-4);
-  color: var(--text-secondary);
-}
+/* Состояния пунктов (hover Shadow-S + синий, active surface-1 + pressed-inset +
+   синий) — РОДНЫЕ из компонента Side Navigation, не переопределяем: фон рейки
+   --background даёт им нужный контраст. */
 
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-horiz-s);
-  min-height: var(--list-min-height-cell);
-  padding: var(--pad-vert-8) var(--pad-horiz-16);
-  border-radius: var(--radius-4);
-  color: var(--text-tertiary);
-  cursor: pointer;
-  transition: var(--transition);
-  border-left: var(--border-width-2) solid transparent;
-}
-
-.sidebar-item:hover {
-  background: var(--surface-2);
-  color: var(--text-primary);
-}
-
-.sidebar-item.active {
-  background: var(--primary-hover);
-  color: var(--primary);
-  border-left-color: var(--primary);
-}
-
-.sidebar-item .dot {
+/* Dot статуса пункта (leadSlot ячейки). */
+.sidebar .dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--success);
   flex-shrink: 0;
 }
-
-.sidebar-item .dot.coming { background: var(--text-secondary); }
-.sidebar-item .dot.in-progress { background: var(--alert); }
-.sidebar-item .dot.incomplete { background: var(--primary); }
+.sidebar .dot.coming { background: var(--text-secondary); }
+.sidebar .dot.in-progress { background: var(--alert); }
+.sidebar .dot.incomplete { background: var(--primary); }
 
 /* CONTENT */
 .content {

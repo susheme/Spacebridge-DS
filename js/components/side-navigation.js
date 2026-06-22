@@ -23,6 +23,24 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   overflow: hidden;
   box-sizing: border-box;
 }
+/* Embedded (flush) — компонент внутри чужого контейнера (рейка): без рамки/
+   radius/фикс-ширины и без своего скролла (скроллит хост). */
+.sb-side-nav.is-embedded {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+.sb-side-nav.is-menu.is-embedded { box-shadow: none; }
+.sb-side-nav.is-embedded .sb-side-nav-body {
+  flex: 0 1 auto;
+  overflow: visible;
+  scrollbar-gutter: auto;
+}
 
 .sb-side-nav-header,
 .sb-side-nav-subnav,
@@ -74,7 +92,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   /* transparent (а не --background): визуально = фон сайдбара, но прозрачность
      не даёт соседним ячейкам перекрывать hover-тень соседа сверху/снизу. */
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   cursor: pointer;
   user-select: none;
   box-sizing: border-box;
@@ -343,30 +361,47 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     </div>`;
   }
 
+  // section-header — некликабельный лейбл-разделитель группы (категории в чроме
+  // DS, лейблы секций в любом side-menu). Прокидывает слоты в наш Section Header
+  // (slotLeft = caption, slotRight = опц. counter/«+»/фильтр). Зависит от
+  // section-header.js — он грузится раньше в index.html.
+  function renderSectionHeader(node) {
+    if (typeof sbMkSectionHeader !== 'function') return '';
+    return sbMkSectionHeader({ slotLeft: node.slotLeft, slotRight: node.slotRight });
+  }
+
   // ── Рендер узлов (рекурсивно) ────────────────────────────────────────
   // Роли по типам Side Navigation:
-  //   menu: item (Single/Child) + parent (раскрывается инлайн)
+  //   menu: item (Single/Child) + parent (раскрывается инлайн) + section-header
   //   bar : item + group (folder) + section (Grand-Parent) — основа, в работе
   function renderNode(node, depth = 0) {
     const role = node.role || 'item';
+    if (role === 'section-header') return renderSectionHeader(node);
     if (role === 'parent') return renderParent(node);
     if (role === 'section' || role === 'group') return renderBranch(node, role, depth);
     return renderItem(node);
   }
 
   function renderItem(node) {
-    const lead = node.status
-      ? `<span class="sb-status-dot mini ${node.status}"></span>`
-      : (node.icon ? sbIcon(node.icon, 'L') : '');
+    // lead: произвольный leadSlot важнее, иначе status-dot / icon.
+    const lead = node.leadSlot != null ? node.leadSlot
+      : (node.status
+        ? `<span class="sb-status-dot mini ${node.status}"></span>`
+        : (node.icon ? sbIcon(node.icon, 'L') : ''));
     const leadEl = lead ? `<span class="sb-side-nav-row-lead">${lead}</span>` : '';
-    const meta = badge(node.badge) + cnt(node.counter);
+    // meta: badge + counter + произвольный rightSlot (text-status, KBS, clear…).
+    const meta = badge(node.badge) + cnt(node.counter) + (node.rightSlot || '');
     const metaEl = meta ? `<span class="sb-side-nav-row-meta">${meta}</span>` : '';
     const chev = node.navigable
       ? `<span class="sb-side-nav-row-chevron nav">${sbIcon('arrow-right-s-line', 'S')}</span>`
       : '';
     const sel = node.selected ? ' is-selected' : '';
     const dis = node.disabled ? ' is-disabled' : '';
-    const onclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, false, true)"';
+    // onClick — escape-hatch для внешнего роутинга: ячейка только зовёт хендлер,
+    // а selected приходит из data (re-render владеет подсветкой). Без onClick —
+    // дефолтное поведение select-ячейки. Хендлер пиши с одинарными кавычками.
+    const handler = node.onClick || 'sbSideNavRow(this, false, true)';
+    const onclick = node.disabled ? '' : ` onclick="${handler}"`;
     return `<div class="sb-side-nav-row is-item${sel}${dis}"${onclick}>
       ${leadEl}<span class="sb-side-nav-row-label sb-title-s">${node.label}</span>${metaEl}${chev}
     </div>`;
@@ -428,15 +463,17 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         <span class="sb-side-nav-folder-open">${sbIcon('folder-open-line', 'L')}</span>
       </span>`;
     // group (Parent / Sub-group): folder + name; правый слот — counter (default)
-    // / edit+delete по hover (icon-only-small). Раскрытие по клику (folder swap),
-    // без chevron-кнопки. Selected → surface-1, hover → Shadow-S.
+    // / edit+delete по hover (icon-only-small). Клик = ТОЛЬКО раскрытие (folder
+    // swap), без chevron-кнопки и без select — иначе ячейка залипает в surface-1
+    // после сворачивания (контейнер, не навигационная цель). Раскрытый group уже
+    // даёт surface-1+синий через .expanded; selected-визуал — через data. Hover → Shadow-S.
     const gMeta = node.counter != null ? `<span class="sb-side-nav-row-meta">${cnt(node.counter)}</span>` : '';
     const gActions = `<span class="sb-side-nav-row-actions">
         <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-side-nav-edit" onclick="event.stopPropagation()">${sbIcon('pencil-line', 'S')}</button>
         <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-side-nav-delete" onclick="event.stopPropagation()">${sbIcon('delete-bin-line', 'S')}</button>
       </span>`;
     const gDis = node.disabled ? ' is-disabled' : '';
-    const gOnclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, true)"';
+    const gOnclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, false)"';
     // Позиции уровня (всё от depth, в CSS — без магических px):
     //   --sn-group-pad = 16 + depth*32       — отступ Group/Parent (16, 48, …)
     //   --sn-rail      = group-pad + 12       — колонка рельсы = ЦЕНТР папки родителя
@@ -458,8 +495,12 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   // variant: 'menu' (overlay-меню, замена Nav Bar в компакте — Single/Parent/
   // Child, read-only) | 'bar' (навигатор-дерево с Grand-Parent / edit-delete —
   // в работе). По умолчанию 'menu'.
-  function mkSideNav({ variant = 'menu', header, subNav, toolBar, tree = [], footer, empty } = {}) {
-    const cls = 'sb-side-nav is-' + (variant === 'bar' ? 'bar' : 'menu');
+  // embedded: «встроенный» режим — компонент живёт внутри чужого контейнера
+  // (рейка приложения): без своей рамки/radius/фикс-ширины и БЕЗ собственного
+  // скролла (скроллит хост). Зоны становятся flush. Sticky-поведение (search/
+  // section-header) вешает хост. Остальное (ячейки, роли, слоты) — как обычно.
+  function mkSideNav({ variant = 'menu', header, subNav, toolBar, tree = [], footer, empty, embedded } = {}) {
+    const cls = 'sb-side-nav is-' + (variant === 'bar' ? 'bar' : 'menu') + (embedded ? ' is-embedded' : '');
     const headerEl  = header  ? `<div class="sb-side-nav-header">${header}</div>`   : '';
     const subNavEl  = subNav  ? `<div class="sb-side-nav-subnav">${subNav}</div>`   : '';
     const toolBarEl = toolBar ? `<div class="sb-side-nav-toolbar">${toolBar}</div>` : '';
@@ -654,6 +695,14 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       : n);
   }
 
+  // Тогл "Section": разбивает плоский список лейблами-секциями (role
+  // section-header → Section Header). Демо menu-варианта.
+  function withSectionHeaders(tree) {
+    const head = label => ({ role: 'section-header', slotLeft: `<span class="sb-caption">${label}</span>` });
+    const mid = Math.ceil(tree.length / 2);
+    return [head('Section'), ...tree.slice(0, mid), head('Section'), ...tree.slice(mid)];
+  }
+
   // Превью-стейдж фиксированной высоты — чтобы было видно скролл body и
   // прижатый footer. На surface-1 подложке.
   function stage(content, h = 560) {
@@ -678,6 +727,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         content:     'menu',     // flat | menu
         icon:        false,      // leading-иконка в Parent/Single
         empty:       false,
+        sectionHead: false,      // лейблы-секции (section-header) в menu-списке
       },
       controls(pg) {
         return `<div class="pg-group">
@@ -689,8 +739,9 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
               ], { label: 'Variant' })}
               ${pg.select('content', CONTENT_OPTS[SB_PG.state(pg.name)?.variant || 'menu'], { label: 'Content' })}
               <div class="pg-toggles">
-                ${pg.toggle('icon',  'Icon')}
-                ${pg.toggle('empty', 'Empty')}
+                ${pg.toggle('icon',    'Icon')}
+                ${pg.toggle('empty',   'Empty')}
+                ${pg.toggle('sectionHead', 'Section')}
               </div>
             </div>
           </div>
@@ -712,6 +763,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       render(s) {
         let tree = treeFor(s.content);
         if (s.icon) tree = withIcons(tree);
+        // Section-лейблы — фишка плоского menu-списка (в bar свои Grand-Parent'ы).
+        if (s.sectionHead && s.variant === 'menu') tree = withSectionHeaders(tree);
         return stage(mkSideNav({
           variant: s.variant,
           ...demoChrome({ headerStyle: s.headerStyle, subNav: s.subNav, search: s.search }),
@@ -722,7 +775,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       },
       genCode(s) {
         return {
-          html: `<!-- sbMkSideNav({ variant:'menu'|'bar', header, subNav, toolBar, tree, footer, empty }).\n     Узлы дерева: { role:'item'|'parent'|'group'|'section', label, icon, status, badge, counter, selected, expanded, navigable, disabled, children }. -->`,
+          html: `<!-- sbMkSideNav({ variant:'menu'|'bar', header, subNav, toolBar, tree, footer, empty }).\n     Узлы дерева: { role:'item'|'parent'|'group'|'section'|'section-header', label, icon, status, badge, counter, leadSlot, rightSlot, onClick, selected, expanded, navigable, disabled, children }.\n     section-header: { role:'section-header', slotLeft, slotRight }. -->`,
           css: COMP_CSS.sideNav,
         };
       },
@@ -789,6 +842,25 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
           tree:    TREE_MENU,
         }), 600),
         html: `<!-- tree:[ {role:'parent', label:'Parent', expanded:true, children:[ {role:'item', label:'Child', status:'online', navigable:true}, ... ]} ] -->`,
+        css: COMP_CSS.sideNav,
+      },
+      {
+        title: 'Section Header + text-status (slots)',
+        desc: 'Лейблы-секции — role section-header (прокидывает слоты в наш Section Header: slotLeft = caption, slotRight = опц. counter/«+»). Ячейка несёт произвольный rightSlot — здесь text-status (Status). Этим Side Menu становится хром-сайдбаром (как чром DS).',
+        preview: stage(mkSideNav({
+          variant: 'menu',
+          header:  demoHeader('logo', true),
+          tree: [
+            { role: 'section-header', slotLeft: '<span class="sb-caption">Section</span>' },
+            { role: 'item', label: 'Single Item', rightSlot: '<span class="sb-status"><span class="sb-status-dot online"></span>Online</span>' },
+            { role: 'item', label: 'Single Item', selected: true },
+            { role: 'item', label: 'Single Item' },
+            { role: 'section-header', slotLeft: '<span class="sb-caption">Section</span>', slotRight: '<span class="sb-counter">2</span>' },
+            { role: 'item', label: 'Single Item', rightSlot: '<span class="sb-status"><span class="sb-status-dot maintenance"></span>Away</span>' },
+            { role: 'item', label: 'Single Item' },
+          ],
+        }), 460),
+        html: `<!-- tree:[ {role:'section-header', slotLeft:'<caption>', slotRight?}, {role:'item', label, rightSlot:'<status text>', onClick?, selected?} ] -->`,
         css: COMP_CSS.sideNav,
       },
       {

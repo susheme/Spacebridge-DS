@@ -16,60 +16,60 @@ const NAV = [
     { id: 'tool-bar', label: 'Tool Bar', incomplete: true },
   ]},
   { category: 'Navigation', items: [
+    { id: 'bottom-bars', label: 'Bottom Bars' },
+    { id: 'breadcrumbs', label: 'Breadcrumbs', ready: true },
+    { id: 'header-l', label: 'Header L', ready: true, done: true },
+    { id: 'header-m', label: 'Header M', ready: true, done: true },
+    { id: 'header-s', label: 'Header S', incomplete: true },
     { id: 'section-header', label: 'Header Section', ready: true },
     { id: 'header-xs', label: 'Header XS', ready: true },
-    { id: 'header-s', label: 'Header S', incomplete: true },
-    { id: 'header-m', label: 'Header M', ready: true, done: true },
-    { id: 'header-l', label: 'Header L', ready: true, done: true },
-    { id: 'side-navigation', label: 'Side Navigation', inProgress: true },
-    { id: 'breadcrumbs', label: 'Breadcrumbs', ready: true },
-    { id: 'tab-bar', label: 'Tab Bar', inProgress: true },
-    { id: 'segment-menu', label: 'Segment Menu', ready: true, done: true },
-    { id: 'toc', label: 'Sticky Table of Contents', ready: true },
-    { id: 'pagination', label: 'Pagination', inProgress: true },
-    { id: 'bottom-bars', label: 'Bottom Bars' },
     { id: 'nav-bar', label: 'Nav Bar', ready: true },
+    { id: 'pagination', label: 'Pagination', inProgress: true },
+    { id: 'segment-menu', label: 'Segment Menu', ready: true, done: true },
+    { id: 'side-navigation', label: 'Side Navigation', inProgress: true },
+    { id: 'toc', label: 'Sticky Table of Contents', ready: true },
     { id: 'sub-nav', label: 'Sub Nav', ready: true, done: true },
+    { id: 'tab-bar', label: 'Tab Bar', inProgress: true },
   ]},
   { category: 'Data Display', items: [
+    { id: 'avatar', label: 'Avatar', ready: true },
+    { id: 'badge', label: 'Badge', ready: true },
+    { id: 'cards', label: 'Cards' },
+    { id: 'context-menu', label: 'Context Menu', incomplete: true },
+    { id: 'counters', label: 'Counters', ready: true },
+    { id: 'led-panel', label: 'LED Panel', ready: true, done: true },
+    { id: 'list', label: 'List', ready: true },
+    { id: 'status', label: 'Status', ready: true },
     { id: 'table', label: 'Table', inProgress: true },
     { id: 'table-footer', label: 'Table Footer', inProgress: true },
-    { id: 'list', label: 'List', ready: true },
-    { id: 'context-menu', label: 'Context Menu', incomplete: true },
-    { id: 'cards', label: 'Cards' },
-    { id: 'badge', label: 'Badge', ready: true },
-    { id: 'avatar', label: 'Avatar', ready: true },
-    { id: 'status', label: 'Status', ready: true },
-    { id: 'led-panel', label: 'LED Panel', ready: true, done: true },
-    { id: 'counters', label: 'Counters', ready: true },
     { id: 'tags', label: 'Tags', ready: true },
   ]},
   { category: 'Forms', items: [
     { id: 'buttons', label: 'Buttons', ready: true },
+    { id: 'checkbox', label: 'Checkbox', ready: true },
     { id: 'chevron', label: 'Chevron Button', ready: true },
+    { id: 'chips', label: 'Chips' },
+    { id: 'file-uploader', label: 'File Uploader' },
     { id: 'input', label: 'Input', ready: true },
-    { id: 'textarea', label: 'Textarea', ready: true },
     { id: 'password', label: 'Password Input', ready: true },
+    { id: 'radio', label: 'Radio', ready: true, done: true },
     { id: 'search-bar', label: 'Search Bar', ready: true, done: true },
     { id: 'selectors', label: 'Selectors / Dropdowns', ready: true },
-    { id: 'chips', label: 'Chips' },
-    { id: 'toggles', label: 'Toggles', ready: true },
-    { id: 'checkbox', label: 'Checkbox', ready: true },
-    { id: 'radio', label: 'Radio', ready: true, done: true },
     { id: 'sliders', label: 'Sliders' },
-    { id: 'file-uploader', label: 'File Uploader' },
+    { id: 'textarea', label: 'Textarea', ready: true },
+    { id: 'toggles', label: 'Toggles', ready: true },
   ]},
   { category: 'Feedback', items: [
-    { id: 'notifications', label: 'Notifications', inProgress: true },
-    { id: 'toast', label: 'Toast' },
     { id: 'dialogues', label: 'Dialogues / Modals' },
     { id: 'loaders', label: 'Loaders' },
+    { id: 'notifications', label: 'Notifications', inProgress: true },
     { id: 'pop-ups', label: 'Pop-Ups' },
+    { id: 'toast', label: 'Toast' },
   ]},
   { category: 'Utility', items: [
     { id: 'icons', label: 'Icons' },
-    { id: 'tooltips', label: 'Tooltips' },
     { id: 'kbd', label: 'Keyboard Shortcut', ready: true },
+    { id: 'tooltips', label: 'Tooltips' },
   ]},
 ];
 
@@ -164,42 +164,44 @@ function renderSidebar() {
   const prevInput = document.getElementById('navSearchInput');
   const prevQuery = prevInput ? prevInput.value : '';
 
-  // Sticky search-плашка наверху сайдбара. Использует наш .sb-search
-  // в icon-left варианте + KBS-подсказку ⌘+K в right-slot. Никаких
-  // ручных полу-разметок — всё через sbMkSearch / sbMkKbdGroup.
+  // Sticky search-плашка наверху сайдбара — хост-элемент рейки (свой sticky +
+  // edge-bleed). Дальше — тело сайдбара как НАШ Side Nav в embedded-режиме
+  // (dogfood: section-header + ячейки компонента, скроллит рейка).
   let html = `<div class="sidebar-search">
     ${sbMkSearch({
       iconLeft: true,
       placeholder: 'Search components',
       inputId: 'navSearchInput',
-      rightSlot: sbMkKbdGroup(['⌘','K']),
+      shortcut: true,
     })}
   </div>
   <div class="sidebar-empty"><span class="sb-body-m">Nothing found</span></div>`;
 
+  // Дерево Side Nav: на каждую категорию — section-header, затем её items.
+  // leadSlot = dot статуса (стили .sidebar .dot), rightSlot = badge,
+  // onClick = navigate, selected = активная страница.
+  const tree = [];
   NAV.forEach(group => {
-    html += `<div class="sidebar-section" data-category="${group.category || ''}">`;
     if (group.category) {
-      html += sbMkSectionHeader({
-        slotLeft: `<span class="sb-caption">${group.category}</span>`,
-        slotRight: false,
-      });
+      tree.push({ role: 'section-header', slotLeft: `<span class="sb-caption">${group.category}</span>` });
     }
     group.items.forEach(item => {
       const active = (location.hash === '#' + item.id) || (!location.hash && item.id === 'getting-started');
       const dotCls = item.ready ? '' : item.inProgress ? 'in-progress' : item.incomplete ? 'incomplete' : 'coming';
       const badge = item.inProgress
-        ? ' <span class="sb-badge sb-badge-alert">In Progress</span>'
-        : item.incomplete
-          ? ' <span class="sb-badge sb-badge-primary">Incomplete</span>'
-          : '';
-      html += `<div class="sidebar-item sb-title-s${active ? ' active' : ''}" data-page="${item.id}" data-search="${item.label.toLowerCase()}" onclick="navigate('${item.id}')">
-        <span class="dot ${dotCls}"></span>
-        <span class="sidebar-item-label" data-label="${item.label}">${item.label}</span>${badge}
-      </div>`;
+        ? '<span class="sb-badge sb-badge-alert">In Progress</span>'
+        : item.incomplete ? '<span class="sb-badge sb-badge-primary">Incomplete</span>' : '';
+      tree.push({
+        role: 'item',
+        label: item.label,
+        leadSlot: `<span class="dot ${dotCls}"></span>`,
+        rightSlot: badge || undefined,
+        selected: active,
+        onClick: `navigate('${item.id}')`,
+      });
     });
-    html += '</div>';
   });
+  html += sbMkSideNav({ variant: 'menu', embedded: true, tree });
   sb.innerHTML = html;
 
   // Восстанавливаем search-state и подключаем live-фильтр.
@@ -224,32 +226,41 @@ function filterNav(query) {
   const q = (query || '').trim().toLowerCase();
   const sb = document.getElementById('sidebar');
   if (!sb) return;
+  const body = sb.querySelector('.sb-side-nav-body');
+  if (!body) return;
   let anyMatch = false;
 
-  sb.querySelectorAll('.sidebar-section').forEach(sec => {
-    let sectionMatch = false;
-    sec.querySelectorAll('.sidebar-item').forEach(item => {
-      const haystack = item.dataset.search || '';
-      const match = !q || haystack.includes(q);
-      item.style.display = match ? '' : 'none';
-      if (match) { sectionMatch = true; anyMatch = true; }
+  // Плоское body: section-header'ы и строки-айтемы — сиблинги. Идём по порядку,
+  // запоминаем текущий header и прячем его, если ни один его item не совпал.
+  let curHeader = null;
+  let headerHit = false;
+  const flushHeader = () => { if (curHeader) curHeader.style.display = headerHit ? '' : 'none'; };
 
-      // Highlight matched substring в лейбле.
-      const labelEl = item.querySelector('.sidebar-item-label');
-      if (labelEl) {
-        const orig = labelEl.dataset.label || '';
-        if (q && orig.toLowerCase().includes(q)) {
-          const i = orig.toLowerCase().indexOf(q);
-          labelEl.innerHTML = esc(orig.slice(0, i))
-            + '<mark class="nav-hl">' + esc(orig.slice(i, i + q.length)) + '</mark>'
-            + esc(orig.slice(i + q.length));
-        } else {
-          labelEl.textContent = orig;
-        }
-      }
-    });
-    sec.style.display = sectionMatch ? '' : 'none';
+  Array.from(body.children).forEach(el => {
+    if (el.classList.contains('sb-section-header')) {
+      flushHeader();
+      curHeader = el;
+      headerHit = false;
+      return;
+    }
+    const labelEl = el.querySelector('.sb-side-nav-row-label');
+    if (!labelEl) return;
+    const orig = labelEl.textContent || '';
+    const match = !q || orig.toLowerCase().includes(q);
+    el.style.display = match ? '' : 'none';
+    if (match) { anyMatch = true; headerHit = true; }
+
+    // Highlight matched substring в лейбле (textContent — стабильный источник).
+    if (q && match) {
+      const i = orig.toLowerCase().indexOf(q);
+      labelEl.innerHTML = esc(orig.slice(0, i))
+        + '<mark class="nav-hl">' + esc(orig.slice(i, i + q.length)) + '</mark>'
+        + esc(orig.slice(i + q.length));
+    } else {
+      labelEl.textContent = orig;
+    }
   });
+  flushHeader();
 
   const empty = sb.querySelector('.sidebar-empty');
   if (empty) empty.classList.toggle('visible', q && !anyMatch);

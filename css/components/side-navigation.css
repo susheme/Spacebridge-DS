@@ -40,6 +40,29 @@
   box-sizing: border-box;
 }
 
+/* ── Embedded (flush) — компонент внутри чужого контейнера (рейка приложения).
+   Снимаем свою рамку/radius/фикс-ширину и СВОЙ скролл: высота по контенту,
+   body overflow visible → скроллит хост. Горизонтальный inset отдаём хосту
+   (его padding + padding строки). Sticky search/section-header вешает хост. */
+.sb-side-nav.is-embedded {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+/* 3 класса — перебиваем .sb-side-nav.is-menu Shadow-L (та же база, но ниже в
+   файле): встроенный компонент не «всплывает», сепаратор даёт хост (border). */
+.sb-side-nav.is-menu.is-embedded { box-shadow: none; }
+.sb-side-nav.is-embedded .sb-side-nav-body {
+  flex: 0 1 auto;
+  overflow: visible;
+  scrollbar-gutter: auto;
+}
+
 /* Chrome-зоны — не сжимаются, body забирает остаток и скроллится. */
 .sb-side-nav-header,
 .sb-side-nav-subnav,
@@ -100,9 +123,9 @@
   /* transparent (а не --background): визуально = фон сайдбара, но прозрачность
      не даёт соседним ячейкам перекрывать hover-тень соседа сверху/снизу. */
   background: transparent;
-  /* Имя ячейки — --text-muted (имена наследуют от строки; иконки тоже).
+  /* Имя ячейки — --text-tertiary (имена наследуют от строки; иконки тоже).
      States: hover(menu)/selected → --primary, disabled → --border. */
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   cursor: pointer;
   user-select: none;
   box-sizing: border-box;

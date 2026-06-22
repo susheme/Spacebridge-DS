@@ -27,11 +27,21 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
 (() => {
   const SEARCH_ICON = SB_GLYPHS.search;
 
+  // KBS-подсказка для right-slot: shortcut===true → ⌘K; массив → кастомные
+  // клавиши (один key → одиночный kbd, иначе группа). Зависит от kbd-компонента.
+  function shortcutSlot(shortcut) {
+    if (!shortcut || typeof sbMkKbdGroup !== 'function') return '';
+    const keys = Array.isArray(shortcut) ? shortcut : ['⌘', 'K'];
+    return keys.length === 1 ? sbMkKbd(keys[0]) : sbMkKbdGroup(keys);
+  }
+
   function mkSearch(opts = {}) {
     const {
       selected, lineView, disabled, critical, iconLeft,
       placeholder = 'Search',
-      rightSlot,        // произвольный HTML справа (KBS-подсказка, clear-кнопка и т.п.)
+      rightSlot,        // произвольный HTML справа (clear-кнопка и т.п.)
+      shortcut,         // KBS-подсказка: true → ⌘K, либо массив клавиш (['⌘','K']).
+                        // Удобная обёртка над rightSlot; явный rightSlot важнее.
       inputId,          // опциональный id для <input> (NAV-search и подобные кейсы)
     } = opts;
 
@@ -49,11 +59,12 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
     // В icon-left варианте .sb-search-btn НЕ рендерим (иконка уже слева).
     // Справа — либо rightSlot (KBS / clear / etc), либо ничего.
     // Без icon-left — старая разметка с .sb-search-btn.
+    // Эффективный right-slot: явный rightSlot, иначе KBS из shortcut. Живёт
+    // только в icon-left режиме (без него справа — search-кнопка).
+    const slot = rightSlot != null ? rightSlot : shortcutSlot(shortcut);
     let rightEl = '';
     if (iconLeft) {
-      rightEl = rightSlot
-        ? `<span class="sb-search-right-slot">${rightSlot}</span>`
-        : '';
+      rightEl = slot ? `<span class="sb-search-right-slot">${slot}</span>` : '';
     } else {
       rightEl = `<button class="sb-search-btn" type="button" tabindex="-1">${SEARCH_ICON}</button>`;
     }
@@ -74,7 +85,7 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
     playground: {
       title: 'Search Bar Playground',
       minPreview: 360,  // Search Bar wrapper max-width:360 — нужна полная ширина чтобы не сжимался
-      state: { selected: false, lineView: false, disabled: false, critical: false, iconLeft: false },
+      state: { selected: false, lineView: false, disabled: false, critical: false, iconLeft: false, shortcut: false },
       controls(pg) {
         // 2 группы (State / Style) укладываются в pg-controls grid
         // через `.pg-card.wide .pg-controls:has(> .pg-group)` правило.
@@ -94,6 +105,7 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
               <div class="pg-toggles">
                 ${pg.toggle('lineView',  'Line View')}
                 ${pg.toggle('iconLeft',  'Icon Left')}
+                ${pg.toggle('shortcut',  'Shortcut', { requires: 'iconLeft' })}
               </div>
             </div>
           </div>`;

@@ -13,16 +13,19 @@ window.COMP_CSS.pagination = `.sb-pagination {
   align-items: center;
   gap: var(--gap-horiz-xs);
 }
-.sb-pagination-page {
-  min-width: 32px;
-  padding: 0 var(--pad-horiz-8);
+.sb-btn-sm.sb-btn-icon.sb-pagination-page {
+  width: auto;
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: none;
+  padding-left: var(--pad-horiz-4);
+  padding-right: var(--pad-horiz-4);
 }
 .sb-pagination-ellipsis {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
+  min-width: var(--btn-rounded-min-width-s);
+  height: var(--btn-rounded-max-height-s);
   color: var(--text-secondary);
   font-size: var(--body-font-size-m);
   user-select: none;
@@ -72,7 +75,9 @@ window.COMP_CSS.pagination = `.sb-pagination {
       const isCurrent = p === current;
       const variant = isCurrent ? 'sb-btn-primary' : 'sb-btn-secondary';
       const aria = isCurrent ? ' aria-current="page"' : '';
-      return `<button class="sb-btn ${variant} sb-btn-sm sb-pagination-page"${aria}${onClick(p)}>${p}</button>`;
+      // Номер = тот же Icon-Only Small, что и стрелки (current = Primary). Квадрат
+      // 24; .sb-pagination-page разрешает ширине расти для много-значных номеров.
+      return `<button class="sb-btn ${variant} sb-btn-sm sb-btn-icon sb-pagination-page"${aria}${onClick(p)}>${p}</button>`;
     }).join('\n      ');
 
     const prevDisabled = current <= 1 ? ' disabled' : '';
@@ -109,7 +114,7 @@ window.COMP_CSS.pagination = `.sb-pagination {
   sbRegister({
     name: 'pagination',
     title: 'Pagination',
-    description: 'Page-навигация для Table / List. Two atoms: <code>sbMkPagination</code> — controls (prev/next + numbers, на базе Button-Secondary Small, current = Primary Small); <code>sbMkPaginationJump</code> — jump-input на базе Input Field. Info-текст ("X of Y rows") — задача consumer\'а (обычно левый слот Table Footer\'а). Алгоритм видимых страниц: первая + хвост + current ± 1, разрывы заполняются «…».',
+    description: 'Page-навигация для Table / List. Two atoms: <code>sbMkPagination</code> — controls (prev/next + numbers, на базе Button Secondary Icon-Only Small, current = Primary Icon-Only); <code>sbMkPaginationJump</code> — jump-input на базе Input Field. Info-текст ("X of Y rows") — задача consumer\'а (обычно левый слот Table Footer\'а). Алгоритм видимых страниц: первая + хвост + current ± 1, разрывы заполняются «…».',
     playground: {
       state: { currentPage: 1, totalPages: 26 },
       controls(pg) {

@@ -3,28 +3,32 @@
    Info-текст (Visible X of Y) и Jump-input — отдельные атомы, рендерятся
    consumer'ом (обычно через Table Footer слоты). Pagination = controls only.
 
-   Контролы — на базе Button-Secondary Small:
-     - page-numbers   : sb-btn-secondary + .sb-pagination-page (override min-width 80→32)
-     - current page   : sb-btn-primary (визуальная активность)
+   Контролы — на базе Button Secondary Icon-Only Small (квадрат 24, как стрелки):
+     - page-numbers   : sb-btn-secondary.sb-btn-icon + .sb-pagination-page (рост ширины для много-значных)
+     - current page   : sb-btn-primary.sb-btn-icon (визуальная активность)
      - prev/next      : sb-btn-secondary.sb-btn-icon с arrow-drop-left/right-line (S=16) */
 .sb-pagination {
   display: flex;
   align-items: center;
   gap: var(--gap-horiz-xs);
 }
-/* Квадратная page-кнопка: переопределяет sb-btn-sm min-width 80 → 32.
-   Padding 8 (а не 16) — чтобы 2- и 3-значные номера были одинаковой ширины. */
-.sb-pagination-page {
-  min-width: 32px;
-  padding: 0 var(--pad-horiz-8);
+/* Page-номер = Icon-Only Small (24×24). Override (0,3,0 > .sb-btn-icon.sb-btn-sm
+   0,2,0): держим квадрат-минимум 24, но разрешаем ширине расти под много-значные
+   номера (иначе «100» вылезает за 24px-бокс). Single/2-значные = 24px, как стрелки. */
+.sb-btn-sm.sb-btn-icon.sb-pagination-page {
+  width: auto;
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: none;
+  padding-left: var(--pad-horiz-4);
+  padding-right: var(--pad-horiz-4);
 }
-/* «…» между неcмежными номерами. Та же высота (32) и min-width (32) — выравнивание по сетке. */
+/* «…» между неcмежными номерами. Та же высота/min-width (24), что у кнопок — выравнивание. */
 .sb-pagination-ellipsis {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
+  min-width: var(--btn-rounded-min-width-s);
+  height: var(--btn-rounded-max-height-s);
   color: var(--text-secondary);
   font-size: var(--body-font-size-m);
   user-select: none;

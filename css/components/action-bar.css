@@ -1,0 +1,29 @@
+/* --- [SYNC:action-bar] Action Bar ---
+   Плашка с 1–2 кнопками внизу модалки / карточки / алерта / окна. Завершает
+   flow (commit Primary / dismiss Secondary). Кнопки — DS Button (.sb-btn-*).
+   Варианты: divider (border-top, встроенная) / floating (radius + Shadow-S).
+   НЕ путать с Tool Bar (манипуляция) и Info Footer (данные). */
+.sb-action-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  width: 100%;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  background: var(--background);
+  border-top: var(--border-width-1) solid var(--border-soft);
+  box-sizing: border-box;
+}
+/* Выравнивание кнопок. Default — left (по Figma). */
+.sb-action-bar.align-right   { justify-content: flex-end; }
+.sb-action-bar.align-between { justify-content: space-between; }
+/* Center — кнопки тянутся на всю ширину бара (flex:1): одна = full-width, две =
+   поровну. min-width:0 перебивает дефолтный min-width кнопки в узких контейнерах. */
+.sb-action-bar.align-center > .sb-btn { flex: 1 1 0; min-width: 0; }
+/* Floating — отрывается от контента: radius + Shadow-S, без верхнего бордера.
+   Та же роль, что «shadow drop при скролле» — выделиться над контентом. */
+.sb-action-bar.floating {
+  border-top: none;
+  border-radius: var(--radius-12);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+/* --- [/SYNC:action-bar] --- */

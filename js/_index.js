@@ -11,6 +11,7 @@
 window.SB_COMPONENTS = [
   // name                 file                       deps             notes
   { name: 'buttons',       file: 'buttons.js',        deps: [] },
+  { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
   { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // used by selectors
   { name: 'separators',    file: 'separators.js',     deps: [] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },

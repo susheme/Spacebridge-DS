@@ -39,6 +39,7 @@
 <link rel="stylesheet" href="css/components/selector.css">
 <link rel="stylesheet" href="css/components/tags.css">
 <link rel="stylesheet" href="css/components/status.css">
+<link rel="stylesheet" href="css/components/info-footer.css">
 <link rel="stylesheet" href="css/components/badge.css">
 <link rel="stylesheet" href="css/components/pin.css">
 <link rel="stylesheet" href="css/components/notifications.css">
@@ -82,7 +83,7 @@
         <span class="sb-brand" style="font-size:18px;color:var(--primary)">SB</span>
       </span>
       <span class="sb-nav-bar-logo-title sb-caption" style="color:var(--text-secondary)">| Design System</span>
-      <span class="sb-nav-bar-badge"><span class="sb-badge-status mini bs-blue">v1.0.0</span></span>
+      <span class="sb-nav-bar-badge"><span class="sb-badge-status mini bs-blue">v1.13.0</span></span>
     </div>
     <div class="sb-nav-bar-center"></div>
     <div class="sb-nav-bar-right" id="dsNavRight">
@@ -98,6 +99,9 @@
     <!-- CONTENT -->
     <main class="content" id="content"></main>
   </div>
+
+  <!-- APP INFO FOOTER (dogfood: sbMkInfoFooter long) — заполняется ниже скриптом -->
+  <div id="app-info-footer" style="flex-shrink:0"></div>
 </div>
 
 <!-- JS: порядок важен. См. js/_index.js -->
@@ -124,6 +128,8 @@
 <script src="js/components/selectors.js"></script>
 <script src="js/components/tags.js"></script>
 <script src="js/components/status.js"></script>
+<!-- info-footer — юзает классы .sb-status-dot / .sb-sep / .sb-sub; esc из core. -->
+<script src="js/components/info-footer.js"></script>
 <script src="js/components/badge.js"></script>
 <script src="js/components/notifications.js"></script>
 <script src="js/components/table.js"></script>
@@ -174,6 +180,26 @@
   tmp.innerHTML = sbMkLangSwitcher();
   var switcher = tmp.firstElementChild;
   right.insertBefore(switcher, right.firstChild);
+})();
+</script>
+
+<!-- App Info Footer (dogfood: наш Info Footer в подвале DS). Версия берётся из
+     бейджа Nav Bar (single source). IIFE — без top-level переменных. -->
+<script>
+(function(){
+  var el = document.getElementById('app-info-footer');
+  if (!el || typeof sbMkInfoFooter !== 'function') return;
+  var badge = document.querySelector('.sb-nav-bar-badge .sb-badge-status');
+  var ver = badge ? badge.textContent.trim() : 'v1.13.0';
+  el.innerHTML = sbMkInfoFooter({
+    variant: 'long',
+    align: 'center',
+    slots: [
+      { text: 'Spacebridge Design System' },
+      { text: 'Version ' + ver },
+      { text: '© Copyright 2026 SpaceBridge Inc.' }
+    ]
+  });
 })();
 </script>
 </body>

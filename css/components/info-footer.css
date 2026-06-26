@@ -1,0 +1,54 @@
+/* --- [SYNC:info-footer] Info Footer ---
+   Системная инфа по слотам (текст Subscription / status-индикатор), всегда видна.
+   Long — горизонтальная полоса на всю ширину (sticky внизу, Shadow-S, border-top).
+   Compact — вертикальный блок для footer-слота Side Menu (radius 8). Слот опц. с
+   popup-якорем (Tooltip позже). НЕ путать с Action Bar / Tool Bar. */
+.sb-info-footer {
+  display: flex;
+  background: var(--surface-1);
+  box-sizing: border-box;
+}
+/* Long — горизонтальная полоса на всю ширину экрана, прижата снизу (Shadow-S +
+   border-top, radius 0). Слоты в ряд, между ними вертикальный Separator. */
+.sb-info-footer.is-long {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  padding: var(--pad-vert-2) var(--pad-horiz-8);
+  border-radius: var(--radius-0);
+  border-top: var(--border-width-1) solid var(--border);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+.sb-info-footer.is-long.align-center { justify-content: center; }
+/* Compact — вертикальный блок (footer-слот Side Menu): строки стопкой, radius 8,
+   без border-top/тени. min-width = ширина ячейки Side Menu (272). */
+.sb-info-footer.is-compact {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-vert-xxs);
+  width: 100%;
+  min-width: var(--side-nav-item-width);
+  max-width: var(--nav-menu-max-width);
+  min-height: 24px; /* Figma-спека; нет dimension-токена — hardcode, согласовано */
+  max-height: var(--textarea-max-height);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  border-radius: var(--radius-8);
+}
+/* Слот — текст Subscription, цвет text-tertiary (sb-sub наследует color). */
+.sb-info-footer-slot {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+/* Status-индикатор в слоте: dot + лейбл, gap 4. */
+.sb-info-footer-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+}
+/* Popup-якорь: слот с расширенной/реалтайм-инфой по ховеру. Сам popup — позже
+   (Tooltip в работе). Сейчас — только якорь (data-attr + фокусируемость + cursor). */
+.sb-info-footer-slot.has-popup { cursor: help; }
+/* --- [/SYNC:info-footer] --- */

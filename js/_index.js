@@ -27,6 +27,7 @@ window.SB_COMPONENTS = [
   { name: 'selectors',     file: 'selectors.js',      deps: ['chevron', 'input'] },  // uses chevron + inputFieldWrap
   { name: 'tags',          file: 'tags.js',           deps: [] },
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
+  { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
   { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
   { name: 'notifications', file: 'notifications.js',  deps: [] },
   { name: 'table',         file: 'table.js',          deps: [] },

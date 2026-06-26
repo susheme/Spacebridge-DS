@@ -7,6 +7,9 @@
 
 Источник версии — бейдж в Nav Bar (`index.html`), его читает Info Footer в подвале.
 
+## [1.13.1] — 2026-06-26
+- Info Footer: slot-текст → Badge-типографика (10px) + `--text-muted`; статус → Incomplete.
+
 ## [1.13.0] — 2026-06-26
 - **Info Footer** — системная инфа по слотам (текст / status-индикатор), лейауты
   Long (full-width strip) и Compact (блок для Side Menu), popup-якорь. Догфуд в

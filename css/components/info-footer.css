@@ -35,11 +35,15 @@
   padding: var(--pad-vert-8) var(--pad-horiz-8);
   border-radius: var(--radius-8);
 }
-/* Слот — текст Subscription, цвет text-tertiary (sb-sub наследует color). */
+/* Слот — типографика Badge (--badge-font-size 10), цвет text-muted. Текст внутри
+   наследует (без отдельного sb-* класса — font в CSS компонента через токены). */
 .sb-info-footer-slot {
   display: inline-flex;
   align-items: center;
-  color: var(--text-tertiary);
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--button-line-height);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 /* Status-индикатор в слоте: dot + лейбл, gap 4. */

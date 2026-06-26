@@ -39,11 +39,15 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
   padding: var(--pad-vert-8) var(--pad-horiz-8);
   border-radius: var(--radius-8);
 }
-/* Слот — текст Subscription, цвет text-tertiary (sb-sub наследует color). */
+/* Слот — типографика Badge (--badge-font-size 10), цвет text-muted. Текст внутри
+   наследует (без отдельного sb-* класса — font в CSS компонента через токены). */
 .sb-info-footer-slot {
   display: inline-flex;
   align-items: center;
-  color: var(--text-tertiary);
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--button-line-height);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 /* Status-индикатор в слоте: dot + лейбл, gap 4. */
@@ -64,11 +68,11 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
     const cls = 'sb-info-footer-slot' + (s.popup ? ' has-popup' : '');
     let inner;
     if (s.status) {
-      inner = `<span class="sb-info-footer-indicator"><span class="sb-status-dot mini ${s.status}"></span><span class="sb-sub">${s.label || ''}</span></span>`;
+      inner = `<span class="sb-info-footer-indicator"><span class="sb-status-dot mini ${s.status}"></span>${s.label || ''}</span>`;
     } else if (s.html) {
       inner = s.html;
     } else {
-      inner = `<span class="sb-sub">${s.text || ''}</span>`;
+      inner = s.text || '';
     }
     return `<span class="${cls}"${popup}>${inner}</span>`;
   }
@@ -111,7 +115,7 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
   sbRegister({
     name: 'info-footer',
     title: 'Info Footer',
-    description: 'Всегда-видимая системная инфа (MAC / S/n / Ver / Part/n / Name / Status / copyright), разбитая по слотам. Слот — текст (Subscription) или status-индикатор (dot + лейбл); опц. popup-якорь по ховеру (расширенный/реалтайм-статус — сам popup позже, Tooltip в работе). Два лейаута: Long (горизонтальная полоса на всю ширину экрана, sticky внизу, Shadow-S) и Compact (вертикальный блок для footer-слота Side Menu). Выравнивание Left / Center. Адаптив (план): на мобиле помещается — sticky-bar внизу с отступами 16; много данных — Compact уезжает в Side Menu. НЕ путать с Action Bar (кнопки) и Tool Bar (манипуляция).',
+    description: 'Всегда-видимая системная инфа (MAC / S/n / Ver / Part/n / Name / Status / copyright), разбитая по слотам. Слот — текст (Badge-типографика, --text-muted) или status-индикатор (dot + лейбл); опц. popup-якорь по ховеру (расширенный/реалтайм-статус — сам popup позже, Tooltip в работе). Два лейаута: Long (горизонтальная полоса на всю ширину экрана, sticky внизу, Shadow-S) и Compact (вертикальный блок для footer-слота Side Menu). Выравнивание Left / Center. Адаптив (план): на мобиле помещается — sticky-bar внизу с отступами 16; много данных — Compact уезжает в Side Menu. НЕ путать с Action Bar (кнопки) и Tool Bar (манипуляция).',
     playground: {
       title: 'Info Footer Playground',
       wide: true,

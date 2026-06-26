@@ -37,7 +37,7 @@ const NAV = [
     { id: 'cards', label: 'Cards' },
     { id: 'context-menu', label: 'Context Menu', incomplete: true },
     { id: 'counters', label: 'Counters', ready: true },
-    { id: 'info-footer', label: 'Info Footer', inProgress: true },
+    { id: 'info-footer', label: 'Info Footer', incomplete: true },
     { id: 'led-panel', label: 'LED Panel', ready: true, done: true },
     { id: 'list', label: 'List', ready: true },
     { id: 'status', label: 'Status', ready: true },

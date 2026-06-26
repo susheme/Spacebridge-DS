@@ -83,7 +83,7 @@
         <span class="sb-brand" style="font-size:18px;color:var(--primary)">SB</span>
       </span>
       <span class="sb-nav-bar-logo-title sb-caption" style="color:var(--text-secondary)">| Design System</span>
-      <span class="sb-nav-bar-badge"><span class="sb-badge-status mini bs-blue">v1.13.0</span></span>
+      <span class="sb-nav-bar-badge"><span class="sb-badge-status mini bs-blue">v1.13.1</span></span>
     </div>
     <div class="sb-nav-bar-center"></div>
     <div class="sb-nav-bar-right" id="dsNavRight">
@@ -190,7 +190,7 @@
   var el = document.getElementById('app-info-footer');
   if (!el || typeof sbMkInfoFooter !== 'function') return;
   var badge = document.querySelector('.sb-nav-bar-badge .sb-badge-status');
-  var ver = badge ? badge.textContent.trim() : 'v1.13.0';
+  var ver = badge ? badge.textContent.trim() : 'v1.13.1';
   el.innerHTML = sbMkInfoFooter({
     variant: 'long',
     align: 'center',

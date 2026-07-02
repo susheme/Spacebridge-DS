@@ -1,0 +1,658 @@
+{
+  "components": {
+    "avatar": {
+      "title": "Avatar",
+      "description": "Визуальное представление пользователя, организации или объекта. Поддерживает четыре типа содержимого и три состояния: hover, статус-индикатор, бейдж.",
+      "sections": [
+        {
+          "title": "Types",
+          "desc": "Четыре типа аватаров: User (иконка пользователя), Initials (инициалы), Company (организация), Image (фото)."
+        },
+        {
+          "title": "User — All States",
+          "desc": "Все состояния: Default, Hover (синее кольцо), Status (зелёная точка), Badge (пилюля). При наличии Badge точка перемещается в верхний правый угол."
+        },
+        {
+          "title": "Initials — All States",
+          "desc": "Тип Initials — инициалы пользователя. Те же состояния."
+        },
+        {
+          "title": "Company — All States",
+          "desc": "Тип Company — иконка организации."
+        },
+        {
+          "title": "Image — All States",
+          "desc": "Тип Image — фотография. Вставьте img внутрь .sb-avatar-circle; object-fit: cover обрезает по кругу."
+        }
+      ]
+    },
+    "badge": {
+      "title": "Badge",
+      "description": "Text-badges для отображения статуса, категории или состояния объекта. Высота 24px, border-radius 20px, типографика Badge (10px / 500 / 12px).",
+      "sections": [
+        {
+          "title": "Text Badges",
+          "desc": "Пять вариантов: Default, Active, Failed, Pending, Warning. Используют alpha-цвета из токенов темы."
+        },
+        {
+          "title": "Symbol Badges",
+          "desc": "11 иконочных бейджей для разных статусов: Info, Time, Warning, Critical, Check."
+        },
+        {
+          "title": "Pin",
+          "desc": "Плашка поверх объекта — роль, метка или статус. Поддерживает текст, иконку и цветовые варианты."
+        }
+      ]
+    },
+    "breadcrumbs": {
+      "title": "Breadcrumbs",
+      "description": "Path-навигация: цепочка ссылок к корню от текущей страницы. Последний элемент — current page (bold + --text-tertiary, не интерактивный). Типографика body-m / regular зеркальна со Sticky ToC. Разделитель — chevron-right 16px.",
+      "sections": [
+        {
+          "title": "Anatomy",
+          "desc": "Контейнер <code>&lt;nav class=\"sb-breadcrumbs\"&gt;</code> с <code>aria-label=\"Breadcrumb\"</code>. Каждый item — <code>&lt;a class=\"sb-breadcrumb-item\"&gt;</code> кроме последнего: <code>&lt;span class=\"sb-breadcrumb-item is-current\" aria-current=\"page\"&gt;</code>. Между item'ами — <code>&lt;span class=\"sb-breadcrumb-sep\" aria-hidden=\"true\"&gt;</code> с иконкой chevron-right."
+        },
+        {
+          "title": "Two levels",
+          "desc": "Минимальная цепочка из двух элементов — родитель + текущая страница."
+        },
+        {
+          "title": "With leading icon",
+          "desc": "Item может содержать иконку перед лейблом (например, home для корневого узла). Иконка наследует <code>color</code> от item'а — меняется на hover/current."
+        },
+        {
+          "title": "Long path — full",
+          "desc": "Полная цепочка без сворачивания. Если строка длиннее контейнера — wrap на следующую строку (<code>flex-wrap: wrap</code> на <code>.sb-breadcrumbs</code>)."
+        },
+        {
+          "title": "Long path — collapsed",
+          "desc": "Когда цепочка глубокая, средние узлы сворачиваются в <code>…</code>. Передай <code>collapseAfter: N</code> — показ первого + последних (N−1) item'ов. Удобно для глубоких иерархий (fleet/group/device/section)."
+        }
+      ]
+    },
+    "buttons": {
+      "title": "Buttons",
+      "description": "Компонент Basic из Figma. Типы: Primary, Secondary, Text. Состояния: Hover, Disable, Loading, Critical. Иконки: Icon-L, Icon-R, Icon-Only. Размеры: L (40px) / S (32px)."
+    },
+    "checkbox": {
+      "title": "Checkbox",
+      "description": "Элемент формы для выбора опций. Размер 20×20px, border-radius 4px. Состояния: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Поддержка Label.",
+      "sections": [
+        {
+          "title": "States — No Label"
+        },
+        {
+          "title": "States — With Label"
+        }
+      ]
+    },
+    "chevron": {
+      "title": "Chevron Button",
+      "description": "Круглая иконочная кнопка для навигации и управления направлением. Размеры: 32px (Normal) и 24px (Mini). Четыре направления: Down, Up, Left, Right.",
+      "sections": [
+        {
+          "title": "Normal — All Directions"
+        },
+        {
+          "title": "Mini — All Directions"
+        }
+      ]
+    },
+    "context-menu": {
+      "title": "Context Menu",
+      "description": "Ячейки для контекстных меню, dropdown'ов, pop-up карточек. Высота 40px, опциональная иконка слева (L), опциональная hover-иконка справа (S, configurable). Selected подсвечивает фон --primary-hover, текст --primary, и показывает check справа. Клик настраиваемый: по умолчанию single-select, галочка sticky (остаётся при повторном открытии меню).",
+      "sections": [
+        {
+          "title": "Context Cell — States",
+          "desc": "Default / Hover / Selected / Disabled. Сверху — c Icon Left (24px), снизу — без. Клик по любой ячейке делает её Selected (single-select в рамках родителя)."
+        },
+        {
+          "title": "Standalone Cell (Radius 4px)",
+          "desc": "Когда ячейка не прижата к границам контейнера — добавляй модификатор .has-radius для скругления углов 4px."
+        },
+        {
+          "title": "Context Card (Dropdown / Pop-up)",
+          "desc": "Карточка-обёртка для группы ячеек — для выпадающих меню (например, overflow-menu в Header L). Radius 12, padding 8/8, gap 8 между ячейками, лёгкая тень (--shadow-sm). До 5 ячеек на карточку — иначе превращай в скроллируемый список. Ячейки в mode:\"action\" — клик не оставляет .is-selected (one-shot действия), только подсвечивается hover-фон. Если все ячейки в карточке без иконок — все равно без иконок; иконка либо у всех, либо ни у кого."
+        },
+        {
+          "title": "Context Card with Tip",
+          "desc": "Modifier <code>.with-tip</code> — карточка получает треугольник сверху-справа, «указывающий» на триггер. Используется для callout-меню над аватаром, kebab-кнопкой, tooltip'ами с действиями. Right-offset треугольника = 16px (попадает примерно в центр 32-40px иконочного триггера). Цвет триангла = фон карточки → шёва не видно."
+        }
+      ]
+    },
+    "counters": {
+      "title": "Counters",
+      "description": "Компактный элемент отображения числовых значений. Высота 24px, border-radius 4px. Варианты: Single (одно значение), Range (текущее/максимум). Состояние Empty — плейсхолдер.",
+      "sections": [
+        {
+          "title": "Single",
+          "desc": "Одиночное числовое значение. Минимальная ширина 24px, растёт по контенту."
+        },
+        {
+          "title": "Range",
+          "desc": "Формат value/max — используется для отображения заполненности (слоты, квоты, списки)."
+        }
+      ]
+    },
+    "getting-started": {
+      "title": "Getting Started",
+      "description": "Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision, and 24/7 operational environments."
+    },
+    "header-l": {
+      "title": "Header L",
+      "description": "Самый крупный хедер — для Page-уровня. Высота до 88px, padding 16/0, нижняя граница 1px (surface-2). Headline — H5 (28/900/32). Два свободных слота — Left и Right (max 700px каждый, gap 16). Между слотами — justify-content: space-between. Responsive: при ширине Header L < 768px gap сжимается до 8, inline-кнопки правого слота автоматически сворачиваются в выпадающее меню под More-кнопкой (⋯). Caption и Badge-Status остаются видимыми всегда.",
+      "sections": [
+        {
+          "title": "Anatomy",
+          "desc": "Корневой контейнер до 88px / row-flex / space-between / без скругления / нижняя граница 1px surface-2 / bg --background. Слева: Info Pop-up + Headline. Справа: Status + More-кнопка (⋯) с прикреплённым выпадающим меню."
+        },
+        {
+          "title": "Title only",
+          "desc": "Простейший вариант — только заголовок в левом слоте, без правого."
+        },
+        {
+          "title": "Navigation pattern (Back button)",
+          "desc": "Типичный сценарий: Secondary-Button с указателем «назад» в левом слоте, справа — Status, primary Action и More-кнопка с дополнительными опциями."
+        },
+        {
+          "title": "Full slot composition",
+          "desc": "Максимальное наполнение: слева Back + Info Pop-up + Headline; справа Caption + Status + inline Add (icon) + inline Action (text) + More-кнопка с дополнительным набором. При сжатии Header L < 768px — Add и Action автоматически сворачиваются в выпадающее меню под More, gap слотов сжимается до 8 px. Caption и Status остаются видимыми всегда."
+        }
+      ]
+    },
+    "header-m": {
+      "title": "Header M",
+      "description": "Используется для Page Blocks, Modals и Cards. Горизонтальный наладдер 56-64px высотой без border-radius (живёт внутри других контейнеров). Два свободных слота — Left и Right (max 700px каждый, gap 8). Заголовок — H6 (24/900). Между слотами — justify-content: space-between. Responsive: при ширине Header M < 600px inline-кнопки правого слота автоматически сворачиваются в выпадающее меню под More-кнопкой (⋯). Caption и Status остаются видимыми.",
+      "sections": [
+        {
+          "title": "Anatomy",
+          "desc": "Корневой контейнер 56-64px / row-flex / space-between / без скругления / bg --background. Слева: Info Pop-up + Headline. Справа: Status mini + More-кнопка с прикреплённым выпадающим меню."
+        },
+        {
+          "title": "Title only",
+          "desc": "Простейший вариант — только заголовок в левом слоте, без правого."
+        },
+        {
+          "title": "Navigation pattern (Back button + collapsible)",
+          "desc": "Типичный сценарий: Secondary-Button «назад» в левом слоте, справа — Status, More-кнопка с дополнительными опциями и Chevron (collapsible)."
+        },
+        {
+          "title": "Full slot composition",
+          "desc": "Максимальное наполнение: слева Back + Indicator + Info Pop-up + Headline; справа Caption + Status + inline Add (icon) + inline Action (text) + More-кнопка с дополнительным набором + Chevron. При сжатии Header M < 600px — Add и Action автоматически сворачиваются в выпадающее меню под More."
+        }
+      ]
+    },
+    "header-s": {
+      "title": "Header S",
+      "description": "Mobile-вариант хедера для основных окон, side-menu и карточек среднего размера. Top corners 16px, нижние 0 (стык с layout). Min-height 40px, max-height 136px (с meta-row + Sub-nav). Заголовок — H6 (24/900). Два режима компоновки: column (default, мобильный) с правым слотом ниже, и .top-right — row-flex с правым слотом инлайн в одной строке с заголовком. Дальше — meta-row (CAPTION + Status mini + actions) и Sub-nav slot. В sub-nav слоте всегда используем Tab Bar — Segment Menu может не поместиться по ширине в узких контекстах (мобила, узкий card). Responsive: при ширине Header S < 400px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).",
+      "sections": [
+        {
+          "title": "Top row only — Anatomy",
+          "desc": "Минимальный вариант: верхняя строка (24px) с Left slot и Headline. Без правого слота, без табов. Root — column-flex."
+        },
+        {
+          "title": "With Meta row",
+          "desc": "Под верхней строкой добавляется meta-row: ADDITIONAL INFO (caption, слева) + actions group (Status mini badge + More-кнопка с прикреплённым выпадающим меню, справа). Высота корня растёт автоматически. Если caption отсутствует, actions прижимаются к правому краю."
+        },
+        {
+          "title": "With Sub-nav slot (Tab Bar)",
+          "desc": "Опциональный нижний sub-nav slot. Внутри — Tab Bar (sbMkTabBar). Сегмент-меню не используем: на узкой ширине Header S оно не помещается. Slot min-height 40px, max-height 120px, имеет border-bottom (1px solid border). Когда слот присутствует, padding-bottom у root становится 0 — слот flush с низом."
+        },
+        {
+          "title": "Full anatomy — top + meta + sub-nav",
+          "desc": "Все три слота вместе: верхняя строка, meta-row (с More-кнопкой и выпадающим меню), sub-nav slot с Tab Bar. Максимальная высота 136px по спеке."
+        },
+        {
+          "title": "Top right slot — inline (.top-right)",
+          "desc": "Когда правый слот лежит в одной строке с заголовком, добавь модификатор .top-right на root. Root становится row-flex с justify-content: space-between. Левый блок (left + headline) и правый слот (More-кнопка с выпадающим меню) разводятся по краям."
+        }
+      ]
+    },
+    "header-xs": {
+      "title": "Header XS",
+      "description": "Самый компактный из header-семейства (40px). Применяется в Toast Notifications и небольших Cards. Левый слот (24px высота, до 700px ширины): Symbol Badge / Status / Loader + Title M (semibold). Правый слот без обёртки — туда кладётся одна Icon-Only Small Button или Chevron. Скруглены только верхние углы 12px (нижние 0 — внизу всегда соседний блок карточки). Для toast-варианта с accent-полосой справа добавь .flush-right — top-right угол станет 0."
+    },
+    "input": {
+      "title": "Input",
+      "description": "Текстовое поле. Высота 32px, border-radius 2px. Варианты: Filled и Line View. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only. Поддержка Label, Subscription и 2-row лейаута.",
+      "sections": [
+        {
+          "title": "With Title",
+          "desc": "Все состояния с правым контентом (Title). Default, Placeholder, Selected (с кнопкой очистки), Critical, Disabled, Read Only."
+        },
+        {
+          "title": "No Title",
+          "desc": "Те же состояния без правого контента."
+        },
+        {
+          "title": "Line View",
+          "desc": "Минималистичный вид — только нижняя линия. Используется в таблицах и компактных формах."
+        },
+        {
+          "title": "With Label & Subscription",
+          "desc": "Label располагается над полем, Subscription — под ним. Оба элемента опциональны и комбинируются независимо."
+        },
+        {
+          "title": "2-row Layout",
+          "desc": "Label слева, Input справа. Ширина колонки Label задаётся через --field-label-w на родителе. .sb-field-group выравнивает лейблы автоматически."
+        }
+      ]
+    },
+    "kbd": {
+      "title": "Keyboard Shortcut",
+      "description": "Маленький стилизованный «клавишный» элемент для отображения хоткеев и подсказок (⌘+K, /, Esc и т. п.). Используется в search-баре, тултипах, command-палетте, диалогах. Минимальная высота 20px, monospace-шрифт, фон surface-2, радиус 4px. Не интерактивен: подсказка, не кнопка.",
+      "sections": [
+        {
+          "title": "Anatomy — single key",
+          "desc": "Один клавишный элемент. Inline-flex 20px высотой, padding 2/8, surface-2 фон, monospace-шрифт subscription-размера."
+        },
+        {
+          "title": "Group — combo keys",
+          "desc": "Несколько клавиш с разделителем (по умолчанию «+»). Используй sb-kbd-group для chord-комбинаций. Разделитель — обычный текст вне фоновой плашки."
+        },
+        {
+          "title": "Inline в подсказках",
+          "desc": "Типичные кейсы использования — внутри Search Bar, тултипа, helper-текста, footer'а команд-палетты."
+        }
+      ]
+    },
+    "led-panel": {
+      "title": "LED Panel",
+      "description": "Status Indicators Panel — горизонтальный bar с LED-item-ами для имитации real-device LED-панели. Каждый item: NAME label сверху (sb-caption uppercase) + Status Indicator Regular снизу. Panel — surface-1 фон, radius 8, padding 8/8, gap 24 между item-ами. Item — column flex, gap 4 между NAME и indicator. Используется внутри Sub Nav (как слот в любом alignment) или standalone. Переиспользует .sb-status-dot из status.css со всеми его статусами.",
+      "sections": [
+        {
+          "title": "Basic — 5 indicators",
+          "desc": "Минимальный набор: 5 типовых статусов real-device. PWR — online (success). LINK — connecting (pulse). RX — online. TX — warning. FAULT — error. Каждый item: NAME + Status Indicator Regular."
+        },
+        {
+          "title": "All status types",
+          "desc": "Все доступные статусы из status.css. online (success green) / offline (grey) / error (red) / warning (orange) / maintenance (alert) / connecting (primary с pulse-анимацией) / info (cyan)."
+        }
+      ]
+    },
+    "list": {
+      "title": "List",
+      "description": "Списки из ячеек 40px высотой. Standard List — ячейки с контентом на фоне --background. Profile Cell — с аватаром, hairline-разделители. Info Cell — для уведомлений/алармов, без разделителей, поддерживает Selected-состояние. Control List — ячейки с title + toggle на фоне --surface-1, 4 варианта по позиции.",
+      "sections": [
+        {
+          "title": "Standard List — Profile Cell",
+          "desc": "Ячейка для списков профилей (люди/организации). Содержит аватар 32×32, title + опциональный subtitle слева, 1–2 иконки или small secondary icon button справа. Разделяются hairline-линией (border-bottom 1px --surface-2). Поддерживает состояния hover (фон --surface-1) и disabled (контент opacity 0.5). Ниже — три списка по 4 ячейки с разным правым контентом."
+        },
+        {
+          "title": "Standard List — Info Cell (Default)",
+          "desc": "Ячейка для списков уведомлений / событий / алармов. Содержит Title (Title S - Regular) и Caption (дата/время) под ним. Без hairline-разделителей. Состояния: Default, Hover, Selected (подсвечен --primary-hover), Disabled (opacity 0.5)."
+        },
+        {
+          "title": "Standard List — Info Cell (Status Indicator)",
+          "desc": "Info Cell с модификатором .has-indicator — добавляется точка статуса слева (.sb-status-dot). Поддерживает все цвета из status: online/offline/error/warning/maintenance/connecting/info. Опционально — анимация .pulse. Gap сужается до 8px. Кликни по любой ячейке — выберется через .is-selected."
+        },
+        {
+          "title": "Standard List — Info Cell (Status Mark)",
+          "desc": "Info Cell с модификатором .has-mark — 2×38px вертикальная цветная полоска прижата к левому краю (absolute, inset 1px top/bottom). Цвета из готового .sb-mark: success/error/warning/alert/info/neutral. Gap остаётся 16px (полоска не в потоке flex)."
+        },
+        {
+          "title": "Control List",
+          "desc": "Объединяй до 5 ячеек в списке. Если контролов больше — выноси их в отдельные блоки (например, Single-ячейка сверху для самого важного, остальные в списке ниже)."
+        },
+        {
+          "title": "Control List — Cell Types",
+          "desc": "Single — одиночная или самостоятельная ячейка. Top/Bottom замыкают список сверху/снизу. Inside — в середине списка, не может быть первой или последней."
+        }
+      ]
+    },
+    "nav-bar": {
+      "title": "Nav Bar (Top Bar)",
+      "description": "Header-полоса сверху приложения. Высота 56px (max 64). Левый слот — leading-button (side-bar / burger icon swap) / logo / logo-title / Badge-Status mini / icon-only buttons. Центр — до 7 кнопок разделов (центрированы или прижаты к правому). Правый слот — до 4 элементов: Button Secondary icon-only, Primary Button, Avatar, Search Bar. На container <1024px центральные tabs прячутся, full-logo / title / badge → compact-logo + burger-icon (mobile-overflow через Bottom Sheet — TODO).",
+      "sections": [
+        {
+          "title": "Anatomy",
+          "desc": "Три слота: левый (logo + extras), центральный (tabs), правый (actions). Высота 56px по дефолту, до 64px. Padding 24px по бокам (16 на мобиле). На < 640px центральные tabs прячутся."
+        },
+        {
+          "title": "Nav Button — States",
+          "desc": "Эксклюзивная кнопка раздела (не из Buttons): 28px высоты, radius 100, --text-secondary по дефолту. Hover — Shadow-S. Selected — --primary-hover bg + Pressed-inset shadow. Disabled — серый --border, не кликается. Min-width 104, max-width 144 (длинный label обрезается многоточием)."
+        },
+        {
+          "title": "Center align vs Right align",
+          "desc": "По умолчанию tabs центрируются в свободной зоне между left и right слотами. Modifier .align-right прижимает их к правому слоту с зазором 24px. Выбирается дизайнером per-app."
+        },
+        {
+          "title": "Right slot — composition",
+          "desc": "До 4 элементов: Button Secondary icon-only, Primary Button (Login), Avatar, Search Bar. Сверх 4 — обрезаем + console.warn. Для overflow используй more-button с Context Menu / Bottom Sheet (mobile)."
+        },
+        {
+          "title": "Floating + Scroll behavior",
+          "desc": "Modifier <code>.floating</code> — бар отрывается от краёв (margin 16, radius 12, Shadow-S), без border-bottom. При скролле вниз — переключается в <code>.is-stuck</code>: схлопывается до full-width (margin 0, radius 0, тень глубже). Транзишн плавный (0.25s). Реализация: <code>position: sticky</code> + IntersectionObserver на sentinel'е (см. <code>sbWireNavBarFloating</code>).<br><br><b>Два паттерна размещения, выбирай по контексту:</b><br>• <b>Page-level sticky</b> — bar ВНУТРИ скролл-контейнера (обычно <code>&lt;main&gt;</code> или сам <code>document</code>). Bar реально «прилипает» при скролле страницы, scrollbar страницы идёт за баром на всю высоту. Подходит для главного chrome приложения.<br>• <b>Inline-panel</b> (как демо ниже) — bar СНАРУЖИ скролл-области, sibling'ом сверху. Scrollbar упирается в низ bar'а, не покрывает его. Подходит для виджетов / диалогов / встроенных панелей с собственным скроллом. Outer wrap = <code>display:flex;flex-direction:column;overflow:hidden</code>, scroll-область = <code>flex:1;min-height:0;overflow-y:auto;scrollbar-gutter:stable</code>. <code>wireFloating</code> сам поймёт, что bar снаружи, и положит sentinel внутрь scroll-области."
+        },
+        {
+          "title": "Left slot — composition (responsive)",
+          "desc": "Структурный API: <code>button</code> / <code>logo</code> / <code>logoCompact</code> / <code>logoTitle</code> / <code>badge</code> — отдельные пропсы. CSS container query переключает между wide и compact: при container <1024px tabs прячутся, full-logo / title / badge → compact-logo. Button всегда виден, но иконка внутри swap'ается (side-bar-line в wide, menu-line в compact). Ниже — два примера на одной ширине."
+        }
+      ]
+    },
+    "notifications": {
+      "title": "Notifications & Banners",
+      "description": "Banners provide contextual feedback about system events, errors, and informational messages.",
+      "sections": [
+        {
+          "title": "Banner Types"
+        }
+      ]
+    },
+    "pagination": {
+      "title": "Pagination",
+      "description": "Page-навигация для Table / List. Two atoms: <code>sbMkPagination</code> — controls (prev/next + numbers, на базе Button-Secondary Small, current = Primary Small); <code>sbMkPaginationJump</code> — jump-input на базе Input Field. Info-текст (\"X of Y rows\") — задача consumer'а (обычно левый слот Table Footer'а). Алгоритм видимых страниц: первая + хвост + current ± 1, разрывы заполняются «…»."
+    },
+    "password": {
+      "title": "Password Input",
+      "description": "Поле ввода пароля. Иконка замка слева, кнопка показа/скрытия пароля справа. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only.",
+      "sections": [
+        {
+          "title": "States",
+          "desc": "Default, Placeholder, Selected (готов к вводу), Critical, Disabled, Read Only. Кнопка глаза переключает видимость пароля."
+        },
+        {
+          "title": "With Label & Subscription",
+          "desc": "Password внутри sb-field — Label сверху, Subscription снизу."
+        },
+        {
+          "title": "2-row Layout",
+          "desc": "Label слева, Password справа. Используй .sb-field-group для выравнивания."
+        }
+      ]
+    },
+    "radio": {
+      "title": "Radio",
+      "description": "Элемент формы для выбора одной опции из группы. Размер 20×20px, border-radius 50%. Состояния: Default, Hover, Selected, Disabled. Поддержка Label и Label Left.",
+      "sections": [
+        {
+          "title": "States — No Label"
+        },
+        {
+          "title": "States — With Label"
+        },
+        {
+          "title": "Label Left"
+        }
+      ]
+    },
+    "search-bar": {
+      "title": "Search Bar",
+      "description": "Поле поиска. Высота 32px, border-radius 100px. Варианты: Filled (с фоном) и LineView (только нижняя линия). Состояния: Default, Selected, Disabled, Critical. Опции: Icon Left (лупа в overlay слева вместо правой кнопки) + опциональный right-slot для KBS-подсказок («⌘+K») или clear-кнопок.",
+      "sections": [
+        {
+          "title": "Filled — States",
+          "desc": "Стандартный вид с заливкой. Default — серый фон, Selected/Focus — белый фон с синим бордером. Иконка лупы — в правой кнопке-action."
+        },
+        {
+          "title": "Line View — States",
+          "desc": "Минималистичный вид — только нижняя линия, без фона. Используется в таблицах и компактных интерфейсах."
+        },
+        {
+          "title": "Icon Left",
+          "desc": "Лупа — в overlay слева, никогда не съедает ширину input'а. В этом варианте правая action-кнопка (.sb-search-btn) НЕ рендерится: справа либо ничего, либо right-slot (KBS-подсказка / clear-кнопка). Канонический паттерн поиска (Spotlight, GitHub, Linear)."
+        },
+        {
+          "title": "Icon Left + KBS hint",
+          "desc": "Иконка слева + KBS-подсказка справа в right-slot. Используется как глобальный поиск с хоткеем (например, в NAV дизайн-системы — ⌘+K). Right-slot в фокусе можно скрывать через CSS на родителе."
+        }
+      ]
+    },
+    "section-header": {
+      "title": "Header Section",
+      "description": "Самый компактный из шапок (40px). Используется внутри карточек, форм, контентных блоков для группировки секций. Два слота: левый (24px высота) — обычно заголовок секции с опциональной иконкой/индикатором; правый (32px высота, до 700px ширины) — экшены секции (toggle, иконки, шеврон, More-кнопка с выпадающим меню). Без табов снизу. Может быть свёрнутым — для этого добавь шеврон в правый слот. Может быть sticky — за это отвечает обёртка/родитель, а не сам компонент. Responsive: при ширине Section Header < 320px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).",
+      "sections": [
+        {
+          "title": "Anatomy",
+          "desc": "Корневой контейнер 40px / surface-2 / radius-6 / padding 8/16. Внутри — два слота: left (flex, 24px) и right (inline-flex, 32px). Поведение слотов управляется data-slot-left / data-slot-right."
+        },
+        {
+          "title": "Title only",
+          "desc": "Простейший вариант — только заголовок в левом слоте, правый слот скрыт через data-slot-right=\"false\"."
+        },
+        {
+          "title": "With Symbol Badge",
+          "desc": "В левом слоте перед заголовком — Symbol Badge (24×24). Чаще всего Info Pop-up, реже — Warning / Critical / Check для статуса секции."
+        },
+        {
+          "title": "Collapsible (chevron)",
+          "desc": "Свёрнутый вариант — шеврон самым крайним справа. Состояние раскрытия (вверх/вниз) хранится на родителе, шеврон отражает его."
+        },
+        {
+          "title": "With indicator + actions",
+          "desc": "Левый слот: status-индикатор + заголовок. Правый слот: дополнительная подпись + toggle + шеврон."
+        },
+        {
+          "title": "With overflow menu (More button)",
+          "desc": "В правом слоте — More-кнопка (⋯) с прикреплённым выпадающим меню. Используй когда у секции есть набор второстепенных действий, не помещающихся инлайн. Inline-кнопки автоматически сворачиваются в меню при ширине Section Header < 320px."
+        }
+      ]
+    },
+    "segment-menu": {
+      "title": "Segment Menu",
+      "description": "Сегментный таб-бар. Используется внутри Headers, Nav Bar, Cards, Modals, Side Menu и любых других layout-контейнеров для переключения между разделами/вариантами. Три варианта содержимого таба: text only, icon-L left + label, icon-L top + label. Состояния: Default / Hover / Selected / Disabled. Selected индикатор — отдельный элемент с GPU-slide-анимацией между табами (transform/width 0.25s, cubic-bezier). Не путать с Mobile Tab Bar (Phase 2) — другой компонент с табами и Status mini indicator."
+    },
+    "selectors": {
+      "title": "Selectors / Dropdowns",
+      "description": "Поле выбора значения. Шеврон из компонента Chevron Button. Варианты: с иконкой слева, с кнопкой добавления, в обёртке sb-field. Состояния: Default, Placeholder, Selected, Critical, Disabled.",
+      "sections": [
+        {
+          "title": "States",
+          "desc": "Default, Placeholder, Selected (активный), Critical, Disabled."
+        },
+        {
+          "title": "Row Variant",
+          "desc": "Иконка слева (AI-ассистент и т.п.), кнопка добавления справа. Используй .sb-sel-row как обёртку."
+        },
+        {
+          "title": "With Label & Subscription",
+          "desc": "Selector внутри sb-field — Label сверху, Subscription снизу. При Critical — Subscription красится error."
+        },
+        {
+          "title": "2-row Layout",
+          "desc": "Label слева, Selector справа. Используй .sb-field-group для выравнивания нескольких полей."
+        }
+      ]
+    },
+    "separators": {
+      "title": "Separator",
+      "description": "Разделители для визуального разграничения контента. Горизонтальные и вертикальные варианты в трёх размерах: L, M, S. Цвет фона — --border по умолчанию или --border-soft через модификатор .soft (опционально). Вертикальные sep'ы используют --border-soft из коробки.",
+      "sections": [
+        {
+          "title": "Horizontal",
+          "desc": "Горизонтальный разделитель для секций и блоков. L — 2px, M — 1.5px, S — 1px. Toggle Soft color переключает все sep'ы внутри блока на модификатор .soft (--border-soft)."
+        },
+        {
+          "title": "Vertical",
+          "desc": "Вертикальный разделитель — разграничение инлайн-элементов. L — 2px, M — 1.5px, S — 1px. У вертикальных sep'ов фон --border-soft из коробки; toggle Soft color ставит .soft класс явно (визуально не меняется)."
+        }
+      ]
+    },
+    "status": {
+      "title": "Status",
+      "description": "Четыре типа статусных компонентов: Indicator (точки), Badge-Status (пилюли), Antenna (сигнал) и Mark (полосы для таблиц).",
+      "sections": [
+        {
+          "title": "Indicator — Regular",
+          "desc": "Regular (10×10px) — цветная точка статуса объекта. Все цветовые варианты:"
+        },
+        {
+          "title": "Indicator — Pulse",
+          "desc": "Regular с пульсацией — для активных состояний реального времени:"
+        },
+        {
+          "title": "Indicator — Mini",
+          "desc": "Mini (6×6px + 2px border) — бейдж поверх иконки с отделяющей рамкой цвета фона:"
+        },
+        {
+          "title": "Badge-Status — Regular",
+          "desc": "Пилюля с текстом. Regular (40px). Использует семантические цветовые токены темы."
+        },
+        {
+          "title": "Badge-Status — Mini",
+          "desc": "Mini-вариант (28px) — для плотных интерфейсов, таблиц, списков."
+        },
+        {
+          "title": "Antenna",
+          "desc": "Уровень сигнала антенны: 4 уровня мощности + состояние ошибки/нет сигнала."
+        },
+        {
+          "title": "Mark — Regular",
+          "desc": "Вертикальная полоса 3×40px — маркировка строк в таблицах и списках."
+        },
+        {
+          "title": "Mark — Small",
+          "desc": "Small (горизонтальный штрих) — для компактных строк и инлайн-меток."
+        }
+      ]
+    },
+    "sub-nav": {
+      "title": "Sub Nav",
+      "description": "Контейнер-полоса под Nav Bar / Header. Sticky-positioned как второй слой (z-index 9). Holds Segment Menu, Tab Bar, LED-панель или комбинацию. На текущий момент имплементирован Desktop centered variant с Segment Menu — остальные (mobile, multi-row, со slot left/right, с LED-панелью без segment'ов) добавятся по мере получения Figma-параметров.",
+      "sections": [
+        {
+          "title": "Desktop — Segment Menu left-aligned",
+          "desc": "Тот же контейнер, но контент прижат к левому краю через модификатор .align-left (justify-content: flex-start). API: sbMkSubNav({ content, align: 'left' }). Размеры/паддинги/border идентичны centered-варианту."
+        },
+        {
+          "title": "Desktop — Segment Menu right-aligned",
+          "desc": "Зеркальный вариант — контент прижат к правому краю через модификатор .align-right (justify-content: flex-end). API: sbMkSubNav({ content, align: 'right' }). Полезно когда основной контент страницы слева, а навигация по подразделам — справа."
+        },
+        {
+          "title": "Desktop — Segment Menu centered",
+          "desc": "Базовый desktop-вариант: Sub Nav с centered Segment Menu внутри. min-width 780, max-width var(--screens-max-screen-width) = 5000. min-height 40, max-height 64. Padding-top 8 (без bottom). justify-content: center, align-items: flex-end (segments прижаты к низу, прямо к границе). Background --background, border-bottom 1px --surface-2."
+        },
+        {
+          "title": "Desktop — LED Panel centered (alone)",
+          "desc": "Sub Nav с LED Panel'ом solo по центру. variant:'led' включает align-items: center (LED ниже Segment Menu по высоте, при flex-end висел бы сверху). API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led' })."
+        },
+        {
+          "title": "Desktop — LED Panel left (alone)",
+          "desc": "Sub Nav с LED Panel'ом solo, прижатым к левому краю (24px padding от края, sync с Nav Bar). align: 'left' добавляет justify-content: flex-start, variant: 'led' оставляет вертикальное центрирование. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' })."
+        },
+        {
+          "title": "Desktop — LED Panel + Segment Menu (combined)",
+          "desc": "Multi-slot режим: LED Panel в left-слоте + Segment Menu в right-слоте. Left slot stretches на всю высоту бара (58), content внутри слота вертикально центрируется. Right slot прижат к правому краю бара (padding 24 от края), content анкорится к низу (segment indicator align'ится с border-bottom). API: sbMkSubNav({ left: sbMkLedPanel([...]), right: sbMkSegmentMenu([...]) })."
+        },
+        {
+          "title": "Tablet — Segment Menu centered (alone)",
+          "desc": "Tablet mode forced через mode:'tablet' (in real app активируется автоматически @media max-width:1024). Sub Nav column-flex, content анкорится к низу (justify-content: flex-end), X-centered. Segment Menu touches border-bottom. Высота 58 (min), но может расти до 114 при multi-row. API: sbMkSubNav({ content: sbMkSegmentMenu([...]), mode: 'tablet' })."
+        },
+        {
+          "title": "Tablet — LED + Segment Menu (two-row stack)",
+          "desc": "Multi-slot Tablet mode: column-flex стэкает слоты вертикально в HTML-порядке (left → center → right). LED Panel сверху, Segment Menu снизу (всегда у нижней границы — justify-content: flex-end). Высота растёт до 114 чтобы оба row'а уместились. Padding/gap = 0 — rows touch без зазора. API: sbMkSubNav({ left: sbMkLedPanel([...]), right: sbMkSegmentMenu([...]), mode: 'tablet' })."
+        },
+        {
+          "title": "Tablet — LED Panel centered (alone)",
+          "desc": "Tablet LED-alone: variant:'led' overrides .tablet column-stack с row-flex + центрирование по обоим осям (justify-content + align-items: center). LED панель сидит ровно в центре бара по X и Y. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', mode: 'tablet' })."
+        }
+      ]
+    },
+    "tab-bar": {
+      "title": "Tab Bar",
+      "description": "Контейнер для табов (sbMkTab). От 2 до 6 табов внутри, табы flex:1 — делят ширину контейнера поровну. Высота 32px, padding 2/2, radius 6, фон --surface-1 с Pressed inset shadow («вдавленный» вид). Используется в side menu, модалках на маленьких окнах, мобилках. Не путать с Segment Menu — другой компонент с другой визуальной моделью.",
+      "sections": [
+        {
+          "title": "Layouts (2-6 tabs)",
+          "desc": "Все варианты по количеству табов на одной ширине контейнера (360px). Tabs внутри flex:1 делят пространство поровну: чем меньше табов — тем шире каждый. Контейнер block-level flex, поэтому в реальном usage его ширина определяется родителем."
+        },
+        {
+          "title": "Tab states",
+          "desc": "Single tab кнопка — building block для Tab Bar. Default — surface-1 bg, text-secondary. Hover — text-primary (фон не меняется). Selected — background bg + Shadow-S + text-primary (вид «приподнятой» пилюли). Disabled — surface-2 bg + text --border, без интеракции. В демо Hover показан статично через .is-hover. Tabs в этой секции — display-only specimens (pointer-events: none), интерактивность отключена чтобы не путать. Опциональный indicator слева от label — переиспользуем готовый Status Mini (.sb-status-dot.mini)."
+        }
+      ]
+    },
+    "table-footer": {
+      "title": "Table Footer",
+      "description": "Универсальная нижняя полоса для Table / List. 3 слота: <code>left</code> (counters / bulk-actions / summary), <code>center</code> (jump-input / utility), <code>right</code> (Pagination). Border-top + background. Радиусы наследуются от parent <code>.sb-table-wrap</code> через <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину; если все три не влезают в одну строку — оборачиваются (грационная деградация на узких контейнерах).",
+      "sections": [
+        {
+          "title": "Summary + Pagination",
+          "desc": "Базовый layout для Table: слева — счётчик строк, справа — Pagination controls. <code>space-between</code> прижимает слоты к краям бара."
+        },
+        {
+          "title": "Bulk-actions mode",
+          "desc": "Когда есть выбранные строки — left превращается в action-bar: counter + Export + Delete. Right остаётся с Pagination."
+        },
+        {
+          "title": "Right-only (Pagination only)",
+          "desc": "Без summary и bulk-actions — left пустой, Pagination прижат к правому краю."
+        }
+      ]
+    },
+    "table": {
+      "title": "Table",
+      "description": "Data tables for displaying structured terminal and device data. Supports sorting, row selection, and inline status indicators."
+    },
+    "tags": {
+      "title": "Tags",
+      "description": "Теги для маркировки и фильтрации. Режимы: Input (Placeholder → Typing → Critical) и Display (Default, Removable, Show More). Используй .sb-tag-group для групп тегов.",
+      "sections": [
+        {
+          "title": "Creating Flow",
+          "desc": "Шаги создания тега: Placeholder (курсор слева), Typing (текст + курсор справа), Critical (ошибка в имени)."
+        },
+        {
+          "title": "Display Tags",
+          "desc": "Default (без удаления) и Removable (с кнопкой ×). Нажатие × удаляет тег."
+        },
+        {
+          "title": "Show More",
+          "desc": "Показывается когда теги не помещаются в строку. Число = количество скрытых тегов."
+        },
+        {
+          "title": "Color Variants",
+          "desc": "Теги с цветовой семантикой. Добавь класс tc-success / tc-error / tc-warning / tc-alert / tc-neutral к .sb-tag.filled."
+        },
+        {
+          "title": "Tag Group",
+          "desc": "Несколько тегов с переносом. Используй .sb-tag-group как обёртку."
+        }
+      ]
+    },
+    "textarea": {
+      "title": "Textarea",
+      "description": "Многострочное текстовое поле. Высота от 96px, border-radius 2px. Состояния: Default, Placeholder, Selected, Critical, Disabled. Поддержка Label и Subscription через sb-field.",
+      "sections": [
+        {
+          "title": "States",
+          "desc": "Default, Placeholder, Selected (готов к вводу), Critical, Disabled."
+        },
+        {
+          "title": "With Label & Subscription",
+          "desc": "Textarea внутри sb-field — Label сверху, Subscription снизу. Subscription красится в error при Critical."
+        },
+        {
+          "title": "2-row Layout",
+          "desc": "Label слева, Textarea справа. Используй .sb-field-group для выравнивания нескольких полей."
+        }
+      ]
+    },
+    "toc": {
+      "title": "Sticky Table of Contents",
+      "description": "Боковая навигация по разделам страницы. Список пунктов соответствует <code>.comp-section</code>-якорям. Активный пункт подсвечивается при попадании секции в viewport (IntersectionObserver). Sticky: прилипает на 32px от верха, физический push-off на нижнем крае parent-контейнера. Авто-показ только при наличии скролла на странице (ResizeObserver). В Spacebridge DS встроен в `.page-shell` для всех страниц с 3+ секциями.",
+      "sections": [
+        {
+          "title": "Anatomy",
+          "desc": "Состоит из <code>&lt;nav class=\"sb-toc\"&gt;</code> с border-left = 1.5px --border, и пунктов <code>.sb-toc-item</code>. Активный получает <code>.is-active</code> — bold + --text-tertiary + 1.5px --primary полоска поверх родительского border-left."
+        },
+        {
+          "title": "Active state tracking",
+          "desc": "Поведение в реальной странице: при скролле <code>IntersectionObserver</code> следит за секциями. Активной становится та, чей <code>.comp-section</code> ближе всех к верху viewport'а. Используется <code>rootMargin: '-32px 0px -70% 0px'</code> — секция считается активной, как только её начало пересекает верхние 30% области."
+        },
+        {
+          "title": "Sticky behavior + Push-off",
+          "desc": "Aside-обёртка <code>.page-toc</code> имеет <code>position: sticky; top: 32px</code>. Стэкуется в верхней части scroll-контейнера (.content) пока parent-страница не закончится. Когда нижний край <code>.page-shell</code> достигает верха viewport'а — sticky теряет силу и TOC уходит вместе с контейнером."
+        },
+        {
+          "title": "Auto-visibility",
+          "desc": "TOC скрывается, если на странице нет скролла (короткий контент). Это ловит <code>ResizeObserver</code> на <code>.content</code> и <code>.page</code> — пересчёт при ресайзе окна, при раскрытии code-панелей, при смене страницы. Триггер: <code>scrollHeight &gt; clientHeight</code>."
+        }
+      ]
+    },
+    "toggles": {
+      "title": "Toggles",
+      "description": "Компонент Toggle из Figma. Размер L: 56×20px. Состояния: Off, On, Disabled. Поддержка Label слева/справа."
+    }
+  }
+}

@@ -42,17 +42,18 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
   window.sbMkTableFooter = mkTableFooter;
 
   // ── Demo helpers ────────────────────────────────────────────────────────
-  function demoSummary(text) {
+  // Левый слот: счётчик рядов (row-info) — «Rows: X of N».
+  function demoRowInfo(text) {
     return `<span class="sb-body-s" style="color:var(--text-tertiary)">${text}</span>`;
   }
-  function demoBulkActions(selected) {
-    return `<span class="sb-body-m" style="color:var(--text-primary)"><strong>${selected}</strong> selected</span>
-        <button class="sb-btn sb-btn-text sb-btn-sm">Export</button>
-        <button class="sb-btn sb-btn-text sb-btn-sm sb-btn-critical">Delete</button>`;
+  // Левый слот в режиме выбора — «Selected: N» (primary). Bulk-действия в реальной
+  // таблице живут во floating Tool Bar, не в футере.
+  function demoSelected(n) {
+    return `<span class="sb-body-s sb-fw-semibold" style="color:var(--primary)">Selected: ${n}</span>`;
   }
   function demoPagination() {
     return (typeof sbMkPagination === 'function')
-      ? sbMkPagination({ currentPage: 1, totalPages: 26 })
+      ? sbMkPagination({ currentPage: 1, totalPages: 2 })
       : '<span class="sb-body-s" style="color:var(--text-secondary)">[Pagination]</span>';
   }
   // Jump-input временно не показывается в demo (паузим до отдельной итерации),
@@ -71,41 +72,58 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
   sbRegister({
     name: 'table-footer',
     title: 'Table Footer',
-    description: 'Универсальная нижняя полоса для Table / List. 3 слота: <code>left</code> (counters / bulk-actions / summary), <code>center</code> (jump-input / utility), <code>right</code> (Pagination). Border-top + background. Радиусы наследуются от parent <code>.sb-table-wrap</code> через <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину; если все три не влезают в одну строку — оборачиваются (грационная деградация на узких контейнерах).',
+    description: 'Универсальная нижняя полоса для Table / List. 3 слота: <code>left</code> (row-count «Rows: X of N» → «Selected: N» при выборе), <code>center</code> (jump-input / utility), <code>right</code> (Pagination). Border-top + background. Радиусы наследуются от parent <code>.sb-table-wrap</code> через <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину; если все три не влезают в одну строку — оборачиваются (грационная деградация на узких контейнерах).',
     sections: [
       {
-        title: 'Summary + Pagination',
-        desc: 'Базовый layout для Table: слева — счётчик строк, справа — Pagination controls. <code>space-between</code> прижимает слоты к краям бара.',
+        title: 'Row Count + Pagination',
+        desc: 'Базовый layout для Table: слева — счётчик рядов «Rows: X of N», справа — Pagination. <code>space-between</code> прижимает слоты к краям.',
         preview: demoWrap(mkTableFooter({
-          left: demoSummary('5 of 128'),
+          left: demoRowInfo('Rows: 10 of 15'),
           right: demoPagination(),
         })),
         html: `<div class="sb-table-footer">
   <div class="sb-table-footer-left">
-    <span class="sb-body-s" style="color:var(--text-tertiary)">5 of 128</span>
+    <span class="sb-body-s" style="color:var(--text-tertiary)">Rows: 10 of 15</span>
   </div>
   <div class="sb-table-footer-center"></div>
   <div class="sb-table-footer-right">
-    <!-- sbMkPagination({ currentPage: 1, totalPages: 26 }) -->
+    <!-- sbMkPagination({ currentPage: 1, totalPages: 2 }) -->
   </div>
 </div>`,
         css: COMP_CSS['table-footer'],
       },
       {
-        title: 'Bulk-actions mode',
-        desc: 'Когда есть выбранные строки — left превращается в action-bar: counter + Export + Delete. Right остаётся с Pagination.',
+        title: 'Selected mode',
+        desc: 'Когда выбраны ряды — left-счётчик меняется на «Selected: N» (--primary). Bulk-действия (Download / Apply / Delete) живут во floating Tool Bar над футером, не в самом футере. Right остаётся с Pagination.',
         preview: demoWrap(mkTableFooter({
-          left: demoBulkActions(12),
+          left: demoSelected(3),
           right: demoPagination(),
         })),
         html: `<div class="sb-table-footer">
   <div class="sb-table-footer-left">
-    <span class="sb-body-m"><strong>12</strong> selected</span>
-    <button class="sb-btn sb-btn-text sb-btn-sm">Export</button>
-    <button class="sb-btn sb-btn-text sb-btn-sm sb-btn-critical">Delete</button>
+    <span class="sb-body-s sb-fw-semibold" style="color:var(--primary)">Selected: 3</span>
   </div>
   <div class="sb-table-footer-center"></div>
   <div class="sb-table-footer-right"><!-- sbMkPagination --></div>
+</div>`,
+        css: COMP_CSS['table-footer'],
+      },
+      {
+        title: 'Center Pagination (all 3 slots)',
+        desc: 'Пагинация по центру, слева — «Rows: X of N», справа — «Selected: N». Задействованы все три слота (left / center / right). Примечание: при <code>space-between</code> центр слегка смещается от ширины боковых слотов — для строгого центра боковые слоты можно сделать <code>flex:1</code>.',
+        preview: demoWrap(mkTableFooter({
+          left: demoRowInfo('Rows: 10 of 15'),
+          center: demoPagination(),
+          right: demoSelected(3),
+        })),
+        html: `<div class="sb-table-footer">
+  <div class="sb-table-footer-left">
+    <span class="sb-body-s" style="color:var(--text-tertiary)">Rows: 10 of 15</span>
+  </div>
+  <div class="sb-table-footer-center"><!-- sbMkPagination({ currentPage: 1, totalPages: 2 }) --></div>
+  <div class="sb-table-footer-right">
+    <span class="sb-body-s sb-fw-semibold" style="color:var(--primary)">Selected: 3</span>
+  </div>
 </div>`,
         css: COMP_CSS['table-footer'],
       },

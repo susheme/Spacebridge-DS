@@ -70,6 +70,9 @@ const ANT = (() => {
     off:  mkErr(),
   };
 })();
+// Экспорт антенны для переиспользования в других компонентах (Table Header
+// Secondary). Ключи: full / high / mid / low / off — готовые 24×24 SVG.
+window.sbAntenna = ANT;
 
 // Status data dictionary
 const SD = {

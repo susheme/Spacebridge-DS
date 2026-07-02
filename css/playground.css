@@ -77,6 +77,31 @@
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
 }
 
+/* Tab Bar playground (scoped): в полном (wide) виде select + toggles в ОДНУ
+   строку — select слева (фикс 160), toggles группой сразу справа (не разносим
+   по краям). В компакте (non-wide) — базовый flex-column → toggles под select
+   парой. Только этот playground (id-scoped), общую сетку не трогаем. */
+.pg-card.wide #pg-tab-bar-controls,
+.pg-card.wide-auto #pg-tab-bar-controls {
+  display: flex;
+  flex-direction: row;   /* перебиваем .pg-controls{flex-direction:column} */
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-vert-m) var(--gap-horiz-xl);
+}
+.pg-card.wide #pg-tab-bar-controls > .pg-sel-wrap,
+.pg-card.wide-auto #pg-tab-bar-controls > .pg-sel-wrap {
+  flex: 0 0 auto;
+  width: 160px;   /* бьём .pg-sel-wrap{width:100%} — иначе select растягивает строку */
+}
+.pg-card.wide #pg-tab-bar-controls > .pg-toggles,
+.pg-card.wide-auto #pg-tab-bar-controls > .pg-toggles {
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--gap-horiz-m);
+  grid-template-columns: none;
+}
+
 /* Header */
 .pg-header {
   padding: var(--pad-vert-24) var(--pad-horiz-24) var(--pad-vert-16);

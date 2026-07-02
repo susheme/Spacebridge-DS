@@ -65,7 +65,16 @@
 
 ## Pending: мелкие вопросы
 
-- **Antenna status export** — попросил разрешения добавить `window.sbAntenna = ANT;` в `status.js` чтобы переиспользовать в других компонентах (List Table нужен был). Ответа не было.
+- **Context Menu — danger/critical вариант ячейки** — у `sbMkContextCell` нет красного (danger) варианта для деструктивных действий (Delete). Сейчас в row-меню таблицы Delete красится скоуп-стилем `.sb-td .sb-ctx-card > .sb-ctx-cell:last-child { color: --error }` (завязано на «последний = Delete»). Правильнее — добавить `mode:'danger'` или `.is-danger` в сам Context Menu (правка компонента, с ОК юзера), тогда красный Delete переиспользуется везде.
+
+- **Table Tool Bar — overflow «⋯» меню** — островок bulk-действий теперь data-driven (`sbMkTableToolBar({actions:[…]})`) + `max-width` cap. Но при МНОГИХ кнопках (5+) он и накрывает больше центра ряда, и может упереться в max-width. Нужна стратегия переполнения: лишние действия сворачивать под «⋯» (overflow-меню, попап) — отдельный заход (нужен popover, нельзя overflow:hidden на островке — заклипает меню).
+
+- **Table Footer — нормальный page-size селектор** — временный компактный `.sb-sel` («10 ▾») в футере таблицы выглядел уродски, убрал. Нужен аккуратный селектор «строк на странице» (10/25/50/100) — отдельным заходом. Пока футер = Pagination (центр) + «Selected: N» (право).
+
+- **Avatar 24px-вариант для Table Cell** — Avatar сейчас единственный размер 32px, в 40px-ряду тесновато (~4px сверху/снизу). Возможно нужен компактный 24px-вариант в avatar-компоненте. Юзер: «посмотрим позже» — не трогать без отмашки.
+
+- ~~**Table — select-all indeterminate («Unselect All»)**~~ — ✅ Сделано: с появлением рядов (`sbMkTableFull`) подключены `sbTableSelectAll` (пусто→выбрать все, часть/все→снять) + `sbTableRowSelect` (row-select) + `_syncHead` (хедер: 0→пусто, все→checked, часть→indeterminate/minus). Выбор — на уровне ряда (`.sb-trow.is-selected`).
+- ~~**Antenna status export**~~ — ✅ Сделано: `window.sbAntenna = ANT;` добавлен в `status.js` (ключи full/high/mid/low/off). Переиспользуется в Table Header Secondary.
 - **List Table** — была обещана спека ("ща скину"), не пришла. Компонент не создан.
 - **Title-case naming review** — `.sb-title-m-bold` теперь = `.sb-title-m + .sb-fw-semibold` (вес 600). Слово "bold" из старого имени отжило. Если где-то остались упоминания в комментах/доках — почистить.
 - **Auto-detect wide-mode threshold** — `cfg.minPreview` сейчас задаётся вручную для 5 компонентов. Если паттерн повторится в новых — может стоить вынести в общий helper или дефолт.

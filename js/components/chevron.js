@@ -29,7 +29,13 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
   sbRegister({
     name: 'chevron',
     title: 'Chevron Button',
-    description: 'Круглая иконочная кнопка для навигации и управления направлением. Размеры: 32px (Normal) и 24px (Mini). Четыре направления: Down, Up, Left, Right.',
+    description: sbT(
+      'A round icon button for direction control. Four directions: Down, Up, Left, Right. Examples: expanding an accordion, collapsing a toast, tree navigation. Two sizes: Normal and Mini.',
+      'Круглая иконочная кнопка для управления направлением. Четыре направления: Down, Up, Left, Right. Примеры: раскрытие аккордеона, сворачивание toast-уведомления, навигация по дереву. Два размера: Normal и Mini.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Normal — 32px, Mini — 24px.',
+      'Normal — 32px, Mini — 24px.'
+    )),
     playground: {
       title: 'Chevron Playground',
       state: { dir: 'down', disabled: false, mini: false },

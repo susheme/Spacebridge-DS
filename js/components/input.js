@@ -86,7 +86,13 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
   sbRegister({
     name: 'input',
     title: 'Input',
-    description: 'Текстовое поле. Высота 32px, border-radius 2px. Варианты: Filled и Line View. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only. Поддержка Label, Subscription и 2-row лейаута.',
+    description: sbT(
+      'A single-line text field. Two variants: Filled and Line View. States: Default, Placeholder, Selected, Critical, Disabled, Read Only. Label, Subscription and a 2-row layout supported. Example: a device name field in a settings form.',
+      'Однострочное текстовое поле. Два варианта: Filled и Line View. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only. Поддерживает Label, Subscription и 2-row лейаут. Пример: поле имени устройства в форме настроек.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Height 32px · border-radius 2px.',
+      'Высота 32px · border-radius 2px.'
+    )),
     playground: {
       title: 'Input Playground',
       wide: true,
@@ -146,7 +152,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
     sections: [
       {
         title: 'With Title',
-        desc: 'Все состояния с правым контентом (Title). Default, Placeholder, Selected (с кнопкой очистки), Critical, Disabled, Read Only.',
+        desc: sbT(
+          'All states with right content (a title): Default, Placeholder, Selected (with a clear button), Critical, Disabled, Read Only.',
+          'Все состояния с правым контентом (Title): Default, Placeholder, Selected (с кнопкой очистки), Critical, Disabled, Read Only.'
+        ),
         preview: `<div class="sec-col narrow gap-md">
           ${mkTf({ value: 'Default' })}
           ${mkTf({ placeholder: true })}
@@ -160,7 +169,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       },
       {
         title: 'No Title',
-        desc: 'Те же состояния без правого контента.',
+        desc: sbT(
+          'The same states without the right content.',
+          'Те же состояния без правого контента.'
+        ),
         preview: `<div class="sec-col narrow gap-md">
           ${mkTf({ value: 'Default', showTitle: false })}
           ${mkTf({ placeholder: true, showTitle: false })}
@@ -174,7 +186,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       },
       {
         title: 'Line View',
-        desc: 'Минималистичный вид — только нижняя линия. Используется в таблицах и компактных формах.',
+        desc: sbT(
+          'The minimal look — a bottom line only. Used in tables and compact forms.',
+          'Минималистичный вид — только нижняя линия. Используется в таблицах и компактных формах.'
+        ),
         preview: `<div class="sec-col narrow gap-md">
           ${mkTf({ lineView: true, value: 'Default' })}
           ${mkTf({ lineView: true, placeholder: true })}
@@ -188,7 +203,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       },
       {
         title: 'With Label & Subscription',
-        desc: 'Label располагается над полем, Subscription — под ним. Оба элемента опциональны и комбинируются независимо.',
+        desc: sbT(
+          'The label sits above the field, the subscription below it. Both are optional and combine independently.',
+          'Label располагается над полем, Subscription — под ним. Оба опциональны и комбинируются независимо.'
+        ),
         preview: `<div class="sec-col narrow gap-lg">
           ${mkField({ value: 'Default' }, { label: 'Label' })}
           ${mkField({ value: 'Default' }, { subscription: 'Subscription text' })}
@@ -200,7 +218,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       },
       {
         title: '2-row Layout',
-        desc: 'Label слева, Input справа. Ширина колонки Label задаётся через --field-label-w на родителе. .sb-field-group выравнивает лейблы автоматически.',
+        desc: sbT(
+          'The label on the left, the input on the right. The label column width is set via --field-label-w on the parent; .sb-field-group aligns the labels automatically.',
+          'Label слева, Input справа. Ширина колонки Label задаётся через --field-label-w на родителе; .sb-field-group выравнивает лейблы автоматически.'
+        ),
         preview: `<div class="sb-field-group sec-xl">
           ${mkField({ value: 'Default' },                                         { label: 'Label', twoRow: true })}
           ${mkField({ value: 'Default' },                                         { label: 'Label', subscription: 'Subscription text', twoRow: true })}

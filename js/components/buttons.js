@@ -56,7 +56,13 @@ function btnClass(s) {
 sbRegister({
   name: 'buttons',
   title: 'Buttons',
-  description: 'Компонент Basic из Figma. Типы: Primary, Secondary, Text. Состояния: Hover, Disable, Loading, Critical. Иконки: Icon-L, Icon-R, Icon-Only. Размеры: L (40px) / S (32px).',
+  description: sbT(
+    'The Basic button component from Figma. Types: Primary, Secondary, Text. States: Hover, Disable, Loading, Critical. Icon options: left, right, icon-only. Examples: Primary — a form submit; Secondary — a Back button in a header.',
+    'Компонент Basic из Figma. Типы: Primary, Secondary, Text. Состояния: Hover, Disable, Loading, Critical. Иконки: слева, справа, icon-only. Примеры: Primary — отправка формы; Secondary — кнопка Back в хедере.'
+  ) + sbDocNote('Tech Info', sbT(
+    'Sizes: L — 40px, S — 32px.',
+    'Размеры: L — 40px, S — 32px.'
+  )),
   playground: {
     title: 'Regular',
     state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false, labelLeft: false, labelRight: false },

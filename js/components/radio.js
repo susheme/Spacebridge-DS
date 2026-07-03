@@ -36,7 +36,13 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
   sbRegister({
     name: 'radio',
     title: 'Radio',
-    description: 'Элемент формы для выбора одной опции из группы. Размер 20×20px, border-radius 50%. Состояния: Default, Hover, Selected, Disabled. Поддержка Label и Label Left.',
+    description: sbT(
+      'A form element for choosing exactly one option from a group. Example: a connection mode in settings. States: Default, Hover, Selected, Disabled. Label and Label Left supported.',
+      'Элемент формы для выбора ровно одной опции из группы. Пример: режим подключения в настройках. Состояния: Default, Hover, Selected, Disabled. Поддерживает Label и Label Left.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Size 20×20px · border-radius 50%.',
+      'Размер 20×20px · border-radius 50%.'
+    )),
     playground: {
       title: 'Radio Playground',
       state: { selected: false, hover: false, disabled: false, hasLabel: false, labelLeft: false },

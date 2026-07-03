@@ -51,7 +51,13 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
   sbRegister({
     name: 'textarea',
     title: 'Textarea',
-    description: 'Многострочное текстовое поле. Высота от 96px, border-radius 2px. Состояния: Default, Placeholder, Selected, Critical, Disabled. Поддержка Label и Subscription через sb-field.',
+    description: sbT(
+      'A multi-line text field. States: Default, Placeholder, Selected, Critical, Disabled. Label and Subscription via sb-field. Example: a comment or description field.',
+      'Многострочное текстовое поле. Состояния: Default, Placeholder, Selected, Critical, Disabled. Label и Subscription — через sb-field. Пример: поле комментария или описания.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Height from 96px · border-radius 2px.',
+      'Высота от 96px · border-radius 2px.'
+    )),
     playground: {
       title: 'Textarea Playground',
       wide: true,
@@ -106,7 +112,10 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
     sections: [
       {
         title: 'States',
-        desc: 'Default, Placeholder, Selected (готов к вводу), Critical, Disabled.',
+        desc: sbT(
+          'Default, Placeholder, Selected (ready for input), Critical, Disabled.',
+          'Default, Placeholder, Selected (готов к вводу), Critical, Disabled.'
+        ),
         preview: `<div class="sec-col narrow gap-md">
           ${mkTa({ value: 'Text area filled with the only one sentence, but you can add more.' })}
           ${mkTa({ placeholder: true })}
@@ -119,7 +128,10 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
       },
       {
         title: 'With Label & Subscription',
-        desc: 'Textarea внутри sb-field — Label сверху, Subscription снизу. Subscription красится в error при Critical.',
+        desc: sbT(
+          'The textarea inside sb-field — the label above, the subscription below. The subscription turns error-colored in the Critical state.',
+          'Textarea внутри sb-field — Label сверху, Subscription снизу. При Critical подпись красится в error.'
+        ),
         preview: `<div class="sec-col narrow gap-lg">
           ${mkTaField({ value: 'Default text' },                   { label: 'Label' })}
           ${mkTaField({ value: 'Default text' },                   { label: 'Label', subscription: 'Subscription text' })}
@@ -131,7 +143,10 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
       },
       {
         title: '2-row Layout',
-        desc: 'Label слева, Textarea справа. Используй .sb-field-group для выравнивания нескольких полей.',
+        desc: sbT(
+          'The label on the left, the textarea on the right. The .sb-field-group wrapper aligns several fields.',
+          'Label слева, Textarea справа. Обёртка .sb-field-group выравнивает несколько полей.'
+        ),
         preview: `<div class="sb-field-group sec-xl">
           ${mkTaField({ value: 'Default text' },                { label: 'Label', twoRow: true })}
           ${mkTaField({ value: 'Default text' },                { label: 'Label', subscription: 'Subscription text', twoRow: true })}

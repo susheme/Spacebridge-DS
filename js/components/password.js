@@ -83,7 +83,10 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
   sbRegister({
     name: 'password',
     title: 'Password Input',
-    description: 'Поле ввода пароля. Иконка замка слева, кнопка показа/скрытия пароля справа. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only.',
+    description: sbT(
+      'A password field. A lock icon on the left, a show/hide button on the right. States: Default, Placeholder, Selected, Critical, Disabled, Read Only. Example: the password field on a login form.',
+      'Поле ввода пароля. Слева иконка замка, справа кнопка показа/скрытия. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only. Пример: поле пароля в форме входа.'
+    ),
     playground: {
       title: 'Password Playground',
       wide: true,
@@ -139,7 +142,10 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
     sections: [
       {
         title: 'States',
-        desc: 'Default, Placeholder, Selected (готов к вводу), Critical, Disabled, Read Only. Кнопка глаза переключает видимость пароля.',
+        desc: sbT(
+          'Default, Placeholder, Selected (ready for input), Critical, Disabled, Read Only. The eye button toggles password visibility.',
+          'Default, Placeholder, Selected (готов к вводу), Critical, Disabled, Read Only. Кнопка-глаз переключает видимость пароля.'
+        ),
         preview: `<div class="sec-col narrow gap-md">
           ${mkPw({})}
           ${mkPw({ placeholder: true })}
@@ -153,7 +159,10 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
       },
       {
         title: 'With Label & Subscription',
-        desc: 'Password внутри sb-field — Label сверху, Subscription снизу.',
+        desc: sbT(
+          'The password field inside sb-field — the label above, the subscription below.',
+          'Password внутри sb-field — Label сверху, Subscription снизу.'
+        ),
         preview: `<div class="sec-col narrow gap-lg">
           ${mkPwField({},                              { label: 'Password' })}
           ${mkPwField({},                              { label: 'Password', subscription: 'Subscription text' })}
@@ -165,7 +174,10 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
       },
       {
         title: '2-row Layout',
-        desc: 'Label слева, Password справа. Используй .sb-field-group для выравнивания.',
+        desc: sbT(
+          'The label on the left, the field on the right. The .sb-field-group wrapper handles the alignment.',
+          'Label слева, Password справа. За выравнивание отвечает обёртка .sb-field-group.'
+        ),
         preview: `<div class="sb-field-group sec-xl">
           ${mkPwField({}, { label: 'Password', twoRow: true })}
           ${mkPwField({}, { label: 'Password', subscription: 'Subscription text', twoRow: true })}

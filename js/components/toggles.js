@@ -60,7 +60,13 @@ function tglClass(s) {
 sbRegister({
   name: 'toggles',
   title: 'Toggles',
-  description: 'Компонент Toggle из Figma. Размер L: 56×20px. Состояния: Off, On, Disabled. Поддержка Label слева/справа.',
+  description: sbT(
+    'The Toggle component from Figma. States: Off, On, Disabled. The label goes on the left or the right. Example: enabling a feature in settings — the effect is instant, unlike a checkbox in a form.',
+    'Компонент Toggle из Figma. Состояния: Off, On, Disabled. Label — слева или справа. Пример: включение фичи в настройках — срабатывает сразу, в отличие от чекбокса в форме.'
+  ) + sbDocNote('Tech Info', sbT(
+    'Size L: 56×20px.',
+    'Размер L: 56×20px.'
+  )),
   playground: {
     title: 'Regular',
     state: { on: false, disabled: false, hasLabel: true, labelPos: 'right' },

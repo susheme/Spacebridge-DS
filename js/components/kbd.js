@@ -50,11 +50,23 @@ window.COMP_CSS.kbd = `.sb-kbd {
   sbRegister({
     name: 'kbd',
     title: 'Keyboard Shortcut',
-    description: 'Маленький стилизованный «клавишный» элемент для отображения хоткеев и подсказок (⌘+K, /, Esc и т. п.). Используется в search-баре, тултипах, command-палетте, диалогах. Минимальная высота 20px, monospace-шрифт, фон surface-2, радиус 4px. Не интерактивен: подсказка, не кнопка.',
+    description: sbT(
+      'A small key-styled element for hotkeys and hints: ⌘+K, /, Esc. Examples: the KBS hint in the Search Bar, shortcuts in tooltips and dialogs. Not interactive — a hint, not a button.',
+      'Маленький элемент в виде клавиши для хоткеев и подсказок: ⌘+K, /, Esc. Примеры: KBS-подсказка в Search Bar, шорткаты в тултипах и диалогах. Не интерактивен — подсказка, а не кнопка.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Min-height 20px · monospace font · background surface-2 · radius 4px.',
+      'Min-height 20px · monospace-шрифт · фон surface-2 · radius 4px.'
+    )),
     sections: [
       {
         title: 'Anatomy — single key',
-        desc: 'Один клавишный элемент. Inline-flex 20px высотой, padding 2/8, surface-2 фон, monospace-шрифт subscription-размера.',
+        desc: sbT(
+          'A single key element.',
+          'Один клавишный элемент.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Inline-flex, 20px tall · padding 2/8 · surface-2 background · monospace font at the subscription size.',
+          'Inline-flex, высота 20px · padding 2/8 · фон surface-2 · monospace-шрифт subscription-размера.'
+        )),
         preview: `<div class="sec-row" style="gap:var(--gap-vert-s);align-items:center">
           ${mkKbd('⌘K')}
           ${mkKbd('Esc')}
@@ -69,7 +81,10 @@ window.COMP_CSS.kbd = `.sb-kbd {
       },
       {
         title: 'Group — combo keys',
-        desc: 'Несколько клавиш с разделителем (по умолчанию «+»). Используй sb-kbd-group для chord-комбинаций. Разделитель — обычный текст вне фоновой плашки.',
+        desc: sbT(
+          'Several keys with a separator (+ by default). The sb-kbd-group wrapper builds chord combinations. The separator is plain text outside the key plates.',
+          'Несколько клавиш с разделителем (по умолчанию +). Chord-комбинации собирает обёртка sb-kbd-group. Разделитель — обычный текст вне клавишных плашек.'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-s);align-items:flex-start">
           ${mkKbdGroup(['⌘', 'K'])}
           ${mkKbdGroup(['⌘', 'Shift', 'P'])}
@@ -85,7 +100,10 @@ window.COMP_CSS.kbd = `.sb-kbd {
       },
       {
         title: 'Inline в подсказках',
-        desc: 'Типичные кейсы использования — внутри Search Bar, тултипа, helper-текста, footer\'а команд-палетты.',
+        desc: sbT(
+          'Typical placements: inside a Search Bar, a tooltip, helper text, or the footer of a command palette.',
+          'Типичные размещения: внутри Search Bar, тултипа, helper-текста или футера command-палитры.'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m);align-items:flex-start">
           <span class="sb-body-m" style="color:var(--text-secondary);display:inline-flex;align-items:center;gap:var(--gap-vert-s)">
             Press ${mkKbdGroup(['⌘', 'K'])} to search

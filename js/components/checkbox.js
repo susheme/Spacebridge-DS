@@ -44,7 +44,13 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
   sbRegister({
     name: 'checkbox',
     title: 'Checkbox',
-    description: 'Элемент формы для выбора опций. Размер 20×20px, border-radius 4px. Состояния: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Поддержка Label.',
+    description: sbT(
+      'A form element for selecting options — any number can be checked. Examples: row selection in a table, a filter list. States: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Label supported.',
+      'Элемент формы для выбора опций — отметить можно любое количество. Примеры: выбор рядов в таблице, список фильтров. Состояния: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Поддерживает Label.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Size 20×20px · border-radius 4px.',
+      'Размер 20×20px · border-radius 4px.'
+    )),
     playground: {
       title: 'Checkbox Playground',
       state: { checked: false, disabled: false, hasLabel: false, type: 'check' },

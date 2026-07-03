@@ -81,7 +81,13 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
   sbRegister({
     name: 'search-bar',
     title: 'Search Bar',
-    description: 'Поле поиска. Высота 32px, border-radius 100px. Варианты: Filled (с фоном) и LineView (только нижняя линия). Состояния: Default, Selected, Disabled, Critical. Опции: Icon Left (лупа в overlay слева вместо правой кнопки) + опциональный right-slot для KBS-подсказок («⌘+K») или clear-кнопок.',
+    description: sbT(
+      'A search field. Two variants: Filled and Line View. States: Default, Selected, Disabled, Critical. Options: Icon Left (the magnifier moves to a left overlay) and a right slot for a KBS hint or a clear button. Example: the global search in the Nav Bar with a ⌘+K hint.',
+      'Поле поиска. Два варианта: Filled и Line View. Состояния: Default, Selected, Disabled, Critical. Опции: Icon Left (лупа переезжает в overlay слева) и right-slot для KBS-подсказки или clear-кнопки. Пример: глобальный поиск в Nav Bar с подсказкой ⌘+K.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Height 32px · border-radius 100px.',
+      'Высота 32px · border-radius 100px.'
+    )),
     playground: {
       title: 'Search Bar Playground',
       minPreview: 360,  // Search Bar wrapper max-width:360 — нужна полная ширина чтобы не сжимался
@@ -116,7 +122,10 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
     sections: [
       {
         title: 'Filled — States',
-        desc: 'Стандартный вид с заливкой. Default — серый фон, Selected/Focus — белый фон с синим бордером. Иконка лупы — в правой кнопке-action.',
+        desc: sbT(
+          'The standard filled look. Default — a gray background; Selected/Focus — the field switches to --background with a blue border. The magnifier lives in the right action button.',
+          'Стандартный вид с заливкой. Default — серый фон; Selected/Focus — поле переходит на --background с синим бордером. Лупа — в правой action-кнопке.'
+        ),
         preview: `<div class="sec-col medium">
           ${mkSearch({})}
           ${mkSearch({ selected: true })}
@@ -128,7 +137,10 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
       },
       {
         title: 'Line View — States',
-        desc: 'Минималистичный вид — только нижняя линия, без фона. Используется в таблицах и компактных интерфейсах.',
+        desc: sbT(
+          'The minimal look — a bottom line only, no background. Used in tables and compact interfaces.',
+          'Минималистичный вид — только нижняя линия, без фона. Используется в таблицах и компактных интерфейсах.'
+        ),
         preview: `<div class="sec-col medium">
           ${mkSearch({ lineView: true })}
           ${mkSearch({ lineView: true, selected: true })}
@@ -139,7 +151,10 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
       },
       {
         title: 'Icon Left',
-        desc: 'Лупа — в overlay слева, никогда не съедает ширину input\'а. В этом варианте правая action-кнопка (.sb-search-btn) НЕ рендерится: справа либо ничего, либо right-slot (KBS-подсказка / clear-кнопка). Канонический паттерн поиска (Spotlight, GitHub, Linear).',
+        desc: sbT(
+          'The magnifier sits in a left overlay and never eats the input width. The right action button (.sb-search-btn) is not rendered in this variant: the right side holds either nothing or the right slot — a KBS hint or a clear button. The canonical search pattern (Spotlight, GitHub, Linear).',
+          'Лупа — в overlay слева и не съедает ширину инпута. Правая action-кнопка (.sb-search-btn) в этом варианте не рендерится: справа либо ничего, либо right-slot — KBS-подсказка или clear-кнопка. Канонический паттерн поиска (Spotlight, GitHub, Linear).'
+        ),
         preview: `<div class="sec-col medium">
           ${mkSearch({ iconLeft: true })}
           ${mkSearch({ iconLeft: true, selected: true })}
@@ -150,7 +165,10 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
       },
       {
         title: 'Icon Left + KBS hint',
-        desc: 'Иконка слева + KBS-подсказка справа в right-slot. Используется как глобальный поиск с хоткеем (например, в NAV дизайн-системы — ⌘+K). Right-slot в фокусе можно скрывать через CSS на родителе.',
+        desc: sbT(
+          'The icon on the left plus a KBS hint in the right slot. Used as a global search with a hotkey — like the ⌘+K search in this design system’s nav. The right slot can be hidden on focus via CSS on the parent.',
+          'Иконка слева и KBS-подсказка в right-slot. Используется как глобальный поиск с хоткеем — как поиск ⌘+K в навигации этой дизайн-системы. Right-slot в фокусе можно скрыть через CSS на родителе.'
+        ),
         preview: `<div class="sec-col medium">
           ${mkSearch({ iconLeft: true, rightSlot: sbMkKbdGroup(['⌘','K']) })}
           ${mkSearch({ iconLeft: true, rightSlot: sbMkKbd('/') })}

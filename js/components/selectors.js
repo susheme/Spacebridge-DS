@@ -92,7 +92,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
   sbRegister({
     name: 'selectors',
     title: 'Selectors / Dropdowns',
-    description: 'Поле выбора значения. Шеврон из компонента Chevron Button. Варианты: с иконкой слева, с кнопкой добавления, в обёртке sb-field. Состояния: Default, Placeholder, Selected, Critical, Disabled.',
+    description: sbT(
+      'A value picker. The chevron comes from the Chevron Button component. Variants: with a left icon, with an add button, inside an sb-field wrapper. States: Default, Placeholder, Selected, Critical, Disabled. Example: a frequency band selector in a terminal form.',
+      'Поле выбора значения. Шеврон — из компонента Chevron Button. Варианты: с иконкой слева, с кнопкой добавления, в обёртке sb-field. Состояния: Default, Placeholder, Selected, Critical, Disabled. Пример: выбор частотного диапазона в форме терминала.'
+    ),
     playground: {
       title: 'Selector Playground',
       wide: true,
@@ -167,7 +170,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
     sections: [
       {
         title: 'States',
-        desc: 'Default, Placeholder, Selected (активный), Critical, Disabled.',
+        desc: sbT(
+          'Default, Placeholder, Selected (active), Critical, Disabled.',
+          'Default, Placeholder, Selected (активный), Critical, Disabled.'
+        ),
         preview: `<div class="sec-col narrow gap-md">
           ${mkSel({})}
           ${mkSel({ placeholder: true })}
@@ -181,7 +187,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
       },
       {
         title: 'Row Variant',
-        desc: 'Иконка слева (AI-ассистент и т.п.), кнопка добавления справа. Используй .sb-sel-row как обёртку.',
+        desc: sbT(
+          'A left icon (an AI assistant and the like) and an add button on the right. The .sb-sel-row wrapper lays it out.',
+          'Иконка слева (AI-ассистент и подобное), кнопка добавления справа. Раскладку даёт обёртка .sb-sel-row.'
+        ),
         preview: `<div style="width:400px;display:flex;flex-direction:column;gap: var(--gap-horiz-m)">
           ${mkSelRow({}, { showIcon: true })}
           ${mkSelRow({}, { showAddBtn: true })}
@@ -193,7 +202,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
       },
       {
         title: 'With Label & Subscription',
-        desc: 'Selector внутри sb-field — Label сверху, Subscription снизу. При Critical — Subscription красится error.',
+        desc: sbT(
+          'The selector inside sb-field — the label above, the subscription below. In the Critical state the subscription turns error-colored.',
+          'Selector внутри sb-field — Label сверху, Subscription снизу. При Critical подпись красится в error.'
+        ),
         preview: `<div class="sec-col narrow gap-lg">
           ${mkSelField({},               { label: 'Label' })}
           ${mkSelField({},               { label: 'Label', subscription: 'Subscription text' })}
@@ -205,7 +217,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
       },
       {
         title: '2-row Layout',
-        desc: 'Label слева, Selector справа. Используй .sb-field-group для выравнивания нескольких полей.',
+        desc: sbT(
+          'The label on the left, the selector on the right. The .sb-field-group wrapper aligns several fields.',
+          'Label слева, Selector справа. Обёртка .sb-field-group выравнивает несколько полей.'
+        ),
         preview: `<div class="sb-field-group sec-xl">
           ${mkSelField({}, { label: 'Label', twoRow: true })}
           ${mkSelField({}, { label: 'Label', subscription: 'Subscription text', twoRow: true })}

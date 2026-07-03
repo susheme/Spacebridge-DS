@@ -646,7 +646,10 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       // устакаться к моменту измерения natural'ов.
       if (!bar.__smartWired) wireSmartCollapse(bar);
     },
-    description: 'Header-полоса сверху приложения. Высота 56px (max 64). Левый слот — leading-button (side-bar / burger icon swap) / logo / logo-title / Badge-Status mini / icon-only buttons. Центр — до 7 кнопок разделов (центрированы или прижаты к правому). Правый слот — до 4 элементов: Button Secondary icon-only, Primary Button, Avatar, Search Bar. На container <1024px центральные tabs прячутся, full-logo / title / badge → compact-logo + burger-icon (mobile-overflow через Bottom Sheet — TODO).',
+    description: sbT(
+      'The application’s top chrome bar. The left slot holds a leading button, a logo, a title and a badge; the center — up to 7 section buttons, centered or pushed to the right; the right slot — up to 4 elements (icon-only buttons, a Primary button, an Avatar, a Search Bar). On narrow containers the center tabs hide and the left slot switches to its compact form with a burger button.',
+      'Верхняя полоса хрома приложения. Левый слот несёт leading-кнопку, логотип, тайтл и бейдж; центр — до 7 кнопок разделов, центрированных или прижатых к правому краю; правый слот — до 4 элементов (icon-only кнопки, Primary-кнопка, Avatar, Search Bar). В узких контейнерах центральные табы прячутся, а левый слот переходит в компактную форму с burger-кнопкой.'
+    ),
     playground: {
       title: 'Nav Bar Playground',
       wide: true,  // широкий компонент — preview под панелью контролов, на всю ширину
@@ -807,7 +810,13 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Три слота: левый (logo + extras), центральный (tabs), правый (actions). Высота 56px по дефолту, до 64px. Padding 24px по бокам (16 на мобиле). На < 640px центральные tabs прячутся.',
+        desc: sbT(
+          'Three slots: the left one (logo and extras), the center (section tabs), the right one (actions).',
+          'Три слота: левый (логотип и дополнения), центральный (табы разделов), правый (действия).'
+        ) + sbDocNote('Tech Info', sbT(
+          'Height 56px by default, up to 64px · side padding 24px (16 in compact). Container breakpoint 1024px: the center tabs hide, the left slot compacts, the search collapses to a trigger. At 640px the floating variant tightens its margins to 8px. Mobile overflow via a Bottom Sheet — TODO.',
+          'Высота 56px по умолчанию, до 64px · боковой padding 24px (16 в compact). Container breakpoint 1024px: центральные табы прячутся, левый слот переходит в compact, поиск сворачивается в триггер. На 640px floating-вариант сжимает отступы до 8px. Mobile-overflow через Bottom Sheet — TODO.'
+        )),
         preview: `<div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
           logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT, logoTitle: DEMO_LOGO_TITLE,
           tabs: [
@@ -836,7 +845,13 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       },
       {
         title: 'Nav Button — States',
-        desc: 'Эксклюзивная кнопка раздела (не из Buttons): 28px высоты, radius 100, --text-secondary по дефолту. Hover — Shadow-S. Selected — --primary-hover bg + Pressed-inset shadow. Disabled — серый --border, не кликается. Min-width 104, max-width 144 (длинный label обрезается многоточием).',
+        desc: sbT(
+          'A section button exclusive to the Nav Bar — not part of the Buttons component.',
+          'Кнопка раздела, эксклюзивная для Nav Bar — не из компонента Buttons.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Height 28px · radius 100 · default color --text-secondary · Hover — Shadow-S · Selected — --primary-hover background plus a pressed inset shadow · Disabled — --border, non-interactive. Width 104–144px; long labels truncate with an ellipsis.',
+          'Высота 28px · radius 100 · цвет по умолчанию --text-secondary · Hover — Shadow-S · Selected — фон --primary-hover и Pressed-inset тень · Disabled — --border, без интеракции. Ширина 104–144px; длинные подписи обрезаются многоточием.'
+        )),
         preview: `<div class="sec-row" style="gap:var(--gap-horiz-s);align-items:center;padding:24px;background:var(--surface-1);border-radius:var(--radius-8)">
           ${mkNavBtn({ label: 'Default' })}
           ${mkNavBtn({ label: 'Selected', selected: true })}
@@ -863,7 +878,10 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       },
       {
         title: 'Center align vs Right align',
-        desc: 'По умолчанию tabs центрируются в свободной зоне между left и right слотами. Modifier .align-right прижимает их к правому слоту с зазором 24px. Выбирается дизайнером per-app.',
+        desc: sbT(
+          'By default the tabs are centered in the free zone between the left and right slots. The .align-right modifier pushes them toward the right slot with a 24px gap. The choice is made by the designer, per application.',
+          'По умолчанию табы центрируются в свободной зоне между левым и правым слотами. Модификатор .align-right прижимает их к правому слоту с зазором 24px. Выбор — за дизайнером, отдельно для каждого приложения.'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
           <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
@@ -891,7 +909,10 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       },
       {
         title: 'Right slot — composition',
-        desc: 'До 4 элементов: Button Secondary icon-only, Primary Button (Login), Avatar, Search Bar. Сверх 4 — обрезаем + console.warn. Для overflow используй more-button с Context Menu / Bottom Sheet (mobile).',
+        desc: sbT(
+          'Up to 4 elements: an icon-only Secondary button, a Primary button (Login), an Avatar and a Search Bar. Anything beyond 4 is dropped with a console warning; for overflow, a More button with a Context Menu (or a Bottom Sheet on mobile) is the intended pattern.',
+          'До 4 элементов: icon-only Secondary-кнопка, Primary-кнопка (Login), Avatar и Search Bar. Всё сверх 4 обрезается с console.warn; для переполнения предусмотрен паттерн More-кнопки с Context Menu (на мобильных — Bottom Sheet).'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-s)">
           <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
@@ -931,7 +952,13 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       },
       {
         title: 'Floating + Scroll behavior',
-        desc: 'Modifier <code>.floating</code> — бар отрывается от краёв (margin 16, radius 12, Shadow-S), без border-bottom. При скролле вниз — переключается в <code>.is-stuck</code>: схлопывается до full-width (margin 0, radius 0, тень глубже). Транзишн плавный (0.25s). Реализация: <code>position: sticky</code> + IntersectionObserver на sentinel\'е (см. <code>sbWireNavBarFloating</code>).<br><br><b>Два паттерна размещения, выбирай по контексту:</b><br>• <b>Page-level sticky</b> — bar ВНУТРИ скролл-контейнера (обычно <code>&lt;main&gt;</code> или сам <code>document</code>). Bar реально «прилипает» при скролле страницы, scrollbar страницы идёт за баром на всю высоту. Подходит для главного chrome приложения.<br>• <b>Inline-panel</b> (как демо ниже) — bar СНАРУЖИ скролл-области, sibling\'ом сверху. Scrollbar упирается в низ bar\'а, не покрывает его. Подходит для виджетов / диалогов / встроенных панелей с собственным скроллом. Outer wrap = <code>display:flex;flex-direction:column;overflow:hidden</code>, scroll-область = <code>flex:1;min-height:0;overflow-y:auto;scrollbar-gutter:stable</code>. <code>wireFloating</code> сам поймёт, что bar снаружи, и положит sentinel внутрь scroll-области.',
+        desc: sbT(
+          'The <code>.floating</code> modifier detaches the bar from the edges; on scroll it collapses back to full width with a deeper shadow. Scroll the preview to see the transition in action.<br><br><b>Two placement patterns, chosen by context:</b><br>• <b>Page-level sticky</b> — the bar lives INSIDE the scroll container (usually <code>&lt;main&gt;</code> or the document itself). It genuinely sticks while the page scrolls, and the page scrollbar runs behind the bar at full height. Suited for the main application chrome.<br>• <b>Inline-panel</b> (as in the demo below) — the bar sits OUTSIDE the scroll area, as a sibling on top. The scrollbar stops at the bottom of the bar without covering it. Suited for widgets, dialogs and embedded panels with their own scrolling.',
+          'Модификатор <code>.floating</code> отрывает бар от краёв; при скролле он схлопывается обратно до полной ширины с более глубокой тенью. Прокрутите превью, чтобы увидеть переход в действии.<br><br><b>Два паттерна размещения, выбор — по контексту:</b><br>• <b>Page-level sticky</b> — бар ВНУТРИ скролл-контейнера (обычно <code>&lt;main&gt;</code> или сам документ). Бар действительно прилипает при скролле страницы, scrollbar страницы идёт за баром на всю высоту. Подходит для главного хрома приложения.<br>• <b>Inline-panel</b> (как в демо ниже) — бар СНАРУЖИ скролл-области, sibling-ом сверху. Scrollbar упирается в низ бара и не покрывает его. Подходит для виджетов, диалогов и встроенных панелей с собственным скроллом.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Floating: margin 16, radius 12, Shadow-S, no border-bottom. On scroll, <code>.is-stuck</code> switches to full width (margin 0, radius 0, deeper shadow); the transition takes 0.25s. Implementation: <code>position: sticky</code> plus an IntersectionObserver on a sentinel (<code>sbWireNavBarFloating</code>). Inline-panel wiring: the outer wrap is <code>display:flex;flex-direction:column;overflow:hidden</code>, the scroll area is <code>flex:1;min-height:0;overflow-y:auto;scrollbar-gutter:stable</code>. <code>wireFloating</code> detects that the bar is outside and places the sentinel inside the scroll area.',
+          'Floating: margin 16, radius 12, Shadow-S, без border-bottom. При скролле <code>.is-stuck</code> переключает в full-width (margin 0, radius 0, тень глубже); транзишн — 0.25s. Реализация: <code>position: sticky</code> и IntersectionObserver на sentinel-элементе (<code>sbWireNavBarFloating</code>). Обвязка inline-panel: внешний wrap — <code>display:flex;flex-direction:column;overflow:hidden</code>, скролл-область — <code>flex:1;min-height:0;overflow-y:auto;scrollbar-gutter:stable</code>. <code>wireFloating</code> сам определяет, что бар снаружи, и кладёт sentinel внутрь скролл-области.'
+        )),
         preview: `<div id="nav-bar-scroll-demo" style="width:100%;display:flex;flex-direction:column;height:340px;background:var(--background);border-radius:var(--radius-8);border:var(--border-width-1) solid var(--border);overflow:hidden">
           ${mkNavBar({
             button: DEMO_BUTTON,
@@ -1009,7 +1036,10 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       },
       {
         title: 'Left slot — composition (responsive)',
-        desc: 'Структурный API: <code>button</code> / <code>logo</code> / <code>logoCompact</code> / <code>logoTitle</code> / <code>badge</code> — отдельные пропсы. CSS container query переключает между wide и compact: при container <1024px tabs прячутся, full-logo / title / badge → compact-logo. Button всегда виден, но иконка внутри swap\'ается (side-bar-line в wide, menu-line в compact). Ниже — два примера на одной ширине.',
+        desc: sbT(
+          'A structural API: <code>button</code>, <code>logo</code>, <code>logoCompact</code>, <code>logoTitle</code> and <code>badge</code> are separate props. A CSS container query (breakpoint 1024px) switches between wide and compact: the tabs hide, and the full logo, title and badge give way to the compact logo. The button itself is always visible, but its icon swaps — side-bar-line in wide, menu-line in compact. Below — two examples at the same width.',
+          'Структурный API: <code>button</code>, <code>logo</code>, <code>logoCompact</code>, <code>logoTitle</code> и <code>badge</code> — отдельные пропсы. CSS container query (breakpoint 1024px) переключает между wide и compact: табы прячутся, full-logo, тайтл и бейдж уступают место compact-logo. Сама кнопка видна всегда, но иконка внутри меняется — side-bar-line в wide, menu-line в compact. Ниже — два примера на одной ширине.'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
           ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Wide (container > 1024px)</span>` })}
           <span class="sb-body-m" style="color:var(--text-tertiary);padding:0 var(--pad-horiz-16)">Горизонтальный скролл для full-view</span>

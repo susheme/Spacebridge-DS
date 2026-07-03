@@ -184,11 +184,20 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
   sbRegister({
     name: 'breadcrumbs',
     title: 'Breadcrumbs',
-    description: 'Path-навигация: цепочка ссылок к корню от текущей страницы. Последний элемент — current page (bold + --text-tertiary, не интерактивный). Типографика body-m / regular зеркальна со Sticky ToC. Разделитель — chevron-right 16px.',
+    description: sbT(
+      'Path navigation: a chain of links from the current page back to the root. The last element is the current page — emphasized and non-interactive. Items are separated by chevrons.',
+      'Path-навигация: цепочка ссылок от текущей страницы к корню. Последний элемент — текущая страница, выделен и неинтерактивен. Элементы разделены шевронами.'
+    ),
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Контейнер <code>&lt;nav class="sb-breadcrumbs"&gt;</code> с <code>aria-label="Breadcrumb"</code>. Каждый item — <code>&lt;a class="sb-breadcrumb-item"&gt;</code> кроме последнего: <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>. Между item\'ами — <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> с иконкой chevron-right.',
+        desc: sbT(
+          'A nav container with a chain of link items; the last item is a non-interactive element marking the current page, and the items are separated by decorative chevron icons.',
+          'Контейнер-nav с цепочкой ссылок; последний элемент — неинтерактивный, обозначает текущую страницу, между элементами — декоративные иконки-шевроны.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Container: <code>&lt;nav class="sb-breadcrumbs"&gt;</code> with <code>aria-label="Breadcrumb"</code>. Items: <code>&lt;a class="sb-breadcrumb-item"&gt;</code>; the last one — <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>. Separator: <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> with a chevron-right icon (16px). Current page: bold, --text-tertiary. Typography: body-m / regular — mirrored with the Sticky ToC.',
+          'Контейнер: <code>&lt;nav class="sb-breadcrumbs"&gt;</code> с <code>aria-label="Breadcrumb"</code>. Элементы: <code>&lt;a class="sb-breadcrumb-item"&gt;</code>; последний — <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>. Разделитель: <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> с иконкой chevron-right (16px). Текущая страница: bold, --text-tertiary. Типографика: body-m / regular — зеркально со Sticky ToC.'
+        )),
         preview: `<div style="padding:24px">${mkBreadcrumbs({ items: ITEMS_3 })}</div>`,
         html: `<nav class="sb-breadcrumbs" aria-label="Breadcrumb">
   <a class="sb-breadcrumb-item" href="#">Spacebridge</a>
@@ -201,7 +210,10 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
       },
       {
         title: 'Two levels',
-        desc: 'Минимальная цепочка из двух элементов — родитель + текущая страница.',
+        desc: sbT(
+          'The minimal chain of two elements — a parent and the current page.',
+          'Минимальная цепочка из двух элементов — родитель и текущая страница.'
+        ),
         preview: `<div style="padding:24px">${mkBreadcrumbs({ items: ITEMS_2 })}</div>`,
         html: `<nav class="sb-breadcrumbs" aria-label="Breadcrumb">
   <a class="sb-breadcrumb-item" href="#">Home</a>
@@ -212,7 +224,10 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
       },
       {
         title: 'With leading icon',
-        desc: 'Item может содержать иконку перед лейблом (например, home для корневого узла). Иконка наследует <code>color</code> от item\'а — меняется на hover/current.',
+        desc: sbT(
+          'An item may carry an icon before its label (for example, home for the root node). The icon inherits the item’s <code>color</code> and follows it on hover and in the current state.',
+          'Элемент может нести иконку перед подписью (например, home для корневого узла). Иконка наследует <code>color</code> элемента и следует за ним на hover и в состоянии current.'
+        ),
         preview: `<div style="padding:24px">${mkBreadcrumbs({ items: ITEMS_WITH_ICON })}</div>`,
         html: `<nav class="sb-breadcrumbs" aria-label="Breadcrumb">
   <a class="sb-breadcrumb-item" href="#">
@@ -227,14 +242,20 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
       },
       {
         title: 'Long path — full',
-        desc: 'Полная цепочка без сворачивания. Если строка длиннее контейнера — wrap на следующую строку (<code>flex-wrap: wrap</code> на <code>.sb-breadcrumbs</code>).',
+        desc: sbT(
+          'The full chain without collapsing. When the line is longer than its container, it wraps onto the next line (<code>flex-wrap: wrap</code> on <code>.sb-breadcrumbs</code>).',
+          'Полная цепочка без сворачивания. Если строка длиннее контейнера — перенос на следующую строку (<code>flex-wrap: wrap</code> на <code>.sb-breadcrumbs</code>).'
+        ),
         preview: `<div style="padding:24px">${mkBreadcrumbs({ items: ITEMS_LONG })}</div>`,
         html: `<!-- mkBreadcrumbs({ items: [...6 levels...] }) -->`,
         css: COMP_CSS.breadcrumbs,
       },
       {
         title: 'Long path — collapsed',
-        desc: 'Когда цепочка глубокая, средние узлы сворачиваются в <code>…</code>. Передай <code>collapseAfter: N</code> — показ первого + последних (N−1) item\'ов. Удобно для глубоких иерархий (fleet/group/device/section).',
+        desc: sbT(
+          'In deep hierarchies the middle nodes collapse into an ellipsis: the <code>collapseAfter: N</code> option keeps the first item and the last N−1. Convenient for deep paths (fleet / group / device / section).',
+          'В глубоких иерархиях средние узлы сворачиваются в многоточие: опция <code>collapseAfter: N</code> оставляет первый элемент и последние N−1. Удобно для глубоких путей (fleet / group / device / section).'
+        ),
         preview: `<div style="padding:24px">${mkBreadcrumbs({ items: ITEMS_LONG, collapseAfter: 4 })}</div>`,
         html: `<!-- mkBreadcrumbs({ items: [...6 levels...], collapseAfter: 4 }) -->
 <nav class="sb-breadcrumbs" aria-label="Breadcrumb">

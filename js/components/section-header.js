@@ -101,11 +101,20 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
   sbRegister({
     name: 'section-header',
     title: 'Header Section',
-    description: 'Самый компактный из шапок (40px). Используется внутри карточек, форм, контентных блоков для группировки секций. Два слота: левый (24px высота) — обычно заголовок секции с опциональной иконкой/индикатором; правый (32px высота, до 700px ширины) — экшены секции (toggle, иконки, шеврон, More-кнопка с выпадающим меню). Без табов снизу. Может быть свёрнутым — для этого добавь шеврон в правый слот. Может быть sticky — за это отвечает обёртка/родитель, а не сам компонент. Responsive: при ширине Section Header < 320px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).',
+    description: sbT(
+      'A compact header that groups sections inside cards, forms and content blocks. The left slot holds the section title with an optional icon or indicator; the right slot holds section actions — a toggle, icons, a chevron or the More menu. A chevron in the right slot makes the section collapsible; sticky behavior, when needed, is the parent’s responsibility. On narrow widths, inline buttons collapse into a dropdown menu behind the More (⋯) button.',
+      'Компактная шапка для группировки секций внутри карточек, форм и контентных блоков. Левый слот — заголовок секции с опциональной иконкой или индикатором; правый — действия секции: toggle, иконки, шеврон или More-меню. Шеврон в правом слоте делает секцию сворачиваемой; sticky-поведение, когда оно нужно, — зона ответственности родителя. На узкой ширине inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).'
+    ),
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Корневой контейнер 40px / surface-2 / radius-6 / padding 8/16. Внутри — два слота: left (flex, 24px) и right (inline-flex, 32px). Поведение слотов управляется data-slot-left / data-slot-right.',
+        desc: sbT(
+          'A single row with two slots pushed to opposite edges: the title on the left, the actions on the right.',
+          'Одна строка с двумя разведёнными по краям слотами: слева заголовок, справа действия.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Root: height 40px · background surface-2 · radius 6 · padding 8/16. Slots: left — flex, 24px; right — inline-flex, 32px, up to 700px wide; slot behavior via data-slot-left / data-slot-right. Breakpoint 320px: inline buttons collapse behind More (⋯).',
+          'Корень: высота 40px · фон surface-2 · radius 6 · padding 8/16. Слоты: левый — flex, 24px; правый — inline-flex, 32px, ширина до 700px; поведение слотов — через data-slot-left / data-slot-right. Breakpoint 320px: inline-кнопки сворачиваются под More (⋯).'
+        )),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%">
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Section title</span>`,
@@ -124,7 +133,10 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
       },
       {
         title: 'Title only',
-        desc: 'Простейший вариант — только заголовок в левом слоте, правый слот скрыт через data-slot-right="false".',
+        desc: sbT(
+          'The simplest configuration — only the title in the left slot; the right slot is hidden via <code>data-slot-right="false"</code>.',
+          'Простейшая конфигурация — только заголовок в левом слоте; правый слот скрыт через <code>data-slot-right="false"</code>.'
+        ),
         preview: mkSectionHeader({
           slotLeft: `<span class="sb-caption">Section title</span>`,
           slotRight: false,
@@ -138,7 +150,10 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
       },
       {
         title: 'With Symbol Badge',
-        desc: 'В левом слоте перед заголовком — Symbol Badge (24×24). Чаще всего Info Pop-up, реже — Warning / Critical / Check для статуса секции.',
+        desc: sbT(
+          'A Symbol Badge (24×24) precedes the title in the left slot. Most often an Info Pop-up; Warning, Critical or Check can reflect the section’s status.',
+          'Перед заголовком в левом слоте — Symbol Badge (24×24). Чаще всего Info Pop-up; Warning, Critical или Check могут отражать статус секции.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
           ${mkSectionHeader({
             slotLeft: `${SB_SVG.infoPop}<span class="sb-caption">Section title</span>`,
@@ -159,7 +174,10 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
       },
       {
         title: 'Collapsible (chevron)',
-        desc: 'Свёрнутый вариант — шеврон самым крайним справа. Состояние раскрытия (вверх/вниз) хранится на родителе, шеврон отражает его.',
+        desc: sbT(
+          'The collapsible variant places a chevron at the far right. The expanded state is stored on the parent; the chevron only reflects it.',
+          'Сворачиваемый вариант — шеврон крайним справа. Состояние раскрытия хранится на родителе; шеврон лишь отражает его.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Expanded section</span>`,
@@ -182,7 +200,10 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
       },
       {
         title: 'With indicator + actions',
-        desc: 'Левый слот: status-индикатор + заголовок. Правый слот: дополнительная подпись + toggle + шеврон.',
+        desc: sbT(
+          'Left slot: a status indicator and the title. Right slot: an additional caption, a toggle and a chevron.',
+          'Левый слот: status-индикатор и заголовок. Правый слот: дополнительная подпись, toggle и шеврон.'
+        ),
         preview: mkSectionHeader({
           slotLeft: `
             <span class="sb-status-dot online"></span>
@@ -217,7 +238,10 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
       },
       {
         title: 'With overflow menu (More button)',
-        desc: 'В правом слоте — More-кнопка (⋯) с прикреплённым выпадающим меню. Используй когда у секции есть набор второстепенных действий, не помещающихся инлайн. Inline-кнопки автоматически сворачиваются в меню при ширине Section Header < 320px.',
+        desc: sbT(
+          'The More (⋯) button with an attached dropdown menu — for sections with a set of secondary actions that do not fit inline. On narrow widths (below 320px), inline buttons collapse into this menu automatically.',
+          'More-кнопка (⋯) с прикреплённым выпадающим меню — для секций с набором второстепенных действий, которые не помещаются инлайн. На узкой ширине (меньше 320px) inline-кнопки сворачиваются в это меню автоматически.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Section title</span>`,

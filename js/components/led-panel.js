@@ -79,11 +79,20 @@ window.COMP_CSS["led-panel"] = `.sb-led-panel {
   sbRegister({
     name: 'led-panel',
     title: 'LED Panel',
-    description: 'Status Indicators Panel — горизонтальный bar с LED-item-ами для имитации real-device LED-панели. Каждый item: NAME label сверху (sb-caption uppercase) + Status Indicator Regular снизу. Panel — surface-1 фон, radius 8, padding 8/8, gap 24 между item-ами. Item — column flex, gap 4 между NAME и indicator. Используется внутри Sub Nav (как слот в любом alignment) или standalone. Переиспользует .sb-status-dot из status.css со всеми его статусами.',
+    description: sbT(
+      'A horizontal bar of LED items. It mimics the LED panel of a real device. Each item: a NAME label on top, a status indicator below. Example: PWR / LINK / RX / TX / FAULT in a Sub Nav. Works inside a Sub Nav or standalone.',
+      'Горизонтальный бар из LED-элементов. Имитирует LED-панель реального устройства. Каждый элемент: NAME-лейбл сверху, статус-индикатор снизу. Пример: PWR / LINK / RX / TX / FAULT в Sub Nav. Работает внутри Sub Nav или standalone.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Panel: surface-1 · radius 8 · padding 8/8 · gap 24 between items. Item: column flex, gap 4. The label is sb-caption uppercase. Reuses .sb-status-dot from Status with all its states.',
+      'Панель: surface-1 · radius 8 · padding 8/8 · gap 24 между элементами. Элемент: column flex, gap 4. Лейбл — sb-caption uppercase. Переиспользует .sb-status-dot из Status со всеми его статусами.'
+    )),
     sections: [
       {
         title: 'Basic — 5 indicators',
-        desc: 'Минимальный набор: 5 типовых статусов real-device. PWR — online (success). LINK — connecting (pulse). RX — online. TX — warning. FAULT — error. Каждый item: NAME + Status Indicator Regular.',
+        desc: sbT(
+          'A typical real-device set. PWR — online. LINK — connecting (pulse). RX — online. TX — warning. FAULT — error.',
+          'Типовой набор реального устройства. PWR — online. LINK — connecting (pulse). RX — online. TX — warning. FAULT — error.'
+        ),
         preview: `<div style="display:flex;justify-content:center;padding:var(--pad-vert-16)">
           ${mkLedPanel(DEMO_ITEMS)}
         </div>`,
@@ -102,7 +111,10 @@ window.COMP_CSS["led-panel"] = `.sb-led-panel {
       },
       {
         title: 'All status types',
-        desc: 'Все доступные статусы из status.css. online (success green) / offline (grey) / error (red) / warning (orange) / maintenance (alert) / connecting (primary с pulse-анимацией) / info (cyan).',
+        desc: sbT(
+          'Every status from Status: online (green), offline (grey), error (red), warning (orange), maintenance (alert), connecting (primary, pulse), info (cyan).',
+          'Все статусы из Status: online (зелёный), offline (серый), error (красный), warning (оранжевый), maintenance (alert), connecting (primary, pulse), info (cyan).'
+        ),
         preview: `<div style="display:flex;justify-content:center;padding:var(--pad-vert-16)">
           ${mkLedPanel([
             { name: 'ONLINE',  status: 'online'      },

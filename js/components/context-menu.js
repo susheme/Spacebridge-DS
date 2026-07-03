@@ -201,7 +201,13 @@ window.SB_DEMO_MORE_ITEMS = [
   sbRegister({
     name: 'context-menu',
     title: 'Context Menu',
-    description: 'Ячейки для контекстных меню, dropdown\'ов, pop-up карточек. Высота 40px, опциональная иконка слева (L), опциональная hover-иконка справа (S, configurable). Selected подсвечивает фон --primary-hover, текст --primary, и показывает check справа. Клик настраиваемый: по умолчанию single-select, галочка sticky (остаётся при повторном открытии меню).',
+    description: sbT(
+      'Cells for context menus, dropdowns and pop-up cards. Examples: the More (⋯) menu in headers, the language switcher in the Nav Bar. Selection is single-select by default. The check mark is sticky — it survives reopening the menu.',
+      'Ячейки для контекстных меню, dropdown-ов и pop-up карточек. Примеры: More-меню (⋯) в хедерах, переключатель языка в Nav Bar. Выбор по умолчанию single-select. Галочка sticky — сохраняется при повторном открытии меню.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Cell height 40px. Optional left icon (L); optional hover icon on the right (S, configurable). Selected: background --primary-hover, text --primary, a check on the right.',
+      'Высота ячейки 40px. Опциональная иконка слева (L); опциональная hover-иконка справа (S, настраивается). Selected: фон --primary-hover, текст --primary, галочка справа.'
+    )),
     playground: {
       title: 'Context Cell Playground',
       minPreview: 320,  // context cell ~280-320px широта — нужно ~320 чтобы не схлопывалось
@@ -275,7 +281,10 @@ window.SB_DEMO_MORE_ITEMS = [
     sections: [
       {
         title: 'Context Cell — States',
-        desc: 'Default / Hover / Selected / Disabled. Сверху — c Icon Left (24px), снизу — без. Клик по любой ячейке делает её Selected (single-select в рамках родителя).',
+        desc: sbT(
+          'Default / Hover / Selected / Disabled. The top row — with a left icon (24px), the bottom one — without. A click selects a cell; the selection is single within the parent.',
+          'Default / Hover / Selected / Disabled. Верхний ряд — с иконкой слева (24px), нижний — без. Клик выбирает ячейку; выбор одиночный в рамках родителя.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:212px">
           ${mkStateRow('With Icon Left', true)}
           ${mkStateRow('Without Icon Left', false)}
@@ -298,7 +307,10 @@ window.SB_DEMO_MORE_ITEMS = [
       },
       {
         title: 'Standalone Cell (Radius 4px)',
-        desc: 'Когда ячейка не прижата к границам контейнера — добавляй модификатор .has-radius для скругления углов 4px.',
+        desc: sbT(
+          'When a cell is not pressed against the container edges, the .has-radius modifier rounds its corners to 4px.',
+          'Если ячейка не прижата к границам контейнера, модификатор .has-radius скругляет углы до 4px.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%;max-width:212px">
           ${mkContextCell({ iconLeft: 'gemini-fill', label: 'Standalone', iconRightHover: 'file-copy-line', standalone: true })}
           ${mkContextCell({ label: 'Standalone (no icon)', iconRightHover: 'file-copy-line', standalone: true })}
@@ -310,7 +322,16 @@ window.SB_DEMO_MORE_ITEMS = [
       },
       {
         title: 'Context Card (Dropdown / Pop-up)',
-        desc: 'Карточка-обёртка для группы ячеек — для выпадающих меню (например, overflow-menu в Header L). Radius 12, padding 8/8, gap 8 между ячейками, лёгкая тень (--shadow-sm). До 5 ячеек на карточку — иначе превращай в скроллируемый список. Ячейки в mode:"action" — клик не оставляет .is-selected (one-shot действия), только подсвечивается hover-фон. Если все ячейки в карточке без иконок — все равно без иконок; иконка либо у всех, либо ни у кого.',
+        desc: sbT(
+          'A wrapper card for a group of cells — the base of dropdown menus. Example: the overflow menu in Header L. Up to 5 cells per card; longer sets become a scrollable list. In mode: "action" a click leaves no selection — for one-shot actions.',
+          'Карточка-обёртка для группы ячеек — основа выпадающих меню. Пример: overflow-меню в Header L. До 5 ячеек на карточку; длинные наборы — в скроллируемый список. В mode: "action" клик не оставляет выбора — для one-shot действий.'
+        ) + sbDocNote('Important', sbT(
+          'Icons are all-or-nothing: either every cell in the card has one, or none does.',
+          'Иконки — либо у всех ячеек карточки, либо ни у одной.'
+        )) + sbDocNote('Tech Info', sbT(
+          'Radius 12 · padding 8/8 · gap 8 between cells · --shadow-sm.',
+          'Radius 12 · padding 8/8 · gap 8 между ячейками · --shadow-sm.'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
           <div class="sb-ctx-card">
             ${mkContextCell({ iconLeft: 'file-copy-line',  label: 'Copy',          mode: 'action' })}
@@ -332,7 +353,13 @@ window.SB_DEMO_MORE_ITEMS = [
       },
       {
         title: 'Context Card with Tip',
-        desc: 'Modifier <code>.with-tip</code> — карточка получает треугольник сверху-справа, «указывающий» на триггер. Используется для callout-меню над аватаром, kebab-кнопкой, tooltip\'ами с действиями. Right-offset треугольника = 16px (попадает примерно в центр 32-40px иконочного триггера). Цвет триангла = фон карточки → шёва не видно.',
+        desc: sbT(
+          'The <code>.with-tip</code> modifier adds a triangle at the top right, pointing at the trigger. Examples: a callout menu under an avatar or a kebab button.',
+          'Модификатор <code>.with-tip</code> добавляет треугольник сверху справа, указывающий на триггер. Примеры: callout-меню под аватаром или kebab-кнопкой.'
+        ) + sbDocNote('Tech Info', sbT(
+          'The triangle’s right offset is 16px — roughly the center of a 32–40px icon trigger. Its color equals the card background, so the seam is invisible.',
+          'Right-offset треугольника — 16px, примерно центр иконочного триггера 32–40px. Цвет треугольника равен фону карточки, поэтому шва не видно.'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
           <div class="sb-ctx-card with-tip" style="position:relative">
             ${mkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' })}

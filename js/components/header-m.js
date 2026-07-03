@@ -128,7 +128,10 @@ window.COMP_CSS.headerM = `.sb-header-m {
   sbRegister({
     name: 'header-m',
     title: 'Header M',
-    description: 'Используется для Page Blocks, Modals и Cards. Горизонтальный наладдер 56-64px высотой без border-radius (живёт внутри других контейнеров). Два свободных слота — Left и Right (max 700px каждый, gap 8). Заголовок — H6 (24/900). Между слотами — justify-content: space-between. Responsive: при ширине Header M < 600px inline-кнопки правого слота автоматически сворачиваются в выпадающее меню под More-кнопкой (⋯). Caption и Status остаются видимыми.',
+    description: sbT(
+      'A mid-size header for page blocks, modals and cards. It always sits inside another container, so it has no rounded corners of its own. Two flexible slots — Left and Right — are pushed to opposite edges; on narrow widths, inline buttons in the right slot collapse into the More (⋯) dropdown while the caption and status stay visible.',
+      'Средний хедер — для блоков страницы, модалок и карточек. Всегда находится внутри другого контейнера, поэтому собственных скруглений не имеет. Два свободных слота — Left и Right — разведены по краям; на узкой ширине inline-кнопки правого слота сворачиваются в меню под More-кнопкой (⋯), caption и статус остаются видимыми.'
+    ),
     playground: {
       title: 'Header M Playground',
       wide: true,
@@ -268,7 +271,13 @@ window.COMP_CSS.headerM = `.sb-header-m {
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Корневой контейнер 56-64px / row-flex / space-between / без скругления / bg --background. Слева: Info Pop-up + Headline. Справа: Status mini + More-кнопка с прикреплённым выпадающим меню.',
+        desc: sbT(
+          'A single row with content at opposite edges: an Info Pop-up and the headline on the left, a mini status and the More button with an attached dropdown menu on the right.',
+          'Одна строка с содержимым по краям: слева Info Pop-up и заголовок, справа Status mini и More-кнопка с прикреплённым выпадающим меню.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Root: height 56–64px · row-flex · space-between · no border-radius · background --background. Headline — H6 (24 / 900). Slots: up to 700px each, gap 8. Breakpoint 600px: right-slot inline buttons collapse behind More (⋯).',
+          'Корень: высота 56–64px · row-flex · space-between · без скругления · фон --background. Headline — H6 (24 / 900). Слоты: до 700px каждый, gap 8. Breakpoint 600px: inline-кнопки правого слота сворачиваются под More (⋯).'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:600px">
           ${mkHeaderM({
             slotLeft: `${SB_SVG.infoPop}`,
@@ -298,7 +307,10 @@ window.COMP_CSS.headerM = `.sb-header-m {
       },
       {
         title: 'Title only',
-        desc: 'Простейший вариант — только заголовок в левом слоте, без правого.',
+        desc: sbT(
+          'The minimal configuration — only the headline in the left slot, no right slot.',
+          'Минимальная конфигурация — только заголовок в левом слоте, без правого.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:600px">
           ${mkHeaderM({
             title: 'Headline',
@@ -313,7 +325,10 @@ window.COMP_CSS.headerM = `.sb-header-m {
       },
       {
         title: 'Navigation pattern (Back button + collapsible)',
-        desc: 'Типичный сценарий: Secondary-Button «назад» в левом слоте, справа — Status, More-кнопка с дополнительными опциями и Chevron (collapsible).',
+        desc: sbT(
+          'A typical pattern: a Secondary back button in the left slot; a status, the More button with secondary options and a chevron (collapsible) on the right.',
+          'Типичный паттерн: Secondary-кнопка «назад» в левом слоте; справа — статус, More-кнопка с второстепенными действиями и шеврон (collapsible).'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:600px">
           ${mkHeaderM({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>`,
@@ -347,7 +362,13 @@ window.COMP_CSS.headerM = `.sb-header-m {
       },
       {
         title: 'Full slot composition',
-        desc: 'Максимальное наполнение: слева Back + Indicator + Info Pop-up + Headline; справа Caption + Status + inline Add (icon) + inline Action (text) + More-кнопка с дополнительным набором + Chevron. При сжатии Header M < 600px — Add и Action автоматически сворачиваются в выпадающее меню под More.',
+        desc: sbT(
+          'Every slot filled: Back, an indicator, an Info Pop-up and the headline on the left; a caption, a status, inline Add (icon), inline Action (text), the More button and a chevron on the right.',
+          'Максимальное наполнение: слева Back, индикатор, Info Pop-up и заголовок; справа caption, статус, inline Add (иконка), inline Action (текст), More-кнопка и шеврон.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Below 600px, Add and Action collapse into the dropdown behind the More button.',
+          'При ширине меньше 600px Add и Action сворачиваются в меню под More-кнопкой.'
+        )),
         preview: `<div style="width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)"><div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:900px">
           ${mkHeaderM({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button><span class="sb-status-dot online"></span>${SB_SVG.infoPop}`,
@@ -397,7 +418,10 @@ window.COMP_CSS.headerM = `.sb-header-m {
       },
       {
         title: 'Composition: + Sub Nav + Tool Bar',
-        desc: 'Header M в композиции с Sub Nav и Tool Bar — стандартный chrome для основных рабочих страниц приложения: заголовок, навигация по разделам, action-полоска.',
+        desc: sbT(
+          'Header M combined with Sub Nav and Tool Bar — the standard chrome for the application’s primary working pages: a title, section navigation and an action strip.',
+          'Header M в композиции с Sub Nav и Tool Bar — стандартный chrome основных рабочих страниц приложения: заголовок, навигация по разделам и полоса действий.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;box-sizing:border-box">
           ${mkHeaderM({
             slotLeft: SB_SVG.infoPop,

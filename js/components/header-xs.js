@@ -119,7 +119,10 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
   sbRegister({
     name: 'header-xs',
     title: 'Header XS',
-    description: 'Самый компактный из header-семейства (40px). Применяется в Toast Notifications и небольших Cards. Левый слот (24px высота, до 700px ширины): Symbol Badge / Status / Loader + Title M (semibold). Правый слот без обёртки — туда кладётся одна Icon-Only Small Button или Chevron. Скруглены только верхние углы 12px (нижние 0 — внизу всегда соседний блок карточки). Для toast-варианта с accent-полосой справа добавь .flush-right — top-right угол станет 0.',
+    description: sbT(
+      'The most compact header in the family, used in toast notifications and small cards. The left slot pairs a Symbol Badge, status or loader with the title; the right slot takes a single small icon-only button or a chevron.',
+      'Самый компактный хедер семейства — для toast-уведомлений и небольших карточек. Левый слот сочетает Symbol Badge, статус или лоадер с заголовком; правый — одна маленькая icon-only кнопка или шеврон.'
+    ),
     playground: {
       title: 'Header XS Playground',
       minPreview: 400,  // stage 360 + padding 24×2 = 408, нужно ~400 чтобы header не clip'нулся
@@ -181,7 +184,13 @@ ${leftInner}
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Корневой контейнер 40px / background / radius 12 12 0 0 / padding 8/8 / gap 2px. Левый слот: flex-grow, 24px высота, gap 8px. Правый слот без обёртки — Icon-Only Small Button / Chevron кладётся прямо в корень.',
+        desc: sbT(
+          'A single 40px row: the left slot grows to fill the available width; the right control is placed directly into the root, without a wrapper.',
+          'Одна строка 40px: левый слот растягивается на доступную ширину; правый контрол кладётся прямо в корень, без обёртки.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Root: height 40px · background --background · radius 12 12 0 0 (a card block always adjoins below) · padding 8/8 · gap 2px. Left slot: flex-grow, 24px tall, up to 700px wide, gap 8px. Title — Title M (semibold).',
+          'Корень: высота 40px · фон --background · radius 12 12 0 0 (снизу всегда примыкает блок карточки) · padding 8/8 · gap 2px. Левый слот: flex-grow, высота 24px, ширина до 700px, gap 8px. Заголовок — Title M (semibold).'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Header XS</span>`,
@@ -200,7 +209,10 @@ ${leftInner}
       },
       {
         title: 'Toast — Warning',
-        desc: 'Типичный кейс: Symbol Badge (warning) + Title M + Close-кнопка. Контент карточки рендерится отдельно ниже хедера.',
+        desc: sbT(
+          'A typical case: a warning Symbol Badge, the title and a Close button. The card content renders separately, below the header.',
+          'Типичный случай: Symbol Badge (warning), заголовок и Close-кнопка. Содержимое карточки рендерится отдельно, ниже хедера.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>`,
@@ -220,7 +232,10 @@ ${leftInner}
       },
       {
         title: 'Loader (Loading state)',
-        desc: 'Вместо Symbol Badge в левый слот ставится крутилка 24×24. Та же sb-spin-анимация, что у кнопок-лоадеров. Полезно для toast-ов с длительной операцией ("Saving…", "Connecting…").',
+        desc: sbT(
+          'A 24×24 spinner takes the Symbol Badge’s place in the left slot — the same sb-spin animation as in button loaders. Suited for toasts that track a long-running operation (Saving…, Connecting…).',
+          'Вместо Symbol Badge в левом слоте — спиннер 24×24, та же анимация sb-spin, что у кнопок-лоадеров. Подходит для toast-уведомлений с длительной операцией (Saving…, Connecting…).'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `<span class="sb-header-xs-loader" aria-label="Loading"></span><span class="sb-header-xs-title sb-title-m sb-fw-semibold">Saving…</span>`,
@@ -239,8 +254,11 @@ ${leftInner}
         css: COMP_CSS.headerXs,
       },
       {
-        title: 'Flush Right (для accent-полосы)',
-        desc: 'Когда у toast-карточки есть цветная вертикальная полоса справа, верхний правый угол хедера должен быть 0 (иначе полоса выглядит обрезанной). Включается через .flush-right.',
+        title: 'Flush Right (accent stripe)',
+        desc: sbT(
+          'When a toast card has a colored vertical stripe on the right, the header’s top-right corner must stay square — otherwise the stripe looks clipped. Enabled with the .flush-right modifier.',
+          'Если у toast-карточки есть цветная вертикальная полоса справа, верхний правый угол хедера должен оставаться прямым — иначе полоса выглядит обрезанной. Включается модификатором .flush-right.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             flushRight: true,
@@ -261,7 +279,10 @@ ${leftInner}
       },
       {
         title: 'With Chevron',
-        desc: 'Альтернатива close-кнопке в правом слоте — Chevron из DS (collapsible toast).',
+        desc: sbT(
+          'An alternative to the Close button in the right slot — the DS Chevron, for collapsible toasts.',
+          'Альтернатива Close-кнопке в правом слоте — Chevron из DS, для сворачиваемых toast-уведомлений.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `<span class="sb-status-dot online"></span><span class="sb-header-xs-title sb-title-m sb-fw-semibold">Connection</span>`,

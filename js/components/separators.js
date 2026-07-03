@@ -19,11 +19,20 @@ window.COMP_CSS.separator = `.sb-sep { display: block; background: var(--border)
 sbRegister({
   name: 'separators',
   title: 'Separator',
-  description: 'Разделители для визуального разграничения контента. Горизонтальные и вертикальные варианты в трёх размерах: L, M, S. Цвет фона — --border по умолчанию или --border-soft через модификатор .soft (опционально). Вертикальные sep\'ы используют --border-soft из коробки.',
+  description: sbT(
+    'Separators visually divide content. Horizontal and vertical variants come in three sizes — L, M and S.',
+    'Разделители визуально разграничивают контент. Горизонтальный и вертикальный варианты в трёх размерах — L, M и S.'
+  ) + sbDocNote('Tech Info', sbT(
+    'Thickness: L — 2px · M — 1.5px · S — 1px. Default color — --border; the .soft modifier switches it to --border-soft. Vertical separators use --border-soft out of the box.',
+    'Толщина: L — 2px · M — 1.5px · S — 1px. Цвет по умолчанию — --border; модификатор .soft переключает на --border-soft. Вертикальные разделители используют --border-soft из коробки.'
+  )),
   sections: [
     {
       title: 'Horizontal',
-      desc: 'Горизонтальный разделитель для секций и блоков. L — 2px, M — 1.5px, S — 1px. Toggle Soft color переключает все sep\'ы внутри блока на модификатор .soft (--border-soft).',
+      desc: sbT(
+        'A horizontal separator for sections and blocks. The Soft color toggle applies the .soft modifier (--border-soft) to every separator in the example.',
+        'Горизонтальный разделитель для секций и блоков. Переключатель Soft color применяет ко всем разделителям в примере модификатор .soft (--border-soft).'
+      ),
       col: true,
       preview: `
         <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-lg);width:100%">
@@ -53,7 +62,10 @@ sbRegister({
     },
     {
       title: 'Vertical',
-      desc: 'Вертикальный разделитель — разграничение инлайн-элементов. L — 2px, M — 1.5px, S — 1px. У вертикальных sep\'ов фон --border-soft из коробки; toggle Soft color ставит .soft класс явно (визуально не меняется).',
+      desc: sbT(
+        'A vertical separator that divides inline elements. Vertical separators use --border-soft out of the box, so the Soft color toggle only sets the .soft class explicitly, with no visual change.',
+        'Вертикальный разделитель — разграничивает инлайн-элементы. Вертикальные разделители используют --border-soft из коробки, поэтому переключатель Soft color лишь явно ставит класс .soft, ничего не меняя визуально.'
+      ),
       preview: `
         <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-lg);width:100%">
           <label class="sb-toggle-wrap">

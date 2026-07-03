@@ -576,7 +576,10 @@ window.COMP_CSS.table = `.sb-table {
   sbRegister({
     name: 'table',
     title: 'Table',
-    description: 'Композируемая flex-таблица (div + ARIA-роли). Фаза 1 — два типа хедера. Header Primary: ячейка-чекбокс (40×40) + CAPTION-ячейки (12/500 --text-secondary uppercase) с sort-иконкой (24×24). Header Secondary: ячейки Title M (16/600 --text-tertiary, Title Case) с иконка-слотом слева/справа (антенна-статус из Status или любая иконка), без сортировки. Оба: верхние углы скруглены (TL/TR), border-bottom --border (сплошной), на стыках вертикальный separator (2px, внутри ячейки). Ряды, типы контента (slots), selection + тул-бар, pin/drag/accordion, filter, empty — следующими шагами.',
+    description: sbT(
+      'A composable flex table (div plus ARIA roles). Two header types, a body cell with all content types and states, and the assembled Full Table: selection, sorting, pagination, a tool bar and a footer. Example: a fleet table of terminals. Pin / drag / accordion, filtering and the empty state come next.',
+      'Композируемая flex-таблица (div и ARIA-роли). Два типа хедера, body-ячейка со всеми типами контента и состояниями, и собранная Full Table: выбор, сортировка, пагинация, тул-бар и футер. Пример: таблица флота терминалов. Pin / drag / accordion, фильтрация и empty-state — следующими шагами.'
+    ),
     renderPage() {
       const header = mkTable({
         selectable: true,
@@ -668,35 +671,71 @@ window.COMP_CSS.table = `.sb-table {
 
       const pageHTML = `<div class="page fade-in">
         <h1 class="page-title sb-h4">Table</h1>
-        <p class="page-desc sb-body-l">Композируемая таблица для структурных данных терминалов/устройств. Строится по частям — сейчас доступны два типа хедера (Primary, Secondary), body-ячейка со всеми типами контента и состояниями, и собранная таблица (Header + ряды).</p>
+        <p class="page-desc sb-body-l">${sbT(
+          'A composable table for structured terminal and device data. It is built from parts: two header types (Primary, Secondary), a body cell with all content types and states, and the assembled Full Table with a tool bar, a footer and working pagination. Example: a fleet table of terminals.',
+          'Композируемая таблица для структурных данных терминалов и устройств. Строится по частям: два типа хедера (Primary, Secondary), body-ячейка со всеми типами контента и состояниями, и собранная Full Table с тул-баром, футером и рабочей пагинацией. Пример: таблица флота терминалов.'
+        )}</p>
         <div class="comp-section" id="sec-header-primary">
           <h2 class="comp-title sb-title-l">Header Primary</h2>
-          <p class="comp-desc sb-body-m">Чекбокс-ячейка (40×40) + текстовые ячейки (min 80, CAPTION 12/500 --text-secondary uppercase + sort-иконка 24). Скруглены верхние углы, border-bottom --border (сплошной), вертикальный separator (2px) на стыках, внутри ячейки. Минимум 2 ячейки.</p>
+          <p class="comp-desc sb-body-m">${sbT(
+            'The main header: a checkbox cell plus caption cells with sorting. Example: the header of a selectable fleet table. Minimum 2 cells.',
+            'Основной хедер: ячейка-чекбокс и caption-ячейки с сортировкой. Пример: хедер таблицы флота с выбором рядов. Минимум 2 ячейки.'
+          ) + sbDocNote('Tech Info', sbT(
+            'Checkbox cell 40×40. Text cells: min 80, CAPTION 12/500 --text-secondary uppercase, sort icon 24. Top corners rounded, border-bottom --border, a 2px vertical separator inside cells at the seams.',
+            'Ячейка-чекбокс 40×40. Текстовые ячейки: min 80, CAPTION 12/500 --text-secondary uppercase, sort-иконка 24. Верхние углы скруглены, border-bottom --border, на стыках вертикальный separator 2px внутри ячейки.'
+          ))}</p>
           ${exampleBox(stage(header), codeHTML, COMP_CSS.table, { col: true })}
         </div>
         <div class="comp-section" id="sec-header-secondary">
           <h2 class="comp-title sb-title-l">Header Secondary</h2>
-          <p class="comp-desc sb-body-m">Ячейки типа Title M (16/600 --text-tertiary, Title Case) с опциональным иконка-слотом слева/справа — антенна-статус (переиспользуем из Status) или любая иконка. В демо антенна только на первой ячейке. Min-width 40, padding 8/8, gap 8, border-bottom --border, вертикальный separator на стыках. Без сортировки. Типы ячеек — следующим шагом (ниже/в playground).</p>
+          <p class="comp-desc sb-body-m">${sbT(
+            'A lighter header without sorting. Cells carry an optional icon slot on the left or right — an antenna status from Status, or any icon. In the demo, only the first cell has an antenna. Example: a sub-table inside a device card.',
+            'Облегчённый хедер без сортировки. Ячейки несут опциональный иконка-слот слева или справа — антенна-статус из Status или любая иконка. В демо антенна только на первой ячейке. Пример: под-таблица внутри карточки устройства.'
+          ) + sbDocNote('Tech Info', sbT(
+            'Cells: Title M 16/600 --text-tertiary, Title Case. Min-width 40, padding 8/8, gap 8, border-bottom --border, a vertical separator at the seams.',
+            'Ячейки: Title M 16/600 --text-tertiary, Title Case. Min-width 40, padding 8/8, gap 8, border-bottom --border, на стыках вертикальный separator.'
+          ))}</p>
           ${exampleBox(stage(headerSec), codeSecHTML, COMP_CSS.table, { col: true })}
         </div>
         <div class="comp-section" id="sec-cell-text">
           <h2 class="comp-title sb-title-l">Cell — Text</h2>
-          <p class="comp-desc sb-body-m">Базовая body-ячейка (40px): flex, ширина 200 (min 80), padding 8/0/8/8, space-between, border-bottom --border-soft. Контент Text — типографика Title S (14/600 --text-tertiary) с обрезкой по ellipsis при переполнении.</p>
+          <p class="comp-desc sb-body-m">${sbT(
+            'The base body cell (40px). The Text content truncates with an ellipsis on overflow.',
+            'Базовая body-ячейка (40px). Контент Text при переполнении обрезается многоточием.'
+          ) + sbDocNote('Tech Info', sbT(
+            'Flex, width 200 (min 80), padding 8/0/8/8, space-between, border-bottom --border-soft. Text typography: Title S (14/600 --text-tertiary).',
+            'Flex, ширина 200 (min 80), padding 8/0/8/8, space-between, border-bottom --border-soft. Типографика Text: Title S (14/600 --text-tertiary).'
+          ))}</p>
           ${exampleBox(stage(cellText), codeCellHTML, COMP_CSS.table, { col: true })}
         </div>
         <div class="comp-section" id="sec-cell-content">
           <h2 class="comp-title sb-title-l">Cell — Content Types</h2>
-          <p class="comp-desc sb-body-m">Типы контента на слотовой системе: левый слот — ведущая группа (avatar/icon/status + text/link), правый — трейлинг (icon/icon-button), разводятся space-between; gap/padding 8. Узкие control-ячейки по центру: Checkbox = 40px, Chevron Button (.sb-chevron, вниз) / Icon-Button / Drawer (drag-handle, конец ряда) = 32px. Toggle — ширина по тоглу. Date — CAPTION + формат DD.MM.YYYY; Link — Link S. Переиспользуют DS-компоненты (Checkbox, Toggle, Input, Status, Mark, Avatar, Link, Button, Chevron).</p>
+          <p class="comp-desc sb-body-m">${sbT(
+            'Content types on a slot system. The left slot is the leading group: an avatar, an icon or a status, plus text or a link. The right slot is trailing: an icon or an icon button. Narrow control cells are centered. Everything reuses DS components: Checkbox, Toggle, Input, Status, Mark, Avatar, Link, Button, Chevron.',
+            'Типы контента на слотовой системе. Левый слот — ведущая группа: аватар, иконка или статус, плюс текст или ссылка. Правый слот — трейлинг: иконка или icon-кнопка. Узкие control-ячейки центрируются. Всё переиспользует DS-компоненты: Checkbox, Toggle, Input, Status, Mark, Avatar, Link, Button, Chevron.'
+          ) + sbDocNote('Tech Info', sbT(
+            'Slots split by space-between; gap and padding 8. Control cell widths: Checkbox — 40px; Chevron Button (.sb-chevron, down) / Icon-Button / Drawer (drag handle, end of row) — 32px; Toggle — by the toggle. Date — CAPTION, format DD.MM.YYYY. Link — Link S.',
+            'Слоты разводятся space-between; gap и padding 8. Ширины control-ячеек: Checkbox — 40px; Chevron Button (.sb-chevron, вниз) / Icon-Button / Drawer (drag-handle, конец ряда) — 32px; Toggle — по тоглу. Date — CAPTION, формат DD.MM.YYYY. Link — Link S.'
+          ))}</p>
           ${exampleBox(stage(cellTypes), codeTypesHTML, COMP_CSS.table, { col: true })}
         </div>
         <div class="comp-section" id="sec-cell-states">
           <h2 class="comp-title sb-title-l">Cell — States</h2>
-          <p class="comp-desc sb-body-m">Состояния ячейки — цвета как у Context Cell: Hover → фон --surface-1; Selected → фон --primary-hover + текст --primary. Hover не применяется поверх Selected. Класс на ячейке: <code>is-hover</code> / <code>is-selected</code>.</p>
+          <p class="comp-desc sb-body-m">${sbT(
+            'Cell states use the same colors as Context Cell. Hover — background --surface-1. Selected — background --primary-hover, text --primary. Hover does not apply on top of Selected. Cell classes: <code>is-hover</code> / <code>is-selected</code>.',
+            'Состояния ячейки — цвета как у Context Cell. Hover — фон --surface-1. Selected — фон --primary-hover, текст --primary. Hover не применяется поверх Selected. Классы на ячейке: <code>is-hover</code> / <code>is-selected</code>.'
+          )}</p>
           ${exampleBox(stage(cellStates), codeStatesHTML, COMP_CSS.table, { col: true })}
         </div>
         <div class="comp-section" id="sec-full-table">
           <h2 class="comp-title sb-title-l">Full Table</h2>
-          <p class="comp-desc sb-body-m">Собранная таблица во wrap'е: Header Primary (чекбокс + 5 колонок), 15 рядов с <b>рабочей пагинацией</b> (2 страницы, pageSize 10: 10+5, переключение живое; высота таблицы фиксирована по лейауту — не прыгает, хвост-пустота на 2-й странице — фон --background), <b>Table Tool Bar</b> и <b>Table Footer</b>. Колонки выровнены по явной ширине. Чекбокс — select-all/row-select. Сортировка кликабельна. При выборе рядов над футером всплывает компактный <b>floating-островок</b> (Download + Apply + Delete, кнопки Secondary S, тень Shadow-S, radius-8, gap 8px над футером) — не меняет высоту таблицы; Footer (компонент Table Footer): слева — счётчик «Rows: X of N» (обновляется при смене страницы), справа — Pagination. При выборе рядов левый слот меняется на «Selected: N». Выдели строки чекбоксами — островок, счётчик и левый слот оживают. В конце каждого ряда — kebab (⋯): клик открывает контекст-меню (Copy / Rename / Download / Delete, последний красный).</p>
+          <p class="comp-desc sb-body-m">${sbT(
+            'The assembled table: Header Primary (a checkbox and 5 columns), 15 rows, a <b>Table Tool Bar</b> and a <b>Table Footer</b>. Pagination works live — 2 pages. Sorting is clickable. The checkbox covers select-all and row selection. When rows are selected, a compact <b>floating island</b> (Download / Apply / Delete) appears above the footer, and the footer counter switches to Selected: N. Each row ends with a kebab (⋯) that opens a context menu (Copy / Rename / Download / Delete). Select a few rows with the checkboxes to see the island and the counters react.',
+            'Собранная таблица: Header Primary (чекбокс и 5 колонок), 15 рядов, <b>Table Tool Bar</b> и <b>Table Footer</b>. Пагинация рабочая — 2 страницы. Сортировка кликабельна. Чекбокс покрывает select-all и выбор ряда. При выборе рядов над футером всплывает компактный <b>floating-островок</b> (Download / Apply / Delete), а счётчик футера меняется на Selected: N. В конце каждого ряда — kebab (⋯), открывающий контекст-меню (Copy / Rename / Download / Delete). Выделите несколько рядов чекбоксами, чтобы увидеть, как оживают островок и счётчики.'
+          ) + sbDocNote('Tech Info', sbT(
+            'pageSize 10 → 2 pages (10+5). The table height is fixed by the layout and does not jump; the tail emptiness on page 2 is --background. Columns align by explicit widths. Island: Secondary S buttons, Shadow-S, radius 8, 8px above the footer; it does not change the table height. Footer: Rows: X of N on the left (updates on page change), Pagination on the right. The last menu item (Delete) is red.',
+            'pageSize 10 → 2 страницы (10+5). Высота таблицы фиксирована по лейауту и не прыгает; хвост-пустота на 2-й странице — фон --background. Колонки выровнены по явной ширине. Островок: кнопки Secondary S, Shadow-S, radius 8, 8px над футером; высоту таблицы не меняет. Футер: слева Rows: X of N (обновляется при смене страницы), справа Pagination. Последний пункт меню (Delete) — красный.'
+          ))}</p>
           ${exampleBox(stage(fullTable), codeFullHTML, COMP_CSS.table, { col: true })}
         </div>
       </div>`;

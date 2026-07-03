@@ -31,7 +31,13 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
   sbRegister({
     name: 'counters',
     title: 'Counters',
-    description: 'Компактный элемент отображения числовых значений. Высота 24px, border-radius 4px. Варианты: Single (одно значение), Range (текущее/максимум). Состояние Empty — плейсхолдер.',
+    description: sbT(
+      'A compact element for numeric values. Two variants: Single (one value) and Range (current / maximum). Example: the number of items next to a group in Side Navigation.',
+      'Компактный элемент для числовых значений. Два варианта: Single (одно значение) и Range (текущее / максимум). Пример: количество элементов рядом с группой в Side Navigation.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Height 24px · border-radius 4px. The Empty state shows a placeholder.',
+      'Высота 24px · border-radius 4px. Состояние Empty показывает плейсхолдер.'
+    )),
     playground: {
       title: 'Counter Playground',
       state: { type: 'single', value: 9, max: 9999, empty: false },
@@ -56,7 +62,10 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
     sections: [
       {
         title: 'Single',
-        desc: 'Одиночное числовое значение. Минимальная ширина 24px, растёт по контенту.',
+        desc: sbT(
+          'A single numeric value. Example: unread notifications. Min-width 24px, grows with the content.',
+          'Одиночное числовое значение. Пример: непрочитанные уведомления. Минимальная ширина 24px, растёт по контенту.'
+        ),
         preview: `<div class="sec-row wrap">
           ${mkCnt({ value: 9 })}
           ${mkCnt({ value: 999 })}
@@ -71,7 +80,10 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
       },
       {
         title: 'Range',
-        desc: 'Формат value/max — используется для отображения заполненности (слоты, квоты, списки).',
+        desc: sbT(
+          'The value/max format — shows capacity. Examples: slots, quotas, list fullness.',
+          'Формат value/max — показывает заполненность. Примеры: слоты, квоты, наполнение списков.'
+        ),
         preview: `<div class="sec-row">
           ${mkCnt({ type: 'range', value: 1,    max: 9 })}
           ${mkCnt({ type: 'range', value: 99,   max: 999 })}

@@ -19,7 +19,7 @@
    на Group, анимация search-with-filter — отдельными заходами. */
 
 .sb-side-nav {
-  position: relative; /* для overlay-футера */
+  position: relative; /* positioning context на будущее (декоры/оверлеи панели) */
   display: flex;
   flex-direction: column;
   /* Figma --Layout: ширина фикс 320. Высота заполняет контейнер (height:100%);
@@ -77,14 +77,11 @@
    сами через sbMkHeaderM({divider}) / sbMkSubNav({divider}) — «умно» включает
    нижнюю зону demoChrome(). */
 .sb-side-nav-toolbar { border-bottom: var(--border-width-1) solid var(--border-soft); }
-/* Footer — OVERLAY поверх контента (absolute), а не в потоке: включение/
-   выключение не двигает и не сжимает body (нет «скачка»). Свой фон перекрывает
-   контент, уезжающий под него. */
+/* Footer — В ПОТОКЕ, последняя flex-зона: всегда прижат к низу панели
+   (body flex:1 распирает), всегда видим целиком. Body над ним — скролл-бокс:
+   контент никогда не уезжает под футер (раньше был overlay — низ дерева
+   прятался за футером без шанса доскроллить). */
 .sb-side-nav-footer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
   border-top: var(--border-width-1) solid var(--border-soft);
   padding: var(--pad-vert-16);
   background: var(--background);
@@ -108,6 +105,11 @@
 }
 /* Side Bar: между Grand Parent ячейками gap 8. */
 .sb-side-nav.is-bar .sb-side-nav-body { gap: var(--gap-vert-s); }
+/* Все дети скролл-бокса (ячейки / ноды / section-header'ы) — БЕЗ сжатия:
+   высота ячейки фиксированная (40px), переполнение уходит в скролл, а не
+   ужимает айтемы (иначе 40px ячейки «худели» до ~36px и раскрытие родителя
+   прыгало по всему списку). */
+.sb-side-nav-body > * { flex-shrink: 0; }
 
 /* ── Row (общая строка для всех трёх ролей) ──────────────────────────── */
 /* Figma-спека ячейки: height 40, padding 8/8/8/16 (top/right/bottom/left —
@@ -148,6 +150,8 @@
      1px  1px 2px 0 var(--shadow-overlay) inset,
     -1px -1px 2px 0 var(--shadow-lg) inset;
 }
+/* Hover по Selected item (Side Menu / Side Bar) — фон светлеет до --background. */
+.sb-side-nav-row.is-item.is-selected:hover:not(.is-disabled) { background: var(--background); }
 
 /* Disabled — серый текст (--border). Hover-эффекты к нему не применяются. */
 .sb-side-nav-row.is-disabled { color: var(--border); cursor: not-allowed; }
@@ -243,9 +247,14 @@
   background: var(--background);
   transition: background var(--transition), box-shadow var(--transition);
 }
-.sb-side-nav-node.is-section:has(> .sb-side-nav-row:hover) {
+.sb-side-nav-node.is-section:not(.expanded):has(> .sb-side-nav-row:hover) {
   box-shadow: 0 2px 8px 0 var(--shadow-overlay); /* Shadow-S */
 }
+/* Раскрытый аккордеон (Grand-Parent / Parent / Group): hover без теней —
+   нода держит inset-карточку, header-строка не даёт drop Shadow-S. */
+.sb-side-nav-node.is-section.expanded > .sb-side-nav-row:hover,
+.sb-side-nav-node.is-parent.expanded  > .sb-side-nav-row:hover,
+.sb-side-nav-node.is-group.expanded   > .sb-side-nav-row:hover { box-shadow: none; }
 .sb-side-nav-node.is-section:has(> .sb-side-nav-row.is-selected) {
   background: var(--surface-1);
 }
@@ -292,6 +301,9 @@
   box-shadow: none;
   color: var(--primary);
 }
+/* Вложенный selected Child без пилюли — hover-подсветка --background к нему
+   не применяется (гасим правило hover-по-selected из базового блока). */
+.sb-side-nav-children .sb-side-nav-row.is-item.is-selected:hover { background: transparent; }
 .sb-side-nav-children .sb-side-nav-row.is-selected .sb-side-nav-row-lead,
 .sb-side-nav-children .sb-side-nav-row.is-selected .sb-side-nav-row-chevron { color: var(--primary); }
 

@@ -33,7 +33,7 @@
 /* Color variants */
 .sb-tag.filled.tc-success { background: var(--success); }
 .sb-tag.filled.tc-error { background: var(--error); }
-.sb-tag.filled.tc-warning { background: var(--warning); color: var(--text-primary); }
+.sb-tag.filled.tc-warning { background: var(--warning); color: var(--background); }
 .sb-tag.filled.tc-alert { background: var(--alert); }
 /* Show More */
 .sb-tag.more {

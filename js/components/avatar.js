@@ -63,7 +63,10 @@ function avStateRow(type, initials) {
 sbRegister({
   name: 'avatar',
   title: 'Avatar',
-  description: 'Визуальное представление пользователя, организации или объекта. Поддерживает четыре типа содержимого и три состояния: hover, статус-индикатор, бейдж.',
+  description: sbT(
+    'A visual representation of a user, organization or object. Four content types. Three add-ons: a hover ring, a status dot, a badge. Typical uses: the account in the Nav Bar, people in profile lists, an organization on a company card.',
+    'Визуальное представление пользователя, организации или объекта. Четыре типа содержимого. Три дополнения: hover-кольцо, статус-точка, бейдж. Типичные применения: аккаунт в Nav Bar, люди в списках профилей, организация в карточке компании.'
+  ),
   playground: {
     title: 'Avatar Playground',
     state: { type: 'user', hover: false, status: false, badge: false },
@@ -95,7 +98,10 @@ sbRegister({
   sections: [
     {
       title: 'Types',
-      desc: 'Четыре типа аватаров: User (иконка пользователя), Initials (инициалы), Company (организация), Image (фото).',
+      desc: sbT(
+        'Four avatar types: User (a user icon), Initials, Company (an organization icon), Image (a photo).',
+        'Четыре типа аватаров: User (иконка пользователя), Initials (инициалы), Company (иконка организации), Image (фото).'
+      ),
       preview: `<div style="display:flex;gap: var(--gap-horiz-xl);align-items:flex-end">
         ${['user','initials','company','image'].map(t =>
           `<div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">`
@@ -135,7 +141,10 @@ sbRegister({
     },
     {
       title: 'User — All States',
-      desc: 'Все состояния: Default, Hover (синее кольцо), Status (зелёная точка), Badge (пилюля). При наличии Badge точка перемещается в верхний правый угол.',
+      desc: sbT(
+        'All states: Default, Hover (a blue ring), Status (a green dot), Badge (a pill). With a badge present, the dot moves to the top right corner.',
+        'Все состояния: Default, Hover (синее кольцо), Status (зелёная точка), Badge (пилюля). При наличии бейджа точка переезжает в верхний правый угол.'
+      ),
       preview: avStateRow('user'),
       html: `<!-- Default -->
 <div class="sb-avatar">
@@ -169,7 +178,10 @@ sbRegister({
     },
     {
       title: 'Initials — All States',
-      desc: 'Тип Initials — инициалы пользователя. Те же состояния.',
+      desc: sbT(
+        'The Initials type — the user’s initials. Same states.',
+        'Тип Initials — инициалы пользователя. Состояния те же.'
+      ),
       preview: avStateRow('initials', 'NS'),
       html: `<div class="sb-avatar">
   <div class="sb-avatar-circle">
@@ -180,7 +192,10 @@ sbRegister({
     },
     {
       title: 'Company — All States',
-      desc: 'Тип Company — иконка организации.',
+      desc: sbT(
+        'The Company type — an organization icon.',
+        'Тип Company — иконка организации.'
+      ),
       preview: avStateRow('company'),
       html: `<div class="sb-avatar">
   <div class="sb-avatar-circle">
@@ -191,7 +206,10 @@ sbRegister({
     },
     {
       title: 'Image — All States',
-      desc: 'Тип Image — фотография. Вставьте img внутрь .sb-avatar-circle; object-fit: cover обрезает по кругу.',
+      desc: sbT(
+        'The Image type — a photo. The img element goes inside .sb-avatar-circle; object-fit: cover crops it to the circle.',
+        'Тип Image — фотография. Элемент img кладётся внутрь .sb-avatar-circle; object-fit: cover обрезает по кругу.'
+      ),
       preview: avStateRow('image'),
       html: `<div class="sb-avatar">
   <div class="sb-avatar-circle">

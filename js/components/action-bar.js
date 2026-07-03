@@ -87,7 +87,13 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
   sbRegister({
     name: 'action-bar',
     title: 'Action Bar',
-    description: 'Плашка с 1–2 кнопками внизу модалки / pop-up / критического сообщения / окна. Завершает flow — commit (Primary) / dismiss (Secondary). Варианты: divider (border-top, встроена в низ карточки/алерта) и floating (radius + Shadow-S, «отрывается» от контента — та же роль, что shadow-drop при скролле). Выравнивание Left (по умолчанию) / Right / Between. Captions короткие (одно слово) или иконки. НЕ путать с Tool Bar (манипуляция контентом) и Info Footer (системные данные).',
+    description: sbT(
+      'A bar with one or two buttons at the bottom of a modal, pop-up, critical message or window. It completes the flow: commit (Primary) or dismiss (Secondary). Two variants — divider (built into the bottom of a card, separated by a top border) and floating (detached from the content); alignment options are Left, Right, Between and Center. Captions are short — a single word — or icons.',
+      'Плашка с одной-двумя кнопками внизу модалки, pop-up, критического сообщения или окна. Завершает flow: commit (Primary) или dismiss (Secondary). Два варианта — divider (встроена в низ карточки, отделена верхней границей) и floating (оторвана от контента); выравнивание — Left, Right, Between и Center. Подписи короткие — одно слово — либо иконки.'
+    ) + sbDocNote('Important', sbT(
+      'Not to be confused with the Tool Bar (content manipulation) or the Info Footer (system data).',
+      'Не путать с Tool Bar (манипуляция контентом) и Info Footer (системные данные).'
+    )),
     playground: {
       title: 'Action Bar Playground',
       state: { count: 'two', align: 'left', floating: false },
@@ -124,21 +130,30 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
     sections: [
       {
         title: 'In a card (default)',
-        desc: 'Встроенная: border-top отделяет от контента карточки/модалки. Primary (commit) слева, Secondary (dismiss) рядом. Фон бара — --background.',
+        desc: sbT(
+          'The built-in variant: a top border separates the bar from the card or modal content. Primary (commit) on the left, Secondary (dismiss) next to it. The bar background is --background.',
+          'Встроенный вариант: верхняя граница отделяет плашку от контента карточки или модалки. Primary (commit) слева, Secondary (dismiss) рядом. Фон плашки — --background.'
+        ),
         preview: stage(card(mkActionBar({ buttons: TWO }))),
         html: `<!-- sbMkActionBar({ buttons:[{label:'Save',variant:'primary'},{label:'Cancel',variant:'secondary'}] }) -->`,
         css: COMP_CSS["action-bar"],
       },
       {
         title: 'Floating',
-        desc: 'Отрывается от контента — radius + Shadow-S, без верхнего бордера. Применяется когда бар «висит» над скроллящимся контентом (выделяется тенью).',
+        desc: sbT(
+          'Detached from the content — radius plus Shadow-S, no top border. Used when the bar hovers above scrolling content and stands out with its shadow.',
+          'Оторвана от контента — radius и Shadow-S, без верхней границы. Применяется, когда плашка висит над скроллящимся контентом и выделяется тенью.'
+        ),
         preview: stage(mkActionBar({ buttons: TWO, floating: true })),
         html: `<!-- sbMkActionBar({ buttons:[...], floating:true }) -->`,
         css: COMP_CSS["action-bar"],
       },
       {
         title: 'Alignment',
-        desc: 'Left (по умолчанию — по Figma) / Right (канон западных диалогов) / Between (кнопки к разным краям) / Center (кнопки тянутся на всю ширину бара: одна = full-width, две = поровну).',
+        desc: sbT(
+          'Left (default, per Figma), Right (the convention in Western dialogs), Between (buttons pushed to opposite edges) and Center (buttons stretch across the bar: a single button takes the full width, two share it equally).',
+          'Left (по умолчанию, по Figma), Right (канон западных диалогов), Between (кнопки по разным краям) и Center (кнопки растягиваются на всю плашку: одна занимает всю ширину, две делят её поровну).'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
           ${stage(mkActionBar({ buttons: TWO, align: 'left' }))}
           ${stage(mkActionBar({ buttons: TWO, align: 'right' }))}
@@ -150,7 +165,10 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
       },
       {
         title: 'Single button',
-        desc: 'Один Primary — подтверждающее окно без отмены (ack / continue). Default — натуральная ширина; Center — на всю ширину плашки.',
+        desc: sbT(
+          'A single Primary button — a confirmation window with no cancel option (acknowledge / continue). Default keeps the natural width; Center stretches the button across the bar.',
+          'Одна Primary-кнопка — подтверждающее окно без отмены (acknowledge / continue). Default сохраняет натуральную ширину; Center растягивает кнопку на всю плашку.'
+        ),
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
           ${stage(mkActionBar({ buttons: ONE }))}
           ${stage(mkActionBar({ buttons: ONE, align: 'center' }))}

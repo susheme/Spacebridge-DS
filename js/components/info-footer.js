@@ -115,7 +115,13 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
   sbRegister({
     name: 'info-footer',
     title: 'Info Footer',
-    description: 'Всегда-видимая системная инфа (MAC / S/n / Ver / Part/n / Name / Status / copyright), разбитая по слотам. Слот — текст (Badge-типографика, --text-muted) или status-индикатор (dot + лейбл); опц. popup-якорь по ховеру (расширенный/реалтайм-статус — сам popup позже, Tooltip в работе). Два лейаута: Long (горизонтальная полоса на всю ширину экрана, sticky внизу, Shadow-S) и Compact (вертикальный блок для footer-слота Side Menu). Выравнивание Left / Center. Адаптив (план): на мобиле помещается — sticky-bar внизу с отступами 16; много данных — Compact уезжает в Side Menu. НЕ путать с Action Bar (кнопки) и Tool Bar (манипуляция).',
+    description: sbT(
+      'An always-visible strip of system data, split into slots. Examples: MAC, serial number, firmware version, device status, copyright. Two layouts: Long — a horizontal bar stuck to the bottom of the screen; Compact — a vertical block for the Side Menu footer. Alignment: left or center.',
+      'Всегда видимая полоса системных данных, разбитая по слотам. Примеры: MAC, серийный номер, версия прошивки, статус устройства, copyright. Два лейаута: Long — горизонтальная полоса, прижатая к низу экрана; Compact — вертикальный блок для футера Side Menu. Выравнивание: left или center.'
+    ) + sbDocNote('Important', sbT(
+      'Not to be confused with the Action Bar (buttons) or the Tool Bar (content manipulation).',
+      'Не путать с Action Bar (кнопки) и Tool Bar (манипуляция контентом).'
+    )),
     playground: {
       title: 'Info Footer Playground',
       wide: true,
@@ -144,21 +150,33 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
     sections: [
       {
         title: 'Long — full-width strip',
-        desc: 'Горизонтальная полоса на всю ширину экрана, прижата снизу (border-top --border, surface-1, Shadow-S). Слоты в ряд, между ними вертикальный Separator (sep-v). Status-слот — dot + лейбл; на нём заложен popup-якорь.',
+        desc: sbT(
+          'A horizontal bar across the full screen width, stuck to the bottom. Slots go in a row, divided by vertical separators. The status slot is a dot with a label; it carries a popup anchor.',
+          'Горизонтальная полоса на всю ширину экрана, прижата к низу. Слоты идут в ряд, между ними вертикальные разделители. Status-слот — точка с лейблом; на нём заложен popup-якорь.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Border-top --border · surface-1 · Shadow-S. A slot is text (Badge typography, --text-muted) or a status indicator. The hover popup comes later — Tooltip is in progress. Mobile plan: a sticky bar with 16px margins; with lots of data, Compact moves into the Side Menu.',
+          'Border-top --border · surface-1 · Shadow-S. Слот — текст (типографика Badge, --text-muted) или статус-индикатор. Popup по ховеру появится позже — Tooltip в работе. План на мобильные: sticky-полоса с отступами 16; при большом объёме данных Compact уезжает в Side Menu.'
+        )),
         preview: longStage(mkInfoFooter({ slots: DEVICE })),
         html: `<!-- sbMkInfoFooter({ variant:'long', slots:[ {text:'MAC: …'}, …, {status:'online', label:'Sit Status'}, {text:'© …'} ] }) -->`,
         css: COMP_CSS["info-footer"],
       },
       {
         title: 'Long — centered',
-        desc: 'Выравнивание Center — слоты по центру полосы.',
+        desc: sbT(
+          'Center alignment — the slots gather in the middle of the strip.',
+          'Выравнивание Center — слоты собираются по центру полосы.'
+        ),
         preview: longStage(mkInfoFooter({ slots: DEVICE, align: 'center' })),
         html: `<!-- align: 'center' -->`,
         css: COMP_CSS["info-footer"],
       },
       {
         title: 'Compact — Side Menu block',
-        desc: 'Вертикальный блок (radius 8) для footer-слота Side Menu: строки стопкой (gap 2), без разделителей. Это тот же device-info, что в футере Side Navigation — догфуд.',
+        desc: sbT(
+          'A vertical block (radius 8) for the Side Menu footer. Rows stack with a 2px gap, no separators. The same device info as in the Side Navigation footer — dogfooded.',
+          'Вертикальный блок (radius 8) для footer-слота Side Menu. Строки стопкой с gap 2, без разделителей. Тот же device-info, что в футере Side Navigation, — догфуд.'
+        ),
         preview: compactStage(mkInfoFooter({ slots: DEVICE, variant: 'compact' })),
         html: `<!-- sbMkInfoFooter({ variant:'compact', slots:[ {text:'MAC: …'}, … ] }) -->`,
         css: COMP_CSS["info-footer"],

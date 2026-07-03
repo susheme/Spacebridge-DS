@@ -227,7 +227,13 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
   sbRegister({
     name: 'segment-menu',
     title: 'Segment Menu',
-    description: 'Сегментный таб-бар. Используется внутри Headers, Nav Bar, Cards, Modals, Side Menu и любых других layout-контейнеров для переключения между разделами/вариантами. Три варианта содержимого таба: text only, icon-L left + label, icon-L top + label. Состояния: Default / Hover / Selected / Disabled. Selected индикатор — отдельный элемент с GPU-slide-анимацией между табами (transform/width 0.25s, cubic-bezier). Не путать с Mobile Tab Bar (Phase 2) — другой компонент с табами и Status mini indicator.',
+    description: sbT(
+      'A segmented tab bar for switching between sections or views. Used inside headers, the Nav Bar, cards, modals, side menus and other layout containers. Three tab content variants: text only, icon on the left, icon on top. The selected indicator is a separate element that slides between tabs.',
+      'Сегментный таб-бар для переключения между разделами или представлениями. Используется внутри хедеров, Nav Bar, карточек, модалок, side-menu и других layout-контейнеров. Три варианта содержимого таба: только текст, иконка слева, иконка сверху. Индикатор выбранного — отдельный элемент, скользящий между табами.'
+    ) + sbDocNote('Important', sbT(
+      'Not to be confused with the Mobile Tab Bar (Phase 2) — a different component with its own tabs and a Status mini indicator.',
+      'Не путать с Mobile Tab Bar (Phase 2) — это другой компонент со своими табами и Status mini индикатором.'
+    )),
     playground: {
       title: 'Segment Menu Playground',
       state: {
@@ -298,7 +304,13 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
       return [
         {
           title: 'Segments States',
-          desc: 'Каждый вариант таба (text only / icon left / icon top) в четырёх состояниях. Default — text-secondary. Hover — text-primary. Selected — primary text + animated indicator под item-ом. Disabled — text --border, без интеракции. В реальном использовании клики переключают selected через sbSelectSegmentItem, hover триггерится по :hover. В демо ниже Hover показан статично через модификатор .is-hover.',
+          desc: sbT(
+            'Each tab variant (text only, icon left, icon top) in all four states. In real usage, clicks switch the selection via sbSelectSegmentItem and hover reacts to the pointer; in the demo below, Hover is rendered statically with the .is-hover modifier.',
+            'Каждый вариант таба (только текст, иконка слева, иконка сверху) во всех четырёх состояниях. В реальном использовании клики переключают выбор через sbSelectSegmentItem, hover реагирует на курсор; в демо ниже Hover показан статично модификатором .is-hover.'
+          ) + sbDocNote('Tech Info', sbT(
+            'Default — text-secondary · Hover — text-primary · Selected — primary text plus an animated indicator under the item (GPU slide: transform/width 0.25s, cubic-bezier) · Disabled — text --border, non-interactive.',
+            'Default — text-secondary · Hover — text-primary · Selected — primary-текст и анимированный индикатор под элементом (GPU-slide: transform/width 0.25s, cubic-bezier) · Disabled — текст --border, без интеракции.'
+          )),
           preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xl);width:100%">
             ${stateGroup('Text only', 'none')}
             ${stateGroup('Icon left', 'left')}

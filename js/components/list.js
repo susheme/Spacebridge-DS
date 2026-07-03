@@ -229,7 +229,10 @@ window.sbSelectInfoCell = function(cell) {
   sbRegister({
     name: 'list',
     title: 'List',
-    description: 'Списки из ячеек 40px высотой. Standard List — ячейки с контентом на фоне --background. Profile Cell — с аватаром, hairline-разделители. Info Cell — для уведомлений/алармов, без разделителей, поддерживает Selected-состояние. Control List — ячейки с title + toggle на фоне --surface-1, 4 варианта по позиции.',
+    description: sbT(
+      'Lists built from 40px cells. Three cell families. Profile Cell — people and organizations, with an avatar. Info Cell — notifications, events and alarms. Control List — cells with a title and a toggle. Example: a device event feed on Info Cells.',
+      'Списки из ячеек высотой 40px. Три семейства ячеек. Profile Cell — люди и организации, с аватаром. Info Cell — уведомления, события и алармы. Control List — ячейки с заголовком и toggle. Пример: лента событий устройства на Info Cell.'
+    ),
     playground: {
       title: 'Standard List Cell Playground',
       minPreview: 360,  // list cell с аватаром + субтитлом — нужно ~360 для нормального layout'а
@@ -405,7 +408,13 @@ window.sbSelectInfoCell = function(cell) {
     sections: [
       {
         title: 'Standard List — Profile Cell',
-        desc: 'Ячейка для списков профилей (люди/организации). Содержит аватар 32×32, title + опциональный subtitle слева, 1–2 иконки или small secondary icon button справа. Разделяются hairline-линией (border-bottom 1px --surface-2). Поддерживает состояния hover (фон --surface-1) и disabled (контент opacity 0.5). Ниже — три списка по 4 ячейки с разным правым контентом.',
+        desc: sbT(
+          'A cell for profile lists: people and organizations. On the left — an avatar and a title with an optional subtitle. On the right — one or two icons, or a small button. Below — three lists with different right content.',
+          'Ячейка для списков профилей: люди и организации. Слева — аватар и заголовок с опциональным подзаголовком. Справа — одна-две иконки или маленькая кнопка. Ниже — три списка с разным правым контентом.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Avatar 32×32. Hairline divider: border-bottom 1px --border-soft. Hover — background --surface-1. Disabled — content opacity 0.5.',
+          'Аватар 32×32. Hairline-разделитель: border-bottom 1px --border-soft. Hover — фон --surface-1. Disabled — контент с opacity 0.5.'
+        )),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xl);width:100%;max-width:360px">
           <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
             <span class="sb-caption" style="color:var(--text-tertiary)">1 Icon</span>
@@ -466,7 +475,10 @@ window.sbSelectInfoCell = function(cell) {
       },
       {
         title: 'Standard List — Info Cell (Default)',
-        desc: 'Ячейка для списков уведомлений / событий / алармов. Содержит Title (Title S - Regular) и Caption (дата/время) под ним. Без hairline-разделителей. Состояния: Default, Hover, Selected (подсвечен --primary-hover), Disabled (opacity 0.5).',
+        desc: sbT(
+          'A cell for notification, event and alarm lists. A title, with a caption (date or time) under it. No dividers. States: Default, Hover, Selected (--primary-hover), Disabled (opacity 0.5).',
+          'Ячейка для списков уведомлений, событий и алармов. Заголовок, под ним caption (дата или время). Без разделителей. Состояния: Default, Hover, Selected (--primary-hover), Disabled (opacity 0.5).'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:360px">
           ${['default', 'hover', 'selected', 'disabled'].map(st => `
             <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
@@ -495,7 +507,10 @@ window.sbSelectInfoCell = function(cell) {
       },
       {
         title: 'Standard List — Info Cell (Status Indicator)',
-        desc: 'Info Cell с модификатором .has-indicator — добавляется точка статуса слева (.sb-status-dot). Поддерживает все цвета из status: online/offline/error/warning/maintenance/connecting/info. Опционально — анимация .pulse. Gap сужается до 8px. Кликни по любой ячейке — выберется через .is-selected.',
+        desc: sbT(
+          'The .has-indicator modifier adds a status dot on the left. All Status colors; the .pulse animation is optional. The gap tightens to 8px. A click selects a cell via .is-selected.',
+          'Модификатор .has-indicator добавляет статус-точку слева. Все цвета из Status; анимация .pulse опциональна. Gap сужается до 8px. Клик выбирает ячейку через .is-selected.'
+        ),
         preview: `<div style="width:100%;max-width:360px">
           ${mkInfoCell({ indicator: { status: 'online',      pulse: true } })}
           ${mkInfoCell({ indicator: { status: 'error',       pulse: true } })}
@@ -532,7 +547,13 @@ window.sbSelectInfoCell = function(cell) {
       },
       {
         title: 'Standard List — Info Cell (Status Mark)',
-        desc: 'Info Cell с модификатором .has-mark — 2×38px вертикальная цветная полоска прижата к левому краю (absolute, inset 1px top/bottom). Цвета из готового .sb-mark: success/error/warning/alert/info/neutral. Gap остаётся 16px (полоска не в потоке flex).',
+        desc: sbT(
+          'The .has-mark modifier — a colored vertical stripe at the left edge. Colors from the ready-made .sb-mark: success, error, warning, alert, info, neutral.',
+          'Модификатор .has-mark — цветная вертикальная полоска у левого края. Цвета из готового .sb-mark: success, error, warning, alert, info, neutral.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Stripe 2×38px, absolute, inset 1px top and bottom. The gap stays 16px — the stripe is out of the flex flow.',
+          'Полоска 2×38px, absolute, отступ 1px сверху и снизу. Gap остаётся 16px — полоска вне flex-потока.'
+        )),
         preview: `<div style="width:100%;max-width:360px">
           ${mkInfoCell({ mark: { status: 'error' } })}
           ${mkInfoCell({ mark: { status: 'warning' } })}
@@ -561,7 +582,10 @@ window.sbSelectInfoCell = function(cell) {
       },
       {
         title: 'Control List',
-        desc: 'Объединяй до 5 ячеек в списке. Если контролов больше — выноси их в отдельные блоки (например, Single-ячейка сверху для самого важного, остальные в списке ниже).',
+        desc: sbT(
+          'Up to 5 cells per list. With more controls, split them into separate blocks. Example: a Single cell on top for the key control, the rest in a list below.',
+          'До 5 ячеек в списке. Если контролов больше — в отдельные блоки. Пример: Single-ячейка сверху для главного контрола, остальные списком ниже.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:360px">
           ${mkControlList([
             { label: 'DC Power', on: false },
@@ -594,7 +618,10 @@ window.sbSelectInfoCell = function(cell) {
       },
       {
         title: 'Control List — Cell Types',
-        desc: 'Single — одиночная или самостоятельная ячейка. Top/Bottom замыкают список сверху/снизу. Inside — в середине списка, не может быть первой или последней.',
+        desc: sbT(
+          'Single — a standalone cell. Top and Bottom close the list at its ends. Inside — a middle cell; it cannot be first or last.',
+          'Single — самостоятельная ячейка. Top и Bottom замыкают список по краям. Inside — серединная ячейка; не может быть первой или последней.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:360px">
           ${mkCellWithTypeTag('single', 'Single', 'DC Power', { on: false })}
           ${mkCellWithTypeTag('top',    'Top',    'Low Power Mode', { on: true })}

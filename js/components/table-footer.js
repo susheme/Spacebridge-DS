@@ -63,7 +63,7 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
   function demoWrap(footerHtml) {
     return `<div style="border:var(--border-width-1) solid var(--border);border-radius:var(--radius-8);overflow:hidden;background:var(--background)">
       <div style="padding:var(--pad-vert-16) var(--pad-horiz-16);color:var(--text-secondary)" class="sb-body-s">
-        [ Table body — placeholder, реальный Table придёт в следующей итерации ]
+        [ Table body ]
       </div>
       ${footerHtml}
     </div>`;
@@ -72,11 +72,20 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
   sbRegister({
     name: 'table-footer',
     title: 'Table Footer',
-    description: 'Универсальная нижняя полоса для Table / List. 3 слота: <code>left</code> (row-count «Rows: X of N» → «Selected: N» при выборе), <code>center</code> (jump-input / utility), <code>right</code> (Pagination). Border-top + background. Радиусы наследуются от parent <code>.sb-table-wrap</code> через <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину; если все три не влезают в одну строку — оборачиваются (грационная деградация на узких контейнерах).',
+    description: sbT(
+      'A universal bottom strip for tables and lists. Three slots. Left — a row count: Rows: X of N, or Selected: N during selection. Center — a jump input or utility. Right — Pagination. Example: the footer of a fleet table.',
+      'Универсальная нижняя полоса для таблиц и списков. Три слота. Left — счётчик рядов: Rows: X of N, при выборе — Selected: N. Center — jump-инпут или utility. Right — Pagination. Пример: футер таблицы флота.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Border-top plus background. Radii inherit from the parent <code>.sb-table-wrap</code> via <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — slots take their natural width and wrap on narrow containers.',
+      'Border-top и background. Радиусы наследуются от родителя <code>.sb-table-wrap</code> через <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину и переносятся на узких контейнерах.'
+    )),
     sections: [
       {
         title: 'Row Count + Pagination',
-        desc: 'Базовый layout для Table: слева — счётчик рядов «Rows: X of N», справа — Pagination. <code>space-between</code> прижимает слоты к краям.',
+        desc: sbT(
+          'The base table layout: the row count on the left, Pagination on the right. <code>space-between</code> pushes the slots to the edges.',
+          'Базовый layout для таблицы: счётчик рядов слева, Pagination справа. <code>space-between</code> разводит слоты по краям.'
+        ),
         preview: demoWrap(mkTableFooter({
           left: demoRowInfo('Rows: 10 of 15'),
           right: demoPagination(),
@@ -94,7 +103,10 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
       },
       {
         title: 'Selected mode',
-        desc: 'Когда выбраны ряды — left-счётчик меняется на «Selected: N» (--primary). Bulk-действия (Download / Apply / Delete) живут во floating Tool Bar над футером, не в самом футере. Right остаётся с Pagination.',
+        desc: sbT(
+          'During selection the left counter switches to Selected: N (--primary). Bulk actions (Download / Apply / Delete) live in the floating Tool Bar above the footer, not in the footer itself. The right slot keeps Pagination.',
+          'При выборе рядов левый счётчик меняется на Selected: N (--primary). Bulk-действия (Download / Apply / Delete) живут во floating Tool Bar над футером, не в самом футере. Правый слот остаётся с Pagination.'
+        ),
         preview: demoWrap(mkTableFooter({
           left: demoSelected(3),
           right: demoPagination(),
@@ -110,7 +122,10 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
       },
       {
         title: 'Center Pagination (all 3 slots)',
-        desc: 'Пагинация по центру, слева — «Rows: X of N», справа — «Selected: N». Задействованы все три слота (left / center / right). Примечание: при <code>space-between</code> центр слегка смещается от ширины боковых слотов — для строгого центра боковые слоты можно сделать <code>flex:1</code>.',
+        desc: sbT(
+          'Pagination in the center; Rows: X of N on the left, Selected: N on the right. All three slots in use. Note: with <code>space-between</code> the center shifts slightly with the side slots’ width. For a strict center, the side slots can be set to <code>flex:1</code>.',
+          'Пагинация по центру; слева Rows: X of N, справа Selected: N. Заняты все три слота. Примечание: при <code>space-between</code> центр слегка смещается от ширины боковых слотов. Для строгого центра боковым слотам задаётся <code>flex:1</code>.'
+        ),
         preview: demoWrap(mkTableFooter({
           left: demoRowInfo('Rows: 10 of 15'),
           center: demoPagination(),
@@ -129,7 +144,10 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
       },
       {
         title: 'Right-only (Pagination only)',
-        desc: 'Без summary и bulk-actions — left пустой, Pagination прижат к правому краю.',
+        desc: sbT(
+          'No summary and no bulk actions — the left slot is empty, Pagination sits at the right edge.',
+          'Без summary и bulk-действий — левый слот пуст, Pagination прижат к правому краю.'
+        ),
         preview: demoWrap(mkTableFooter({ right: demoPagination() })),
         html: `<div class="sb-table-footer">
   <div class="sb-table-footer-left"></div>

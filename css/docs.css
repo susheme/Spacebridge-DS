@@ -91,3 +91,31 @@
 .sec-medium { width: 100%; max-width: 400px; }
 .sec-wide   { width: 100%; max-width: 480px; }
 .sec-xl     { width: 100%; max-width: 520px; }
+
+/* --- Docs i18n — двуязычные описания (js/docs-i18n.js) ---
+   sbT(en, ru) рендерит пару спанов; html[data-lang] решает, какой виден.
+   Default (и любой не-RU выбор в lang switcher'е) — EN. */
+html[data-lang="ru"] .i18n-en { display: none; }
+html:not([data-lang="ru"]) .i18n-ru { display: none; }
+
+/* --- Doc Note — инфо-плашка в описаниях (sbDocNote) ---
+   Интерим-стиль до отдельной спеки. Только спаны: плашка живёт внутри
+   <p class="comp-desc">, блочные теги браузер бы вынес из параграфа. */
+.sb-doc-note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-vert-xs);
+  margin-top: var(--pad-vert-16);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  background: var(--surface-1);
+  border-left: var(--border-width-4) solid var(--info);
+  border-radius: var(--radius-8);
+}
+.sb-doc-note-head {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  color: var(--text-primary);
+}
+.sb-doc-note-head .sb-icon-wrap { color: var(--info); }
+.sb-doc-note-text { display: block; color: var(--text-secondary); }

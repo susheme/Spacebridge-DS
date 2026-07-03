@@ -115,11 +115,20 @@ window.downloadSymbolBadgeZip = async function() {
 sbRegister({
   name: 'badge',
   title: 'Badge',
-  description: 'Text-badges для отображения статуса, категории или состояния объекта. Высота 24px, border-radius 20px, типографика Badge (10px / 500 / 12px).',
+  description: sbT(
+    'Text badges show an object’s status, category or state. Example: a deployment status in a device table — Active, Failed, Pending.',
+    'Текстовые бейджи показывают статус, категорию или состояние объекта. Пример: статус деплоя в таблице устройств — Active, Failed, Pending.'
+  ) + sbDocNote('Tech Info', sbT(
+    'Height 24px · border-radius 20px · Badge typography (10 / 500 / 12).',
+    'Высота 24px · border-radius 20px · типографика Badge (10 / 500 / 12).'
+  )),
   sections: [
     {
       title: 'Text Badges',
-      desc: 'Пять вариантов: Default, Active, Failed, Pending, Warning. Используют alpha-цвета из токенов темы.',
+      desc: sbT(
+        'Five variants: Default, Active, Failed, Pending, Warning. Colors come from the theme’s alpha tokens.',
+        'Пять вариантов: Default, Active, Failed, Pending, Warning. Цвета — из alpha-токенов темы.'
+      ),
       preview: `
         <span class="sb-badge sb-badge-primary">Default</span>
         <span class="sb-badge sb-badge-success">Active</span>
@@ -135,7 +144,10 @@ sbRegister({
     },
     {
       title: 'Symbol Badges',
-      desc: '11 иконочных бейджей для разных статусов: Info, Time, Warning, Critical, Check.',
+      desc: sbT(
+        'Eleven icon badges: Info, Time, Warning, Critical, Check and their variants. Example: a warning badge in a toast header.',
+        'Одиннадцать иконочных бейджей: Info, Time, Warning, Critical, Check и их варианты. Пример: warning-бейдж в хедере toast-уведомления.'
+      ),
       preview: (() => {
         const LABELS = {
           infoPop: 'Info Pop-up', infoLine: 'Info Line', infoFilled: 'Info Filled',
@@ -156,7 +168,10 @@ sbRegister({
     },
     {
       title: 'Pin',
-      desc: 'Плашка поверх объекта — роль, метка или статус. Поддерживает текст, иконку и цветовые варианты.',
+      desc: sbT(
+        'A small plate over an object: a role, a label or a status. Example: the ADMIN pin on an avatar. Supports text, an icon and color variants.',
+        'Плашка поверх объекта: роль, метка или статус. Пример: пин ADMIN на аватаре. Поддерживает текст, иконку и цветовые варианты.'
+      ),
       preview: `
         <span class="sb-pin">ADMIN ★</span>
         <span class="sb-pin sb-pin-primary">PRIMARY ★</span>

@@ -45,11 +45,20 @@ window.COMP_CSS.toc = `.sb-toc { display: flex; flex-direction: column; list-sty
   sbRegister({
     name: 'toc',
     title: 'Sticky Table of Contents',
-    description: 'Боковая навигация по разделам страницы. Список пунктов соответствует <code>.comp-section</code>-якорям. Активный пункт подсвечивается при попадании секции в viewport (IntersectionObserver). Sticky: прилипает на 32px от верха, физический push-off на нижнем крае parent-контейнера. Авто-показ только при наличии скролла на странице (ResizeObserver). В Spacebridge DS встроен в `.page-shell` для всех страниц с 3+ секциями.',
+    description: sbT(
+      'Side navigation across the sections of a page. The list mirrors the section anchors; the active item is highlighted as its section enters the viewport. The ToC sticks near the top while scrolling and hides itself on pages with no scroll. In this design system it is built into every page with three or more sections.',
+      'Боковая навигация по разделам страницы. Список повторяет якоря секций; активный пункт подсвечивается, когда его секция попадает во viewport. ToC прилипает у верхнего края при скролле и сам скрывается на страницах без скролла. В этой дизайн-системе встроен во все страницы с тремя и более секциями.'
+    ),
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Состоит из <code>&lt;nav class="sb-toc"&gt;</code> с border-left = 1.5px --border, и пунктов <code>.sb-toc-item</code>. Активный получает <code>.is-active</code> — bold + --text-tertiary + 1.5px --primary полоска поверх родительского border-left.',
+        desc: sbT(
+          'A nav list with a left border; the active item is emphasized and marked with a primary-colored stripe over the border.',
+          'Список-nav с левой границей; активный пункт выделен и помечен полоской primary-цвета поверх границы.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Container: <code>&lt;nav class="sb-toc"&gt;</code>, border-left 1.5px --border. Items: <code>.sb-toc-item</code>; the active one gets <code>.is-active</code> — bold, --text-tertiary, plus a 1.5px --primary stripe over the parent border-left.',
+          'Контейнер: <code>&lt;nav class="sb-toc"&gt;</code>, border-left 1.5px --border. Пункты: <code>.sb-toc-item</code>; активный получает <code>.is-active</code> — bold, --text-tertiary и полоска 1.5px --primary поверх родительского border-left.'
+        )),
         preview: `<div style="padding:24px">${mkDemoToc(1)}</div>`,
         html: `<nav class="sb-toc">
   <a class="sb-toc-item" href="#anatomy">Anatomy</a>
@@ -61,7 +70,13 @@ window.COMP_CSS.toc = `.sb-toc { display: flex; flex-direction: column; list-sty
       },
       {
         title: 'Active state tracking',
-        desc: 'Поведение в реальной странице: при скролле <code>IntersectionObserver</code> следит за секциями. Активной становится та, чей <code>.comp-section</code> ближе всех к верху viewport\'а. Используется <code>rootMargin: \'-32px 0px -70% 0px\'</code> — секция считается активной, как только её начало пересекает верхние 30% области.',
+        desc: sbT(
+          'While the page scrolls, the active item follows the section closest to the top of the viewport.',
+          'При скролле активный пункт следует за секцией, ближайшей к верху viewport.'
+        ) + sbDocNote('Tech Info', sbT(
+          'An <code>IntersectionObserver</code> watches the sections with <code>rootMargin: -32px 0px -70% 0px</code> — a section becomes active as soon as its start crosses the top 30% of the area.',
+          '<code>IntersectionObserver</code> следит за секциями с <code>rootMargin: -32px 0px -70% 0px</code> — секция становится активной, как только её начало пересекает верхние 30% области.'
+        )),
         preview: `<div style="padding:24px;display:flex;gap:16px;align-items:flex-start">
           ${mkDemoToc(0)}
           ${mkDemoToc(2)}
@@ -82,7 +97,13 @@ sections.forEach(s => io.observe(s));`,
       },
       {
         title: 'Sticky behavior + Push-off',
-        desc: 'Aside-обёртка <code>.page-toc</code> имеет <code>position: sticky; top: 32px</code>. Стэкуется в верхней части scroll-контейнера (.content) пока parent-страница не закончится. Когда нижний край <code>.page-shell</code> достигает верха viewport\'а — sticky теряет силу и TOC уходит вместе с контейнером.',
+        desc: sbT(
+          'The ToC sticks 32px from the top of the scroll container and travels with the page until the page itself ends — then the container pushes it off.',
+          'ToC прилипает в 32px от верха скролл-контейнера и едет со страницей, пока сама страница не закончится — дальше контейнер уводит его за собой.'
+        ) + sbDocNote('Tech Info', sbT(
+          'The aside wrapper <code>.page-toc</code> has <code>position: sticky; top: 32px</code>. It stacks at the top of the scroll container (.content) until the bottom edge of <code>.page-shell</code> reaches the top of the viewport — then sticky yields and the ToC leaves with its container.',
+          'Aside-обёртка <code>.page-toc</code> имеет <code>position: sticky; top: 32px</code>. Стэкуется в верхней части скролл-контейнера (.content), пока нижний край <code>.page-shell</code> не достигнет верха viewport — тогда sticky теряет силу и ToC уходит вместе с контейнером.'
+        )),
         preview: `<div style="padding:24px;color:var(--text-secondary)">
           <span class="sb-body-m">См. реальное поведение: открой любую страницу с 3+ секциями (Header L, Input, Buttons) и поскролль.</span>
         </div>`,
@@ -102,7 +123,13 @@ sections.forEach(s => io.observe(s));`,
       },
       {
         title: 'Auto-visibility',
-        desc: 'TOC скрывается, если на странице нет скролла (короткий контент). Это ловит <code>ResizeObserver</code> на <code>.content</code> и <code>.page</code> — пересчёт при ресайзе окна, при раскрытии code-панелей, при смене страницы. Триггер: <code>scrollHeight &gt; clientHeight</code>.',
+        desc: sbT(
+          'On short pages with no scroll the ToC hides itself.',
+          'На коротких страницах без скролла ToC скрывается сам.'
+        ) + sbDocNote('Tech Info', sbT(
+          'A <code>ResizeObserver</code> on <code>.content</code> and <code>.page</code> recalculates on window resize, on code panel expansion and on page change. Trigger: <code>scrollHeight &gt; clientHeight</code>.',
+          '<code>ResizeObserver</code> на <code>.content</code> и <code>.page</code> пересчитывает при ресайзе окна, раскрытии code-панелей и смене страницы. Триггер: <code>scrollHeight &gt; clientHeight</code>.'
+        )),
         preview: `<div style="padding:24px;color:var(--text-secondary)">
           <span class="sb-body-m">На &lt; 1024px viewport — TOC прячется через <code>display: none</code> (узкий экран).</span>
         </div>`,

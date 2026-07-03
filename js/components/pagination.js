@@ -114,7 +114,13 @@ window.COMP_CSS.pagination = `.sb-pagination {
   sbRegister({
     name: 'pagination',
     title: 'Pagination',
-    description: 'Page-навигация для Table / List. Two atoms: <code>sbMkPagination</code> — controls (prev/next + numbers, на базе Button Secondary Icon-Only Small, current = Primary Icon-Only); <code>sbMkPaginationJump</code> — jump-input на базе Input Field. Info-текст ("X of Y rows") — задача consumer\'а (обычно левый слот Table Footer\'а). Алгоритм видимых страниц: первая + хвост + current ± 1, разрывы заполняются «…».',
+    description: sbT(
+      'Page navigation for tables and lists. Two atoms: <code>sbMkPagination</code> — the controls (previous / next and page numbers); <code>sbMkPaginationJump</code> — a jump input built on Input Field. The info text (X of Y rows) is the consumer’s responsibility, usually the left slot of a Table Footer.',
+      'Постраничная навигация для таблиц и списков. Два атома: <code>sbMkPagination</code> — контролы (previous / next и номера страниц); <code>sbMkPaginationJump</code> — jump-инпут на базе Input Field. Info-текст (X of Y rows) — зона ответственности потребителя, обычно левый слот Table Footer.'
+    ) + sbDocNote('Tech Info', sbT(
+      'Controls are built on Button Secondary Icon-Only Small; the current page is Primary Icon-Only. Visible pages algorithm: the first page, the tail and current ± 1; gaps are filled with an ellipsis.',
+      'Контролы построены на Button Secondary Icon-Only Small; текущая страница — Primary Icon-Only. Алгоритм видимых страниц: первая, хвост и current ± 1; разрывы заполняются многоточием.'
+    )),
     playground: {
       state: { currentPage: 1, totalPages: 26 },
       controls(pg) {

@@ -170,7 +170,10 @@ window.COMP_CSS.headerL = `.sb-header-l {
   sbRegister({
     name: 'header-l',
     title: 'Header L',
-    description: 'Самый крупный хедер — для Page-уровня. Высота до 88px, padding 16/0, нижняя граница 1px (surface-2). Headline — H5 (28/900/32). Два свободных слота — Left и Right (max 700px каждый, gap 16). Между слотами — justify-content: space-between. Responsive: при ширине Header L < 768px gap сжимается до 8, inline-кнопки правого слота автоматически сворачиваются в выпадающее меню под More-кнопкой (⋯). Caption и Badge-Status остаются видимыми всегда.',
+    description: sbT(
+      'The largest header in the family, used at page level: it carries the page title and the page’s primary actions. Two flexible slots — Left and Right — are pushed to opposite edges of the bar. On narrow widths, inline buttons in the right slot collapse into a dropdown menu behind the More (⋯) button; the caption and status always stay visible.',
+      'Самый крупный хедер семейства — уровень страницы: несёт заголовок страницы и её основные действия. Два свободных слота — Left и Right — разведены по краям. На узкой ширине inline-кнопки правого слота сворачиваются в выпадающее меню под More-кнопкой (⋯); caption и статус остаются видимыми всегда.'
+    ),
     playground: {
       title: 'Header L Playground',
       wide: true,
@@ -388,7 +391,13 @@ ${leftInner}
     sections: [
       {
         title: 'Anatomy',
-        desc: 'Корневой контейнер до 88px / row-flex / space-between / без скругления / нижняя граница 1px surface-2 / bg --background. Слева: Info Pop-up + Headline. Справа: Status + More-кнопка (⋯) с прикреплённым выпадающим меню.',
+        desc: sbT(
+          'A single row with content pushed to opposite edges: identity on the left (an Info Pop-up and the headline), actions on the right (a status and the More button with an attached dropdown menu).',
+          'Одна строка с разведённым по краям содержимым: слева идентификация (Info Pop-up и заголовок), справа действия (статус и More-кнопка с прикреплённым выпадающим меню).'
+        ) + sbDocNote('Tech Info', sbT(
+          'Root: height up to 88px · row-flex · space-between · no border-radius · bottom border 1px (border-soft) · background --background. Headline — H5 (28 / 900 / 32). Slots: up to 700px each, gap 16. Breakpoint 768px: the slot gap shrinks to 8px, right-slot inline buttons collapse behind More (⋯).',
+          'Корень: высота до 88px · row-flex · space-between · без скругления · нижняя граница 1px (border-soft) · фон --background. Headline — H5 (28 / 900 / 32). Слоты: до 700px каждый, gap 16. Breakpoint 768px: gap слотов сжимается до 8px, inline-кнопки правого слота сворачиваются под More (⋯).'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:720px">
           ${mkHeaderL({
             slotLeft: `${SB_SVG.infoPop}`,
@@ -418,7 +427,10 @@ ${leftInner}
       },
       {
         title: 'Title only',
-        desc: 'Простейший вариант — только заголовок в левом слоте, без правого.',
+        desc: sbT(
+          'The minimal configuration — only the headline in the left slot, no right slot.',
+          'Минимальная конфигурация — только заголовок в левом слоте, без правого.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:720px">
           ${mkHeaderL({
             title: 'Headline',
@@ -433,7 +445,10 @@ ${leftInner}
       },
       {
         title: 'Navigation pattern (Back button)',
-        desc: 'Типичный сценарий: Secondary-Button с указателем «назад» в левом слоте, справа — Status, primary Action и More-кнопка с дополнительными опциями.',
+        desc: sbT(
+          'A typical pattern for nested pages: a Secondary button with a back arrow in the left slot; a status, a primary Action and the More button with secondary options on the right.',
+          'Типичный паттерн вложенных страниц: Secondary-кнопка «назад» в левом слоте; справа — статус, primary Action и More-кнопка с второстепенными действиями.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:720px">
           ${mkHeaderL({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>`,
@@ -473,7 +488,13 @@ ${leftInner}
       },
       {
         title: 'Full slot composition',
-        desc: 'Максимальное наполнение: слева Back + Info Pop-up + Headline; справа Caption + Status + inline Add (icon) + inline Action (text) + More-кнопка с дополнительным набором. При сжатии Header L < 768px — Add и Action автоматически сворачиваются в выпадающее меню под More, gap слотов сжимается до 8 px. Caption и Status остаются видимыми всегда.',
+        desc: sbT(
+          'Every slot filled: Back, an Info Pop-up and the headline on the left; a caption, a status, inline Add (icon), inline Action (text) and the More button on the right.',
+          'Максимальное наполнение: слева Back, Info Pop-up и заголовок; справа caption, статус, inline Add (иконка), inline Action (текст) и More-кнопка.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Below 768px, Add and Action collapse into the dropdown behind the More button and the slot gap shrinks to 8px; the caption and status always stay visible.',
+          'При ширине меньше 768px Add и Action сворачиваются в меню под More-кнопкой, gap слотов сжимается до 8px; caption и статус остаются видимыми всегда.'
+        )),
         preview: `<div style="width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)"><div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:960px">
           ${mkHeaderL({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>${SB_SVG.infoPop}`,

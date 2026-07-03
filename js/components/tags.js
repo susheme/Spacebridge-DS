@@ -15,7 +15,7 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
 .sb-tag-remove { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; color: var(--background); padding: var(--pad-horiz-2); }
 .sb-tag.filled.tc-success { background: var(--success); }
 .sb-tag.filled.tc-error { background: var(--error); }
-.sb-tag.filled.tc-warning { background: var(--warning); color: var(--text-primary); }
+.sb-tag.filled.tc-warning { background: var(--warning); color: var(--background); }
 .sb-tag.filled.tc-alert { background: var(--alert); }
 .sb-tag.more { padding: var(--pad-vert-2) var(--pad-horiz-8); gap: var(--gap-horiz-xs); border-radius: var(--radius-100); background: var(--primary-hover); color: var(--primary); }
 .sb-tag-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-horiz-xs); }
@@ -84,7 +84,10 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
   sbRegister({
     name: 'tags',
     title: 'Tags',
-    description: 'Теги для маркировки и фильтрации. Режимы: Input (Placeholder → Typing → Critical) и Display (Default, Removable, Show More). Используй .sb-tag-group для групп тегов.',
+    description: sbT(
+      'Tags for labeling and filtering. Example: device labels used as table filters. Two modes: Input (creation) and Display. Groups wrap via .sb-tag-group.',
+      'Теги для маркировки и фильтрации. Пример: метки устройств как фильтры таблицы. Два режима: Input (создание) и Display. Группы переносятся через .sb-tag-group.'
+    ),
     playground: {
       title: 'Tag Playground',
       wide: true,
@@ -117,7 +120,10 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
     sections: [
       {
         title: 'Creating Flow',
-        desc: 'Шаги создания тега: Placeholder (курсор слева), Typing (текст + курсор справа), Critical (ошибка в имени).',
+        desc: sbT(
+          'Tag creation steps: Placeholder (the cursor on the left), Typing (text with the cursor on the right), Critical (an invalid name).',
+          'Шаги создания тега: Placeholder (курсор слева), Typing (текст и курсор справа), Critical (ошибка в имени).'
+        ),
         preview: `<div class="sec-row spread">
           ${mkTag({ mode: 'placeholder' })}
           ${mkTag({ mode: 'typing', text: 'Name' })}
@@ -128,7 +134,10 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
       },
       {
         title: 'Display Tags',
-        desc: 'Default (без удаления) и Removable (с кнопкой ×). Нажатие × удаляет тег.',
+        desc: sbT(
+          'Default (non-removable) and Removable (with an × button). Pressing × removes the tag.',
+          'Default (без удаления) и Removable (с кнопкой ×). Нажатие × удаляет тег.'
+        ),
         preview: `<div class="sec-row spread">
           ${mkTag({ mode: 'filled', text: 'Ka-Band' })}
           ${mkTag({ mode: 'filled', text: 'Active' })}
@@ -141,7 +150,10 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
       },
       {
         title: 'Show More',
-        desc: 'Показывается когда теги не помещаются в строку. Число = количество скрытых тегов.',
+        desc: sbT(
+          'Appears when the tags do not fit the line. The number equals the count of hidden tags.',
+          'Появляется, когда теги не помещаются в строку. Число равно количеству скрытых тегов.'
+        ),
         preview: `<div class="sec-row gap-sm">
           ${mkTag({ mode: 'filled', text: 'Ka-Band', removable: true })}
           ${mkTag({ mode: 'filled', text: 'Active', removable: true })}
@@ -152,7 +164,10 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
       },
       {
         title: 'Color Variants',
-        desc: 'Теги с цветовой семантикой. Добавь класс tc-success / tc-error / tc-warning / tc-alert / tc-neutral к .sb-tag.filled.',
+        desc: sbT(
+          'Tags with color semantics. The tc-success / tc-error / tc-warning / tc-alert / tc-neutral classes apply to .sb-tag.filled.',
+          'Теги с цветовой семантикой. Классы tc-success / tc-error / tc-warning / tc-alert / tc-neutral применяются к .sb-tag.filled.'
+        ),
         preview: `<div style="display:flex;flex-direction:column;gap: var(--gap-horiz-s)">
           <div class="sec-row wrap gap-xs">
             ${mkTag({ mode: 'filled', text: 'Online', color: 'success' })}
@@ -176,7 +191,10 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
       },
       {
         title: 'Tag Group',
-        desc: 'Несколько тегов с переносом. Используй .sb-tag-group как обёртку.',
+        desc: sbT(
+          'Several tags with wrapping. The .sb-tag-group wrapper handles it.',
+          'Несколько тегов с переносом. За перенос отвечает обёртка .sb-tag-group.'
+        ),
         preview: `<div class="sb-tag-group" style="max-width:400px">
           ${mkTag({ mode: 'filled', text: 'SB-Terminal-001', removable: true })}
           ${mkTag({ mode: 'filled', text: 'Ka-Band', removable: true })}

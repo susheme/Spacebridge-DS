@@ -195,11 +195,23 @@ window.COMP_CSS.headerS = `.sb-header-s {
   sbRegister({
     name: 'header-s',
     title: 'Header S',
-    description: 'Mobile-вариант хедера для основных окон, side-menu и карточек среднего размера. Top corners 16px, нижние 0 (стык с layout). Min-height 40px, max-height 136px (с meta-row + Sub-nav). Заголовок — H6 (24/900). Два режима компоновки: column (default, мобильный) с правым слотом ниже, и .top-right — row-flex с правым слотом инлайн в одной строке с заголовком. Дальше — meta-row (CAPTION + Status mini + actions) и Sub-nav slot. В sub-nav слоте всегда используем Tab Bar — Segment Menu может не поместиться по ширине в узких контекстах (мобила, узкий card). Responsive: при ширине Header S < 400px inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).',
+    description: sbT(
+      'A mobile-oriented header for main windows, side menus and mid-size cards. By default it stacks vertically: a top row with the headline, an optional meta row (caption, status and actions) and an optional sub-nav slot. The .top-right modifier places the right slot inline with the headline instead. On narrow widths, inline buttons collapse into a dropdown menu behind the More (⋯) button.',
+      'Мобильный хедер для основных окон, side-menu и карточек среднего размера. По умолчанию строится вертикально: верхняя строка с заголовком, опциональная meta-строка (caption, статус и действия) и опциональный sub-nav слот. Модификатор .top-right выносит правый слот в одну строку с заголовком. На узкой ширине inline-кнопки сворачиваются в выпадающее меню под More-кнопкой (⋯).'
+    ) + sbDocNote('Important', sbT(
+      'Always use a Tab Bar in the sub-nav slot. A Segment Menu may not fit the narrow contexts this header is designed for (mobile screens, narrow cards).',
+      'В sub-nav слоте всегда используется Tab Bar. Segment Menu может не поместиться в узких контекстах, на которые рассчитан этот хедер (мобильные экраны, узкие карточки).'
+    )),
     sections: [
       {
         title: 'Top row only — Anatomy',
-        desc: 'Минимальный вариант: верхняя строка (24px) с Left slot и Headline. Без правого слота, без табов. Root — column-flex.',
+        desc: sbT(
+          'The minimal configuration: a single top row with the left slot and the headline — no right slot, no tabs.',
+          'Минимальная конфигурация: одна верхняя строка с левым слотом и заголовком — без правого слота и табов.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Root — column-flex · top corners 16px, bottom 0 (flush with the layout) · min-height 40px, max-height 136px (with the meta row and sub-nav) · top row 24px · headline — H6 (24 / 900). Breakpoint 400px: inline buttons collapse behind More (⋯).',
+          'Корень — column-flex · верхние углы 16px, нижние 0 (стык с layout) · min-height 40px, max-height 136px (с meta-строкой и sub-nav) · верхняя строка 24px · headline — H6 (24 / 900). Breakpoint 400px: inline-кнопки сворачиваются под More (⋯).'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
@@ -221,7 +233,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'With Meta row',
-        desc: 'Под верхней строкой добавляется meta-row: ADDITIONAL INFO (caption, слева) + actions group (Status mini badge + More-кнопка с прикреплённым выпадающим меню, справа). Высота корня растёт автоматически. Если caption отсутствует, actions прижимаются к правому краю.',
+        desc: sbT(
+          'A meta row appears under the top row: additional info (a caption) on the left and an actions group on the right — a mini status badge and the More button with an attached dropdown menu. The root height grows automatically; without a caption, the actions align to the right edge.',
+          'Под верхней строкой появляется meta-строка: дополнительная информация (caption) слева и группа действий справа — Status mini и More-кнопка с прикреплённым выпадающим меню. Высота корня растёт автоматически; без caption действия прижимаются к правому краю.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
@@ -260,7 +275,13 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'With Sub-nav slot (Tab Bar)',
-        desc: 'Опциональный нижний sub-nav slot. Внутри — Tab Bar (sbMkTabBar). Сегмент-меню не используем: на узкой ширине Header S оно не помещается. Slot min-height 40px, max-height 120px, имеет border-bottom (1px solid border). Когда слот присутствует, padding-bottom у root становится 0 — слот flush с низом.',
+        desc: sbT(
+          'An optional bottom slot for section navigation, with a Tab Bar inside — a Segment Menu would not fit the narrow width of Header S.',
+          'Опциональный нижний слот для навигации по разделам, внутри — Tab Bar: Segment Menu на узкой ширине Header S не поместится.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Slot: min-height 40px, max-height 120px, border-bottom 1px (border). When the slot is present, the root’s bottom padding becomes 0 — the slot sits flush with the bottom edge.',
+          'Слот: min-height 40px, max-height 120px, border-bottom 1px (border). Когда слот присутствует, нижний padding корня становится 0 — слот прилегает к нижней грани вплотную.'
+        )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
@@ -296,7 +317,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'Full anatomy — top + meta + sub-nav',
-        desc: 'Все три слота вместе: верхняя строка, meta-row (с More-кнопкой и выпадающим меню), sub-nav slot с Tab Bar. Максимальная высота 136px по спеке.',
+        desc: sbT(
+          'All three tiers together: the top row, the meta row (with the More button and its dropdown menu) and the sub-nav slot with a Tab Bar. Maximum height — 136px.',
+          'Все три яруса вместе: верхняя строка, meta-строка (с More-кнопкой и выпадающим меню) и sub-nav слот с Tab Bar. Максимальная высота — 136px.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,
@@ -317,7 +341,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'Top right slot — inline (.top-right)',
-        desc: 'Когда правый слот лежит в одной строке с заголовком, добавь модификатор .top-right на root. Root становится row-flex с justify-content: space-between. Левый блок (left + headline) и правый слот (More-кнопка с выпадающим меню) разводятся по краям.',
+        desc: sbT(
+          'The .top-right modifier keeps the right slot on the same line as the headline: the root becomes a row, with the left block (the left slot and the headline) and the right slot pushed to opposite edges.',
+          'Модификатор .top-right оставляет правый слот в одной строке с заголовком: корень становится строкой, левый блок (левый слот и заголовок) и правый слот разводятся по краям.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({
             topRight: true,
@@ -349,7 +376,10 @@ window.COMP_CSS.headerS = `.sb-header-s {
       },
       {
         title: 'Composition: + Tool Bar',
-        desc: 'Header S с собственным sub-nav слотом (Tab Bar) + Tool Bar снизу. Стандартная композиция для secondary-страниц приложения: navigation сверху, actions ниже.',
+        desc: sbT(
+          'Header S with its own sub-nav slot (a Tab Bar) plus a Tool Bar below — a standard composition for the application’s secondary pages: navigation on top, actions underneath.',
+          'Header S с собственным sub-nav слотом (Tab Bar) и Tool Bar снизу — стандартная композиция для второстепенных страниц приложения: навигация сверху, действия ниже.'
+        ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:400px">
           ${mkHeaderS({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>${SB_SVG.infoPop}`,

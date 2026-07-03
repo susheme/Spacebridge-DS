@@ -178,7 +178,10 @@ window.downloadAntennaZip = async function() {
 sbRegister({
   name: 'status',
   title: 'Status',
-  description: 'Четыре типа статусных компонентов: Indicator (точки), Badge-Status (пилюли), Antenna (сигнал) и Mark (полосы для таблиц).',
+  description: sbT(
+    'Four status components. Indicator — dots. Badge-Status — pills. Antenna — signal level. Mark — stripes for tables. Example: a device state in a fleet table.',
+    'Четыре статусных компонента. Indicator — точки. Badge-Status — пилюли. Antenna — уровень сигнала. Mark — полосы для таблиц. Пример: состояние устройства в таблице флота.'
+  ),
   playground: {
     title: 'Indicator Playground',
     state: { variant: 'online', pulse: false, mini: false },
@@ -219,42 +222,60 @@ sbRegister({
   sections: [
     {
       title: 'Indicator — Regular',
-      desc: 'Regular (10×10px) — цветная точка статуса объекта. Все цветовые варианты:',
+      desc: sbT(
+        'Regular (10×10px) — a colored dot showing an object’s status. All color variants:',
+        'Regular (10×10px) — цветная точка статуса объекта. Все цветовые варианты:'
+      ),
       preview: dotPreview,
       html: dotCode,
       css: COMP_CSS.status.indicator,
     },
     {
       title: 'Indicator — Pulse',
-      desc: 'Regular с пульсацией — для активных состояний реального времени:',
+      desc: sbT(
+        'Regular with a pulse — for live, real-time states. Example: an active connection:',
+        'Regular с пульсацией — для живых состояний реального времени. Пример: активное подключение:'
+      ),
       preview: pulsePreview,
       html: `<span class="sb-status">\n  <span class="sb-status-dot online pulse"></span>Transmitting\n</span>\n<span class="sb-status">\n  <span class="sb-status-dot error pulse"></span>Link Down\n</span>`,
       css: COMP_CSS.status.pulse,
     },
     {
       title: 'Indicator — Mini',
-      desc: 'Mini (6×6px + 2px border) — бейдж поверх иконки с отделяющей рамкой цвета фона:',
+      desc: sbT(
+        'Mini (6×6px plus a 2px border) — a badge over an icon. The background-colored border separates it. Example: the status dot on an Avatar:',
+        'Mini (6×6px и рамка 2px) — бейдж поверх иконки. Рамка цвета фона отделяет его. Пример: статус-точка на Avatar:'
+      ),
       preview: miniIconPreview,
       html: `<!-- Online badge on icon -->\n<div class="sb-icon-badge-wrap">\n  ${bellIcon}\n  <span class="sb-status-dot mini online"></span>\n</div>`,
       css: COMP_CSS.status.mini,
     },
     {
       title: 'Badge-Status — Regular',
-      desc: 'Пилюля с текстом. Regular (40px). Использует семантические цветовые токены темы.',
+      desc: sbT(
+        'A pill with text. Regular, 40px. Uses the theme’s semantic color tokens.',
+        'Пилюля с текстом. Regular, 40px. Использует семантические цветовые токены темы.'
+      ),
       preview: bsRegular,
       html: `<span class="sb-badge-status bs-green">Online</span>\n<span class="sb-badge-status bs-red">Critical</span>\n<span class="sb-badge-status bs-grey">Offline</span>`,
       css: COMP_CSS.status.badgeStatus,
     },
     {
       title: 'Badge-Status — Mini',
-      desc: 'Mini-вариант (28px) — для плотных интерфейсов, таблиц, списков.',
+      desc: sbT(
+        'The Mini variant (28px) — for dense interfaces, tables and lists.',
+        'Mini-вариант (28px) — для плотных интерфейсов, таблиц и списков.'
+      ),
       preview: bsMini,
       html: `<span class="sb-badge-status mini bs-green">Online</span>\n<span class="sb-badge-status mini bs-red">Critical</span>\n<span class="sb-badge-status mini bs-grey">Offline</span>`,
       css: COMP_CSS.status.badgeStatusMini,
     },
     {
       title: 'Antenna',
-      desc: 'Уровень сигнала антенны: 4 уровня мощности + состояние ошибки/нет сигнала.',
+      desc: sbT(
+        'Antenna signal level: 4 power levels plus an error / no-signal state. Example: link quality in a terminal table.',
+        'Уровень сигнала антенны: 4 уровня мощности и состояние ошибки / нет сигнала. Пример: качество связи в таблице терминалов.'
+      ),
       preview: `<span class="sb-status" style="gap: var(--gap-horiz-s)">${ANT.full}<span>Full Signal</span></span>
         <span class="sb-status" style="gap: var(--gap-horiz-s)">${ANT.high}<span>High</span></span>
         <span class="sb-status" style="gap: var(--gap-horiz-s)">${ANT.mid}<span>Medium</span></span>
@@ -266,14 +287,20 @@ sbRegister({
     },
     {
       title: 'Mark — Regular',
-      desc: 'Вертикальная полоса 3×40px — маркировка строк в таблицах и списках.',
+      desc: sbT(
+        'A vertical 3×40px stripe — row marking in tables and lists.',
+        'Вертикальная полоса 3×40px — маркировка строк в таблицах и списках.'
+      ),
       preview: markDemo,
       html: `<!-- Mark in table row -->\n<td style="padding:0; width:3px">\n  <span class="sb-mark success"></span>\n</td>`,
       css: COMP_CSS.status.mark,
     },
     {
       title: 'Mark — Small',
-      desc: 'Small (горизонтальный штрих) — для компактных строк и инлайн-меток.',
+      desc: sbT(
+        'Small — a horizontal dash for compact rows and inline labels.',
+        'Small — горизонтальный штрих для компактных строк и инлайн-меток.'
+      ),
       preview: SD.marks.map(d => `<span class="sb-status" style="gap: var(--gap-horiz-s)"><span class="sb-mark sm ${d.cls}"></span><span class="sb-body-m" style="color:var(--text-tertiary)">${d.label}</span></span>`).join('\n        '),
       html: `<span class="sb-mark sm success"></span>\n<span class="sb-mark sm error"></span>`,
       css: COMP_CSS.status.markSm,

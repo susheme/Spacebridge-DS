@@ -107,6 +107,9 @@
 <!-- JS: порядок важен. См. js/_index.js -->
 <script src="js/core.js"></script>
 <script src="js/docs-helpers.js"></script>
+<!-- docs-i18n — sbT/sbDocNote для двуязычных описаний. ДО components/*:
+     хелперы вызываются в конфигах sbRegister на этапе загрузки. -->
+<script src="js/docs-i18n.js"></script>
 
 <!-- Components (порядок: сначала те, чей COMP_CSS-ключ используют другие —
      chevron и input перед selector/textarea/password) -->
@@ -177,7 +180,8 @@
   var right = document.getElementById('dsNavRight');
   if (!right || typeof sbMkLangSwitcher !== 'function') return;
   var tmp = document.createElement('div');
-  tmp.innerHTML = sbMkLangSwitcher();
+  // Стартуем с языка документации из localStorage (см. js/docs-i18n.js).
+  tmp.innerHTML = sbMkLangSwitcher({ selected: (localStorage.getItem('sb-lang') || 'en').toUpperCase() });
   var switcher = tmp.firstElementChild;
   right.insertBefore(switcher, right.firstChild);
 })();

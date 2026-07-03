@@ -63,7 +63,13 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
   sbRegister({
     name: 'tab-bar',
     title: 'Tab Bar',
-    description: 'Контейнер для табов (sbMkTab). От 2 до 6 табов внутри, табы flex:1 — делят ширину контейнера поровну. Высота 32px, padding 2/2, radius 6, фон --surface-1 с Pressed inset shadow («вдавленный» вид). Используется в side menu, модалках на маленьких окнах, мобилках. Не путать с Segment Menu — другой компонент с другой визуальной моделью.',
+    description: sbT(
+      'A container for tabs (sbMkTab). It holds 2 to 6 tabs that share the container width equally. Used in side menus, in modals on small windows and on mobile.',
+      'Контейнер для табов (sbMkTab). Вмещает от 2 до 6 табов, которые делят ширину контейнера поровну. Используется в side-menu, в модалках на маленьких окнах и на мобильных.'
+    ) + sbDocNote('Important', sbT(
+      'Not to be confused with the Segment Menu — a different component with a different visual model.',
+      'Не путать с Segment Menu — это другой компонент с другой визуальной моделью.'
+    )),
     playground: {
       title: 'Tab Bar Playground',
       minPreview: 360,  // Tab Bar демо-stage 360px → нужно столько же в preview-box
@@ -111,7 +117,13 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
     sections: [
       {
         title: 'Layouts (2-6 tabs)',
-        desc: 'Все варианты по количеству табов на одной ширине контейнера (360px). Tabs внутри flex:1 делят пространство поровну: чем меньше табов — тем шире каждый. Контейнер block-level flex, поэтому в реальном usage его ширина определяется родителем.',
+        desc: sbT(
+          'All tab counts at the same container width (360px). Tabs are flex: 1 and share the space equally — the fewer the tabs, the wider each one. In real usage the container width is set by the parent.',
+          'Все варианты по количеству табов на одной ширине контейнера (360px). Табы — flex: 1 и делят пространство поровну: чем меньше табов, тем шире каждый. В реальном использовании ширину контейнера задаёт родитель.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Container: height 32px · padding 2/2 · radius 6 · background --surface-1 with a pressed inset shadow (the sunken look) · block-level flex.',
+          'Контейнер: высота 32px · padding 2/2 · radius 6 · фон --surface-1 с Pressed-inset тенью (вдавленный вид) · block-level flex.'
+        )),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m);width:360px;max-width:100%">
           ${mkTabBar(['Day', 'Night'],                                       { selectedIndex: 0 })}
           ${mkTabBar(['List', 'Grid', 'Map'],                                { selectedIndex: 0 })}
@@ -139,7 +151,13 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
       },
       {
         title: 'Tab states',
-        desc: 'Single tab кнопка — building block для Tab Bar. Default — surface-1 bg, text-secondary. Hover — text-primary (фон не меняется). Selected — background bg + Shadow-S + text-primary (вид «приподнятой» пилюли). Disabled — surface-2 bg + text --border, без интеракции. В демо Hover показан статично через .is-hover. Tabs в этой секции — display-only specimens (pointer-events: none), интерактивность отключена чтобы не путать. Опциональный indicator слева от label — переиспользуем готовый Status Mini (.sb-status-dot.mini).',
+        desc: sbT(
+          'A single tab button is the building block of the Tab Bar. In the demo, Hover is rendered statically via the .is-hover modifier; the specimens are display-only (pointer-events: none), with interaction disabled to avoid confusion. The optional indicator to the left of the label reuses the Status Mini dot.',
+          'Одиночная таб-кнопка — building block для Tab Bar. В демо Hover показан статично модификатором .is-hover; образцы display-only (pointer-events: none), интерактивность отключена, чтобы не путать. Опциональный индикатор слева от подписи переиспользует Status Mini.'
+        ) + sbDocNote('Tech Info', sbT(
+          'Default — surface-1 background, text-secondary · Hover — text-primary, background unchanged · Selected — --background plus Shadow-S and text-primary (a raised pill) · Disabled — surface-2 background, text --border, non-interactive. Indicator: .sb-status-dot.mini.',
+          'Default — фон surface-1, text-secondary · Hover — text-primary, фон не меняется · Selected — --background, Shadow-S и text-primary (вид приподнятой пилюли) · Disabled — фон surface-2, текст --border, без интеракции. Индикатор: .sb-status-dot.mini.'
+        )),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m);width:100%">
           <div style="display:flex;flex-direction:column;gap:var(--gap-vert-m)">
             ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Without indicator</span>` })}

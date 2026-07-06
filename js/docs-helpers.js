@@ -78,6 +78,8 @@ function copyCodeSection(btn) {
   navigator.clipboard.writeText(code).then(() => {
     btn.style.color = 'var(--success)';
     setTimeout(() => btn.style.color = '', 1200);
+    // Dogfood: снэкбар «Copied / Скопировано» (sbShowSnackbar из notifications.js).
+    if (typeof sbShowSnackbar === 'function') sbShowSnackbar();
   });
 }
 
@@ -147,6 +149,13 @@ function dismissBanner(btn) {
 function copyColor(swatch, hex) {
   navigator.clipboard.writeText(hex).then(() => {
     swatch.classList.add('copied');
+    setTimeout(() => swatch.classList.remove('copied'), 1500);
+    // Dogfood: снэкбар вместо локального тоста (sbShowSnackbar из notifications.js).
+    if (typeof sbShowSnackbar === 'function') {
+      sbShowSnackbar();
+      return;
+    }
+    // Fallback: старый локальный тост, если снэкбар недоступен.
     let toast = swatch.querySelector('.copy-toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -156,10 +165,7 @@ function copyColor(swatch, hex) {
     toast.textContent = 'Copied!';
     requestAnimationFrame(() => toast.classList.add('show'));
     clearTimeout(toast._tid);
-    toast._tid = setTimeout(() => {
-      toast.classList.remove('show');
-      swatch.classList.remove('copied');
-    }, 1500);
+    toast._tid = setTimeout(() => toast.classList.remove('show'), 1500);
   });
 }
 
@@ -167,5 +173,6 @@ function copyTypo(btn, css) {
   navigator.clipboard.writeText(css).then(() => {
     btn.style.color = 'var(--success)';
     setTimeout(() => btn.style.color = '', 1200);
+    if (typeof sbShowSnackbar === 'function') sbShowSnackbar();
   });
 }

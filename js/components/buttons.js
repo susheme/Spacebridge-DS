@@ -30,6 +30,17 @@ window.COMP_CSS.buttons = `.sb-btn {
   background: transparent;
   color: var(--primary);
 }
+.sb-btn-mini {
+  height: var(--btn-rounded-max-height-s);
+  min-width: var(--btn-rounded-min-width);
+  max-width: var(--btn-rounded-max-width);
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  gap: var(--gap-horiz-xs);
+  border-radius: var(--radius-4);
+  font-size: var(--button-mini-font-size);
+  line-height: var(--button-mini-line-height);
+  font-weight: var(--font-weight-medium);
+}
 .sb-btn-with-label {
   display: inline-flex;
   align-items: center;
@@ -50,6 +61,7 @@ function btnClass(s) {
   if (s.type === 'text')      cls += s.critical ? ' sb-btn-text sb-btn-critical' : ' sb-btn-text';
   if (s.iconOnly)             cls += s.twoIcons ? ' sb-btn-icon-2' : ' sb-btn-icon';
   if (s.iconOnly && s.small)  cls += ' sb-btn-sm';
+  if (!s.iconOnly && s.mini)  cls += ' sb-btn-mini';
   if (s.loading)              cls += ' sb-btn-loading';
   return cls;
 }
@@ -60,12 +72,12 @@ sbRegister({
     'The Basic button component from Figma. Types: Primary, Secondary, Text. States: Hover, Disable, Loading, Critical. Icon options: left, right, icon-only. Examples: Primary — a form submit; Secondary — a Back button in a header.',
     'Компонент Basic из Figma. Типы: Primary, Secondary, Text. Состояния: Hover, Disable, Loading, Critical. Иконки: слева, справа, icon-only. Примеры: Primary — отправка формы; Secondary — кнопка Back в хедере.'
   ) + sbDocNote('Tech Info', sbT(
-    'Sizes: L — 40px, S — 32px.',
-    'Размеры: L — 40px, S — 32px.'
+    'Sizes: L — 40px, S — 32px, Mini — 24px (width 40–68, Button-Mini typography 12/500/10; for dense spots like Snackbar actions).',
+    'Размеры: L — 40px, S — 32px, Mini — 24px (ширина 40–68, типографика Button-Mini 12/500/10; для плотных мест вроде действий Snackbar).'
   )),
   playground: {
     title: 'Regular',
-    state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false, labelLeft: false, labelRight: false },
+    state: { type: 'primary', iconL: false, iconR: false, disabled: false, loading: false, critical: false, iconOnly: false, twoIcons: false, small: false, mini: false, labelLeft: false, labelRight: false },
     controls(pg) {
       // Variant — одиночный select с label'ом (без обёртки в pg-group: один
       // контрол в группе — избыточная декорация). Modifiers / State — pg-group'ы
@@ -98,7 +110,7 @@ sbRegister({
     },
     onControlChange(key, val, s) {
       if (key === 'iconOnly') {
-        if (s.iconOnly) { s.iconL = false; s.iconR = false; }
+        if (s.iconOnly) { s.iconL = false; s.iconR = false; s.mini = false; }
         else { s.twoIcons = false; s.small = false; }
       }
       if ((key === 'iconL' || key === 'iconR') && val) {
@@ -143,7 +155,15 @@ sbRegister({
       return btnHtml;
     },
     extraPreview(s) {
-      if (!s.iconOnly) return '';
+      // Текстовая кнопка: чекбокс Mini (24px, типографика Button-Mini).
+      if (!s.iconOnly) {
+        return `<div class="pg-extras-row" style="display:grid;grid-template-columns:auto;justify-content:center">
+          <div class="pg-cb-group">
+            <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-mini"${boolAttr('checked', s.mini)} onchange="SB_PG.set('buttons','mini',this.checked)">
+            <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-mini">Mini</label>
+          </div>
+        </div>`;
+      }
       // 4 чекбокса в сетке 2×2 (2 столбца). Inline-style чтобы не плодить
       // буттон-специфичный класс в playground.css.
       return `<div class="pg-extras-row" style="display:grid;grid-template-columns:auto auto;gap:var(--gap-vert-s) var(--gap-horiz-lg);justify-content:center">

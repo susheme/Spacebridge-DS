@@ -73,6 +73,8 @@
 
 - **Avatar 24px-вариант для Table Cell** — Avatar сейчас единственный размер 32px, в 40px-ряду тесновато (~4px сверху/снизу). Возможно нужен компактный 24px-вариант в avatar-компоненте. Юзер: «посмотрим позже» — не трогать без отмашки.
 
+- **Inverse-цвета (токены) — на будущее** — Snackbar СДЕЛАН без них: юзерский трюк «фон `--text-tertiary` + контент `--surface-1`» — пара инвертируется темой сама. Полноценные `--surface-inverse` / `--text-inverse` (+ hover) всё же желательны для чистоты семантики (text-токен в роли фона — рабочий, но хрупкий контракт: смена оттенка text-tertiary красит и снэкбар). Путь: Figma `Color-DS.json` → `js/tokens.js` → `css/tokens.css`. `sbShowSnackbar` (низ по центру, слайд, 5с кольцо-таймер, вытеснение) и dogfood на всех копи-кнопках — ✅ сделаны; из поведенческого не делали только очередь (стек нескольких) и hover-паузу таймера.
+
 - ~~**Table — select-all indeterminate («Unselect All»)**~~ — ✅ Сделано: с появлением рядов (`sbMkTableFull`) подключены `sbTableSelectAll` (пусто→выбрать все, часть/все→снять) + `sbTableRowSelect` (row-select) + `_syncHead` (хедер: 0→пусто, все→checked, часть→indeterminate/minus). Выбор — на уровне ряда (`.sb-trow.is-selected`).
 - ~~**Antenna status export**~~ — ✅ Сделано: `window.sbAntenna = ANT;` добавлен в `status.js` (ключи full/high/mid/low/off). Переиспользуется в Table Header Secondary.
 - **List Table** — была обещана спека ("ща скину"), не пришла. Компонент не создан.

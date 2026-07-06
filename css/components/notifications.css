@@ -1,66 +1,200 @@
 /* --- [SYNC:notifications] Notifications / Banners --- */
 .sb-banner {
   display: flex;
-  align-items: flex-start;
-  gap: var(--gap-horiz-m);
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  width: 100%;
+  min-width: 288px;
+  max-width: 800px;
+  min-height: 60px;
   padding: var(--pad-vert-16) var(--pad-horiz-16);
-  border-radius: var(--radius-8);
-  border: var(--border-width-1) solid;
-  font-size: var(--body-font-size-m);
-  line-height: 1.5;
-  position: relative;
+  border-radius: var(--radius-4);
+  border-left: var(--border-width-4) solid var(--border);
+  background: var(--surface-1);
+  box-sizing: border-box;
 }
 
-.sb-banner-icon { flex-shrink: 0; margin-top: 1px; font-size: var(--body-font-size-l); }
+/* Content column: title-row (lead + title) + description. Grows to ~80%. */
+.sb-banner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--gap-vert-xs);
+  flex: 1 1 80%;
+  min-width: 0;
+  align-self: stretch;
+}
+.sb-banner-titlerow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  max-width: 100%;
+}
+.sb-banner-lead { flex-shrink: 0; display: inline-flex; align-items: center; }
+/* Icon leads inherit the type colour (Status-dots carry their own bg). */
+.sb-banner.info    .sb-banner-lead { color: var(--info); }
+.sb-banner.success .sb-banner-lead { color: var(--success); }
+.sb-banner.warning .sb-banner-lead { color: var(--alert); }
+.sb-banner.error   .sb-banner-lead { color: var(--error); }
 
-.sb-banner-content { flex: 1; }
-.sb-banner-title { font-weight: var(--font-weight-medium); margin-bottom: 2px; }
-.sb-banner-text { font-size: var(--body-font-size-s); }
+/* Title: Title M typography via .sb-title-m in markup; colour per type.
+   Link-title — underlined, colour follows the type. */
+.sb-banner-title { color: var(--text-tertiary); }
+a.sb-banner-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-xxs);
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.sb-banner-text { color: var(--text-secondary); }
 
-.sb-banner-close {
+/* Right slot — pinned to the right edge, ~20% of the width. Generic:
+   Badge-Status, close button, actions — any content. */
+.sb-banner-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-horiz-s);
+  flex: 0 1 20%;
+  align-self: stretch;
+}
+
+/* Types. Info / Success — neutral surface, coloured marker only.
+   Warning / Critical — tinted surface + coloured title & text. */
+.sb-banner.info    { border-left-color: var(--info); }
+.sb-banner.success { border-left-color: var(--success); }
+.sb-banner.warning {
+  border-left-color: var(--alert);
+  background: var(--alert-hover);
+}
+.sb-banner.warning .sb-banner-title,
+.sb-banner.warning .sb-banner-text { color: var(--alert); }
+.sb-banner.error {
+  border-left-color: var(--error);
+  background: var(--error-hover);
+}
+.sb-banner.error .sb-banner-title,
+.sb-banner.error .sb-banner-text { color: var(--error); }
+
+/* ── Notification Bar ── slim full-width strip right under the Nav Bar.
+   Content centered by default; .align-left pins it to the left edge.
+   Text — Body M in the type colour; links inherit it, bold + underline. */
+.sb-notif-bar {
+  display: flex;
+  width: 100%;
+  min-width: 320px;
+  height: 28px;
+  padding: var(--pad-vert-2) var(--pad-horiz-8);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  box-sizing: border-box;
+  border-left: var(--border-width-4) solid var(--info);
+  background: var(--primary-hover);
+  color: var(--info);
+}
+.sb-notif-bar.align-left { justify-content: flex-start; }
+.sb-notif-bar-lead { flex-shrink: 0; display: inline-flex; align-items: center; }
+/* Fixed 28px height — no wrapping; long text truncates with an ellipsis. */
+.sb-notif-bar-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sb-notif-bar a {
+  color: inherit;
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.sb-notif-bar.success { border-left-color: var(--success); background: var(--success-hover); color: var(--success); }
+.sb-notif-bar.warning { border-left-color: var(--alert);   background: var(--alert-hover);   color: var(--alert); }
+.sb-notif-bar.error   { border-left-color: var(--error);   background: var(--error-hover);   color: var(--error); }
+
+/* ── Snackbar ── floating bottom feedback about an action. Inverse plate
+   without inverse tokens: --text-tertiary bg + --surface-1 text — the pair
+   flips with the theme automatically. Types by composition, not colour:
+   Feedback (message only) / Action (message + a mini action button). */
+.sb-snackbar {
+  display: flex;
+  min-width: 320px;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  border-radius: var(--radius-8);
+  background: var(--text-tertiary);
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay); /* Shadow-L */
+  box-sizing: border-box;
+}
+.sb-snackbar-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  flex: 1 0 0;
+  min-width: 0;
+}
+.sb-snackbar-lead { flex-shrink: 0; display: inline-flex; align-items: center; color: var(--surface-1); }
+/* Позитивный исход (sent / copied) — зелёный Check Circle. */
+.sb-snackbar-lead.is-success { color: var(--success); }
+/* Message: Title S Regular via sb-* classes in markup; single line + ellipsis. */
+.sb-snackbar-msg {
+  flex: 1 0 0;
+  min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--surface-1);
+}
+.sb-snackbar-close {
   flex-shrink: 0;
   width: 24px;
   height: 24px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  background: transparent;
   border-radius: var(--radius-4);
-  transition: var(--transition);
-  font-size: var(--body-font-size-m);
+  color: var(--surface-1);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.sb-snackbar-close:hover { background: var(--shadow-overlay); }
+
+/* Обратный таймер-лоадер: кольцо 20px, убывает 5 секунд. В статичных
+   демо кольцо полное; анимация — только на живом снэкбаре (.is-live,
+   вешает sbShowSnackbar). Длина окружности r=8 → 2πr ≈ 50.27. */
+.sb-snackbar-timer {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--surface-1);
+}
+.sb-snackbar.is-live .sb-snackbar-timer circle {
+  animation: sb-snackbar-countdown 5s linear forwards;
+}
+@keyframes sb-snackbar-countdown {
+  to { stroke-dashoffset: 50.27; }
 }
 
-.sb-banner-close:hover { background: var(--shadow-overlay); }
-
-.sb-banner.info {
-  background: var(--primary-hover);
-  border-color: var(--primary);
-  color: var(--text-primary);
+/* Host живого снэкбара (sbShowSnackbar): фикс снизу по центру экрана,
+   слайд вверх при появлении. 24px от низа — поведенческий слой, не Figma. */
+.sb-snackbar-host {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 8px);
+  opacity: 0;
+  z-index: 10000;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.sb-banner.info .sb-banner-icon { color: var(--primary); }
-.sb-banner.info .sb-banner-close { color: var(--primary); }
-
-.sb-banner.success {
-  background: var(--success-hover);
-  border-color: var(--success);
-}
-.sb-banner.success .sb-banner-icon { color: var(--success); }
-.sb-banner.success .sb-banner-close { color: var(--success); }
-
-.sb-banner.warning {
-  background: var(--warning-hover);
-  border-color: var(--warning);
-}
-.sb-banner.warning .sb-banner-icon { color: var(--warning); }
-.sb-banner.warning .sb-banner-close { color: var(--warning); }
-.sb-banner.warning .sb-banner-text { color: var(--text-tertiary); }
-
-.sb-banner.error {
-  background: var(--error-hover);
-  border-color: var(--error);
-}
-.sb-banner.error .sb-banner-icon { color: var(--error); }
-.sb-banner.error .sb-banner-close { color: var(--error); }
+.sb-snackbar-host.is-in { opacity: 1; transform: translate(-50%, 0); }
 /* --- [/SYNC:notifications] --- */

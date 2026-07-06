@@ -98,24 +98,19 @@
 html[data-lang="ru"] .i18n-en { display: none; }
 html:not([data-lang="ru"]) .i18n-ru { display: none; }
 
-/* --- Doc Note — инфо-плашка в описаниях (sbDocNote) ---
-   Интерим-стиль до отдельной спеки. Только спаны: плашка живёт внутри
-   <p class="comp-desc">, блочные теги браузер бы вынес из параграфа. */
-.sb-doc-note {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-vert-xs);
-  margin-top: var(--pad-vert-16);
-  padding: var(--pad-vert-16) var(--pad-horiz-16);
-  background: var(--surface-1);
-  border-left: var(--border-width-4) solid var(--info);
-  border-radius: var(--radius-8);
+/* --- Doc Note — теперь это НАШ Banner (см. sbDocNote в js/docs-i18n.js:
+   dogfood компонента Notifications). Описание рендерится в <div class="page-desc"
+   / "comp-desc"> (не <p>), чтобы блочный .sb-banner был валиден внутри.
+   Отступ плашки от прозы выше — только в контексте описаний, сам баннер не трогаем. */
+.page-desc .sb-banner,
+.comp-desc .sb-banner { margin-top: var(--pad-vert-16); }
+/* Код-блоки внутри доковых плашек (пример вызова в Tech Info):
+   моноширинный <pre class="sb-mono"> на --background подложке. */
+.page-desc .sb-banner pre,
+.comp-desc .sb-banner pre {
+  margin: var(--gap-vert-s) 0;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  background: var(--background);
+  border-radius: var(--radius-4);
+  overflow-x: auto;
 }
-.sb-doc-note-head {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-horiz-s);
-  color: var(--text-primary);
-}
-.sb-doc-note-head .sb-icon-wrap { color: var(--info); }
-.sb-doc-note-text { display: block; color: var(--text-secondary); }

@@ -48,6 +48,7 @@
   /* Figma Typography-DS/Subscription, Button, Badge */
   --subscription-font-size: 12px;
   --button-font-size: 15px;
+  --button-mini-font-size: 12px;  /* Figma Button-Mini (12/500/10) */
   --badge-font-size: 10px;
 
   /* ───────── TYPOGRAPHY LINE HEIGHTS ───────── */
@@ -72,6 +73,7 @@
   --link-line-height: 14px;
   --subscription-line-height: 14px;
   --button-line-height: 12px;
+  --button-mini-line-height: 10px;  /* Figma Button-Mini (12/500/10) */
 
   /* ───────── FONT WEIGHTS ───────── */
   /* Figma Typography-DS/Weight (значение = CSS numeric, имя = семантика Figma) */

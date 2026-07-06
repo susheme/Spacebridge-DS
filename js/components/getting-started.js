@@ -8,7 +8,10 @@
 sbRegister({
   name: 'getting-started',
   title: 'Getting Started',
-  description: 'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision, and 24/7 operational environments.',
+  description: sbT(
+    'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision and 24/7 operational environments. This page holds the foundation: color tokens, the type scale and effect styles.',
+    'Spacebridge UI — дизайн-система для ПО спутниковой связи и управления сетями. Создана ради ясности, точности и круглосуточных операционных сред. На этой странице — фундамент: цветовые токены, типографическая шкала и стили эффектов.'
+  ),
   renderPage() {
     const colorGroups = window.COLOR_TOKENS;
 
@@ -99,50 +102,77 @@ sbRegister({
     return `<div class="page-shell"><div class="page fade-in">
       ${bcBlock}
       <h1 class="page-title sb-h4">Getting Started</h1>
-      <p class="page-desc sb-body-l">Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision, and 24/7 operational environments.</p>
+      <div class="page-desc sb-body-l">${sbT(
+        'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision and 24/7 operational environments. This page holds the foundation: color tokens, the type scale and effect styles.',
+        'Spacebridge UI — дизайн-система для ПО спутниковой связи и управления сетями. Создана ради ясности, точности и круглосуточных операционных сред. На этой странице — фундамент: цветовые токены, типографическая шкала и стили эффектов.'
+      )}</div>
 
       <div class="comp-section" id="sec-color-palette">
         <h2 class="comp-title sb-title-l">Color Palette</h2>
-        <p class="comp-desc sb-body-m">Semantic color tokens that adapt between light and dark themes. Currently showing ${isDark ? 'dark' : 'light'} theme values.</p>
+        <div class="comp-desc sb-body-m">${sbT(
+          'Semantic color tokens that adapt between the light and dark themes. A click on a swatch copies the value. Currently showing the ' + (isDark ? 'dark' : 'light') + ' theme values.',
+          'Семантические цветовые токены, адаптирующиеся между светлой и тёмной темой. Клик по свотчу копирует значение. Сейчас показаны значения ' + (isDark ? 'тёмной' : 'светлой') + ' темы.'
+        )}</div>
         ${colorHTML}
       </div>
 
       <div class="comp-section" id="sec-typography">
         <h2 class="comp-title sb-title-l">Typography</h2>
-        <p class="comp-desc sb-body-m">Roboto is used across all Spacebridge products. The type scale ranges from 96px display to 12px captions.</p>
+        <div class="comp-desc sb-body-m">${sbT(
+          'Roboto is used across all Spacebridge products. The scale ranges from the 96px display size down to the 10px subscription text. Each row copies its CSS; the brand font (SpaceBridge Classic) is available for download in the first row.',
+          'Во всех продуктах Spacebridge используется Roboto. Шкала — от display-размера 96px до subscription-текста 10px. Каждая строка копирует свой CSS; брендовый шрифт (SpaceBridge Classic) можно скачать в первой строке.'
+        )}</div>
         ${typoHTML}
       </div>
 
       <div class="comp-section" id="sec-effect-styles">
         <h2 class="comp-title sb-title-l">Effect Styles</h2>
-        <p class="comp-desc sb-body-m">Тени и эффекты, адаптированные под тёмную и светлую тему через CSS-токены.</p>
+        <div class="comp-desc sb-body-m">${sbT(
+          'Shadows and effects, adapted to the light and dark themes via CSS tokens. The copy button takes the ready-made CSS.',
+          'Тени и эффекты, адаптированные под светлую и тёмную тему через CSS-токены. Кнопка копирования забирает готовый CSS.'
+        )}</div>
         <div class="typo-scale">
           ${[
             {
               name: 'Shadow-S',
               shadow: 'box-shadow: 0 2px 8px 0 var(--shadow-overlay)',
-              desc: 'Стандартная elevation — карточки, поповеры, компоненты',
+              desc: sbT(
+                'Standard elevation — cards, popovers, components',
+                'Стандартная elevation — карточки, поповеры, компоненты'
+              ),
             },
             {
               name: 'Shadow-L',
               shadow: 'box-shadow: 0 10px 20px 0 var(--shadow-overlay)',
-              desc: 'Тяжёлая elevation — модальные окна, overlay-панели',
+              desc: sbT(
+                'Heavy elevation — modal windows, overlay panels',
+                'Тяжёлая elevation — модальные окна, overlay-панели'
+              ),
             },
             {
               name: 'Hover-red',
               shadow: 'box-shadow: 0 6px 10px -6px var(--error-hover), 0 2px 8px 0 var(--error-hover), 0 10px 20px 0 var(--error-hover)',
-              desc: 'Hover-эффект для красных элементов — critical-кнопки, деструктивные действия',
+              desc: sbT(
+                'Hover effect for red elements — critical buttons, destructive actions',
+                'Hover-эффект для красных элементов — critical-кнопки, деструктивные действия'
+              ),
             },
             {
               name: 'Hover-blue',
               shadow: 'box-shadow: 0 6px 10px -6px var(--primary-hover), 0 2px 8px 0 var(--primary-hover), 0 10px 20px 0 var(--primary-hover)',
-              desc: 'Hover-эффект для синих элементов — кнопки primary, активные состояния',
+              desc: sbT(
+                'Hover effect for blue elements — primary buttons, active states',
+                'Hover-эффект для синих элементов — primary-кнопки, активные состояния'
+              ),
             },
             {
               name: 'Pressed',
               shadow: 'box-shadow: 1px 1px 2px 0 var(--shadow-overlay) inset, -1px -1px 2px 0 var(--shadow-lg) inset',
               bg: 'var(--surface-1)',
-              desc: 'Вложенная поверхность внутри родительской — карты, секции, разделение контента',
+              desc: sbT(
+                'A nested surface inside its parent — cards, sections, content separation',
+                'Вложенная поверхность внутри родительской — карточки, секции, разделение контента'
+              ),
             },
           ].map(e => {
             const bg = e.bg || 'var(--background)';
@@ -156,7 +186,7 @@ sbRegister({
             </div>
             <div class="typo-end">
               <div class="typo-meta sb-sub" style="max-width:260px;word-break:break-all">${cssSnippet}</div>
-              <button class="pg-code-copy-btn" onclick="navigator.clipboard.writeText('${cssSnippet}')" title="Copy">${sbIcon('file-copy-line','L')}</button>
+              <button class="pg-code-copy-btn" onclick="navigator.clipboard.writeText('${cssSnippet}').then(function(){ if (typeof sbShowSnackbar === 'function') sbShowSnackbar(); })" title="Copy">${sbIcon('file-copy-line','L')}</button>
             </div>
           </div>`;
           }).join('')}

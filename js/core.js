@@ -394,7 +394,7 @@ function renderComponentPage(name) {
   let pageHTML = `<div class="page fade-in">
     ${bcBlock}
     <h1 class="page-title sb-h4">${comp.title}</h1>
-    <p class="page-desc sb-body-l">${comp.description}</p>`;
+    <div class="page-desc sb-body-l">${comp.description}</div>`;
 
   if (comp.playground) {
     const id = 'sec-playground';
@@ -411,7 +411,7 @@ function renderComponentPage(name) {
     tocItems.push({ id, label: sec.title });
     pageHTML += `<div class="comp-section" id="${id}">
       <h2 class="comp-title sb-title-l">${sec.title}</h2>
-      ${sec.desc ? `<p class="comp-desc sb-body-m">${sec.desc}</p>` : ''}
+      ${sec.desc ? `<div class="comp-desc sb-body-m">${sec.desc}</div>` : ''}
       ${exampleBox(sec.preview, sec.html, sec.css, { col: sec.col, interactive: sec.interactive, footer: sec.footer })}
     </div>`;
   });
@@ -616,6 +616,8 @@ const SB_PG = {
       const idx = type === 'html' ? 'first-child' : 'last-child';
       const copyBtn = document.querySelector(`#pg-${name}-code-panel .pg-code-section:${idx} .pg-code-copy-btn`);
       if (copyBtn) { copyBtn.style.color = 'var(--success)'; setTimeout(() => copyBtn.style.color = '', 1200); }
+      // Dogfood: снэкбар «Copied / Скопировано» (sbShowSnackbar из notifications.js).
+      if (typeof sbShowSnackbar === 'function') sbShowSnackbar();
     });
   },
 

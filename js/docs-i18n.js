@@ -24,15 +24,25 @@ function sbT(en, ru) {
 }
 
 // sbDocNote(title, body) — инфо-плашка в описаниях: Tech Info (параметры,
-// анатомия — позже переедет в pop-up/модалку, когда компонент появится)
-// или Important (критичное для разработчиков/дизайнеров).
-// Интерим-стиль по скриншоту дизайнера; финальная спека будет позже.
+// анатомия) или Important (критичное для разработчиков/дизайнеров).
+// Dogfood: рендерит НАШ Banner (notifications). 'Important' → warning, всё
+// остальное ('Tech Info') → info. Разметку баннера инлайним (не зовём
+// sbMkBanner) — он живёт в notifications.js, который грузится ПОЗЖЕ большинства
+// компонентов, а sbDocNote вызывается ими на этапе sbRegister. Визуал берётся
+// из .sb-banner CSS (грузится глобально), так что это настоящий баннер.
 // body может быть sbT(...) — тогда плашка одна, текст переключается.
+// ВАЖНО: возвращает <div> — обёртка описания в core.js должна быть <div>, не <p>.
 function sbDocNote(title, body) {
-  return `<span class="sb-doc-note">`
-    + `<span class="sb-doc-note-head">${sbIcon('information-fill', 'L')}<span class="sb-title-s">${title}</span></span>`
-    + `<span class="sb-doc-note-text sb-body-m">${body}</span>`
-    + `</span>`;
+  const type = /important/i.test(title) ? 'warning' : 'info';
+  return `<div class="sb-banner ${type}">`
+    + `<div class="sb-banner-content">`
+    +   `<div class="sb-banner-titlerow">`
+    +     `<span class="sb-banner-lead">${sbIcon('information-fill', 'L')}</span>`
+    +     `<span class="sb-banner-title sb-title-m">${title}</span>`
+    +   `</div>`
+    +   `<div class="sb-banner-text sb-body-m">${body}</div>`
+    + `</div>`
+    + `</div>`;
 }
 
 function sbSetDocLang(lang) {

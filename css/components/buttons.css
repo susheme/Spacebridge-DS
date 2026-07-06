@@ -46,6 +46,26 @@
 .sb-btn-sm { height: 32px; padding: 0 var(--pad-horiz-16); font-size: var(--body-font-size-m); min-width: 80px; }
 .sb-btn-sm svg { width: 16px; height: 16px; }
 
+/* ── Size Mini ── 24px текстовая кнопка (Figma Buttons-Rounded-S box +
+   типографика Button-Mini 12/500/10). Для плотных мест: Snackbar-действия
+   (Undo / Refresh), компактные слоты. Кап ширины 68 — текст режется ellipsis. */
+.sb-btn-mini {
+  height: var(--btn-rounded-max-height-s);
+  min-height: var(--btn-rounded-min-height-s);
+  max-height: var(--btn-rounded-max-height-s);
+  min-width: var(--btn-rounded-min-width);
+  max-width: var(--btn-rounded-max-width);
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  gap: var(--gap-horiz-xs);
+  border-radius: var(--radius-4);
+  font-size: var(--button-mini-font-size);
+  line-height: var(--button-mini-line-height);
+  font-weight: var(--font-weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sb-btn-mini svg { width: 16px; height: 16px; }
+
 /* ── Icon-only (square: width = height) ── */
 .sb-btn-icon   { min-width: unset; width: var(--btn-primary-min-height); padding: 0; }
 /* Icon-Only Small — 24×24, radius-4, padding 4/2, gap 0 (Figma Buttons-Rounded-S) */

@@ -243,16 +243,23 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
         disabledOnTabs: false,
       },
       controls(pg) {
-        return pg.select('tabCount', [
-          { value: 2, label: '2 segments' },
-          { value: 3, label: '3 segments' },
-          { value: 4, label: '4 segments' },
-          { value: 5, label: '5 segments' },
-        ]) + pg.select('iconPosition', [
-          { value: 'none', label: 'Text only' },
-          { value: 'left', label: 'Icon left' },
-          { value: 'top',  label: 'Icon top'  },
-        ], { label: 'icon position' }) + `<div class="pg-toggles">
+        return `<div class="pg-group">
+          <div class="pg-group-title sb-field-label">Segments</div>
+          <div class="pg-group-body">
+            ${pg.select('tabCount', [
+              { value: 2, label: '2 segments' },
+              { value: 3, label: '3 segments' },
+              { value: 4, label: '4 segments' },
+              { value: 5, label: '5 segments' },
+            ], { label: 'Count' })}
+            ${pg.select('iconPosition', [
+              { value: 'none', label: 'Text only' },
+              { value: 'left', label: 'Icon left' },
+              { value: 'top',  label: 'Icon top'  },
+            ], { label: 'Icon Position' })}
+          </div>
+        </div>
+        <div class="pg-toggles">
           ${pg.toggle('disabledOnTabs', 'Disable')}
         </div>`;
       },

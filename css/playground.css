@@ -77,6 +77,22 @@
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
 }
 
+/* В wide-mode селекты/поля ВНУТРИ pg-group-body — сеткой по 2 в ряд:
+   когда группа занимает весь ряд (средние экраны), flex-column растягивал
+   каждый селект на всю ширину группы. Тогглы занимают весь ряд — у них
+   свой внутренний grid. Base (narrow панель 320px) остаётся столбиком. */
+.pg-card.wide .pg-group-body,
+.pg-card.wide-auto .pg-group-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.pg-card.wide .pg-group-body > .pg-toggles,
+.pg-card.wide-auto .pg-group-body > .pg-toggles,
+.pg-card.wide .pg-group-body > .pg-toggles-3,
+.pg-card.wide-auto .pg-group-body > .pg-toggles-3 {
+  grid-column: 1 / -1;
+}
+
 /* Tab Bar playground (scoped): в полном (wide) виде select + toggles в ОДНУ
    строку — select слева (фикс 160), toggles группой сразу справа (не разносим
    по краям). В компакте (non-wide) — базовый flex-column → toggles под select

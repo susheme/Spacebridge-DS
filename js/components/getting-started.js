@@ -5,6 +5,30 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 // --- GETTING STARTED ---
+// Палитра печатает literal hex текущей темы (isDark в renderPage) — при
+// переключении data-theme свотчи протухают. Обновляем их НА МЕСТЕ (bg,
+// hex-подпись, copy-значение) без ре-рендера страницы: скролл и состояние
+// не трогаются. Порядок .color-swatch в DOM = порядок COLOR_TOKENS.
+if (!window.__sbGsThemeWatch) {
+  window.__sbGsThemeWatch = true;
+  new MutationObserver(() => {
+    const swatches = document.querySelectorAll('#content .color-swatch');
+    if (!swatches.length) return; // Getting Started не открыт
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    let i = 0;
+    window.COLOR_TOKENS.forEach(group => group.tokens.forEach(c => {
+      const sw = swatches[i++];
+      if (!sw) return;
+      const val = isDark ? c.dark : c.light;
+      const prev = sw.querySelector('.color-swatch-preview');
+      const hex  = sw.querySelector('.color-swatch-hex');
+      if (prev) prev.style.background = val;
+      if (hex)  hex.textContent = val;
+      sw.onclick = () => copyColor(sw, val); // перебивает inline-атрибут со старым hex
+    }));
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+}
+
 sbRegister({
   name: 'getting-started',
   title: 'Getting Started',

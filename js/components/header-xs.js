@@ -133,7 +133,10 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
         flushRight: false,
       },
       controls(pg) {
-        return pg.select('leftType', [
+        return `<div class="pg-group">
+          <div class="pg-group-title sb-field-label">Composition</div>
+          <div class="pg-group-body">
+            ${pg.select('leftType', [
           { value: 'none',             label: 'None' },
           { value: 'warnLine',         label: 'Warning Line' },
           { value: 'warnFilled',       label: 'Warning Filled' },
@@ -154,7 +157,10 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
           { value: 'close',       label: 'Close button' },
           { value: 'chevronDown', label: 'Chevron ↓' },
           { value: 'chevronUp',   label: 'Chevron ↑' },
-        ], { label: 'Right slot' }) + `<div class="pg-toggles">${pg.toggle('flushRight', 'Flush right corner')}</div>`;
+        ], { label: 'Right slot' })}
+            <div class="pg-toggles">${pg.toggle('flushRight', 'Flush')}</div>
+          </div>
+        </div>`;
       },
       render(s) {
         const leftEl = LEFT_BUILDERS[s.leftType]();

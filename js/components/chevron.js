@@ -45,7 +45,12 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
           { value: 'up',    label: 'Up' },
           { value: 'left',  label: 'Left' },
           { value: 'right', label: 'Right' },
-        ]) + `<div class="pg-toggles">${pg.toggle('disabled', 'Disable')}${pg.toggle('mini', 'Mini')}</div>`;
+        ]) + `<div class="pg-group">
+          <div class="pg-group-title sb-field-label">State</div>
+          <div class="pg-group-body">
+            <div class="pg-toggles">${pg.toggle('disabled', 'Disable')}${pg.toggle('mini', 'Mini')}</div>
+          </div>
+        </div>`;
       },
       render(s) {
         return mkChv(s);

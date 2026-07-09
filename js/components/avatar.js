@@ -76,7 +76,12 @@ sbRegister({
         { value: 'initials', label: 'Initials' },
         { value: 'company',  label: 'Company' },
         { value: 'image',    label: 'Image' },
-      ]) + `<div class="pg-toggles">${pg.toggle('hover','Hover')}${pg.toggle('status','Status')}${pg.toggle('badge','Badge')}</div>`;
+      ]) + `<div class="pg-group">
+        <div class="pg-group-title sb-field-label">Modifiers</div>
+        <div class="pg-group-body">
+          <div class="pg-toggles">${pg.toggle('hover','Hover')}${pg.toggle('status','Status')}${pg.toggle('badge','Badge')}</div>
+        </div>
+      </div>`;
     },
     render(s) {
       return `<div style="padding: var(--pad-vert-24) 0">${mkAv(s.type, s, 'NS')}</div>`;

@@ -551,8 +551,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   const LANG_OPTIONS = [
     { code: 'EN', name: 'English'  },
     { code: 'RU', name: 'Русский'  },
-    { code: 'FR', name: 'Français' },
-    { code: 'ES', name: 'Español'  },
+    // FR / ES вернём, когда будут готовы переводы (см. BACKLOG: FR-локализация).
   ];
   function mkLangSwitcher(opts = {}) {
     const selected = opts.selected || 'EN';

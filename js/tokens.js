@@ -45,10 +45,10 @@ window.COLOR_TOKENS = [
     { name: '--warning-hover', light: 'rgba(255,193,7,0.1)', dark: 'rgba(255,193,7,0.1)' },
   ]},
   { label: 'Shadows', tokens: [
-    { name: '--shadow-sm',     light: 'rgba(0,0,0,0.08)',          dark: 'rgba(0,0,0,0.2)' },
-    { name: '--shadow-md',     light: 'rgba(0,0,0,0.16)',          dark: 'rgba(0,0,0,0.35)' },
-    { name: '--shadow-lg',     light: 'rgba(255,255,255,0.55)',    dark: 'rgba(20,28,41,0.25)' },
-    { name: '--shadow-overlay',light: 'rgba(135,152,173,0.3)',     dark: 'rgba(20,28,41,0.5)' },
+    { name: '--shadow-sm',     light: 'rgba(0,0,0,0.08)',          dark: 'rgba(20,28,41,0.25)' },
+    { name: '--shadow-md',     light: 'rgba(0,0,0,0.16)',          dark: 'rgba(20,28,41,0.5)' },
+    { name: '--shadow-lg',     light: 'rgba(255,255,255,0.55)',    dark: 'rgba(0,0,0,0.2)' },
+    { name: '--shadow-overlay',light: 'rgba(135,152,173,0.3)',     dark: 'rgba(0,0,0,0.35)' },
   ]},
 ];
 

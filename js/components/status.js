@@ -191,7 +191,12 @@ sbRegister({
         { value: 'info', label: 'Info' }, { value: 'warning', label: 'Warning' },
         { value: 'maintenance', label: 'Alert' }, { value: 'error', label: 'Error' },
         { value: 'offline', label: 'Offline' },
-      ]) + `<div class="pg-toggles">${pg.toggle('pulse','Pulsing')}${pg.toggle('mini','Mini')}</div>`;
+      ]) + `<div class="pg-group">
+        <div class="pg-group-title sb-field-label">Modifiers</div>
+        <div class="pg-group-body">
+          <div class="pg-toggles">${pg.toggle('pulse','Pulsing')}${pg.toggle('mini','Mini')}</div>
+        </div>
+      </div>`;
     },
     render(s) {
       const cls = dotClass(s);

@@ -105,7 +105,16 @@ html:not([data-lang="ru"]) .i18n-ru { display: none; }
 .page-desc .sb-banner,
 .comp-desc .sb-banner { margin-top: var(--pad-vert-16); }
 /* Код-блоки внутри доковых плашек (пример вызова в Tech Info):
-   моноширинный <pre class="sb-mono"> на --background подложке. */
+   моноширинный <pre class="sb-mono"> на --background подложке.
+   Текст-блок плашки растягиваем и даём сжиматься (min-width:0) — иначе
+   в flex-колонке с align-items:flex-start несжимаемый pre (white-space:pre)
+   распирает блок на ширину самой длинной строки и вылезает за плашку;
+   при ограниченной ширине overflow-x:auto скроллит код внутри. */
+.page-desc .sb-banner .sb-banner-text,
+.comp-desc .sb-banner .sb-banner-text {
+  align-self: stretch;
+  min-width: 0;
+}
 .page-desc .sb-banner pre,
 .comp-desc .sb-banner pre {
   margin: var(--gap-vert-s) 0;
@@ -113,4 +122,12 @@ html:not([data-lang="ru"]) .i18n-ru { display: none; }
   background: var(--background);
   border-radius: var(--radius-4);
   overflow-x: auto;
+}
+/* Списки внутри доковых плашек (структурированные Tech Info):
+   возвращаем буллеты и отступ, зануленные глобальным reset'ом. */
+.page-desc .sb-banner ul,
+.comp-desc .sb-banner ul {
+  list-style: disc;
+  margin: var(--gap-vert-xs) 0 var(--gap-vert-s);
+  padding-left: var(--pad-horiz-16);
 }

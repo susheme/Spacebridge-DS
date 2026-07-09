@@ -29,7 +29,7 @@ const NAV = [
     { id: 'side-navigation', label: 'Side Navigation', inProgress: true },
     { id: 'toc', label: 'Sticky Table of Contents', ready: true },
     { id: 'sub-nav', label: 'Sub Nav', ready: true, done: true },
-    { id: 'tab-bar', label: 'Tab Bar', inProgress: true },
+    { id: 'tab-bar', label: 'Tab Bar', incomplete: true },
   ]},
   { category: 'Data Display', items: [
     { id: 'avatar', label: 'Avatar', ready: true },
@@ -63,7 +63,7 @@ const NAV = [
   { category: 'Feedback', items: [
     { id: 'dialogues', label: 'Dialogues / Modals' },
     { id: 'loaders', label: 'Loaders' },
-    { id: 'notifications', label: 'Notifications', inProgress: true },
+    { id: 'notifications', label: 'Notifications', incomplete: true },
     { id: 'pop-ups', label: 'Pop-Ups' },
     { id: 'toast', label: 'Toast' },
   ]},

@@ -757,10 +757,10 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
           <div class="pg-group">
             <div class="pg-group-title sb-field-label">Layout</div>
             <div class="pg-group-body">
-              ${pg.select('headerStyle', [
+              <div style="grid-column:1/-1">${pg.select('headerStyle', [
                 { value: 'logo',     label: 'Logo' },
                 { value: 'headline', label: 'Headline + Actions' },
-              ], { label: 'Header M' })}
+              ], { label: 'Header M' })}</div>
               <div class="pg-toggles">
                 ${pg.toggle('search', 'Search')}
                 ${pg.toggle('subNav', 'Sub Nav')}

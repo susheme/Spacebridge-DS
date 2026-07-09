@@ -142,15 +142,16 @@ a.sb-banner-title {
 .sb-snackbar-lead { flex-shrink: 0; display: inline-flex; align-items: center; color: var(--surface-1); }
 /* Позитивный исход (sent / copied) — зелёный Check Circle. */
 .sb-snackbar-lead.is-success { color: var(--success); }
-/* Message: Title S Regular via sb-* classes in markup; single line + ellipsis. */
+/* Message: Title S Regular via sb-* classes in markup; single line + ellipsis.
+   Вертикальный padding обязателен: Title S — 14px при line-height 12px,
+   overflow:hidden без запаса клипает выносные элементы глифов. */
 .sb-snackbar-msg {
   flex: 1 0 0;
   min-width: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: var(--pad-vert-4) 0;
   color: var(--surface-1);
 }
 .sb-snackbar-close {

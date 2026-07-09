@@ -127,14 +127,19 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
       wide: true,
       state: { variant: 'long', align: 'left' },
       controls(pg) {
-        return `${pg.select('variant', [
-            { value: 'long',    label: 'Long' },
-            { value: 'compact', label: 'Compact' },
-          ], { label: 'Layout' })}
-          ${pg.select('align', [
-            { value: 'left',   label: 'Left' },
-            { value: 'center', label: 'Center' },
-          ], { label: 'Align' })}`;
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">Layout</div>
+            <div class="pg-group-body">
+              ${pg.select('variant', [
+                { value: 'long',    label: 'Long' },
+                { value: 'compact', label: 'Compact' },
+              ], { label: 'Variant' })}
+              ${pg.select('align', [
+                { value: 'left',   label: 'Left' },
+                { value: 'center', label: 'Center' },
+              ], { label: 'Align' })}
+            </div>
+          </div>`;
       },
       render(s) {
         const footer = mkInfoFooter({ slots: DEVICE, variant: s.variant, align: s.align });

@@ -147,15 +147,16 @@ a.sb-banner-title {
 .sb-snackbar-lead { flex-shrink: 0; display: inline-flex; align-items: center; color: var(--surface-1); }
 /* Позитивный исход (sent / copied) — зелёный Check Circle. */
 .sb-snackbar-lead.is-success { color: var(--success); }
-/* Message: Title S Regular via sb-* classes in markup; single line + ellipsis. */
+/* Message: Title S Regular via sb-* classes in markup; single line + ellipsis.
+   Вертикальный padding обязателен: Title S — 14px при line-height 12px,
+   overflow:hidden без запаса клипает выносные элементы глифов. */
 .sb-snackbar-msg {
   flex: 1 0 0;
   min-width: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: var(--pad-vert-4) 0;
   color: var(--surface-1);
 }
 .sb-snackbar-close {
@@ -272,11 +273,16 @@ a.sb-banner-title {
   // close:   true → крест (уводит снэкбар с фейдом)
   function mkSnackbar(o) {
     const c = o || {};
+    // lead: false → нет; имя из ICON_PATHS → иконка S; иначе — свой HTML/текст.
+    const leadInner = typeof c.lead === 'string' && ICON_PATHS[c.lead]
+      ? sbIcon(c.lead, 'S')
+      : (c.lead || sbIcon(c.success ? 'success-fill' : 'check-line', 'S'));
     const lead = c.lead === false ? ''
-      : `<span class="sb-snackbar-lead${c.success ? ' is-success' : ''}">${c.lead || sbIcon(c.success ? 'success-fill' : 'check-line', 'S')}</span>`;
+      : `<span class="sb-snackbar-lead${c.success ? ' is-success' : ''}">${leadInner}</span>`;
     const act = typeof c.action === 'string' ? { label: c.action } : c.action;
+    // Клик по действию всегда закрывает снэкбар (после пользовательского onClick).
     const action = act
-      ? `<button class="sb-btn sb-btn-primary sb-btn-mini"${act.onClick ? ` onclick="${act.onClick}"` : ''}>${act.label}</button>`
+      ? `<button class="sb-btn sb-btn-primary sb-btn-mini" onclick="${act.onClick ? act.onClick + '; ' : ''}sbSnackbarDismiss(this)">${act.label}</button>`
       : '';
     // Прогресс-кольцо (не иконка из ICON_PATHS — компонентная графика, как SB_SVG).
     // Длительность отсчёта — inline animation-duration (перекрывает 5s из CSS).
@@ -289,7 +295,7 @@ a.sb-banner-title {
       : '';
     return `<div class="sb-snackbar">`
       + `<div class="sb-snackbar-content">${lead}<span class="sb-snackbar-msg sb-title-s sb-fw-regular">${c.text || ''}</span></div>`
-      + action + timer + close
+      + timer + action + close
       + `</div>`;
   }
   window.sbMkSnackbar = mkSnackbar;
@@ -315,7 +321,9 @@ a.sb-banner-title {
     const c = o || {};
     const opts = {
       success: c.success !== false,
-      timer:   c.timer   !== false,
+      // Кольцо-таймер — ТОЛЬКО для критичных/отменяемых действий (delete + Undo):
+      // даёт время передумать. Обычный фидбэк (copied/sent) — без кольца.
+      timer:   c.timer || false,
       close:   c.close   !== false,
       text:    c.text || sbT('Copied', 'Скопировано'),
       lead:    c.lead,
@@ -329,13 +337,18 @@ a.sb-banner-title {
     host.firstElementChild.classList.add('is-live');
     document.body.appendChild(host);
     requestAnimationFrame(() => host.classList.add('is-in'));
+    // Авто-уход: с кольцом — по его секундам (true → 5); обычный фидбэк без
+    // кольца — тихо через 4с; action БЕЗ кольца (Refresh) — sticky, висит
+    // до нажатия действия или креста.
+    const hide = () => {
+      host.classList.remove('is-in');
+      setTimeout(() => host.remove(), 200);
+    };
     if (opts.timer) {
-      // timer: число = секунды (true → 5). Синхронно с кольцом (animation-duration).
       const sec = typeof opts.timer === 'number' && opts.timer > 0 ? opts.timer : 5;
-      host._t = setTimeout(() => {
-        host.classList.remove('is-in');
-        setTimeout(() => host.remove(), 200);
-      }, sec * 1000);
+      host._t = setTimeout(hide, sec * 1000);
+    } else if (!opts.action) {
+      host._t = setTimeout(hide, 4000);
     }
     return host;
   };
@@ -369,32 +382,47 @@ a.sb-banner-title {
       title: 'Notifications Playground',
       state: { comp: 'banner', type: 'info', lead: 'dot', right: 'badge', align: 'center', title: true, link: false, text: true, icon: true },
       controls(pg) {
-        return `${pg.select('comp', [
-            { value: 'banner', label: 'Banner' },
-            { value: 'bar',    label: 'Notification Bar' },
-          ], { label: 'Component' })}
-          ${pg.select('type', [
-            { value: 'info',    label: 'Info' },
-            { value: 'success', label: 'Success' },
-            { value: 'warning', label: 'Warning' },
-            { value: 'error',   label: 'Critical' },
-          ], { label: 'Type' })}
-          <div data-nb-scope="banner">${pg.select('lead', [
-            { value: 'none',  label: 'None' },
-            { value: 'dot',   label: 'Indicator' },
-            { value: 'glyph', label: 'Badge' },
-            { value: 'icon',  label: 'Icon' },
-          ], { label: 'Lead' })}</div>
-          <div data-nb-scope="banner">${pg.select('right', [
-            { value: 'none',    label: 'None' },
-            { value: 'badge',   label: 'Status' },
-            { value: 'close',   label: 'Close' },
-            { value: 'buttons', label: 'Buttons' },
-          ], { label: 'Right Slot' })}</div>
-          <div data-nb-scope="bar">${pg.select('align', [
-            { value: 'center', label: 'Center' },
-            { value: 'left',   label: 'Left' },
-          ], { label: 'Align' })}</div>
+        return `<div class="pg-group">
+            <div class="pg-group-title sb-field-label">Component</div>
+            <div class="pg-group-body">
+              ${pg.select('comp', [
+                { value: 'banner', label: 'Banner' },
+                { value: 'bar',    label: 'Notification Bar' },
+              ], { label: 'Component' })}
+              ${pg.select('type', [
+                { value: 'info',    label: 'Info' },
+                { value: 'success', label: 'Success' },
+                { value: 'warning', label: 'Warning' },
+                { value: 'error',   label: 'Critical' },
+              ], { label: 'Type' })}
+            </div>
+          </div>
+          <div class="pg-group" data-nb-scope="banner">
+            <div class="pg-group-title sb-field-label">Slots</div>
+            <div class="pg-group-body">
+              ${pg.select('lead', [
+                { value: 'none',  label: 'None' },
+                { value: 'dot',   label: 'Indicator' },
+                { value: 'glyph', label: 'Badge' },
+                { value: 'icon',  label: 'Icon' },
+              ], { label: 'Lead' })}
+              ${pg.select('right', [
+                { value: 'none',    label: 'None' },
+                { value: 'badge',   label: 'Status' },
+                { value: 'close',   label: 'Close' },
+                { value: 'buttons', label: 'Buttons' },
+              ], { label: 'Right Slot' })}
+            </div>
+          </div>
+          <div class="pg-group" data-nb-scope="bar">
+            <div class="pg-group-title sb-field-label">Alignment</div>
+            <div class="pg-group-body">
+              ${pg.select('align', [
+                { value: 'center', label: 'Center' },
+                { value: 'left',   label: 'Left' },
+              ], { label: 'Align' })}
+            </div>
+          </div>
           <div class="pg-group">
             <div class="pg-group-title sb-field-label">Content</div>
             <div class="pg-group-body">
@@ -493,8 +521,22 @@ a.sb-banner-title {
           'A row with a coloured left marker in the type colour. The content column holds a title (optionally a link) with an optional leading indicator, and a description below. A generic right slot is pinned to the right edge — a Badge-Status, a close button or actions.',
           'Строка с цветным левым маркером под тип. Колонка контента несёт тайтл (опционально ссылку) с опциональным ведущим индикатором и описание под ним. Генерик-слот справа прижат к правому краю — Badge-Status, кнопка закрытия или действия.'
         ) + sbDocNote('Tech Info', sbT(
-          'Width 100% · min-width 288px · max-width 800px · min-height 60px · padding 16/16 · radius 4 · border-left 4px in the type colour. Content ~80% / right slot ~20%. Title — Title M; description — Body M. Info & Success sit on --surface-1; Warning & Critical tint the surface (--alert-hover / --error-hover) and colour the title and text.',
-          'Ширина 100% · min-width 288px · max-width 800px · min-height 60px · padding 16/16 · radius 4 · border-left 4px в цвет типа. Контент ~80% / правый слот ~20%. Тайтл — Title M; описание — Body M. Info и Success — на --surface-1; Warning и Critical тонируют фон (--alert-hover / --error-hover) и красят тайтл и текст.'
+          '<b>Width: 100%</b>'
+          + '<ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4;</li><li>border-left: 4px in the type colour.</li></ul>'
+          + '<b>Titles and descriptions:</b>'
+          + '<ul><li>Title — Title M;</li><li>description — Body M.</li></ul>'
+          + '<b>Info & Success:</b>'
+          + '<ul><li>sit on --surface-1.</li></ul>'
+          + '<b>Warning & Critical:</b>'
+          + '<ul><li>tint the surface (--alert-hover / --error-hover);</li><li>colour the title and text.</li></ul>',
+          '<b>Ширина: 100%</b>'
+          + '<ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4;</li><li>border-left: 4px в цвет типа.</li></ul>'
+          + '<b>Тайтл и описание:</b>'
+          + '<ul><li>тайтл — Title M;</li><li>описание — Body M.</li></ul>'
+          + '<b>Info и Success:</b>'
+          + '<ul><li>сидят на --surface-1.</li></ul>'
+          + '<b>Warning и Critical:</b>'
+          + '<ul><li>тонируют фон (--alert-hover / --error-hover);</li><li>красят тайтл и текст.</li></ul>'
         )),
         col: true,
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
@@ -569,38 +611,44 @@ a.sb-banner-title {
       {
         title: 'Snackbar',
         desc: sbT(
-          'A floating plate that slides in at the bottom of the screen and reports an action. Two types by composition. Feedback — a message only; positive outcomes (sent, copied) carry a green Check Circle. Action — a message plus a mini button: File was deleted with Undo, or New changes available with Refresh. Closes by the 5-second countdown ring or by the cross. This design system dogfoods it: every copy button shows the Copied snackbar.',
-          'Плавающая плашка, выезжающая снизу экрана и сообщающая о действии. Два типа по составу. Feedback — только сообщение; позитивные исходы (отправлено, скопировано) несут зелёный Check Circle. Action — сообщение и mini-кнопка: File was deleted с Undo или New changes available с Refresh. Закрывается по 5-секундному кольцу-таймеру или крестом. Дизайн-система сама его использует: каждая копи-кнопка показывает снэкбар Copied.'
+          'A floating plate that slides in at the bottom of the screen and reports an action. Two types by composition. Feedback — a message only; positive outcomes (sent, copied) carry a green Check Circle. Action — a message plus a mini button: File was deleted with Undo, or New changes available with Refresh. The countdown ring appears only on critical, undoable actions — it buys time for Undo; plain feedback quietly auto-hides after 4 seconds. This design system dogfoods it: every copy button shows the Copied snackbar.',
+          'Плавающая плашка, выезжающая снизу экрана и сообщающая о действии. Два типа по составу. Feedback — только сообщение; позитивные исходы (отправлено, скопировано) несут зелёный Check Circle. Action — сообщение и mini-кнопка: File was deleted с Undo или New changes available с Refresh. Кольцо-таймер появляется только у критичных, отменяемых действий — оно даёт время на Undo; обычный фидбэк тихо исчезает через 4 секунды. Дизайн-система сама его использует: каждая копи-кнопка показывает снэкбар Copied.'
         ) + sbDocNote('Tech Info', sbT(
           'To show the message box, you can use this code:'
-          + '<pre class="sb-mono">sbShowSnackbar({\n  text: "Your message here",\n  success: true, // set true for a success message\n  lead: "This is a lead text",\n  action: "OK", // text for the action button\n  timer: 5, // how long to show the timer (in seconds)\n  close: true // if you want a close button\n});</pre>'
+          + '<pre class="sb-mono">sbShowSnackbar({\n  text: "Your message here",\n  success: true, // set true for a success message\n  lead: "delete-bin-line", // left icon: an ICON_PATHS name or custom HTML\n  action: "OK", // text for the action button; pressing it closes the snackbar\n  timer: 5, // countdown ring in seconds — only for critical / undoable actions\n  close: true // if you want a close button\n  // no timer: plain feedback auto-hides in 4 s; with an action it stays until pressed\n});</pre>'
           + 'This will show the message box with the specified text and settings.',
           'Показать плашку с сообщением можно этим кодом:'
-          + '<pre class="sb-mono">sbShowSnackbar({\n  text: "Ваше сообщение",\n  success: true, // true для позитивного сообщения\n  lead: "Свой лид-контент",\n  action: "OK", // текст action-кнопки\n  timer: 5, // сколько секунд показывать таймер\n  close: true // нужна ли кнопка закрытия\n});</pre>'
+          + '<pre class="sb-mono">sbShowSnackbar({\n  text: "Ваше сообщение",\n  success: true, // true для позитивного сообщения\n  lead: "delete-bin-line", // иконка слева: имя из ICON_PATHS или свой HTML\n  action: "OK", // текст action-кнопки; нажатие закрывает снэкбар\n  timer: 5, // кольцо-таймер в секундах — только для критичных / отменяемых действий\n  close: true // нужна ли кнопка закрытия\n  // без timer: обычный фидбэк исчезает через 4 с; с action — висит до нажатия\n});</pre>'
           + 'Плашка появится с указанным текстом и настройками.'
         )),
         col: true, interactive: true,
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:480px;width:100%">
           ${mkSnackbar({ success: true, text: 'Message sent.', close: true })}
-          ${mkSnackbar({ text: 'File was deleted.', lead: sbIcon('delete-bin-line', 'S'), action: { label: 'Undo' }, close: true })}
+          ${mkSnackbar({ text: 'File was deleted.', lead: sbIcon('delete-bin-line', 'S'), action: { label: 'Undo' }, timer: true, close: true })}
           ${mkSnackbar({ text: 'New changes available.', lead: sbIcon('loop-left-line', 'S'), action: { label: 'Refresh' }, close: true })}
-          ${mkSnackbar({ success: true, text: 'Copied to clipboard.', timer: true, close: true })}
-          <div style="display:flex;justify-content:center;padding-top:var(--pad-vert-8)">
-            <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar()">Show Live</button>
+          <div class="pg-group" style="margin-top:var(--pad-vert-8)">
+            <div class="pg-group-title sb-field-label">Show Live:</div>
+            <div class="pg-group-body" style="flex-direction:row;justify-content:center;gap:var(--gap-horiz-s);flex-wrap:wrap">
+              <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar()">Copied</button>
+              <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar({ text: 'File was deleted.', success: false, lead: 'delete-bin-line', action: 'Undo', timer: 5 })">Undo</button>
+              <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar({ text: 'New changes available.', success: false, lead: 'loop-left-line', action: 'Refresh' })">Refresh</button>
+            </div>
           </div>
         </div>`,
         html: `<div class="sb-snackbar">
   <div class="sb-snackbar-content">
-    <span class="sb-snackbar-lead is-success"><!-- success-fill icon --></span>
-    <span class="sb-snackbar-msg sb-title-s sb-fw-regular">Copied to clipboard.</span>
+    <span class="sb-snackbar-lead"><!-- icon --></span>
+    <span class="sb-snackbar-msg sb-title-s sb-fw-regular">File was deleted.</span>
   </div>
-  <span class="sb-snackbar-timer"><!-- countdown ring --></span>
+  <span class="sb-snackbar-timer"><!-- countdown ring: critical / undoable only --></span>
+  <button class="sb-btn sb-btn-primary sb-btn-mini">Undo</button>
   <button class="sb-snackbar-close"><!-- close icon --></button>
 </div>
 
-<!-- Feedback: message only (success → green Check Circle) · Action: + mini button
+<!-- Feedback: message only (success → green Check Circle), auto-hides in 4 s
+     Action: + mini button; countdown ring (timer) — critical / undoable only
      sbMkSnackbar({ text, success?, lead?, action?: { label, onClick }, timer?, close? })
-     Live (bottom of the screen, 5 s auto-hide): sbShowSnackbar(opts) -->`,
+     Live (bottom of the screen): sbShowSnackbar(opts) -->`,
         css: COMP_CSS.notifications,
       },
     ],

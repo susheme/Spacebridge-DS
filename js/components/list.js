@@ -255,7 +255,7 @@ window.sbSelectInfoCell = function(cell) {
           { value: 'profile', label: 'Profile' },
           { value: 'info',    label: 'Info' },
         ])
-        + `<div data-pg-cell-type="profile">`
+        + `<div class="pg-group" data-pg-cell-type="profile"><div class="pg-group-title sb-field-label">Profile Cell</div><div class="pg-group-body">`
           + pg.select('avatarType', [
               { value: 'user',     label: 'User' },
               { value: 'initials', label: 'Initials' },
@@ -269,8 +269,8 @@ window.sbSelectInfoCell = function(cell) {
               { value: 'button', label: 'Icon Button' },
             ])
           + `<div class="pg-toggles">${pg.toggle('showSubtitle', 'Subtitle')}</div>`
-        + `</div>`
-        + `<div data-pg-cell-type="info">`
+        + `</div></div>`
+        + `<div class="pg-group" data-pg-cell-type="info"><div class="pg-group-title sb-field-label">Info Cell</div><div class="pg-group-body">`
           + pg.select('infoSubtype', [
               { value: 'default',   label: 'Default' },
               { value: 'indicator', label: 'Status Indicator' },
@@ -298,7 +298,7 @@ window.sbSelectInfoCell = function(cell) {
                 { value: 'neutral', label: 'Neutral (gray)' },
               ])
           + `</div>`
-        + `</div>`
+        + `</div></div>`
         + pg.select('cellState', [
             { value: 'default',  label: 'Default' },
             { value: 'hover',    label: 'Hover' },

@@ -46,11 +46,22 @@
   grid-column: 1 / -1;
 }
 /* .pg-group — обычная cell'a в pg-controls grid (НЕ на весь ряд),
-   чтобы 2-3 группы могли лежать рядом. Если в pg-controls есть pg-group'ы,
-   переключаемся на более крупные cell'ы (minmax 320, 1fr). */
+   чтобы группы лежали рядом. Если в pg-controls есть pg-group'ы —
+   строгая сетка 2 колонки + равная высота рамок в ряду (без мозаики). */
 .pg-card.wide .pg-controls:has(> .pg-group),
 .pg-card.wide-auto .pg-controls:has(> .pg-group) {
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+/* Рамку (body) тянем на всю высоту ячейки — группы в ряду ровные. */
+.pg-card.wide .pg-controls:has(> .pg-group) > .pg-group > .pg-group-body,
+.pg-card.wide-auto .pg-controls:has(> .pg-group) > .pg-group > .pg-group-body {
+  flex: 1 0 auto;
+}
+/* Нечётный последний ребёнок — на весь ряд: не оставляем дыру справа. */
+.pg-card.wide .pg-controls:has(> .pg-group) > :last-child:nth-child(odd),
+.pg-card.wide-auto .pg-controls:has(> .pg-group) > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 .pg-card.wide .pg-preview,
 .pg-card.wide-auto .pg-preview { justify-content: flex-start; }

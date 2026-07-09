@@ -423,7 +423,7 @@ a.sb-banner-title {
               ], { label: 'Align' })}
             </div>
           </div>
-          <div class="pg-group">
+          <div class="pg-group" style="grid-column:1/-1">
             <div class="pg-group-title sb-field-label">Content</div>
             <div class="pg-group-body">
               <div class="pg-toggles">

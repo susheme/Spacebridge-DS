@@ -251,33 +251,49 @@ window.sbSelectInfoCell = function(cell) {
         cellState: 'default',
       },
       controls(pg) {
-        return pg.select('cellType', [
-          { value: 'profile', label: 'Profile' },
-          { value: 'info',    label: 'Info' },
-        ])
-        + `<div class="pg-group" data-pg-cell-type="profile"><div class="pg-group-title sb-field-label">Profile Cell</div><div class="pg-group-body">`
-          + pg.select('avatarType', [
+        return `<div class="pg-group" style="grid-column:1/-1">
+          <div class="pg-group-title sb-field-label">Cell</div>
+          <div class="pg-group-body">
+            ${pg.select('cellType', [
+              { value: 'profile', label: 'Profile' },
+              { value: 'info',    label: 'Info' },
+            ], { label: 'Type' })}
+            ${pg.select('cellState', [
+              { value: 'default',  label: 'Default' },
+              { value: 'hover',    label: 'Hover' },
+              { value: 'selected', label: 'Selected (Info only)' },
+              { value: 'disabled', label: 'Disabled' },
+            ], { label: 'State' })}
+          </div>
+        </div>
+        <div class="pg-group" style="grid-column:1/-1" data-pg-cell-type="profile">
+          <div class="pg-group-title sb-field-label">Profile Cell</div>
+          <div class="pg-group-body">
+            ${pg.select('avatarType', [
               { value: 'user',     label: 'User' },
               { value: 'initials', label: 'Initials' },
               { value: 'company',  label: 'Company' },
               { value: 'image',    label: 'Image' },
-            ])
-          + pg.select('rightContent', [
+            ], { label: 'Avatar' })}
+            ${pg.select('rightContent', [
               { value: 'none',   label: 'None' },
               { value: 'icon',   label: '1 Icon' },
               { value: 'icons2', label: '2 Icons' },
               { value: 'button', label: 'Icon Button' },
-            ])
-          + `<div class="pg-toggles">${pg.toggle('showSubtitle', 'Subtitle')}</div>`
-        + `</div></div>`
-        + `<div class="pg-group" data-pg-cell-type="info"><div class="pg-group-title sb-field-label">Info Cell</div><div class="pg-group-body">`
-          + pg.select('infoSubtype', [
+            ], { label: 'Right' })}
+            <div class="pg-toggles">${pg.toggle('showSubtitle', 'Subtitle')}</div>
+          </div>
+        </div>
+        <div class="pg-group" style="grid-column:1/-1" data-pg-cell-type="info">
+          <div class="pg-group-title sb-field-label">Info Cell</div>
+          <div class="pg-group-body">
+            ${pg.select('infoSubtype', [
               { value: 'default',   label: 'Default' },
               { value: 'indicator', label: 'Status Indicator' },
               { value: 'mark',      label: 'Status Mark' },
-            ])
-          + `<div data-pg-info-subtype="indicator">`
-            + pg.select('indicatorStatus', [
+            ], { label: 'Subtype' })}
+            <div data-pg-info-subtype="indicator">
+              ${pg.select('indicatorStatus', [
                 { value: 'online',      label: 'Online (green)' },
                 { value: 'error',       label: 'Error (red)' },
                 { value: 'warning',     label: 'Warning (yellow)' },
@@ -285,35 +301,30 @@ window.sbSelectInfoCell = function(cell) {
                 { value: 'info',        label: 'Info (blue)' },
                 { value: 'connecting',  label: 'Connecting (primary)' },
                 { value: 'offline',     label: 'Offline (gray)' },
-              ])
-            + `<div class="pg-toggles">${pg.toggle('indicatorPulse', 'Pulse')}</div>`
-          + `</div>`
-          + `<div data-pg-info-subtype="mark">`
-            + pg.select('markStatus', [
+              ], { label: 'Indicator' })}
+              <div class="pg-toggles">${pg.toggle('indicatorPulse', 'Pulse')}</div>
+            </div>
+            <div data-pg-info-subtype="mark">
+              ${pg.select('markStatus', [
                 { value: 'success', label: 'Success (green)' },
                 { value: 'error',   label: 'Error (red)' },
                 { value: 'warning', label: 'Warning (yellow)' },
                 { value: 'alert',   label: 'Alert (orange)' },
                 { value: 'info',    label: 'Info (blue)' },
                 { value: 'neutral', label: 'Neutral (gray)' },
-              ])
-          + `</div>`
-        + `</div></div>`
-        + pg.select('cellState', [
-            { value: 'default',  label: 'Default' },
-            { value: 'hover',    label: 'Hover' },
-            { value: 'selected', label: 'Selected (Info only)' },
-            { value: 'disabled', label: 'Disabled' },
-          ]);
+              ], { label: 'Mark' })}
+            </div>
+          </div>
+        </div>`;
       },
       syncControls(s, container) {
+        // Обёртки теперь pg-group'ы с рамкой — показываем обычным display
+        // (НЕ 'contents': он растворяет группу, тайтл и body рассыпаются по гриду).
         container.querySelectorAll('[data-pg-cell-type]').forEach(wrap => {
-          // display: contents makes wrapper transparent to flex — children flow as direct
-          // children of .pg-controls, inheriting its column gap.
-          wrap.style.display = wrap.getAttribute('data-pg-cell-type') === s.cellType ? 'contents' : 'none';
+          wrap.style.display = wrap.getAttribute('data-pg-cell-type') === s.cellType ? '' : 'none';
         });
         container.querySelectorAll('[data-pg-info-subtype]').forEach(wrap => {
-          wrap.style.display = wrap.getAttribute('data-pg-info-subtype') === s.infoSubtype ? 'contents' : 'none';
+          wrap.style.display = wrap.getAttribute('data-pg-info-subtype') === s.infoSubtype ? '' : 'none';
         });
       },
       render(s) {

@@ -47,10 +47,14 @@
 }
 /* .pg-group — обычная cell'a в pg-controls grid (НЕ на весь ряд),
    чтобы группы лежали рядом. Если в pg-controls есть pg-group'ы —
-   строгая сетка 2 колонки + равная высота рамок в ряду (без мозаики). */
+   резиновая сетка: группа минимум 320px, на узком экране группы
+   складываются в столбик (жёсткий repeat(2) давил их на мобильной
+   ширине). min(320px, 100%) страхует от overflow при контейнере <320.
+   Согласовано с toggle-сеткой ниже (min 160): группа от ~370px
+   (min 320 + рост 1fr) даёт 2 колонки тогглов, уже — столбик. */
 .pg-card.wide .pg-controls:has(> .pg-group),
 .pg-card.wide-auto .pg-controls:has(> .pg-group) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   align-items: stretch;
 }
 /* Рамку (body) тянем на всю высоту ячейки — группы в ряду ровные. */
@@ -74,28 +78,75 @@
    Min подняли (180/160 вместо base 130/110) чтобы лейблы тогглов
    точно влезали без переноса в широких playground'ах. */
 .pg-card.wide .pg-toggles,
-.pg-card.wide-auto .pg-toggles   { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+.pg-card.wide-auto .pg-toggles   { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
 .pg-card.wide .pg-toggles-3,
-.pg-card.wide-auto .pg-toggles-3 { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-/* …но внутри .pg-group-body wide-min 180/160 рассчитан на full-width ряд —
-   в теле группы (~285px при minmax 320) он схлопывает grid в одну колонку
-   и тогглы стэкаются столбиком, тратя вертикаль. Возвращаем компактный
-   min 110: короткие лейблы (одно слово — см. правило) ложатся по 2-3 в ряд. */
+.pg-card.wide-auto .pg-toggles-3 { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+/* …но внутри .pg-group-body — резиновая сетка по схеме юзера: РАВНЫЕ
+   колонки минимум 180px, растянутые на всю ширину группы, gap 16px.
+   Число колонок адаптивное: широкая группа — 2-3+, узкая (маленький
+   экран) — столбик. Тоггл фикс-ширины, лейбл занимает остаток ячейки
+   и обрезается ellipsis'ом — наезды невозможны по построению.
+   История граблей (не повторять):
+   - auto-fit minmax(110px, 1fr): min 110 слишком мал — лейблы давило;
+   - фикс-кап 130px: длинные лейблы вылезали под соседний тоггл (Input);
+   - flex-wrap natural width: рваные колонки без ритма;
+   - auto-fit 180px фикс: колонки не заполняли группу;
+   - repeat(2, 1fr) жёстко: на узком экране 2 колонки давили тогглы;
+   - min 180px: в типовую группу (~350-400px CSS-px) влезал 1 раз —
+     тогглы стэкались столбиком на нормальном экране, а на узком
+     трек-минимум вылезал за рамку группы. min(160px, 100%) даёт
+     2 колонки в средней группе и не переполняет узкую;
+   - auto-fit: схлопывает ПУСТЫЕ треки — при 2-3 элементах в full-row
+     группе оставшиеся раздувались на весь ряд (огромные расстояния,
+     жирные селекты в List). auto-fill держит пустые треки → шаг
+     колонок стабильный ~176px при любой ширине. */
 .pg-card.wide .pg-group-body .pg-toggles,
 .pg-card.wide-auto .pg-group-body .pg-toggles,
 .pg-card.wide .pg-group-body .pg-toggles-3,
 .pg-card.wide-auto .pg-group-body .pg-toggles-3 {
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+  gap: var(--gap-horiz-m);
+}
+/* Ячейка: toggle-wrap растягивается на колонку, трек не сжимается,
+   лейбл-текст truncate (overflow:hidden убирает у flex-ребёнка
+   auto-min-size, nowrap уже задан общим правилом ниже). */
+.pg-card.wide .pg-group-body .pg-toggles .sb-toggle-wrap,
+.pg-card.wide-auto .pg-group-body .pg-toggles .sb-toggle-wrap,
+.pg-card.wide .pg-group-body .pg-toggles-3 .sb-toggle-wrap,
+.pg-card.wide-auto .pg-group-body .pg-toggles-3 .sb-toggle-wrap {
+  display: flex;
+  min-width: 0;
+}
+.pg-card.wide .pg-group-body .pg-toggles .sb-toggle,
+.pg-card.wide-auto .pg-group-body .pg-toggles .sb-toggle,
+.pg-card.wide .pg-group-body .pg-toggles-3 .sb-toggle,
+.pg-card.wide-auto .pg-group-body .pg-toggles-3 .sb-toggle {
+  flex-shrink: 0;
+}
+.pg-card.wide .pg-group-body .pg-toggles .sb-toggle-label-text,
+.pg-card.wide-auto .pg-group-body .pg-toggles .sb-toggle-label-text,
+.pg-card.wide .pg-group-body .pg-toggles-3 .sb-toggle-label-text,
+.pg-card.wide-auto .pg-group-body .pg-toggles-3 .sb-toggle-label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* В wide-mode селекты/поля ВНУТРИ pg-group-body — сеткой по 2 в ряд:
-   когда группа занимает весь ряд (средние экраны), flex-column растягивал
-   каждый селект на всю ширину группы. Тогглы занимают весь ряд — у них
-   свой внутренний grid. Base (narrow панель 320px) остаётся столбиком. */
+/* В wide-mode селекты/поля ВНУТРИ pg-group-body — та же резиновая сетка,
+   что у тогглов: колонка минимум 160px, число колонок по ширине группы,
+   узко — столбик (жёсткий repeat(2) давил селекты на узких группах).
+   Одиночный селект в широкой/full-row группе растянется, но его ширину
+   капит собственный max-width токен (--text-field-max-width). Тогглы
+   занимают весь ряд — у них свой внутренний grid (правило ниже).
+   Base (narrow панель 320px) остаётся столбиком. */
 .pg-card.wide .pg-group-body,
 .pg-card.wide-auto .pg-group-body {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr));
+  /* Рамка группы тянется под самую высокую в ряду (align-items:stretch
+     выше) — но контент НЕ распределяем по лишней высоте, прижимаем
+     к верху. Иначе в группе с меньшим числом рядов (Password Anatomy
+     против State) между рядами тогглов возникают дыры. */
+  align-content: start;
 }
 .pg-card.wide .pg-group-body > .pg-toggles,
 .pg-card.wide-auto .pg-group-body > .pg-toggles,
@@ -127,6 +178,18 @@
   flex: 0 0 auto;
   gap: var(--gap-horiz-m);
   grid-template-columns: none;
+}
+
+/* Tabs-группа (единственная с .sb-field внутри): её одиночный toggle —
+   в соседнюю cell'у group-body, справа от селекта, а не строкой ниже
+   (на узкой группе резиновая сетка сама уронит его под селект).
+   align-self:end + отступ центрируют его против селекта (32px)
+   с учётом высоты sb-field-label над ним. */
+.pg-card.wide #pg-nav-bar-controls .pg-group-body:has(> .sb-field) > .pg-toggles,
+.pg-card.wide-auto #pg-nav-bar-controls .pg-group-body:has(> .sb-field) > .pg-toggles {
+  grid-column: auto;
+  align-self: end;
+  margin-bottom: var(--pad-vert-4);
 }
 
 /* Header */

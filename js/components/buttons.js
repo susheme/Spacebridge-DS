@@ -87,26 +87,20 @@ sbRegister({
           { value: 'secondary', label: 'Secondary' },
           { value: 'text',      label: 'Text'      },
         ], { label: 'Variant' })}
-        <div class="pg-group">
-          <div class="pg-group-title sb-field-label">Modifiers</div>
-          <div class="pg-group-body">
+        ${sbPgGroup('Modifiers', `
             <div class="pg-toggles">
               ${pg.toggle('iconL',    'Icon-L')}
               ${pg.toggle('iconR',    'Icon-R')}
               ${pg.toggle('iconOnly', 'Icon-Only')}
             </div>
-          </div>
-        </div>
-        <div class="pg-group">
-          <div class="pg-group-title sb-field-label">State</div>
-          <div class="pg-group-body">
+          `)}
+        ${sbPgGroup('State', `
             <div class="pg-toggles">
               ${pg.toggle('disabled', 'Disable')}
               ${pg.toggle('loading',  'Loading')}
               ${pg.toggle('critical', 'Critical')}
             </div>
-          </div>
-        </div>`;
+          `)}`;
     },
     onControlChange(key, val, s) {
       if (key === 'iconOnly') {

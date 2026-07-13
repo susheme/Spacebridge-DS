@@ -1,7 +1,7 @@
 /* --- [SYNC:sub-nav] Sub Nav --- */
-/* Контейнер-полоса под Nav Bar / любым Header'ом. Holds:
+/* Контейнер-полоса под Navigation Bar / любым Header'ом. Holds:
    Segment Menu / Tab Bar / LED-панель / любой custom-контент.
-   Sticky-positioned как «второй слой» под Nav Bar (z-index 9 < nav-bar 10).
+   Sticky-positioned как «второй слой» под Navigation Bar (z-index 9 < nav-bar 10).
 
    Figma spec — Desktop centered variant:
      min-width 780, max-width 5000 (--screens-max-screen-width)
@@ -11,8 +11,8 @@
      background --background, border-bottom 1px --surface-2 (NOT --border).
 
    --sub-nav-top CSS-переменная — смещение от верха при sticky.
-   Default 0. Consumer ставит 56px (под обычной Nav Bar) или 88px
-   (под Nav Bar floating с margin:16) и т.п.
+   Default 0. Consumer ставит 56px (под обычной Navigation Bar) или 88px
+   (под Navigation Bar floating с margin:16) и т.п.
 
    TODO: multi-row layout, slot system (left/center/right) — придут с
    мобильными и комбинированными вариантами от пользователя. */
@@ -48,7 +48,7 @@
    has-divider добавляется по умолчанию); гасится sbMkSubNav({divider:false}). */
 .sb-sub-nav.has-divider { border-bottom: var(--border-width-1) solid var(--border-soft); }
 
-/* Sticky-режим — opt-in. Прилипает под Nav Bar / Header при скролле.
+/* Sticky-режим — opt-in. Прилипает под Navigation Bar / Header при скролле.
    В docs не активируется по умолчанию (иначе все 6 демо-баров пытаются
    быть sticky одновременно → лаги). В real-app: sbMkSubNav({sticky:true}). */
 .sb-sub-nav.sticky {

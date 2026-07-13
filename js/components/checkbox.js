@@ -55,25 +55,19 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
       title: 'Checkbox Playground',
       state: { checked: false, disabled: false, hasLabel: false, type: 'check' },
       controls(pg) {
-        return `<div class="pg-group">
-          <div class="pg-group-title sb-field-label">State</div>
-          <div class="pg-group-body">
+        return `${sbPgGroup('State', `
             <div class="pg-toggles">
               ${pg.toggle('checked', 'Checked')}
               ${pg.toggle('disabled', 'Disabled')}
               ${pg.toggle('hasLabel', 'Label')}
             </div>
-          </div>
-        </div>
-        <div class="pg-group">
-          <div class="pg-group-title sb-field-label">Type</div>
-          <div class="pg-group-body">
+          `)}
+        ${sbPgGroup('Type', `
             <div class="pg-toggles">
               <div class="sb-radio selected" data-pg-radio-left onclick="SB_PG.set('checkbox','type','check')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Check</span></div>
               <div class="sb-radio" data-pg-radio-right onclick="SB_PG.set('checkbox','type','unselect')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Unselect All</span></div>
             </div>
-          </div>
-        </div>`;
+          `)}`;
       },
       syncControls(s, container) {
         const rbCheck = container.querySelector('[data-pg-radio-left]');

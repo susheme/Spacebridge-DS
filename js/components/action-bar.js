@@ -98,9 +98,7 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
       title: 'Action Bar Playground',
       state: { count: 'two', align: 'left', floating: false },
       controls(pg) {
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">Layout</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('Layout', `
               ${pg.select('count', [
                 { value: 'one', label: 'One' },
                 { value: 'two', label: 'Two' },
@@ -111,8 +109,7 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
                 { value: 'center',  label: 'Center' },
                 { value: 'between', label: 'Between' },
               ], { label: 'Align' })}
-            </div>
-          </div>
+          `)}
           <div class="pg-toggles">
             ${pg.toggle('floating', 'Floating')}
           </div>`;

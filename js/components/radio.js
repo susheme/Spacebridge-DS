@@ -47,26 +47,20 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
       title: 'Radio Playground',
       state: { selected: false, hover: false, disabled: false, hasLabel: false, labelLeft: false },
       controls(pg) {
-        return `<div class="pg-group">
-          <div class="pg-group-title sb-field-label">State</div>
-          <div class="pg-group-body">
+        return `${sbPgGroup('State', `
             <div class="pg-toggles">
               ${pg.toggle('selected',  'Selected')}
               ${pg.toggle('hover',     'Hover')}
               ${pg.toggle('disabled',  'Disable')}
               ${pg.toggle('hasLabel',  'Title')}
             </div>
-          </div>
-        </div>
-        <div class="pg-group" data-rb-group>
-          <div class="pg-group-title sb-field-label">Label</div>
-          <div class="pg-group-body">
+          `)}
+        ${sbPgGroup('Label', `
             <div class="pg-toggles">
               <div class="sb-radio selected" data-rb-right onclick="SB_PG.set('radio','labelLeft',false)"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Right</span></div>
               <div class="sb-radio" data-rb-left onclick="SB_PG.set('radio','labelLeft',true)"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Left</span></div>
             </div>
-          </div>
-        </div>`;
+          `, { attrs: 'data-rb-group' })}`;
       },
       syncControls(s, container) {
         const rbRight = container.querySelector('[data-rb-right]');

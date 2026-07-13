@@ -186,8 +186,8 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
     name: 'sub-nav',
     title: 'Sub Nav',
     description: sbT(
-      'A container strip below the Nav Bar or a header, positioned sticky as the second chrome layer. It holds a Segment Menu, a Tab Bar, an LED Panel or their combination. Desktop and tablet variants are implemented; the mobile ones will follow as the Figma parameters arrive.',
-      'Контейнер-полоса под Nav Bar или хедером, sticky-позиционирована как второй слой хрома. Вмещает Segment Menu, Tab Bar, LED Panel или их комбинацию. Реализованы desktop- и tablet-варианты; мобильные добавятся по мере получения Figma-параметров.'
+      'A container strip below the Navigation Bar or a header, positioned sticky as the second chrome layer. It holds a Segment Menu, a Tab Bar, an LED Panel or their combination. Desktop and tablet variants are implemented; the mobile ones will follow as the Figma parameters arrive.',
+      'Контейнер-полоса под Navigation Bar или хедером, sticky-позиционирована как второй слой хрома. Вмещает Segment Menu, Tab Bar, LED Panel или их комбинацию. Реализованы desktop- и tablet-варианты; мобильные добавятся по мере получения Figma-параметров.'
     ),
     sections: [
       {
@@ -281,8 +281,8 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
       {
         title: 'Desktop — LED Panel left (alone)',
         desc: sbT(
-          "A solo LED Panel pushed to the left edge (24px of padding, in sync with the Nav Bar). align: 'left' adds justify-content: flex-start; variant: 'led' keeps the vertical centering. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' }).",
-          "Одиночная LED Panel, прижатая к левому краю (padding 24px, синхронно с Nav Bar). align: 'left' добавляет justify-content: flex-start; variant: 'led' сохраняет вертикальное центрирование. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' })."
+          "A solo LED Panel pushed to the left edge (24px of padding, in sync with the Navigation Bar). align: 'left' adds justify-content: flex-start; variant: 'led' keeps the vertical centering. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' }).",
+          "Одиночная LED Panel, прижатая к левому краю (padding 24px, синхронно с Navigation Bar). align: 'left' добавляет justify-content: flex-start; variant: 'led' сохраняет вертикальное центрирование. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' })."
         ),
         preview: sbMkPreviewStage(mkSubNav({ content: demoLed(), variant: 'led', align: 'left' }), { framed: false, preserveScroll: false }),
         html: `<header class="sb-sub-nav led align-left">

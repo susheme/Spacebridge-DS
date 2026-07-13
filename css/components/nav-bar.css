@@ -1,4 +1,4 @@
-/* --- [SYNC:nav-bar] Nav Bar (Top Bar) --- */
+/* --- [SYNC:nav-bar] Navigation Bar (Top Bar) --- */
 /* Header-полоса сверху приложения: левый слот (logo + extras), центральные
    nav-кнопки разделов, правый слот (action-кнопки + avatar + search).
    Высота 56px по дефолту, до 64px max (--nav-bar-max-height).
@@ -88,7 +88,7 @@
 }
 
 /* ── NAV BUTTON ──────────────────────────────────────────────────────
-   Эксклюзив Nav Bar: 28px высоты, radius 100, --text-secondary.
+   Эксклюзив Navigation Bar: 28px высоты, radius 100, --text-secondary.
    Hover → Shadow-S; Selected → --primary-hover bg + Pressed-inset shadow.
    28px / min-width 104 / max-width 144 — нет в Figma JSON, hardcoded
    до согласования с дизайнером. */

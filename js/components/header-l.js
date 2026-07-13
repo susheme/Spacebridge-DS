@@ -190,9 +190,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
         compact: false,          // false → wide stage 1200px; true → 600px (триггерит @container < 768)
       },
       controls(pg) {
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">Left Slot</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('Left Slot', `
               ${pg.select('leftSymbol', [
                 { value: 'none',      label: 'None' },
                 { value: 'infoPop',   label: 'Info Pop-up' },
@@ -206,11 +204,8 @@ window.COMP_CSS.headerL = `.sb-header-l {
               <div class="pg-toggles">
                 ${pg.toggle('backButton', 'Back button')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Right Slot</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Right Slot', `
               ${pg.select('rightExtra', [
                 { value: 'none',      label: 'None' },
                 { value: 'badge',     label: 'Badge-Status' },
@@ -225,11 +220,8 @@ window.COMP_CSS.headerL = `.sb-header-l {
                 ${pg.toggle('rightCaption', 'Caption')}
                 ${pg.toggle('actionButton', 'Action btn')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Composition</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Composition', `
               ${pg.select('subNav', [
                 { value: 'none',    label: 'None' },
                 { value: 'segment', label: 'Segment Menu' },
@@ -240,8 +232,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
                 ${pg.toggle('toolBarEnable', 'Tool Bar')}
                 ${pg.toggle('compact', 'Compact')}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         // Constraints:

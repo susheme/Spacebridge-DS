@@ -64,8 +64,8 @@ sbRegister({
   name: 'avatar',
   title: 'Avatar',
   description: sbT(
-    'A visual representation of a user, organization or object. Four content types. Three add-ons: a hover ring, a status dot, a badge. Typical uses: the account in the Nav Bar, people in profile lists, an organization on a company card.',
-    'Визуальное представление пользователя, организации или объекта. Четыре типа содержимого. Три дополнения: hover-кольцо, статус-точка, бейдж. Типичные применения: аккаунт в Nav Bar, люди в списках профилей, организация в карточке компании.'
+    'A visual representation of a user, organization or object. Four content types. Three add-ons: a hover ring, a status dot, a badge. Typical uses: the account in the Navigation Bar, people in profile lists, an organization on a company card.',
+    'Визуальное представление пользователя, организации или объекта. Четыре типа содержимого. Три дополнения: hover-кольцо, статус-точка, бейдж. Типичные применения: аккаунт в Navigation Bar, люди в списках профилей, организация в карточке компании.'
   ),
   playground: {
     title: 'Avatar Playground',
@@ -76,12 +76,9 @@ sbRegister({
         { value: 'initials', label: 'Initials' },
         { value: 'company',  label: 'Company' },
         { value: 'image',    label: 'Image' },
-      ]) + `<div class="pg-group">
-        <div class="pg-group-title sb-field-label">Modifiers</div>
-        <div class="pg-group-body">
+      ]) + `${sbPgGroup('Modifiers', `
           <div class="pg-toggles">${pg.toggle('hover','Hover')}${pg.toggle('status','Status')}${pg.toggle('badge','Badge')}</div>
-        </div>
-      </div>`;
+          `)}`;
     },
     render(s) {
       return `<div style="padding: var(--pad-vert-24) 0">${mkAv(s.type, s, 'NS')}</div>`;

@@ -249,6 +249,44 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
     ? `<div style="width:200px">${sbMkSearch({ placeholder: 'Search' })}</div>`
     : '';
 
+  // Scroll-контент для Floating-демо: оригинальная стилизация под мемуары
+  // Эвелина Миллера («The American Inferno», RDR2) — НЕ текст из игры
+  // (внутриигровая книга — копирайт Rockstar, дословно не копируем).
+  // По строке на <p>, пары EN/RU зипуются через sbT — язык переключается
+  // вместе с остальной документацией.
+  const DEMO_SCROLL_LINES_EN = [
+    'They told me I would find hell out west, and so I went looking for it.',
+    'I crossed rivers that had never been named and prairies that had never been fenced,',
+    'and everywhere I went I found men busy building the very inferno they had fled.',
+    'The wilderness did not burn us. We brought the fire with us,',
+    'in ledgers and in locomotives, in deeds and in debts.',
+    'I met a man in the mountains who owned nothing and wanted nothing,',
+    'and I could not decide if he was the last free American or the first of the damned.',
+    'Civilization, I have come to believe, is a circle like any other circle of hell:',
+    'we descend it together, applauding our progress at every ring.',
+    'And yet — I have seen dawn come up over country no fence has touched,',
+    'and heard a silence older than any scripture,',
+    'and in that moment I forgave America everything,',
+    'the way a man forgives the fire for being hot.',
+    'If this is the inferno, Lord, let me be the last to leave it.',
+  ];
+  const DEMO_SCROLL_LINES_RU = [
+    'Мне говорили, что на западе я найду ад, — и я отправился его искать.',
+    'Я пересекал реки, которым не дали имён, и прерии, которых не касались изгороди,',
+    'и всюду встречал людей, усердно строящих тот самый ад, от которого они бежали.',
+    'Дикие земли не жгли нас. Огонь мы принесли с собой —',
+    'в гроссбухах и локомотивах, в купчих и долгах.',
+    'В горах я встретил человека, который ничем не владел и ничего не хотел,',
+    'и так и не решил: последний ли он свободный американец или первый из проклятых.',
+    'Цивилизация, как я теперь понимаю, — такой же круг, как любой круг ада:',
+    'мы спускаемся по нему вместе, рукоплеща своему прогрессу на каждом витке.',
+    'И всё же — я видел, как рассвет встаёт над землёй, не тронутой ни одной изгородью,',
+    'и слышал тишину древнее любого писания,',
+    'и в тот миг я простил Америке всё —',
+    'как прощают огню то, что он горяч.',
+    'Если это и есть ад — Господи, позволь мне уйти из него последним.',
+  ];
+
   sbRegister({
     name: 'tool-bar',
     title: 'Tool Bar',
@@ -480,7 +518,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
           'Detached: margin 16, radius 12, shadow-sm. On scroll, the <code>.is-stuck</code> class switches to full width with no margins and a deeper shadow; the transition takes 0.25s. Implementation: <code>position: sticky</code> plus an IntersectionObserver via <code>sbWireToolBarFloating(scrollRoot, bar)</code>.',
           'В отрыве: margin 16, radius 12, shadow-sm. При скролле класс <code>.is-stuck</code> переключает в full-width без отступов и с более глубокой тенью; транзишн — 0.25s. Реализация: <code>position: sticky</code> и IntersectionObserver через <code>sbWireToolBarFloating(scrollRoot, bar)</code>.'
         )),
-        preview: `<div style="background:var(--surface-1);border-radius:var(--radius-12);overflow:hidden;height:280px;display:flex;flex-direction:column" id="tool-bar-floating-demo">
+        preview: `<div style="background:var(--surface-1);border-radius:var(--radius-12);overflow:hidden;width:100%;height:280px;display:flex;flex-direction:column" id="tool-bar-floating-demo">
           ${mkToolBar({
             floating: true,
             left: `${demoIconBtn({ icon: 'add-line' })}${demoIconBtn({ icon: 'add-line', label: 'Title', labelPos: 'right' })}`,
@@ -488,7 +526,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
             right: `${demoIconBtn({ icon: 'add-line' })}`,
           })}
           <div data-tool-bar-scroll style="flex:1;overflow-y:auto;padding:var(--pad-vert-16) var(--pad-horiz-24)">
-            ${Array.from({length:8}).map((_,i) => `<p class="sb-body-m" style="margin:0 0 12px;color:var(--text-tertiary)">Scrollable content block ${i+1}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et erat at ipsum interdum lobortis.</p>`).join('')}
+            ${DEMO_SCROLL_LINES_EN.map((en, i) => `<p class="sb-body-m" style="margin:0 0 4px;color:var(--text-tertiary)">${sbT(en, DEMO_SCROLL_LINES_RU[i])}</p>`).join('')}
           </div>
         </div>`,
         html: `<div class="sb-tool-bar floating">

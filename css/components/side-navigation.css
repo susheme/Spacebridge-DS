@@ -92,7 +92,7 @@
   min-height: 0;
   overflow-y: auto;
   /* Резервируем место под скроллбар всегда — иначе при включении Footer body
-     сжимается и контент «скачет» по горизонтали (как в Nav Bar scroll-area). */
+     сжимается и контент «скачет» по горизонтали (как в Navigation Bar scroll-area). */
   scrollbar-gutter: stable;
   /* horiz 16 — вровень с Header M / Search (панель-padding по спеке Side Menu).
      Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал.
@@ -142,7 +142,7 @@
 .sb-side-nav-row.is-section { gap: var(--gap-horiz-s); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
-   Nav Bar / Tab Bar) + синий текст (--primary). */
+   Navigation Bar / Tab Bar) + синий текст (--primary). */
 .sb-side-nav-row.is-selected {
   background: var(--surface-1);
   color: var(--primary);
@@ -174,7 +174,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   /* line-height Title S = 12px < font-size 14 → overflow:hidden режет
-     descender'ы (g/p/y). Берём --body-line-height (20), как в Nav Bar.
+     descender'ы (g/p/y). Берём --body-line-height (20), как в Navigation Bar.
      На одну строку визуально не влияет — текст центрируется в 40px ряду. */
   line-height: var(--body-line-height);
   font-variant-numeric: lining-nums tabular-nums;
@@ -308,7 +308,7 @@
 .sb-side-nav-children .sb-side-nav-row.is-selected .sb-side-nav-row-chevron { color: var(--primary); }
 
 /* ══ Variant: SIDE MENU ═══════════════════════════════════════════════════
-   Overlay-меню (замена меню Nav Bar в компакте). Read-only: Single Item +
+   Overlay-меню (замена меню Navigation Bar в компакте). Read-only: Single Item +
    Parent (раскрывается инлайн) + Child. Без Grand-Parent / edit-delete.
    Панель — Shadow-L (всплывающая), без бордера. */
 .sb-side-nav.is-menu {

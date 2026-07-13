@@ -148,9 +148,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
         compact:       false,   // false → wide stage 1200px; true → 480px (триггерит @container < 600)
       },
       controls(pg) {
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">Left Slot</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('Left Slot', `
               ${pg.select('leftSymbol', [
                 { value: 'none',    label: 'None' },
                 { value: 'infoPop', label: 'Info Pop-up' },
@@ -163,11 +161,8 @@ window.COMP_CSS.headerM = `.sb-header-m {
               <div class="pg-toggles">
                 ${pg.toggle('backButton', 'Back button')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Right Slot</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Right Slot', `
               ${pg.select('iconCount', [
                 { value: '0', label: '0' },
                 { value: '1', label: '1' },
@@ -178,11 +173,8 @@ window.COMP_CSS.headerM = `.sb-header-m {
                 ${pg.toggle('actionButton', 'Action btn')}
                 ${pg.toggle('chevron',      'Chevron')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Composition</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Composition', `
               ${pg.select('subNav', [
                 { value: 'none',    label: 'None' },
                 { value: 'segment', label: 'Segment Menu' },
@@ -193,8 +185,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
                 ${pg.toggle('toolBarEnable', 'Tool Bar')}
                 ${pg.toggle('compact', 'Compact')}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         const wantIcons  = parseInt(s.iconCount, 10) || 0;

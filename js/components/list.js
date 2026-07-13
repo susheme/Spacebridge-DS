@@ -251,9 +251,7 @@ window.sbSelectInfoCell = function(cell) {
         cellState: 'default',
       },
       controls(pg) {
-        return `<div class="pg-group" style="grid-column:1/-1">
-          <div class="pg-group-title sb-field-label">Cell</div>
-          <div class="pg-group-body">
+        return `${sbPgGroup('Cell', `
             ${pg.select('cellType', [
               { value: 'profile', label: 'Profile' },
               { value: 'info',    label: 'Info' },
@@ -264,11 +262,8 @@ window.sbSelectInfoCell = function(cell) {
               { value: 'selected', label: 'Selected (Info only)' },
               { value: 'disabled', label: 'Disabled' },
             ], { label: 'State' })}
-          </div>
-        </div>
-        <div class="pg-group" style="grid-column:1/-1" data-pg-cell-type="profile">
-          <div class="pg-group-title sb-field-label">Profile Cell</div>
-          <div class="pg-group-body">
+          `, { fullRow: true })}
+        ${sbPgGroup('Profile Cell', `
             ${pg.select('avatarType', [
               { value: 'user',     label: 'User' },
               { value: 'initials', label: 'Initials' },
@@ -282,11 +277,8 @@ window.sbSelectInfoCell = function(cell) {
               { value: 'button', label: 'Icon Button' },
             ], { label: 'Right' })}
             <div class="pg-toggles">${pg.toggle('showSubtitle', 'Subtitle')}</div>
-          </div>
-        </div>
-        <div class="pg-group" style="grid-column:1/-1" data-pg-cell-type="info">
-          <div class="pg-group-title sb-field-label">Info Cell</div>
-          <div class="pg-group-body">
+          `, { fullRow: true, attrs: 'data-pg-cell-type="profile"' })}
+        ${sbPgGroup('Info Cell', `
             ${pg.select('infoSubtype', [
               { value: 'default',   label: 'Default' },
               { value: 'indicator', label: 'Status Indicator' },
@@ -314,8 +306,7 @@ window.sbSelectInfoCell = function(cell) {
                 { value: 'neutral', label: 'Neutral (gray)' },
               ], { label: 'Mark' })}
             </div>
-          </div>
-        </div>`;
+          `, { fullRow: true, attrs: 'data-pg-cell-type="info"' })}`;
       },
       syncControls(s, container) {
         // Обёртки теперь pg-group'ы с рамкой — показываем обычным display

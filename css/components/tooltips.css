@@ -1,0 +1,126 @@
+/* --- [SYNC:tooltips] Tooltip ---
+   Hover/click-подсказка: bubble (Shadow-L) + фигурный SVG-носик.
+   Носик — единственный согласованный локальный <svg> в DS (не иконка
+   24×24): путь живёт в tooltips.js, fill наследует var(--background),
+   поэтому тёмная тема работает из коробки.
+   Размеры bubble (height 36 / min 50 / max 192) — из Figma-спеки,
+   компонентных токенов в Dimensions-DS.json нет → hardcoded. */
+.sb-tooltip-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.sb-tooltip {
+  position: absolute;
+  z-index: 30;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: max-content;
+  min-width: 50px;
+  max-width: 192px;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  border-radius: var(--radius-4);
+  background: var(--background);
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay); /* Shadow-L */
+  pointer-events: none;
+  /* Скрыт по умолчанию. Показ — с задержкой 200ms (transition-delay
+     в :hover-правиле ниже), скрытие — сразу, с коротким fade. */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0s linear 0.15s;
+}
+.sb-tooltip-wrap:not(.click):hover > .sb-tooltip,
+.sb-tooltip-wrap:not(.click):focus-within > .sb-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0.2s, 0.2s;
+}
+/* Клик-вариант: показ без задержки, управляется .is-open (sbTipToggle). */
+.sb-tooltip-wrap.click { cursor: pointer; }
+.sb-tooltip-wrap.is-open > .sb-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s, 0s;
+}
+
+/* Текст. База — многострочный вариант (Body M, стреч по ширине). */
+.sb-tooltip-text {
+  align-self: stretch;
+  color: var(--text-tertiary);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--letter-spacing);
+}
+/* Однострочный вариант: Title M semibold, по центру, ellipsis при
+   переполнении max-width. Figma leading-trim не переносится в CSS —
+   вертикальное центрирование даёт flex bubble'а. */
+.sb-tooltip.line { height: 36px; }
+.sb-tooltip.line .sb-tooltip-text {
+  text-align: center;
+  font-size: var(--title-font-size-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--title-line-height-s);
+  font-variant-numeric: lining-nums tabular-nums;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Носик: svg 44×14, прилегает к bubble с перекрытием 1px (шов).
+   Тень — drop-shadow, чтобы повторяла контур волны. */
+.sb-tooltip-tail {
+  position: absolute;
+  fill: var(--background);
+  filter: drop-shadow(0 10px 20px var(--shadow-overlay));
+}
+
+/* Позиции. Насадка на wrap: data-tip-pos="top|bottom|left|right".
+   Отступ bubble = 13px видимого носика + 4px воздуха до триггера.
+   Для left/right носик повёрнут вокруг центра (layout-box 44×14 →
+   визуально 14×44), отсюда сдвиг calc(100% - 16px):
+   центр носика = край bubble + 6px → кончик = край + 13px. */
+.sb-tooltip-wrap[data-tip-pos="top"] > .sb-tooltip {
+  bottom: calc(100% + 17px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.sb-tooltip-wrap[data-tip-pos="top"] .sb-tooltip-tail {
+  top: calc(100% - 1px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.sb-tooltip-wrap[data-tip-pos="bottom"] > .sb-tooltip {
+  top: calc(100% + 17px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.sb-tooltip-wrap[data-tip-pos="bottom"] .sb-tooltip-tail {
+  bottom: calc(100% - 1px);
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+.sb-tooltip-wrap[data-tip-pos="right"] > .sb-tooltip {
+  left: calc(100% + 17px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.sb-tooltip-wrap[data-tip-pos="right"] .sb-tooltip-tail {
+  right: calc(100% - 16px);
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+.sb-tooltip-wrap[data-tip-pos="left"] > .sb-tooltip {
+  right: calc(100% + 17px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+.sb-tooltip-wrap[data-tip-pos="left"] .sb-tooltip-tail {
+  left: calc(100% - 16px);
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+/* --- [/SYNC:tooltips] --- */

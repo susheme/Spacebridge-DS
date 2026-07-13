@@ -106,9 +106,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
       },
       controls(pg) {
         // 3 группы (State / Style / Anatomy) укладываются в pg-controls grid.
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">State</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('State', `
               <div class="pg-toggles">
                 ${pg.toggle('placeholder', 'Placeholder')}
                 ${pg.toggle('selected',   'Selected')}
@@ -116,28 +114,21 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
                 ${pg.toggle('disabled',   'Disable')}
                 ${pg.toggle('open',       'Open')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Style</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Style', `
               <div class="pg-toggles">
                 ${pg.toggle('showIcon',   'Icon Left')}
                 ${pg.toggle('showAddBtn', 'Add Button')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Anatomy</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Anatomy', `
               <div class="pg-toggles">
                 ${pg.toggle('showLabel',  'Label')}
                 ${pg.toggle('showSub',    'Subscription')}
                 ${pg.toggle('twoRow',     '2 Rows',      { requires: 'showLabel' })}
                 ${pg.toggle('showDesc',   'Description', { requires: 'showLabel' })}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         const selOpts = { placeholder: s.placeholder, selected: s.selected, critical: s.critical, disabled: s.disabled, open: s.open };

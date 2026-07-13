@@ -39,6 +39,25 @@
 
 ---
 
+## Major: Fieldset — промоушн pg-group в DS-компонент
+
+Группировка контролов playground'а (`.pg-group` / `-title` / `-body` + резиновая сетка) доказала себя (51 использование в 24 playground'ах, вся разметка уже через единый хелпер `sbPgGroup()` в `core.js`) — формализовать в полноценный компонент **Fieldset**.
+
+### Блокер
+
+В Figma компонента нет. Текущий визуал собран из общих паттернов DS (radius-12, `--border`, `--text-tertiary` тайтл) — **перед стартом дизайнер рисует/согласует в Figma**: размеры, отступы, варианты (default / compact / inline?), состояния. Правило «токены только из Figma JSON» действует.
+
+### План (детали в памяти агента)
+
+1. `js/components/fieldset.js` + `css/components/fieldset.css` (SYNC-маркеры), API `sbMkFieldset({ title, children, variant })`.
+2. Класс-нейминг: `.pg-group*` → `.sb-fieldset*`; `sbPgGroup()` становится тонкой обёрткой над `sbMkFieldset` — playground'ы не трогаем, мигрируют автоматически.
+3. NAV: запись в Forms (или Layout), docs EN/RU, playground.
+4. Use cases вне playground'а: группы полей форм, секции настроек, detail-карточки.
+
+Триггер: «старт Fieldset» + Figma-параметры (или отмашка «бери как есть»).
+
+---
+
 ## Major: Пробный GUI из DS-компонентов
 
 Собрать **полностью реалистичную фейк-страницу** (например login flow, dashboard, settings page), используя только наши DS-компоненты. Цель — обкатать как они работают в композиции, найти missing'и и edge case'ы.

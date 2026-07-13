@@ -23,7 +23,7 @@ const NAV = [
     { id: 'header-s', label: 'Header S', incomplete: true },
     { id: 'section-header', label: 'Header Section', ready: true },
     { id: 'header-xs', label: 'Header XS', ready: true },
-    { id: 'nav-bar', label: 'Nav Bar', ready: true },
+    { id: 'nav-bar', label: 'Navigation Bar', ready: true },
     { id: 'pagination', label: 'Pagination', incomplete: true },
     { id: 'segment-menu', label: 'Segment Menu', ready: true, done: true },
     { id: 'side-navigation', label: 'Side Navigation', inProgress: true },
@@ -63,14 +63,14 @@ const NAV = [
   { category: 'Feedback', items: [
     { id: 'dialogues', label: 'Dialogues / Modals' },
     { id: 'loaders', label: 'Loaders' },
-    { id: 'notifications', label: 'Notifications', incomplete: true },
+    { id: 'notifications', label: 'Notifications & Banners', incomplete: true },
     { id: 'pop-ups', label: 'Pop-Ups' },
     { id: 'toast', label: 'Toast' },
   ]},
   { category: 'Utility', items: [
     { id: 'icons', label: 'Icons' },
     { id: 'kbd', label: 'Keyboard Shortcut', ready: true },
-    { id: 'tooltips', label: 'Tooltips' },
+    { id: 'tooltips', label: 'Tooltips', ready: true },
   ]},
 ];
 
@@ -149,6 +149,21 @@ function sbIconRaw(name, size = 'L') {
 }
 
 function esc(s) { return s.replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+// Группа контролов playground'а: рамка + тайтл + тело. ЕДИНСТВЕННЫЙ
+// разрешённый способ сгруппировать контролы — разметку руками не писать
+// (см. память: раньше 51 hand-rolled копия разъезжалась инлайн-стилями).
+// Сетка/отступы/адаптивность приходят из playground.css (.pg-group*).
+// opts: fullRow — растянуть группу на весь ряд pg-controls;
+//       attrs   — доп. атрибуты на корневой div (data-*, style и т.п.).
+// TODO: при промоушне в DS-компонент Fieldset — этот хелпер станет
+// обёрткой над sbMkFieldset (см. память playground_pg_group).
+function sbPgGroup(title, body, opts = {}) {
+  return `<div class="pg-group"${opts.fullRow ? ' style="grid-column:1/-1"' : ''}${opts.attrs ? ' ' + opts.attrs : ''}>
+    <div class="pg-group-title sb-field-label">${title}</div>
+    <div class="pg-group-body">${body}</div>
+  </div>`;
+}
 
 // Slugify для якорей секций. Латиница + кириллица → kebab-case.
 // Используется в renderComponentPage для генерации id="sec-..." на .comp-section.

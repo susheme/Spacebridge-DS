@@ -101,7 +101,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 .sb-side-nav-row.is-section { gap: var(--gap-horiz-s); }
 
 /* Selected (Active) — surface-1 + Pressed-inset shadow (канон DS, как у
-   Nav Bar / Tab Bar) + синий текст (--primary). */
+   Navigation Bar / Tab Bar) + синий текст (--primary). */
 .sb-side-nav-row.is-selected {
   background: var(--surface-1);
   color: var(--primary);
@@ -128,7 +128,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   text-overflow: ellipsis;
   white-space: nowrap;
   /* line-height Title S = 12px < font-size 14 → overflow:hidden режет
-     descender'ы (g/p/y). Берём --body-line-height (20), как в Nav Bar.
+     descender'ы (g/p/y). Берём --body-line-height (20), как в Navigation Bar.
      На одну строку визуально не влияет — текст центрируется в 40px ряду. */
   line-height: var(--body-line-height);
   font-variant-numeric: lining-nums tabular-nums;
@@ -721,8 +721,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     name: 'side-navigation',
     title: 'Side Navigation',
     description: sbT(
-      'A vertical navigation sidebar. Two variants: Side Menu — a read-only replacement for the Nav Bar menu in compact modes (single items, parents with inline expansion, children); Side Bar — an editable navigator tree with the Grand-Parent role and edit/delete actions, populated by the user (in progress). Composed of a Header M, an optional Sub Nav (Tab Bar), an optional Tool Bar with search, the tree itself and an optional footer.',
-      'Вертикальный навигационный сайдбар. Два варианта: Side Menu — read-only замена меню Nav Bar в компактных режимах (одиночные элементы, родители с инлайн-раскрытием, дети); Side Bar — редактируемое дерево-навигатор с ролью Grand-Parent и действиями edit/delete, наполняется пользователем (в работе). Композиция: Header M, опциональный Sub Nav (Tab Bar), опциональный Tool Bar с поиском, само дерево и опциональный footer.'
+      'A vertical navigation sidebar. Two variants: Side Menu — a read-only replacement for the Navigation Bar menu in compact modes (single items, parents with inline expansion, children); Side Bar — an editable navigator tree with the Grand-Parent role and edit/delete actions, populated by the user (in progress). Composed of a Header M, an optional Sub Nav (Tab Bar), an optional Tool Bar with search, the tree itself and an optional footer.',
+      'Вертикальный навигационный сайдбар. Два варианта: Side Menu — read-only замена меню Navigation Bar в компактных режимах (одиночные элементы, родители с инлайн-раскрытием, дети); Side Bar — редактируемое дерево-навигатор с ролью Grand-Parent и действиями edit/delete, наполняется пользователем (в работе). Композиция: Header M, опциональный Sub Nav (Tab Bar), опциональный Tool Bar с поиском, само дерево и опциональный footer.'
     ),
     playground: {
       title: 'Side Navigation Playground',
@@ -739,9 +739,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         sectionHead: false,      // лейблы-секции (section-header) в menu-списке
       },
       controls(pg) {
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">Type</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('Type', `
               ${pg.select('variant', [
                 { value: 'menu', label: 'Side Menu' },
                 { value: 'bar',  label: 'Side Bar (WIP)' },
@@ -752,11 +750,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
                 ${pg.toggle('empty',   'Empty')}
                 ${pg.toggle('sectionHead', 'Section')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Layout</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Layout', `
               <div style="grid-column:1/-1">${pg.select('headerStyle', [
                 { value: 'logo',     label: 'Logo' },
                 { value: 'headline', label: 'Headline + Actions' },
@@ -766,8 +761,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
                 ${pg.toggle('subNav', 'Sub Nav')}
                 ${pg.toggle('footer', 'Footer')}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         let tree = treeFor(s.content);
@@ -837,8 +831,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       {
         title: 'Side Menu — anatomy',
         desc: sbT(
-          'Variant one — a read-only replacement for the Nav Bar menu in compact modes. The panel is an overlay with Shadow-L: a Header M with the logo, a search field, a flat list of single items and a footer with device info.',
-          'Первый вариант — read-only замена меню Nav Bar в компактных режимах. Панель — overlay с Shadow-L: Header M с логотипом, поиск, плоский список одиночных элементов и footer с информацией об устройстве.'
+          'Variant one — a read-only replacement for the Navigation Bar menu in compact modes. The panel is an overlay with Shadow-L: a Header M with the logo, a search field, a flat list of single items and a footer with device info.',
+          'Первый вариант — read-only замена меню Navigation Bar в компактных режимах. Панель — overlay с Shadow-L: Header M с логотипом, поиск, плоский список одиночных элементов и footer с информацией об устройстве.'
         ),
         preview: stage(mkSideNav({
           variant: 'menu',
@@ -853,8 +847,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       {
         title: 'Side Menu — Parent + Children',
         desc: sbT(
-          'A parent (the counterpart of a Nav Bar dropdown tab) expands inline: its children appear in a surface-1 group with a continuous 1.5px guide line on the left. The expansion chevron is a Chevron Button; when expanded, it points up and the parent title turns blue. A child carries a status dot, a label and a right navigation chevron.',
-          'Родитель (аналог таба с дропдауном в Nav Bar) раскрывается инлайн: дети появляются в surface-1 группе с непрерывной направляющей 1.5px слева. Шеврон раскрытия — Chevron Button; при раскрытии он смотрит вверх, а заголовок родителя становится синим. Ребёнок несёт status-dot, подпись и правый навигационный шеврон.'
+          'A parent (the counterpart of a Navigation Bar dropdown tab) expands inline: its children appear in a surface-1 group with a continuous 1.5px guide line on the left. The expansion chevron is a Chevron Button; when expanded, it points up and the parent title turns blue. A child carries a status dot, a label and a right navigation chevron.',
+          'Родитель (аналог таба с дропдауном в Navigation Bar) раскрывается инлайн: дети появляются в surface-1 группе с непрерывной направляющей 1.5px слева. Шеврон раскрытия — Chevron Button; при раскрытии он смотрит вверх, а заголовок родителя становится синим. Ребёнок несёт status-dot, подпись и правый навигационный шеврон.'
         ),
         preview: stage(mkSideNav({
           variant: 'menu',

@@ -82,8 +82,8 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
     name: 'search-bar',
     title: 'Search Bar',
     description: sbT(
-      'A search field. Two variants: Filled and Line View. States: Default, Selected, Disabled, Critical. Options: Icon Left (the magnifier moves to a left overlay) and a right slot for a KBS hint or a clear button. Example: the global search in the Nav Bar with a ⌘+K hint.',
-      'Поле поиска. Два варианта: Filled и Line View. Состояния: Default, Selected, Disabled, Critical. Опции: Icon Left (лупа переезжает в overlay слева) и right-slot для KBS-подсказки или clear-кнопки. Пример: глобальный поиск в Nav Bar с подсказкой ⌘+K.'
+      'A search field. Two variants: Filled and Line View. States: Default, Selected, Disabled, Critical. Options: Icon Left (the magnifier moves to a left overlay) and a right slot for a KBS hint or a clear button. Example: the global search in the Navigation Bar with a ⌘+K hint.',
+      'Поле поиска. Два варианта: Filled и Line View. Состояния: Default, Selected, Disabled, Critical. Опции: Icon Left (лупа переезжает в overlay слева) и right-slot для KBS-подсказки или clear-кнопки. Пример: глобальный поиск в Navigation Bar с подсказкой ⌘+K.'
     ) + sbDocNote('Tech Info', sbT(
       'Height 32px · border-radius 100px.',
       'Высота 32px · border-radius 100px.'
@@ -95,26 +95,20 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
       controls(pg) {
         // 2 группы (State / Style) укладываются в pg-controls grid
         // через `.pg-card.wide .pg-controls:has(> .pg-group)` правило.
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">State</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('State', `
               <div class="pg-toggles">
                 ${pg.toggle('selected',  'Selected')}
                 ${pg.toggle('disabled',  'Disable')}
                 ${pg.toggle('critical',  'Critical')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Style</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Style', `
               <div class="pg-toggles">
                 ${pg.toggle('lineView',  'Line View')}
                 ${pg.toggle('iconLeft',  'Icon Left')}
                 ${pg.toggle('shortcut',  'Shortcut', { requires: 'iconLeft' })}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) { return `<div style="width:100%;max-width:360px">${mkSearch(s)}</div>`; },
       genCode(s) { return { html: mkSearch(s), css: COMP_CSS["search-bar"] }; },

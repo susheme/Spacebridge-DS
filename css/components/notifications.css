@@ -79,7 +79,7 @@ a.sb-banner-title {
 .sb-banner.error .sb-banner-title,
 .sb-banner.error .sb-banner-text { color: var(--error); }
 
-/* ── Notification Bar ── slim full-width strip right under the Nav Bar.
+/* ── Notification Bar ── slim full-width strip right under the Navigation Bar.
    Content centered by default; .align-left pins it to the left edge.
    Text — Body M in the type colour; links inherit it, bold + underline. */
 .sb-notif-bar {

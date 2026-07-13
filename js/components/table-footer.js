@@ -60,8 +60,11 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
   // но API sbMkPaginationJump остаётся доступным для будущих consumer'ов.
 
   // Wrapper, имитирующий .sb-table-wrap (border + radius 8 + clip).
+  // width:100% обязателен: .example-preview — flex-row, и без него
+  // обёртка (как любой flex-ребёнок) сжимается до ширины контента,
+  // а не тянется на всю preview area.
   function demoWrap(footerHtml) {
-    return `<div style="border:var(--border-width-1) solid var(--border);border-radius:var(--radius-8);overflow:hidden;background:var(--background)">
+    return `<div style="width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);border-radius:var(--radius-8);overflow:hidden;background:var(--background)">
       <div style="padding:var(--pad-vert-16) var(--pad-horiz-16);color:var(--text-secondary)" class="sb-body-s">
         [ Table body ]
       </div>

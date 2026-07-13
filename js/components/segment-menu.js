@@ -228,8 +228,8 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
     name: 'segment-menu',
     title: 'Segment Menu',
     description: sbT(
-      'A segmented tab bar for switching between sections or views. Used inside headers, the Nav Bar, cards, modals, side menus and other layout containers. Three tab content variants: text only, icon on the left, icon on top. The selected indicator is a separate element that slides between tabs.',
-      'Сегментный таб-бар для переключения между разделами или представлениями. Используется внутри хедеров, Nav Bar, карточек, модалок, side-menu и других layout-контейнеров. Три варианта содержимого таба: только текст, иконка слева, иконка сверху. Индикатор выбранного — отдельный элемент, скользящий между табами.'
+      'A segmented tab bar for switching between sections or views. Used inside headers, the Navigation Bar, cards, modals, side menus and other layout containers. Three tab content variants: text only, icon on the left, icon on top. The selected indicator is a separate element that slides between tabs.',
+      'Сегментный таб-бар для переключения между разделами или представлениями. Используется внутри хедеров, Navigation Bar, карточек, модалок, side-menu и других layout-контейнеров. Три варианта содержимого таба: только текст, иконка слева, иконка сверху. Индикатор выбранного — отдельный элемент, скользящий между табами.'
     ) + sbDocNote('Important', sbT(
       'Not to be confused with the Mobile Tab Bar (Phase 2) — a different component with its own tabs and a Status mini indicator.',
       'Не путать с Mobile Tab Bar (Phase 2) — это другой компонент со своими табами и Status mini индикатором.'
@@ -243,9 +243,7 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
         disabledOnTabs: false,
       },
       controls(pg) {
-        return `<div class="pg-group">
-          <div class="pg-group-title sb-field-label">Segments</div>
-          <div class="pg-group-body">
+        return `${sbPgGroup('Segments', `
             ${pg.select('tabCount', [
               { value: 2, label: '2 segments' },
               { value: 3, label: '3 segments' },
@@ -257,8 +255,7 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
               { value: 'left', label: 'Icon left' },
               { value: 'top',  label: 'Icon top'  },
             ], { label: 'Icon Position' })}
-          </div>
-        </div>
+          `)}
         <div class="pg-toggles">
           ${pg.toggle('disabledOnTabs', 'Disable')}
         </div>`;

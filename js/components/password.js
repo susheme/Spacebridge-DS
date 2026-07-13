@@ -93,9 +93,7 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
       state: { placeholder: false, selected: false, critical: false, disabled: false, readOnly: false, showLabel: false, showSub: false, twoRow: false, showDesc: false },
       controls(pg) {
         // 2 группы (State / Anatomy) — Password не имеет Style-вариаций.
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">State</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('State', `
               <div class="pg-toggles">
                 ${pg.toggle('placeholder', 'Placeholder')}
                 ${pg.toggle('selected',   'Selected')}
@@ -103,19 +101,15 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
                 ${pg.toggle('disabled',   'Disable')}
                 ${pg.toggle('readOnly',   'Read Only')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Anatomy</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Anatomy', `
               <div class="pg-toggles">
                 ${pg.toggle('showLabel',  'Label')}
                 ${pg.toggle('showSub',    'Subscription')}
                 ${pg.toggle('twoRow',     '2 Rows',      { requires: 'showLabel' })}
                 ${pg.toggle('showDesc',   'Description', { requires: 'showLabel' })}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         const fOpts = {

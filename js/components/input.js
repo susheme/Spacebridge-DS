@@ -101,9 +101,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
         // 2 группы: State (включая Line View — визуальный вариант) / Anatomy.
         // Style-группу с одним Line View сложили в State, чтобы не плодить
         // микро-группу из одного контрола.
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">State</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('State', `
               <div class="pg-toggles">
                 ${pg.toggle('placeholder', 'Placeholder')}
                 ${pg.toggle('selected',   'Selected')}
@@ -112,11 +110,8 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
                 ${pg.toggle('readOnly',   'Read Only')}
                 ${pg.toggle('lineView',   'Line View')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Anatomy</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Anatomy', `
               <div class="pg-toggles">
                 ${pg.toggle('showTitle',  'Title')}
                 ${pg.toggle('showLabel',  'Label')}
@@ -124,8 +119,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
                 ${pg.toggle('twoRow',     '2 Rows',       { requires: 'showLabel' })}
                 ${pg.toggle('showDesc',   'Description',  { requires: 'showLabel' })}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         const fOpts = {

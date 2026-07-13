@@ -71,24 +71,18 @@ sbRegister({
     title: 'Regular',
     state: { on: false, disabled: false, hasLabel: true, labelPos: 'right' },
     controls(pg) {
-      return `<div class="pg-group">
-        <div class="pg-group-title sb-field-label">State</div>
-        <div class="pg-group-body">
+      return `${sbPgGroup('State', `
           <div class="pg-toggles">
             ${pg.toggle('disabled', 'Disable')}
             ${pg.toggle('hasLabel', 'Label')}
           </div>
-        </div>
-      </div>
-      <div class="pg-group" data-tgl-label-group>
-        <div class="pg-group-title sb-field-label">Label</div>
-        <div class="pg-group-body">
+          `)}
+      ${sbPgGroup('Label', `
           <div class="pg-toggles">
             <div class="sb-radio" data-pg-radio-left onclick="SB_PG.set('toggles','labelPos','left')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Left</span></div>
             <div class="sb-radio selected" data-pg-radio-right onclick="SB_PG.set('toggles','labelPos','right')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Right</span></div>
           </div>
-        </div>
-      </div>`;
+          `, { attrs: 'data-tgl-label-group' })}`;
     },
     render(s) {
       const wrapCls = tglClass(s);

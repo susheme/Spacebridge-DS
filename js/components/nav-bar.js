@@ -619,7 +619,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 
   sbRegister({
     name: 'nav-bar',
-    title: 'Nav Bar (Top Bar)',
+    title: 'Navigation Bar',
     // Nav Bar — full-width компонент. TOC съел бы ~260px у .page, оставив
     // playground всего ~750px. Container threshold 1024 → всё равно compact,
     // но без TOC хотя бы ~848px даёт больше места для compact-демо.
@@ -650,7 +650,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       'Верхняя полоса хрома приложения. Левый слот несёт leading-кнопку, логотип, тайтл и бейдж; центр — до 7 кнопок разделов, центрированных или прижатых к правому краю; правый слот — до 4 элементов (icon-only кнопки, Primary-кнопка, Avatar, Search Bar). В узких контейнерах центральные табы прячутся, а левый слот переходит в компактную форму с burger-кнопкой.'
     ),
     playground: {
-      title: 'Nav Bar Playground',
+      title: 'Navigation Bar Playground',
       wide: true,  // широкий компонент — preview под панелью контролов, на всю ширину
       state: {
         align: 'center',
@@ -678,31 +678,25 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         // 4 группы укладываются в 2×2 grid через `.pg-card.wide .pg-controls:has(> .pg-group)`
         // правило в playground.css (cell minmax 320, 1fr). Row 1: Left Slot | Right Slot.
         // Row 2: Tabs | Bar (Floating/Compact).
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">Left Slot</div>
-            <div class="pg-group-body">
+        // Scoped-правила #pg-nav-bar-controls в playground.css: тогглы в группах —
+        // 2 колонки max-content рядом; в Tabs одиночный toggle — справа от селекта.
+        return `${sbPgGroup('Left Slot', `
               <div class="pg-toggles">
                 ${pg.toggle('showButton',    'Button')}
                 ${pg.toggle('showLogo',      'Logo')}
                 ${pg.toggle('showLogoTitle', 'Logo Title')}
                 ${pg.toggle('showBadge',     'Badge')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Right Slot</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Right Slot', `
               <div class="pg-toggles">
                 ${pg.toggle('showSearch',  'Search')}
                 ${pg.toggle('showBell',    'Bell')}
                 ${pg.toggle('showPrimary', 'Login')}
                 ${pg.toggle('showAvatar',  'Avatar')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Tabs</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Tabs', `
               ${pg.select('align', [
                 { value: 'center', label: 'Center' },
                 { value: 'right',  label: 'Right'  },
@@ -710,17 +704,13 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
               <div class="pg-toggles">
                 ${pg.toggle('disabledOnTabs', 'disabled')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Bar</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Bar', `
               <div class="pg-toggles">
                 ${pg.toggle('floating', 'Floating')}
                 ${pg.toggle('compact',  'Compact')}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         const tabs = [];
@@ -845,8 +835,8 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       {
         title: 'Nav Button — States',
         desc: sbT(
-          'A section button exclusive to the Nav Bar — not part of the Buttons component.',
-          'Кнопка раздела, эксклюзивная для Nav Bar — не из компонента Buttons.'
+          'A section button exclusive to the Navigation Bar — not part of the Buttons component.',
+          'Кнопка раздела, эксклюзивная для Navigation Bar — не из компонента Buttons.'
         ) + sbDocNote('Tech Info', sbT(
           'Height 28px · radius 100 · default color --text-secondary · Hover — Shadow-S · Selected — --primary-hover background plus a pressed inset shadow · Disabled — --border, non-interactive. Width 104–144px; long labels truncate with an ellipsis.',
           'Высота 28px · radius 100 · цвет по умолчанию --text-secondary · Hover — Shadow-S · Selected — фон --primary-hover и Pressed-inset тень · Disabled — --border, без интеракции. Ширина 104–144px; длинные подписи обрезаются многоточием.'

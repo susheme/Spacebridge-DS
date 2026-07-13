@@ -84,7 +84,7 @@ a.sb-banner-title {
 .sb-banner.error .sb-banner-title,
 .sb-banner.error .sb-banner-text { color: var(--error); }
 
-/* ── Notification Bar ── slim full-width strip right under the Nav Bar.
+/* ── Notification Bar ── slim full-width strip right under the Navigation Bar.
    Content centered by default; .align-left pins it to the left edge.
    Text — Body M in the type colour; links inherit it, bold + underline. */
 .sb-notif-bar {
@@ -375,16 +375,14 @@ a.sb-banner-title {
     name: 'notifications',
     title: 'Notifications & Banners',
     description: sbT(
-      'Banners give contextual feedback about system events, errors and informational messages. Four types — Info, Success, Warning, Critical — differ by their left marker and, for the loud ones, a tinted surface. Example: a Critical alarm with a link title that jumps to the affected process. The Notification Bar — a slim full-width strip under the Nav Bar — shares the same four types. The Snackbar — a floating plate at the bottom — reports actions: feedback or an undoable operation.',
-      'Баннеры дают контекстную обратную связь о системных событиях, ошибках и информационных сообщениях. Четыре типа — Info, Success, Warning, Critical — различаются левым маркером, а «громкие» ещё и тонированным фоном. Пример: Critical-алярм с тайтлом-ссылкой, ведущей к затронутому процессу. Notification Bar — тонкая полоса на всю ширину под Nav Bar — использует те же четыре типа. Snackbar — плавающая плашка снизу — сообщает о действиях: фидбэк или отменяемая операция.'
+      'Banners give contextual feedback about system events, errors and informational messages. Four types — Info, Success, Warning, Critical — differ by their left marker and, for the loud ones, a tinted surface. Example: a Critical alarm with a link title that jumps to the affected process. The Notification Bar — a slim full-width strip under the Navigation Bar — shares the same four types. The Snackbar — a floating plate at the bottom — reports actions: feedback or an undoable operation.',
+      'Баннеры дают контекстную обратную связь о системных событиях, ошибках и информационных сообщениях. Четыре типа — Info, Success, Warning, Critical — различаются левым маркером, а «громкие» ещё и тонированным фоном. Пример: Critical-алярм с тайтлом-ссылкой, ведущей к затронутому процессу. Notification Bar — тонкая полоса на всю ширину под Navigation Bar — использует те же четыре типа. Snackbar — плавающая плашка снизу — сообщает о действиях: фидбэк или отменяемая операция.'
     ),
     playground: {
       title: 'Notifications Playground',
       state: { comp: 'banner', type: 'info', lead: 'dot', right: 'badge', align: 'center', title: true, link: false, text: true, icon: true },
       controls(pg) {
-        return `<div class="pg-group">
-            <div class="pg-group-title sb-field-label">Component</div>
-            <div class="pg-group-body">
+        return `${sbPgGroup('Component', `
               ${pg.select('comp', [
                 { value: 'banner', label: 'Banner' },
                 { value: 'bar',    label: 'Notification Bar' },
@@ -395,11 +393,8 @@ a.sb-banner-title {
                 { value: 'warning', label: 'Warning' },
                 { value: 'error',   label: 'Critical' },
               ], { label: 'Type' })}
-            </div>
-          </div>
-          <div class="pg-group" data-nb-scope="banner">
-            <div class="pg-group-title sb-field-label">Slots</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Slots', `
               ${pg.select('lead', [
                 { value: 'none',  label: 'None' },
                 { value: 'dot',   label: 'Indicator' },
@@ -412,28 +407,21 @@ a.sb-banner-title {
                 { value: 'close',   label: 'Close' },
                 { value: 'buttons', label: 'Buttons' },
               ], { label: 'Right Slot' })}
-            </div>
-          </div>
-          <div class="pg-group" data-nb-scope="bar">
-            <div class="pg-group-title sb-field-label">Alignment</div>
-            <div class="pg-group-body">
+          `, { attrs: 'data-nb-scope="banner"' })}
+          ${sbPgGroup('Alignment', `
               ${pg.select('align', [
                 { value: 'center', label: 'Center' },
                 { value: 'left',   label: 'Left' },
               ], { label: 'Align' })}
-            </div>
-          </div>
-          <div class="pg-group" style="grid-column:1/-1">
-            <div class="pg-group-title sb-field-label">Content</div>
-            <div class="pg-group-body">
+          `, { attrs: 'data-nb-scope="bar"' })}
+          ${sbPgGroup('Content', `
               <div class="pg-toggles">
                 ${pg.toggle('title', 'Title')}
                 ${pg.toggle('link', 'Link')}
                 ${pg.toggle('text', 'Text')}
                 ${pg.toggle('icon', 'Icon')}
               </div>
-            </div>
-          </div>`;
+          `, { fullRow: true })}`;
       },
       // Banner и Bar делят playground: нерелевантные контролы прячем.
       // Banner: Lead / Right Slot / Title / Text. Bar: Align / Icon. Link — общий.
@@ -585,8 +573,8 @@ a.sb-banner-title {
       {
         title: 'Notification Bar',
         desc: sbT(
-          'A slim strip at the very top of the screen, right under the Nav Bar, stretching the full width. Content is centered by default or pinned to the left edge. The text may include clickable parts — for example, an apply link. Example: an unsaved-changes warning stuck on top.',
-          'Тонкая полоса в самом верху экрана, сразу под Nav Bar, на всю ширину. Контент по центру или прижат к левому краю. Текст может содержать кликабельные части — например, ссылку применения. Пример: закреплённое сверху предупреждение о несохранённых изменениях.'
+          'A slim strip at the very top of the screen, right under the Navigation Bar, stretching the full width. Content is centered by default or pinned to the left edge. The text may include clickable parts — for example, an apply link. Example: an unsaved-changes warning stuck on top.',
+          'Тонкая полоса в самом верху экрана, сразу под Navigation Bar, на всю ширину. Контент по центру или прижат к левому краю. Текст может содержать кликабельные части — например, ссылку применения. Пример: закреплённое сверху предупреждение о несохранённых изменениях.'
         ) + sbDocNote('Tech Info', sbT(
           'Height 28px · min-width 320px · padding 2/8 · gap 8 · border-left 4px in the type colour · tinted background (--primary-hover / --success-hover / --alert-hover / --error-hover). Text — Body M in the type colour; links — bold, underlined, inherit the colour. The height is fixed, long text truncates with an ellipsis. API: sbMkNotifBar({ type, text, lead, align }).',
           'Высота 28px · min-width 320px · padding 2/8 · gap 8 · border-left 4px в цвет типа · тонированный фон (--primary-hover / --success-hover / --alert-hover / --error-hover). Текст — Body M в цвет типа; ссылки — bold, подчёркнуты, наследуют цвет. Высота фиксированная, длинный текст обрезается многоточием. API: sbMkNotifBar({ type, text, lead, align }).'
@@ -626,14 +614,11 @@ a.sb-banner-title {
           ${mkSnackbar({ success: true, text: 'Message sent.', close: true })}
           ${mkSnackbar({ text: 'File was deleted.', lead: sbIcon('delete-bin-line', 'S'), action: { label: 'Undo' }, timer: true, close: true })}
           ${mkSnackbar({ text: 'New changes available.', lead: sbIcon('loop-left-line', 'S'), action: { label: 'Refresh' }, close: true })}
-          <div class="pg-group" style="margin-top:var(--pad-vert-8)">
-            <div class="pg-group-title sb-field-label">Show Live:</div>
-            <div class="pg-group-body" style="flex-direction:row;justify-content:center;gap:var(--gap-horiz-s);flex-wrap:wrap">
+          ${sbPgGroup('Show Live:', `
               <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar()">Copied</button>
               <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar({ text: 'File was deleted.', success: false, lead: 'delete-bin-line', action: 'Undo', timer: 5 })">Undo</button>
               <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar({ text: 'New changes available.', success: false, lead: 'loop-left-line', action: 'Refresh' })">Refresh</button>
-            </div>
-          </div>
+          `, { attrs: 'style="margin-top:var(--pad-vert-8)"' })}
         </div>`,
         html: `<div class="sb-snackbar">
   <div class="sb-snackbar-content">

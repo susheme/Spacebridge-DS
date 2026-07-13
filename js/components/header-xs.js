@@ -133,9 +133,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
         flushRight: false,
       },
       controls(pg) {
-        return `<div class="pg-group">
-          <div class="pg-group-title sb-field-label">Composition</div>
-          <div class="pg-group-body">
+        return `${sbPgGroup('Composition', `
             ${pg.select('leftType', [
           { value: 'none',             label: 'None' },
           { value: 'warnLine',         label: 'Warning Line' },
@@ -159,8 +157,7 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
           { value: 'chevronUp',   label: 'Chevron ↑' },
         ], { label: 'Right slot' })}
             <div class="pg-toggles">${pg.toggle('flushRight', 'Flush')}</div>
-          </div>
-        </div>`;
+          `)}`;
       },
       render(s) {
         const leftEl = LEFT_BUILDERS[s.leftType]();

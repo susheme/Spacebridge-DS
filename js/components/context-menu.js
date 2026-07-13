@@ -202,8 +202,8 @@ window.SB_DEMO_MORE_ITEMS = [
     name: 'context-menu',
     title: 'Context Menu',
     description: sbT(
-      'Cells for context menus, dropdowns and pop-up cards. Examples: the More (⋯) menu in headers, the language switcher in the Nav Bar. Selection is single-select by default. The check mark is sticky — it survives reopening the menu.',
-      'Ячейки для контекстных меню, dropdown-ов и pop-up карточек. Примеры: More-меню (⋯) в хедерах, переключатель языка в Nav Bar. Выбор по умолчанию single-select. Галочка sticky — сохраняется при повторном открытии меню.'
+      'Cells for context menus, dropdowns and pop-up cards. Examples: the More (⋯) menu in headers, the language switcher in the Navigation Bar. Selection is single-select by default. The check mark is sticky — it survives reopening the menu.',
+      'Ячейки для контекстных меню, dropdown-ов и pop-up карточек. Примеры: More-меню (⋯) в хедерах, переключатель языка в Navigation Bar. Выбор по умолчанию single-select. Галочка sticky — сохраняется при повторном открытии меню.'
     ) + sbDocNote('Tech Info', sbT(
       'Cell height 40px. Optional left icon (L); optional hover icon on the right (S, configurable). Selected: background --primary-hover, text --primary, a check on the right.',
       'Высота ячейки 40px. Опциональная иконка слева (L); опциональная hover-иконка справа (S, настраивается). Selected: фон --primary-hover, текст --primary, галочка справа.'
@@ -227,9 +227,7 @@ window.SB_DEMO_MORE_ITEMS = [
             { value: 'selected', label: 'Selected' },
             { value: 'disabled', label: 'Disabled' },
           ], { label: 'State' })}
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Icons</div>
-            <div class="pg-group-body">
+          ${sbPgGroup('Icons', `
               ${pg.select('iconRightHover', [
                 { value: 'file-copy-line', label: 'Hover icon: Copy' },
                 { value: 'eye-line',       label: 'Hover icon: Eye'  },
@@ -238,17 +236,13 @@ window.SB_DEMO_MORE_ITEMS = [
               <div class="pg-toggles">
                 ${pg.toggle('hasIconLeft', 'Icon Left')}
               </div>
-            </div>
-          </div>
-          <div class="pg-group">
-            <div class="pg-group-title sb-field-label">Behavior</div>
-            <div class="pg-group-body">
+          `)}
+          ${sbPgGroup('Behavior', `
               <div class="pg-toggles">
                 ${pg.toggle('standalone', 'Radius 4px')}
                 ${pg.toggle('clickable',  'Clickable')}
               </div>
-            </div>
-          </div>`;
+          `)}`;
       },
       render(s) {
         return `<div style="width:212px">${mkContextCell({

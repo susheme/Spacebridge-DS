@@ -18,7 +18,7 @@ window.COMP_CSS.separator = `.sb-sep { display: block; background: var(--border)
 // --- SEPARATORS ---
 sbRegister({
   name: 'separators',
-  title: 'Separator',
+  title: 'Separators',
   description: sbT(
     'Separators visually divide content. Horizontal and vertical variants come in three sizes — L, M and S.',
     'Разделители визуально разграничивают контент. Горизонтальный и вертикальный варианты в трёх размерах — L, M и S.'

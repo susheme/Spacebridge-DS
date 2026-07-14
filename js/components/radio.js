@@ -97,7 +97,7 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
     },
     sections: [
       {
-        title: 'States — No Label',
+        title: sbT('States — No Label', 'Состояния — без лейбла'),
         preview: `<div class="sec-row gap-lg">
           ${mkRb({})}
           ${mkRb({ hover: true })}
@@ -109,7 +109,7 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
         css: COMP_CSS.radio,
       },
       {
-        title: 'States — With Label',
+        title: sbT('States — With Label', 'Состояния — с лейблом'),
         preview: `<div class="sec-row spread">
           ${mkRb({ label: 'Title' })}
           ${mkRb({ hover: true, label: 'Title' })}
@@ -121,7 +121,7 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
         css: COMP_CSS.radio,
       },
       {
-        title: 'Label Left',
+        title: sbT('Label Left', 'Лейбл слева'),
         preview: `<div class="sec-row spread">
           ${mkRb({ label: 'Title', labelLeft: true })}
           ${mkRb({ hover: true, label: 'Title', labelLeft: true })}

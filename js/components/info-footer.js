@@ -151,20 +151,34 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
     },
     sections: [
       {
-        title: 'Long — full-width strip',
+        title: sbT('Long — full-width strip', 'Long — полоса на всю ширину'),
         desc: sbT(
           'A horizontal bar across the full screen width, stuck to the bottom. Slots go in a row, divided by vertical separators. The status slot is a dot with a label; it carries a popup anchor.',
           'Горизонтальная полоса на всю ширину экрана, прижата к низу. Слоты идут в ряд, между ними вертикальные разделители. Status-слот — точка с лейблом; на нём заложен popup-якорь.'
         ) + sbDocNote('Tech Info', sbT(
-          'Border-top --border · surface-1 · Shadow-S. A slot is text (Badge typography, --text-muted) or a status indicator. The hover popup comes later — Tooltip is in progress. Mobile plan: a sticky bar with 16px margins; with lots of data, Compact moves into the Side Menu.',
-          'Border-top --border · surface-1 · Shadow-S. Слот — текст (типографика Badge, --text-muted) или статус-индикатор. Popup по ховеру появится позже — Tooltip в работе. План на мобильные: sticky-полоса с отступами 16; при большом объёме данных Compact уезжает в Side Menu.'
+          '<b>Container:</b>'
+          + '<ul><li>Border-top: --border;</li><li>Background: surface-1;</li><li>Shadow: Shadow-S.</li></ul>'
+          + '<b>Slots:</b>'
+          + '<ul><li>A slot is text (Badge typography, --text-muted) or a status indicator.</li></ul>'
+          + '<b>Behavior:</b>'
+          + '<ul><li>The hover popup comes later — Tooltip is in progress.</li></ul>'
+          + '<b>Mobile plan:</b>'
+          + '<ul><li>A sticky bar with 16px margins;</li><li>With lots of data, Compact moves into the Side Menu.</li></ul>',
+          '<b>Контейнер:</b>'
+          + '<ul><li>Border-top: --border;</li><li>Фон: surface-1;</li><li>Тень: Shadow-S.</li></ul>'
+          + '<b>Слоты:</b>'
+          + '<ul><li>Слот — текст (типографика Badge, --text-muted) или статус-индикатор.</li></ul>'
+          + '<b>Поведение:</b>'
+          + '<ul><li>Popup по ховеру появится позже — Tooltip в работе.</li></ul>'
+          + '<b>План на мобильные:</b>'
+          + '<ul><li>Sticky-полоса с отступами 16;</li><li>При большом объёме данных Compact уезжает в Side Menu.</li></ul>'
         )),
         preview: longStage(mkInfoFooter({ slots: DEVICE })),
         html: `<!-- sbMkInfoFooter({ variant:'long', slots:[ {text:'MAC: …'}, …, {status:'online', label:'Sit Status'}, {text:'© …'} ] }) -->`,
         css: COMP_CSS["info-footer"],
       },
       {
-        title: 'Long — centered',
+        title: sbT('Long — centered', 'Long — по центру'),
         desc: sbT(
           'Center alignment — the slots gather in the middle of the strip.',
           'Выравнивание Center — слоты собираются по центру полосы.'
@@ -174,7 +188,7 @@ window.COMP_CSS["info-footer"] = `.sb-info-footer {
         css: COMP_CSS["info-footer"],
       },
       {
-        title: 'Compact — Side Menu block',
+        title: sbT('Compact — Side Menu block', 'Compact — блок Side Menu'),
         desc: sbT(
           'A vertical block (radius 8) for the Side Menu footer. Rows stack with a 2px gap, no separators. The same device info as in the Side Navigation footer — dogfooded.',
           'Вертикальный блок (radius 8) для footer-слота Side Menu. Строки стопкой с gap 2, без разделителей. Тот же device-info, что в футере Side Navigation, — догфуд.'

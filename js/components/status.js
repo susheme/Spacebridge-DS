@@ -223,7 +223,7 @@ sbRegister({
   },
   sections: [
     {
-      title: 'Indicator — Regular',
+      title: sbT('Indicator — Regular', 'Индикатор — Regular'),
       desc: sbT(
         'Regular (10×10px) — a colored dot showing an object’s status. All color variants:',
         'Regular (10×10px) — цветная точка статуса объекта. Все цветовые варианты:'
@@ -233,7 +233,7 @@ sbRegister({
       css: COMP_CSS.status.indicator,
     },
     {
-      title: 'Indicator — Pulse',
+      title: sbT('Indicator — Pulse', 'Индикатор — Pulse'),
       desc: sbT(
         'Regular with a pulse — for live, real-time states. Example: an active connection:',
         'Regular с пульсацией — для живых состояний реального времени. Пример: активное подключение:'
@@ -243,7 +243,7 @@ sbRegister({
       css: COMP_CSS.status.pulse,
     },
     {
-      title: 'Indicator — Mini',
+      title: sbT('Indicator — Mini', 'Индикатор — Mini'),
       desc: sbT(
         'Mini (6×6px plus a 2px border) — a badge over an icon. The background-colored border separates it. Example: the status dot on an Avatar:',
         'Mini (6×6px и рамка 2px) — бейдж поверх иконки. Рамка цвета фона отделяет его. Пример: статус-точка на Avatar:'
@@ -273,7 +273,7 @@ sbRegister({
       css: COMP_CSS.status.badgeStatusMini,
     },
     {
-      title: 'Antenna',
+      title: sbT('Antenna', 'Антенна'),
       desc: sbT(
         'Antenna signal level: 4 power levels plus an error / no-signal state. Example: link quality in a terminal table.',
         'Уровень сигнала антенны: 4 уровня мощности и состояние ошибки / нет сигнала. Пример: качество связи в таблице терминалов.'

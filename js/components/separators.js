@@ -23,12 +23,18 @@ sbRegister({
     'Separators visually divide content. Horizontal and vertical variants come in three sizes — L, M and S.',
     'Разделители визуально разграничивают контент. Горизонтальный и вертикальный варианты в трёх размерах — L, M и S.'
   ) + sbDocNote('Tech Info', sbT(
-    'Thickness: L — 2px · M — 1.5px · S — 1px. Default color — --border; the .soft modifier switches it to --border-soft. Vertical separators use --border-soft out of the box.',
-    'Толщина: L — 2px · M — 1.5px · S — 1px. Цвет по умолчанию — --border; модификатор .soft переключает на --border-soft. Вертикальные разделители используют --border-soft из коробки.'
+    '<b>Thickness:</b>'
+    + '<ul><li>L — 2px;</li><li>M — 1.5px;</li><li>S — 1px.</li></ul>'
+    + '<b>Colors:</b>'
+    + '<ul><li>Default color — --border;</li><li>The .soft modifier switches it to --border-soft;</li><li>Vertical separators use --border-soft out of the box.</li></ul>',
+    '<b>Толщина:</b>'
+    + '<ul><li>L — 2px;</li><li>M — 1.5px;</li><li>S — 1px.</li></ul>'
+    + '<b>Цвета:</b>'
+    + '<ul><li>Цвет по умолчанию — --border;</li><li>Модификатор .soft переключает на --border-soft;</li><li>Вертикальные разделители используют --border-soft из коробки.</li></ul>'
   )),
   sections: [
     {
-      title: 'Horizontal',
+      title: sbT('Horizontal', 'Горизонтальный'),
       desc: sbT(
         'A horizontal separator for sections and blocks. The Soft color toggle applies the .soft modifier (--border-soft) to every separator in the example.',
         'Горизонтальный разделитель для секций и блоков. Переключатель Soft color применяет ко всем разделителям в примере модификатор .soft (--border-soft).'
@@ -61,7 +67,7 @@ sbRegister({
       css: COMP_CSS.separator,
     },
     {
-      title: 'Vertical',
+      title: sbT('Vertical', 'Вертикальный'),
       desc: sbT(
         'A vertical separator that divides inline elements. Vertical separators use --border-soft out of the box, so the Soft color toggle only sets the .soft class explicitly, with no visual change.',
         'Вертикальный разделитель — разграничивает инлайн-элементы. Вертикальные разделители используют --border-soft из коробки, поэтому переключатель Soft color лишь явно ставит класс .soft, ничего не меняя визуально.'

@@ -90,8 +90,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       'A single-line text field. Two variants: Filled and Line View. States: Default, Placeholder, Selected, Critical, Disabled, Read Only. Label, Subscription and a 2-row layout supported. Example: a device name field in a settings form.',
       'Однострочное текстовое поле. Два варианта: Filled и Line View. Состояния: Default, Placeholder, Selected, Critical, Disabled, Read Only. Поддерживает Label, Subscription и 2-row лейаут. Пример: поле имени устройства в форме настроек.'
     ) + sbDocNote('Tech Info', sbT(
-      'Height 32px · border-radius 2px.',
-      'Высота 32px · border-radius 2px.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Height: 32px;</li><li>Border-radius: 2px.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Высота: 32px;</li><li>Border-radius: 2px.</li></ul>'
     )),
     playground: {
       title: 'Input Playground',
@@ -145,7 +147,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
     },
     sections: [
       {
-        title: 'With Title',
+        title: sbT('With Title', 'С тайтлом'),
         desc: sbT(
           'All states with right content (a title): Default, Placeholder, Selected (with a clear button), Critical, Disabled, Read Only.',
           'Все состояния с правым контентом (Title): Default, Placeholder, Selected (с кнопкой очистки), Critical, Disabled, Read Only.'
@@ -162,7 +164,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
         css: COMP_CSS["input-field"],
       },
       {
-        title: 'No Title',
+        title: sbT('No Title', 'Без тайтла'),
         desc: sbT(
           'The same states without the right content.',
           'Те же состояния без правого контента.'
@@ -196,7 +198,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
         css: COMP_CSS["input-field"],
       },
       {
-        title: 'With Label & Subscription',
+        title: sbT('With Label & Subscription', 'С Label и Subscription'),
         desc: sbT(
           'The label sits above the field, the subscription below it. Both are optional and combine independently.',
           'Label располагается над полем, Subscription — под ним. Оба опциональны и комбинируются независимо.'
@@ -211,7 +213,7 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
         css: COMP_CSS["input-field"] + '\n' + COMP_CSS["input-field-wrap"],
       },
       {
-        title: '2-row Layout',
+        title: sbT('2-row Layout', 'Двухрядный layout'),
         desc: sbT(
           'The label on the left, the input on the right. The label column width is set via --field-label-w on the parent; .sb-field-group aligns the labels automatically.',
           'Label слева, Input справа. Ширина колонки Label задаётся через --field-label-w на родителе; .sb-field-group выравнивает лейблы автоматически.'

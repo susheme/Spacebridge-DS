@@ -409,13 +409,19 @@ window.sbSelectInfoCell = function(cell) {
     },
     sections: [
       {
-        title: 'Standard List — Profile Cell',
+        title: sbT('Standard List — Profile Cell', 'Standard List — ячейка Profile'),
         desc: sbT(
           'A cell for profile lists: people and organizations. On the left — an avatar and a title with an optional subtitle. On the right — one or two icons, or a small button. Below — three lists with different right content.',
           'Ячейка для списков профилей: люди и организации. Слева — аватар и заголовок с опциональным подзаголовком. Справа — одна-две иконки или маленькая кнопка. Ниже — три списка с разным правым контентом.'
         ) + sbDocNote('Tech Info', sbT(
-          'Avatar 32×32. Hairline divider: border-bottom 1px --border-soft. Hover — background --surface-1. Disabled — content opacity 0.5.',
-          'Аватар 32×32. Hairline-разделитель: border-bottom 1px --border-soft. Hover — фон --surface-1. Disabled — контент с opacity 0.5.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Avatar: 32×32;</li><li>Hairline divider: border-bottom 1px --border-soft.</li></ul>'
+          + '<b>States:</b>'
+          + '<ul><li>Hover — background --surface-1;</li><li>Disabled — content opacity 0.5.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Аватар: 32×32;</li><li>Hairline-разделитель: border-bottom 1px --border-soft.</li></ul>'
+          + '<b>Состояния:</b>'
+          + '<ul><li>Hover — фон --surface-1;</li><li>Disabled — контент с opacity 0.5.</li></ul>'
         )),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xl);width:100%;max-width:360px">
           <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
@@ -476,7 +482,7 @@ window.sbSelectInfoCell = function(cell) {
         css: COMP_CSS.list + '\n' + COMP_CSS.avatar + '\n' + COMP_CSS.buttons,
       },
       {
-        title: 'Standard List — Info Cell (Default)',
+        title: sbT('Standard List — Info Cell (Default)', 'Standard List — ячейка Info (Default)'),
         desc: sbT(
           'A cell for notification, event and alarm lists. A title, with a caption (date or time) under it. No dividers. States: Default, Hover, Selected (--primary-hover), Disabled (opacity 0.5).',
           'Ячейка для списков уведомлений, событий и алармов. Заголовок, под ним caption (дата или время). Без разделителей. Состояния: Default, Hover, Selected (--primary-hover), Disabled (opacity 0.5).'
@@ -508,7 +514,7 @@ window.sbSelectInfoCell = function(cell) {
         css: COMP_CSS.list,
       },
       {
-        title: 'Standard List — Info Cell (Status Indicator)',
+        title: sbT('Standard List — Info Cell (Status Indicator)', 'Standard List — ячейка Info (Status Indicator)'),
         desc: sbT(
           'The .has-indicator modifier adds a status dot on the left. All Status colors; the .pulse animation is optional. The gap tightens to 8px. A click selects a cell via .is-selected.',
           'Модификатор .has-indicator добавляет статус-точку слева. Все цвета из Status; анимация .pulse опциональна. Gap сужается до 8px. Клик выбирает ячейку через .is-selected.'
@@ -548,13 +554,19 @@ window.sbSelectInfoCell = function(cell) {
         css: COMP_CSS.list + '\n' + COMP_CSS.status,
       },
       {
-        title: 'Standard List — Info Cell (Status Mark)',
+        title: sbT('Standard List — Info Cell (Status Mark)', 'Standard List — ячейка Info (Status Mark)'),
         desc: sbT(
           'The .has-mark modifier — a colored vertical stripe at the left edge. Colors from the ready-made .sb-mark: success, error, warning, alert, info, neutral.',
           'Модификатор .has-mark — цветная вертикальная полоска у левого края. Цвета из готового .sb-mark: success, error, warning, alert, info, neutral.'
         ) + sbDocNote('Tech Info', sbT(
-          'Stripe 2×38px, absolute, inset 1px top and bottom. The gap stays 16px — the stripe is out of the flex flow.',
-          'Полоска 2×38px, absolute, отступ 1px сверху и снизу. Gap остаётся 16px — полоска вне flex-потока.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Stripe: 2×38px;</li><li>Absolute, inset 1px top and bottom.</li></ul>'
+          + '<b>Layout:</b>'
+          + '<ul><li>The gap stays 16px — the stripe is out of the flex flow.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Полоска: 2×38px;</li><li>Absolute, отступ 1px сверху и снизу.</li></ul>'
+          + '<b>Layout:</b>'
+          + '<ul><li>Gap остаётся 16px — полоска вне flex-потока.</li></ul>'
         )),
         preview: `<div style="width:100%;max-width:360px">
           ${mkInfoCell({ mark: { status: 'error' } })}
@@ -619,7 +631,7 @@ window.sbSelectInfoCell = function(cell) {
         css: COMP_CSS.list + '\n' + COMP_CSS.toggles,
       },
       {
-        title: 'Control List — Cell Types',
+        title: sbT('Control List — Cell Types', 'Control List — типы ячеек'),
         desc: sbT(
           'Single — a standalone cell. Top and Bottom close the list at its ends. Inside — a middle cell; it cannot be first or last.',
           'Single — самостоятельная ячейка. Top и Bottom замыкают список по краям. Inside — серединная ячейка; не может быть первой или последней.'

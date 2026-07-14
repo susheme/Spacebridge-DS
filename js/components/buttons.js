@@ -72,8 +72,10 @@ sbRegister({
     'The Basic button component from Figma. Types: Primary, Secondary, Text. States: Hover, Disable, Loading, Critical. Icon options: left, right, icon-only. Examples: Primary — a form submit; Secondary — a Back button in a header.',
     'Компонент Basic из Figma. Типы: Primary, Secondary, Text. Состояния: Hover, Disable, Loading, Critical. Иконки: слева, справа, icon-only. Примеры: Primary — отправка формы; Secondary — кнопка Back в хедере.'
   ) + sbDocNote('Tech Info', sbT(
-    'Sizes: L — 40px, S — 32px, Mini — 24px (width 40–68, Button-Mini typography 12/500/10; for dense spots like Snackbar actions).',
-    'Размеры: L — 40px, S — 32px, Mini — 24px (ширина 40–68, типографика Button-Mini 12/500/10; для плотных мест вроде действий Snackbar).'
+    '<b>Sizes:</b>'
+    + '<ul><li>L: 40px;</li><li>S: 32px;</li><li>Mini: 24px — width 40–68, Button-Mini typography (12/500/10), for dense spots like Snackbar actions.</li></ul>',
+    '<b>Размеры:</b>'
+    + '<ul><li>L: 40px;</li><li>S: 32px;</li><li>Mini: 24px — ширина 40–68, типографика Button-Mini (12/500/10), для плотных мест вроде действий Snackbar.</li></ul>'
   )),
   playground: {
     title: 'Regular',

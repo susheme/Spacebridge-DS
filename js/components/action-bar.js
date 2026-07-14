@@ -131,7 +131,7 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
     },
     sections: [
       {
-        title: 'In a card (default)',
+        title: sbT('In a card (default)', 'В карточке (по умолчанию)'),
         desc: sbT(
           'The built-in variant: a top border separates the bar from the card or modal content. Primary (commit) on the left, Secondary (dismiss) next to it. The bar background is --background.',
           'Встроенный вариант: верхняя граница отделяет плашку от контента карточки или модалки. Primary (commit) слева, Secondary (dismiss) рядом. Фон плашки — --background.'
@@ -151,7 +151,7 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
         css: COMP_CSS["action-bar"],
       },
       {
-        title: 'Alignment',
+        title: sbT('Alignment', 'Выравнивание'),
         desc: sbT(
           'Left (default, per Figma), Right (the convention in Western dialogs), Between (buttons pushed to opposite edges) and Center (buttons stretch across the bar: a single button takes the full width, two share it equally).',
           'Left (по умолчанию, по Figma), Right (канон западных диалогов), Between (кнопки по разным краям) и Center (кнопки растягиваются на всю плашку: одна занимает всю ширину, две делят её поровну).'
@@ -166,7 +166,7 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
         css: COMP_CSS["action-bar"],
       },
       {
-        title: 'Single button',
+        title: sbT('Single button', 'Одна кнопка'),
         desc: sbT(
           'A single Primary button — a confirmation window with no cancel option (acknowledge / continue). Default keeps the natural width; Center stretches the button across the bar.',
           'Одна Primary-кнопка — подтверждающее окно без отмены (acknowledge / continue). Default сохраняет натуральную ширину; Center растягивает кнопку на всю плашку.'

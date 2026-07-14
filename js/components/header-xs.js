@@ -186,13 +186,23 @@ ${leftInner}
     },
     sections: [
       {
-        title: 'Anatomy',
+        title: sbT('Anatomy', 'Анатомия'),
         desc: sbT(
           'A single 40px row: the left slot grows to fill the available width; the right control is placed directly into the root, without a wrapper.',
           'Одна строка 40px: левый слот растягивается на доступную ширину; правый контрол кладётся прямо в корень, без обёртки.'
         ) + sbDocNote('Tech Info', sbT(
-          'Root: height 40px · background --background · radius 12 12 0 0 (a card block always adjoins below) · padding 8/8 · gap 2px. Left slot: flex-grow, 24px tall, up to 700px wide, gap 8px. Title — Title M (semibold).',
-          'Корень: высота 40px · фон --background · radius 12 12 0 0 (снизу всегда примыкает блок карточки) · padding 8/8 · gap 2px. Левый слот: flex-grow, высота 24px, ширина до 700px, gap 8px. Заголовок — Title M (semibold).'
+          '<b>Root:</b>'
+          + '<ul><li>Height: 40px;</li><li>Background: --background;</li><li>Radius: 12 12 0 0 (a card block always adjoins below);</li><li>Padding: 8/8;</li><li>Gap: 2px.</li></ul>'
+          + '<b>Left slot:</b>'
+          + '<ul><li>Flex-grow;</li><li>Height: 24px;</li><li>Width: up to 700px;</li><li>Gap: 8px.</li></ul>'
+          + '<b>Typography:</b>'
+          + '<ul><li>Title — Title M (semibold).</li></ul>',
+          '<b>Корень:</b>'
+          + '<ul><li>Высота: 40px;</li><li>Фон: --background;</li><li>Radius: 12 12 0 0 (снизу всегда примыкает блок карточки);</li><li>Padding: 8/8;</li><li>Gap: 2px.</li></ul>'
+          + '<b>Левый слот:</b>'
+          + '<ul><li>Flex-grow;</li><li>Высота: 24px;</li><li>Ширина: до 700px;</li><li>Gap: 8px.</li></ul>'
+          + '<b>Типографика:</b>'
+          + '<ul><li>Заголовок — Title M (semibold).</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
@@ -234,7 +244,7 @@ ${leftInner}
         css: COMP_CSS.headerXs,
       },
       {
-        title: 'Loader (Loading state)',
+        title: sbT('Loader (Loading state)', 'Loader (состояние загрузки)'),
         desc: sbT(
           'A 24×24 spinner takes the Symbol Badge’s place in the left slot — the same sb-spin animation as in button loaders. Suited for toasts that track a long-running operation (Saving…, Connecting…).',
           'Вместо Symbol Badge в левом слоте — спиннер 24×24, та же анимация sb-spin, что у кнопок-лоадеров. Подходит для toast-уведомлений с длительной операцией (Saving…, Connecting…).'
@@ -257,7 +267,7 @@ ${leftInner}
         css: COMP_CSS.headerXs,
       },
       {
-        title: 'Flush Right (accent stripe)',
+        title: sbT('Flush Right (accent stripe)', 'Flush Right (акцентная полоса)'),
         desc: sbT(
           'When a toast card has a colored vertical stripe on the right, the header’s top-right corner must stay square — otherwise the stripe looks clipped. Enabled with the .flush-right modifier.',
           'Если у toast-карточки есть цветная вертикальная полоса справа, верхний правый угол хедера должен оставаться прямым — иначе полоса выглядит обрезанной. Включается модификатором .flush-right.'
@@ -281,7 +291,7 @@ ${leftInner}
         css: COMP_CSS.headerXs,
       },
       {
-        title: 'With Chevron',
+        title: sbT('With Chevron', 'С шевроном'),
         desc: sbT(
           'An alternative to the Close button in the right slot — the DS Chevron, for collapsible toasts.',
           'Альтернатива Close-кнопке в правом слоте — Chevron из DS, для сворачиваемых toast-уведомлений.'

@@ -160,7 +160,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
     },
     sections: [
       {
-        title: 'States',
+        title: sbT('States', 'Состояния'),
         desc: sbT(
           'Default, Placeholder, Selected (active), Critical, Disabled.',
           'Default, Placeholder, Selected (активный), Critical, Disabled.'
@@ -177,7 +177,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
         css: COMP_CSS.chevron + '\n' + COMP_CSS.selector,
       },
       {
-        title: 'Row Variant',
+        title: sbT('Row Variant', 'Row-вариант'),
         desc: sbT(
           'A left icon (an AI assistant and the like) and an add button on the right. The .sb-sel-row wrapper lays it out.',
           'Иконка слева (AI-ассистент и подобное), кнопка добавления справа. Раскладку даёт обёртка .sb-sel-row.'
@@ -192,7 +192,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
         css: COMP_CSS.chevron + '\n' + COMP_CSS.selector,
       },
       {
-        title: 'With Label & Subscription',
+        title: sbT('With Label & Subscription', 'С Label и Subscription'),
         desc: sbT(
           'The selector inside sb-field — the label above, the subscription below. In the Critical state the subscription turns error-colored.',
           'Selector внутри sb-field — Label сверху, Subscription снизу. При Critical подпись красится в error.'
@@ -207,7 +207,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
         css: COMP_CSS.chevron + '\n' + COMP_CSS.selector + '\n' + COMP_CSS["input-field-wrap"],
       },
       {
-        title: '2-row Layout',
+        title: sbT('2-row Layout', 'Двухрядный layout'),
         desc: sbT(
           'The label on the left, the selector on the right. The .sb-field-group wrapper aligns several fields.',
           'Label слева, Selector справа. Обёртка .sb-field-group выравнивает несколько полей.'

@@ -135,7 +135,7 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
     },
     sections: [
       {
-        title: 'States',
+        title: sbT('States', 'Состояния'),
         desc: sbT(
           'Default, Placeholder, Selected (ready for input), Critical, Disabled, Read Only. The eye button toggles password visibility.',
           'Default, Placeholder, Selected (готов к вводу), Critical, Disabled, Read Only. Кнопка-глаз переключает видимость пароля.'
@@ -152,7 +152,7 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
         css: COMP_CSS.password,
       },
       {
-        title: 'With Label & Subscription',
+        title: sbT('With Label & Subscription', 'С Label и Subscription'),
         desc: sbT(
           'The password field inside sb-field — the label above, the subscription below.',
           'Password внутри sb-field — Label сверху, Subscription снизу.'
@@ -167,7 +167,7 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
         css: COMP_CSS.password + '\n' + COMP_CSS["input-field-wrap"],
       },
       {
-        title: '2-row Layout',
+        title: sbT('2-row Layout', 'Двухрядный layout'),
         desc: sbT(
           'The label on the left, the field on the right. The .sb-field-group wrapper handles the alignment.',
           'Label слева, Password справа. За выравнивание отвечает обёртка .sb-field-group.'

@@ -190,13 +190,19 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
     ),
     sections: [
       {
-        title: 'Anatomy',
+        title: sbT('Anatomy', 'Анатомия'),
         desc: sbT(
           'A nav container with a chain of link items; the last item is a non-interactive element marking the current page, and the items are separated by decorative chevron icons.',
           'Контейнер-nav с цепочкой ссылок; последний элемент — неинтерактивный, обозначает текущую страницу, между элементами — декоративные иконки-шевроны.'
         ) + sbDocNote('Tech Info', sbT(
-          'Container: <code>&lt;nav class="sb-breadcrumbs"&gt;</code> with <code>aria-label="Breadcrumb"</code>. Items: <code>&lt;a class="sb-breadcrumb-item"&gt;</code>; the last one — <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>. Separator: <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> with a chevron-right icon (16px). Current page: bold, --text-tertiary. Typography: body-m / regular — mirrored with the Sticky ToC.',
-          'Контейнер: <code>&lt;nav class="sb-breadcrumbs"&gt;</code> с <code>aria-label="Breadcrumb"</code>. Элементы: <code>&lt;a class="sb-breadcrumb-item"&gt;</code>; последний — <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>. Разделитель: <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> с иконкой chevron-right (16px). Текущая страница: bold, --text-tertiary. Типографика: body-m / regular — зеркально со Sticky ToC.'
+          '<b>Markup:</b>'
+          + '<ul><li>Container: <code>&lt;nav class="sb-breadcrumbs"&gt;</code> with <code>aria-label="Breadcrumb"</code>;</li><li>Items: <code>&lt;a class="sb-breadcrumb-item"&gt;</code>, the last one — <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>;</li><li>Separator: <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> with a chevron-right icon (16px).</li></ul>'
+          + '<b>Typography:</b>'
+          + '<ul><li>Body-m / regular — mirrored with the Sticky ToC;</li><li>Current page: bold, --text-tertiary.</li></ul>',
+          '<b>Разметка:</b>'
+          + '<ul><li>Контейнер: <code>&lt;nav class="sb-breadcrumbs"&gt;</code> с <code>aria-label="Breadcrumb"</code>;</li><li>Элементы: <code>&lt;a class="sb-breadcrumb-item"&gt;</code>, последний — <code>&lt;span class="sb-breadcrumb-item is-current" aria-current="page"&gt;</code>;</li><li>Разделитель: <code>&lt;span class="sb-breadcrumb-sep" aria-hidden="true"&gt;</code> с иконкой chevron-right (16px).</li></ul>'
+          + '<b>Типографика:</b>'
+          + '<ul><li>Body-m / regular — зеркально со Sticky ToC;</li><li>Текущая страница: bold, --text-tertiary.</li></ul>'
         )),
         preview: `<div style="padding:24px">${mkBreadcrumbs({ items: ITEMS_3 })}</div>`,
         html: `<nav class="sb-breadcrumbs" aria-label="Breadcrumb">
@@ -209,7 +215,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
         css: COMP_CSS.breadcrumbs,
       },
       {
-        title: 'Two levels',
+        title: sbT('Two levels', 'Два уровня'),
         desc: sbT(
           'The minimal chain of two elements — a parent and the current page.',
           'Минимальная цепочка из двух элементов — родитель и текущая страница.'
@@ -223,7 +229,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
         css: COMP_CSS.breadcrumbs,
       },
       {
-        title: 'With leading icon',
+        title: sbT('With leading icon', 'С ведущей иконкой'),
         desc: sbT(
           'An item may carry an icon before its label (for example, home for the root node). The icon inherits the item’s <code>color</code> and follows it on hover and in the current state.',
           'Элемент может нести иконку перед подписью (например, home для корневого узла). Иконка наследует <code>color</code> элемента и следует за ним на hover и в состоянии current.'
@@ -241,7 +247,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
         css: COMP_CSS.breadcrumbs,
       },
       {
-        title: 'Long path — full',
+        title: sbT('Long path — full', 'Длинный путь — полный'),
         desc: sbT(
           'The full chain without collapsing. When the line is longer than its container, it wraps onto the next line (<code>flex-wrap: wrap</code> on <code>.sb-breadcrumbs</code>).',
           'Полная цепочка без сворачивания. Если строка длиннее контейнера — перенос на следующую строку (<code>flex-wrap: wrap</code> на <code>.sb-breadcrumbs</code>).'
@@ -251,7 +257,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
         css: COMP_CSS.breadcrumbs,
       },
       {
-        title: 'Long path — collapsed',
+        title: sbT('Long path — collapsed', 'Длинный путь — свёрнутый'),
         desc: sbT(
           'In deep hierarchies the middle nodes collapse into an ellipsis: the <code>collapseAfter: N</code> option keeps the first item and the last N−1. Convenient for deep paths (fleet / group / device / section).',
           'В глубоких иерархиях средние узлы сворачиваются в многоточие: опция <code>collapseAfter: N</code> оставляет первый элемент и последние N−1. Удобно для глубоких путей (fleet / group / device / section).'

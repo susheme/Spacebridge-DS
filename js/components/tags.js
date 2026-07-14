@@ -119,7 +119,7 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
     },
     sections: [
       {
-        title: 'Creating Flow',
+        title: sbT('Creating Flow', 'Флоу создания'),
         desc: sbT(
           'Tag creation steps: Placeholder (the cursor on the left), Typing (text with the cursor on the right), Critical (an invalid name).',
           'Шаги создания тега: Placeholder (курсор слева), Typing (текст и курсор справа), Critical (ошибка в имени).'
@@ -133,7 +133,7 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
         css: COMP_CSS.tags,
       },
       {
-        title: 'Display Tags',
+        title: sbT('Display Tags', 'Отображение тегов'),
         desc: sbT(
           'Default (non-removable) and Removable (with an × button). Pressing × removes the tag.',
           'Default (без удаления) и Removable (с кнопкой ×). Нажатие × удаляет тег.'
@@ -163,7 +163,7 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
         css: COMP_CSS.tags,
       },
       {
-        title: 'Color Variants',
+        title: sbT('Color Variants', 'Цветовые варианты'),
         desc: sbT(
           'Tags with color semantics. The tc-success / tc-error / tc-warning / tc-alert / tc-neutral classes apply to .sb-tag.filled.',
           'Теги с цветовой семантикой. Классы tc-success / tc-error / tc-warning / tc-alert / tc-neutral применяются к .sb-tag.filled.'
@@ -190,7 +190,7 @@ window.COMP_CSS.tags = `.sb-tag { display: inline-flex; align-items: center; jus
         css: COMP_CSS.tags,
       },
       {
-        title: 'Tag Group',
+        title: sbT('Tag Group', 'Группа тегов'),
         desc: sbT(
           'Several tags with wrapping. The .sb-tag-group wrapper handles it.',
           'Несколько тегов с переносом. За перенос отвечает обёртка .sb-tag-group.'

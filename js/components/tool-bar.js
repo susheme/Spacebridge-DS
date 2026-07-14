@@ -296,13 +296,19 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
     ),
     sections: [
       {
-        title: 'Anatomy',
+        title: sbT('Anatomy', 'Анатомия'),
         desc: sbT(
           'A full Tool Bar with all three slots: a dropdown button and a labeled button on the left, a Tab Bar in the center, a labeled button, icon-only buttons and a Search Bar on the right.',
           'Полный Tool Bar со всеми тремя слотами: слева dropdown-кнопка и кнопка с подписью, в центре Tab Bar, справа кнопка с подписью, icon-only кнопки и Search Bar.'
         ) + sbDocNote('Tech Info', sbT(
-          'Left slot: up to 2 Secondary action buttons. Right slot: a Search Bar and icon-only buttons, optionally labeled via .sb-btn-with-label. Height: auto — padding 8/16 plus content. Border-bottom 1.5px separates the bar from the content below.',
-          'Left слот: до 2 Secondary-кнопок действий. Right слот: Search Bar и icon-only кнопки, опционально с подписью через .sb-btn-with-label. Высота: auto — padding 8/16 плюс контент. Border-bottom 1.5px отделяет бар от контента ниже.'
+          '<b>Slots:</b>'
+          + '<ul><li>Left: up to 2 Secondary action buttons;</li><li>Right: a Search Bar and icon-only buttons, optionally labeled via .sb-btn-with-label.</li></ul>'
+          + '<b>Geometry:</b>'
+          + '<ul><li>Height: auto — padding 8/16 plus content;</li><li>Border-bottom: 1.5px, separates the bar from the content below.</li></ul>',
+          '<b>Слоты:</b>'
+          + '<ul><li>Left: до 2 Secondary-кнопок действий;</li><li>Right: Search Bar и icon-only кнопки, опционально с подписью через .sb-btn-with-label.</li></ul>'
+          + '<b>Геометрия:</b>'
+          + '<ul><li>Высота: auto — padding 8/16 плюс контент;</li><li>Border-bottom: 1.5px, отделяет бар от контента ниже.</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;overflow-x:auto"><div style="min-width:1100px">
           ${mkToolBar({
@@ -335,7 +341,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         css: COMP_CSS["tool-bar"],
       },
       {
-        title: 'Left only',
+        title: sbT('Left only', 'Только Left'),
         desc: sbT(
           'The minimal Tool Bar — a single icon-only button in the left slot; the center and right slots are empty.',
           'Минимальный Tool Bar — одна icon-only кнопка в левом слоте; центральный и правый слоты пусты.'
@@ -355,7 +361,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         css: COMP_CSS["tool-bar"],
       },
       {
-        title: 'Left + Right (no Center)',
+        title: sbT('Left + Right (no Center)', 'Left + Right (без Center)'),
         desc: sbT(
           'A Tool Bar without a central Tab Bar: an action group on the left, a Search Bar and an action group on the right, pushed to opposite edges (justify-content: space-between).',
           'Tool Bar без Tab Bar в центре: группа действий слева, Search Bar и группа действий справа, разведены по краям (justify-content: space-between).'
@@ -383,13 +389,19 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         css: COMP_CSS["tool-bar"],
       },
       {
-        title: 'Auto-responsive (container query)',
+        title: sbT('Auto-responsive (container query)', 'Авто-адаптив (container query)'),
         desc: sbT(
           'The Tool Bar watches its own width: in a narrow container it switches to compact mode and moves its inline action buttons into the More (⋯) dropdown, which duplicates the actions. The demo shows two identical Tool Bars in a wide and a narrow wrapper.',
           'Tool Bar следит за собственной шириной: в узком контейнере включается компактный режим, а inline-кнопки действий сворачиваются в More-меню (⋯) с дубликатами действий. В демо — два одинаковых Tool Bar в широком и узком враппере.'
         ) + sbDocNote('Tech Info', sbT(
-          '<code>container-type: inline-size</code>; breakpoint 600px — compact mode (24×24 icon buttons) plus the collapse into the More dropdown. Built with the <code>mkToolBarActions({ inline, more })</code> builder.',
-          '<code>container-type: inline-size</code>; breakpoint 600px — компактный режим (icon-кнопки 24×24) и сворачивание в More-меню. Собирается билдером <code>mkToolBarActions({ inline, more })</code>.'
+          '<b>Behavior:</b>'
+          + '<ul><li><code>container-type: inline-size</code>;</li><li>Breakpoint 600px — compact mode (24×24 icon buttons) plus the collapse into the More dropdown.</li></ul>'
+          + '<b>API:</b>'
+          + '<ul><li>Built with the <code>mkToolBarActions({ inline, more })</code> builder.</li></ul>',
+          '<b>Поведение:</b>'
+          + '<ul><li><code>container-type: inline-size</code>;</li><li>Breakpoint 600px — компактный режим (icon-кнопки 24×24) и сворачивание в More-меню.</li></ul>'
+          + '<b>API:</b>'
+          + '<ul><li>Собирается билдером <code>mkToolBarActions({ inline, more })</code>.</li></ul>'
         )),
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-horiz-lg);width:100%">
           <div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;overflow-x:auto">
@@ -482,7 +494,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         css: COMP_CSS["tool-bar"],
       },
       {
-        title: 'Bottom Tool Bar',
+        title: sbT('Bottom Tool Bar', 'Нижний Tool Bar'),
         desc: sbT(
           'The <code>.bottom</code> modifier places the Tool Bar at the bottom of a card, with the border on top instead of the bottom. Typical cases: editing actions (Save / Cancel / Undo) that appear once the user makes changes, or a form footer with a CTA button.',
           'Модификатор <code>.bottom</code> размещает Tool Bar внизу карточки — граница сверху, а не снизу. Типичные случаи: действия редактирования (Save / Cancel / Undo), появляющиеся когда пользователь вносит изменения, или footer формы с CTA-кнопкой.'
@@ -515,8 +527,18 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
           'The <code>.floating</code> modifier detaches the bar from the edges; on scroll it expands to full width with a deeper shadow. Scroll the preview to see the transition in action.',
           'Модификатор <code>.floating</code> отрывает бар от краёв; при скролле он раскрывается на всю ширину с более глубокой тенью. Прокрутите превью, чтобы увидеть переход в действии.'
         ) + sbDocNote('Tech Info', sbT(
-          'Detached: margin 16, radius 12, shadow-sm. On scroll, the <code>.is-stuck</code> class switches to full width with no margins and a deeper shadow; the transition takes 0.25s. Implementation: <code>position: sticky</code> plus an IntersectionObserver via <code>sbWireToolBarFloating(scrollRoot, bar)</code>.',
-          'В отрыве: margin 16, radius 12, shadow-sm. При скролле класс <code>.is-stuck</code> переключает в full-width без отступов и с более глубокой тенью; транзишн — 0.25s. Реализация: <code>position: sticky</code> и IntersectionObserver через <code>sbWireToolBarFloating(scrollRoot, bar)</code>.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Detached: margin 16, radius 12, shadow-sm.</li></ul>'
+          + '<b>Behavior:</b>'
+          + '<ul><li>On scroll, the <code>.is-stuck</code> class switches to full width with no margins and a deeper shadow;</li><li>Transition: 0.25s.</li></ul>'
+          + '<b>Implementation:</b>'
+          + '<ul><li><code>position: sticky</code> plus an IntersectionObserver via <code>sbWireToolBarFloating(scrollRoot, bar)</code>.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>В отрыве: margin 16, radius 12, shadow-sm.</li></ul>'
+          + '<b>Поведение:</b>'
+          + '<ul><li>При скролле класс <code>.is-stuck</code> переключает в full-width без отступов и с более глубокой тенью;</li><li>Транзишн: 0.25s.</li></ul>'
+          + '<b>Реализация:</b>'
+          + '<ul><li><code>position: sticky</code> и IntersectionObserver через <code>sbWireToolBarFloating(scrollRoot, bar)</code>.</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);border-radius:var(--radius-12);overflow:hidden;width:100%;height:280px;display:flex;flex-direction:column" id="tool-bar-floating-demo">
           ${mkToolBar({

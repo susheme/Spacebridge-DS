@@ -413,12 +413,18 @@ function renderComponentPage(name) {
 
   if (comp.playground) {
     const id = 'sec-playground';
-    tocItems.push({ id, label: 'Playground' });
+    tocItems.push({ id, label: sbT('Playground', 'Плейграунд') });
     pageHTML += `<div class="comp-section" id="${id}">${SB_PG.buildHTML(name)}</div>`;
   }
 
   (comp.sections || []).forEach((sec, i) => {
-    const baseId = `sec-${slugify(sec.title) || `${i}`}`;
+    // Тайтлы секций могут быть sbT(en, ru) — двойной <span>. Slug строим
+    // из EN-части (без тегов), чтобы якоря совпадали с прежними EN-id
+    // и не зависели от языка.
+    const plainTitle = String(sec.title)
+      .replace(/<span class="i18n-ru">[\s\S]*?<\/span>/g, '')
+      .replace(/<[^>]+>/g, '');
+    const baseId = `sec-${slugify(plainTitle) || `${i}`}`;
     // Защита от коллизий: если slug уже занят (повторяющиеся title) — суффикс.
     let id = baseId;
     let n = 1;

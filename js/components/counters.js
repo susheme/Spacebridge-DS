@@ -35,8 +35,14 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
       'A compact element for numeric values. Two variants: Single (one value) and Range (current / maximum). Example: the number of items next to a group in Side Navigation.',
       'Компактный элемент для числовых значений. Два варианта: Single (одно значение) и Range (текущее / максимум). Пример: количество элементов рядом с группой в Side Navigation.'
     ) + sbDocNote('Tech Info', sbT(
-      'Height 24px · border-radius 4px. The Empty state shows a placeholder.',
-      'Высота 24px · border-radius 4px. Состояние Empty показывает плейсхолдер.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Height: 24px;</li><li>Border-radius: 4px.</li></ul>'
+      + '<b>States:</b>'
+      + '<ul><li>Empty: shows a placeholder.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Высота: 24px;</li><li>Border-radius: 4px.</li></ul>'
+      + '<b>Состояния:</b>'
+      + '<ul><li>Empty: показывает плейсхолдер.</li></ul>'
     )),
     playground: {
       title: 'Counter Playground',
@@ -65,7 +71,7 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
     },
     sections: [
       {
-        title: 'Single',
+        title: sbT('Single', 'Одиночный'),
         desc: sbT(
           'A single numeric value. Example: unread notifications. Min-width 24px, grows with the content.',
           'Одиночное числовое значение. Пример: непрочитанные уведомления. Минимальная ширина 24px, растёт по контенту.'
@@ -83,7 +89,7 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
         css: COMP_CSS.counter,
       },
       {
-        title: 'Range',
+        title: sbT('Range', 'Диапазон'),
         desc: sbT(
           'The value/max format — shows capacity. Examples: slots, quotas, list fullness.',
           'Формат value/max — показывает заполненность. Примеры: слоты, квоты, наполнение списков.'

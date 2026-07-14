@@ -191,7 +191,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
     ),
     sections: [
       {
-        title: 'Desktop — Segment Menu left-aligned',
+        title: sbT('Desktop — Segment Menu left-aligned', 'Desktop — Segment Menu слева'),
         desc: sbT(
           "The content is pushed to the left edge with the .align-left modifier (justify-content: flex-start); sizes, paddings and the border match the centered variant. API: sbMkSubNav({ content, align: 'left' }).",
           "Контент прижат к левому краю модификатором .align-left (justify-content: flex-start); размеры, отступы и граница совпадают с centered-вариантом. API: sbMkSubNav({ content, align: 'left' })."
@@ -206,7 +206,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Desktop — Segment Menu right-aligned',
+        title: sbT('Desktop — Segment Menu right-aligned', 'Desktop — Segment Menu справа'),
         desc: sbT(
           "The mirrored variant — the content is pushed to the right edge with the .align-right modifier (justify-content: flex-end). Convenient when the main page content is on the left and the sub-section navigation is on the right. API: sbMkSubNav({ content, align: 'right' }).",
           "Зеркальный вариант — контент прижат к правому краю модификатором .align-right (justify-content: flex-end). Удобно, когда основной контент страницы слева, а навигация по подразделам справа. API: sbMkSubNav({ content, align: 'right' })."
@@ -221,13 +221,23 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Desktop — Segment Menu centered',
+        title: sbT('Desktop — Segment Menu centered', 'Desktop — Segment Menu по центру'),
         desc: sbT(
           'The base desktop variant: a Sub Nav with a centered Segment Menu, whose segments sit right against the bottom border.',
           'Базовый desktop-вариант: Sub Nav с центрированным Segment Menu, сегменты прижаты прямо к нижней границе.'
         ) + sbDocNote('Tech Info', sbT(
-          'Fixed height 58px · min-width: max-content (the content does not shrink; a narrower parent gets a horizontal scroll wrapper) · max-width var(--screens-max-screen-width) · padding 0/24 · justify-content: center, align-items: flex-end · background --background. Divider: border-bottom 1px --border-soft, on by default, disabled via divider: false.',
-          'Фиксированная высота 58px · min-width: max-content (контент не сжимается; при более узком родителе — горизонтальный скролл-враппер) · max-width var(--screens-max-screen-width) · padding 0/24 · justify-content: center, align-items: flex-end · фон --background. Divider: border-bottom 1px --border-soft, включён по умолчанию, отключается через divider: false.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Height: 58px, fixed;</li><li>Min-width: max-content (the content does not shrink; a narrower parent gets a horizontal scroll wrapper);</li><li>Max-width: var(--screens-max-screen-width);</li><li>Padding: 0/24.</li></ul>'
+          + '<b>Layout:</b>'
+          + '<ul><li>justify-content: center, align-items: flex-end;</li><li>Background: --background.</li></ul>'
+          + '<b>Divider:</b>'
+          + '<ul><li>Border-bottom: 1px --border-soft;</li><li>On by default, disabled via divider: false.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Высота: 58px, фиксированная;</li><li>Min-width: max-content (контент не сжимается; при более узком родителе — горизонтальный скролл-враппер);</li><li>Max-width: var(--screens-max-screen-width);</li><li>Padding: 0/24.</li></ul>'
+          + '<b>Layout:</b>'
+          + '<ul><li>justify-content: center, align-items: flex-end;</li><li>Фон: --background.</li></ul>'
+          + '<b>Divider:</b>'
+          + '<ul><li>Border-bottom: 1px --border-soft;</li><li>Включён по умолчанию, отключается через divider: false.</li></ul>'
         )),
         preview: sbMkPreviewStage(mkSubNav({ content: demoSegment('top') }), { framed: false, preserveScroll: false }),
         html: `<!-- Centered Segment Menu внутри Sub Nav -->
@@ -243,7 +253,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Desktop — Tab Bar centered',
+        title: sbT('Desktop — Tab Bar centered', 'Desktop — Tab Bar по центру'),
         desc: sbT(
           "A Sub Nav with a Tab Bar in the center. variant: 'tab-bar' switches to align-items: center — the Tab Bar centers vertically, unlike the Segment Menu, which anchors to the bottom. The Tab Bar must be wrapped in a fixed-width container: by default it stretches to width: 100%. API: sbMkSubNav({ content: wrapped Tab Bar, variant: 'tab-bar' }).",
           "Sub Nav с Tab Bar по центру. variant: 'tab-bar' включает align-items: center — Tab Bar центрируется по вертикали, в отличие от Segment Menu, который анкорится к низу. Tab Bar должен быть обёрнут в контейнер фиксированной ширины: по умолчанию он растягивается на width: 100%. API: sbMkSubNav({ content: обёрнутый Tab Bar, variant: 'tab-bar' })."
@@ -267,7 +277,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Desktop — LED Panel centered (alone)',
+        title: sbT('Desktop — LED Panel centered (alone)', 'Desktop — LED Panel по центру (одна)'),
         desc: sbT(
           "A Sub Nav with a solo LED Panel in the center. variant: 'led' switches to align-items: center — the LED Panel is shorter than a Segment Menu and would hang at the top with flex-end. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led' }).",
           "Sub Nav с одиночной LED Panel по центру. variant: 'led' включает align-items: center — LED Panel ниже Segment Menu по высоте и при flex-end висела бы сверху. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led' })."
@@ -279,7 +289,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Desktop — LED Panel left (alone)',
+        title: sbT('Desktop — LED Panel left (alone)', 'Desktop — LED Panel слева (одна)'),
         desc: sbT(
           "A solo LED Panel pushed to the left edge (24px of padding, in sync with the Navigation Bar). align: 'left' adds justify-content: flex-start; variant: 'led' keeps the vertical centering. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' }).",
           "Одиночная LED Panel, прижатая к левому краю (padding 24px, синхронно с Navigation Bar). align: 'left' добавляет justify-content: flex-start; variant: 'led' сохраняет вертикальное центрирование. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', align: 'left' })."
@@ -291,7 +301,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Desktop — LED Panel + Segment Menu (combined)',
+        title: sbT('Desktop — LED Panel + Segment Menu (combined)', 'Desktop — LED Panel + Segment Menu (вместе)'),
         desc: sbT(
           'The multi-slot mode: an LED Panel in the left slot and a Segment Menu in the right one. The left slot stretches to the full bar height (58) with its content centered vertically; the right slot is pushed to the right edge (24px of padding) with its content anchored to the bottom, so the segment indicator aligns with the border. API: sbMkSubNav({ left: sbMkLedPanel([...]), right: sbMkSegmentMenu([...]) }).',
           'Multi-slot режим: LED Panel в левом слоте и Segment Menu в правом. Левый слот растягивается на всю высоту бара (58), контент внутри центрируется по вертикали; правый прижат к правому краю (padding 24px), контент анкорится к низу — индикатор сегмента совпадает с границей. API: sbMkSubNav({ left: sbMkLedPanel([...]), right: sbMkSegmentMenu([...]) }).'
@@ -309,7 +319,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Tablet — Segment Menu centered (alone)',
+        title: sbT('Tablet — Segment Menu centered (alone)', 'Tablet — Segment Menu по центру (одно)'),
         desc: sbT(
           "The tablet mode, forced here via mode: 'tablet' (in a real application it activates automatically below 1024px). The container becomes a column with the content anchored to the bottom and centered horizontally; the Segment Menu touches the bottom border. Height 58 minimum, growing to 114 with multiple rows. API: sbMkSubNav({ content: sbMkSegmentMenu([...]), mode: 'tablet' }).",
           "Tablet-режим, здесь включён принудительно через mode: 'tablet' (в реальном приложении активируется автоматически при ширине меньше 1024px). Контейнер становится колонкой: контент анкорится к низу и центрируется по горизонтали; Segment Menu касается нижней границы. Высота 58 минимум, растёт до 114 при нескольких рядах. API: sbMkSubNav({ content: sbMkSegmentMenu([...]), mode: 'tablet' })."
@@ -321,7 +331,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Tablet — LED + Segment Menu (two-row stack)',
+        title: sbT('Tablet — LED + Segment Menu (two-row stack)', 'Tablet — LED + Segment Menu (два ряда)'),
         desc: sbT(
           "The multi-slot tablet mode stacks the slots vertically in HTML order (left → center → right): the LED Panel on top, the Segment Menu at the bottom border (justify-content: flex-end). The height grows to 114 to fit both rows; paddings and gaps are 0, so the rows touch. API: sbMkSubNav({ left: sbMkLedPanel([...]), right: sbMkSegmentMenu([...]), mode: 'tablet' }).",
           "Multi-slot tablet-режим стэкает слоты вертикально в HTML-порядке (left → center → right): LED Panel сверху, Segment Menu у нижней границы (justify-content: flex-end). Высота растёт до 114, чтобы уместить оба ряда; отступы и gap нулевые — ряды соприкасаются. API: sbMkSubNav({ left: sbMkLedPanel([...]), right: sbMkSegmentMenu([...]), mode: 'tablet' })."
@@ -339,7 +349,7 @@ window.COMP_CSS["sub-nav"] = `.sb-sub-nav {
         css: COMP_CSS["sub-nav"],
       },
       {
-        title: 'Tablet — LED Panel centered (alone)',
+        title: sbT('Tablet — LED Panel centered (alone)', 'Tablet — LED Panel по центру (одна)'),
         desc: sbT(
           "A solo LED Panel in tablet mode: variant: 'led' overrides the column stack with a row and centers the panel on both axes. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', mode: 'tablet' }).",
           "Одиночная LED Panel в tablet-режиме: variant: 'led' заменяет column-stack на row и центрирует панель по обеим осям. API: sbMkSubNav({ content: sbMkLedPanel([...]), variant: 'led', mode: 'tablet' })."

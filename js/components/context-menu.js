@@ -205,8 +205,18 @@ window.SB_DEMO_MORE_ITEMS = [
       'Cells for context menus, dropdowns and pop-up cards. Examples: the More (⋯) menu in headers, the language switcher in the Navigation Bar. Selection is single-select by default. The check mark is sticky — it survives reopening the menu.',
       'Ячейки для контекстных меню, dropdown-ов и pop-up карточек. Примеры: More-меню (⋯) в хедерах, переключатель языка в Navigation Bar. Выбор по умолчанию single-select. Галочка sticky — сохраняется при повторном открытии меню.'
     ) + sbDocNote('Tech Info', sbT(
-      'Cell height 40px. Optional left icon (L); optional hover icon on the right (S, configurable). Selected: background --primary-hover, text --primary, a check on the right.',
-      'Высота ячейки 40px. Опциональная иконка слева (L); опциональная hover-иконка справа (S, настраивается). Selected: фон --primary-hover, текст --primary, галочка справа.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Cell height: 40px.</li></ul>'
+      + '<b>Icons:</b>'
+      + '<ul><li>Left: optional (L);</li><li>Right: optional hover icon (S, configurable).</li></ul>'
+      + '<b>States:</b>'
+      + '<ul><li>Selected: background --primary-hover, text --primary, a check on the right.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Высота ячейки: 40px.</li></ul>'
+      + '<b>Иконки:</b>'
+      + '<ul><li>Слева: опциональная (L);</li><li>Справа: опциональная hover-иконка (S, настраивается).</li></ul>'
+      + '<b>Состояния:</b>'
+      + '<ul><li>Selected: фон --primary-hover, текст --primary, галочка справа.</li></ul>'
     )),
     playground: {
       title: 'Context Cell Playground',
@@ -274,7 +284,7 @@ window.SB_DEMO_MORE_ITEMS = [
     },
     sections: [
       {
-        title: 'Context Cell — States',
+        title: sbT('Context Cell — States', 'Context Cell — состояния'),
         desc: sbT(
           'Default / Hover / Selected / Disabled. The top row — with a left icon (24px), the bottom one — without. A click selects a cell; the selection is single within the parent.',
           'Default / Hover / Selected / Disabled. Верхний ряд — с иконкой слева (24px), нижний — без. Клик выбирает ячейку; выбор одиночный в рамках родителя.'
@@ -300,7 +310,7 @@ window.SB_DEMO_MORE_ITEMS = [
         css: COMP_CSS.contextMenu,
       },
       {
-        title: 'Standalone Cell (Radius 4px)',
+        title: sbT('Standalone Cell (Radius 4px)', 'Отдельная ячейка (радиус 4px)'),
         desc: sbT(
           'When a cell is not pressed against the container edges, the .has-radius modifier rounds its corners to 4px.',
           'Если ячейка не прижата к границам контейнера, модификатор .has-radius скругляет углы до 4px.'
@@ -315,7 +325,7 @@ window.SB_DEMO_MORE_ITEMS = [
         css: COMP_CSS.contextMenu,
       },
       {
-        title: 'Context Card (Dropdown / Pop-up)',
+        title: sbT('Context Card (Dropdown / Pop-up)', 'Context Card (dropdown / pop-up)'),
         desc: sbT(
           'A wrapper card for a group of cells — the base of dropdown menus. Example: the overflow menu in Header L. Up to 5 cells per card; longer sets become a scrollable list. In mode: "action" a click leaves no selection — for one-shot actions.',
           'Карточка-обёртка для группы ячеек — основа выпадающих меню. Пример: overflow-меню в Header L. До 5 ячеек на карточку; длинные наборы — в скроллируемый список. В mode: "action" клик не оставляет выбора — для one-shot действий.'
@@ -323,8 +333,10 @@ window.SB_DEMO_MORE_ITEMS = [
           'Icons are all-or-nothing: either every cell in the card has one, or none does.',
           'Иконки — либо у всех ячеек карточки, либо ни у одной.'
         )) + sbDocNote('Tech Info', sbT(
-          'Radius 12 · padding 8/8 · gap 8 between cells · --shadow-sm.',
-          'Radius 12 · padding 8/8 · gap 8 между ячейками · --shadow-sm.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Radius: 12;</li><li>Padding: 8/8;</li><li>Gap: 8 between cells;</li><li>Shadow: --shadow-sm.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Radius: 12;</li><li>Padding: 8/8;</li><li>Gap: 8 между ячейками;</li><li>Тень: --shadow-sm.</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
           <div class="sb-ctx-card">
@@ -346,13 +358,19 @@ window.SB_DEMO_MORE_ITEMS = [
         css: COMP_CSS.contextMenu,
       },
       {
-        title: 'Context Card with Tip',
+        title: sbT('Context Card with Tip', 'Context Card с носиком'),
         desc: sbT(
           'The <code>.with-tip</code> modifier adds a triangle at the top right, pointing at the trigger. Examples: a callout menu under an avatar or a kebab button.',
           'Модификатор <code>.with-tip</code> добавляет треугольник сверху справа, указывающий на триггер. Примеры: callout-меню под аватаром или kebab-кнопкой.'
         ) + sbDocNote('Tech Info', sbT(
-          'The triangle’s right offset is 16px — roughly the center of a 32–40px icon trigger. Its color equals the card background, so the seam is invisible.',
-          'Right-offset треугольника — 16px, примерно центр иконочного триггера 32–40px. Цвет треугольника равен фону карточки, поэтому шва не видно.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Triangle right-offset: 16px — roughly the center of a 32–40px icon trigger.</li></ul>'
+          + '<b>Colors:</b>'
+          + '<ul><li>The triangle’s color equals the card background, so the seam is invisible.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Right-offset треугольника: 16px — примерно центр иконочного триггера 32–40px.</li></ul>'
+          + '<b>Цвета:</b>'
+          + '<ul><li>Цвет треугольника равен фону карточки, поэтому шва не видно.</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
           <div class="sb-ctx-card with-tip" style="position:relative">

@@ -48,8 +48,10 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
       'A form element for selecting options — any number can be checked. Examples: row selection in a table, a filter list. States: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Label supported.',
       'Элемент формы для выбора опций — отметить можно любое количество. Примеры: выбор рядов в таблице, список фильтров. Состояния: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Поддерживает Label.'
     ) + sbDocNote('Tech Info', sbT(
-      'Size 20×20px · border-radius 4px.',
-      'Размер 20×20px · border-radius 4px.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Size: 20×20px;</li><li>Border-radius: 4px.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Размер: 20×20px;</li><li>Border-radius: 4px.</li></ul>'
     )),
     playground: {
       title: 'Checkbox Playground',
@@ -101,7 +103,7 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
     },
     sections: [
       {
-        title: 'States — No Label',
+        title: sbT('States — No Label', 'Состояния — без лейбла'),
         preview: `<div class="sec-row gap-lg">
           ${mkCb({})}
           ${mkCb({ hover: true })}
@@ -113,7 +115,7 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
         css: COMP_CSS.checkbox,
       },
       {
-        title: 'States — With Label',
+        title: sbT('States — With Label', 'Состояния — с лейблом'),
         preview: `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap: var(--gap-horiz-m) 8px;width:100%">
           ${mkCb({ label: 'Title' })}
           ${mkCb({ hover: true, label: 'Title' })}

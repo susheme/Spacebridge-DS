@@ -504,7 +504,7 @@ a.sb-banner-title {
     },
     sections: [
       {
-        title: 'Anatomy',
+        title: sbT('Anatomy', 'Анатомия'),
         desc: sbT(
           'A row with a coloured left marker in the type colour. The content column holds a title (optionally a link) with an optional leading indicator, and a description below. A generic right slot is pinned to the right edge — a Badge-Status, a close button or actions.',
           'Строка с цветным левым маркером под тип. Колонка контента несёт тайтл (опционально ссылку) с опциональным ведущим индикатором и описание под ним. Генерик-слот справа прижат к правому краю — Badge-Status, кнопка закрытия или действия.'
@@ -545,7 +545,7 @@ a.sb-banner-title {
         css: COMP_CSS.notifications,
       },
       {
-        title: 'Banner Types',
+        title: sbT('Banner Types', 'Типы баннеров'),
         desc: sbT(
           'The four types. Info and Success stay calm — a neutral surface with a coloured marker. Warning and Critical demand attention — a tinted surface and coloured text. The Critical banner below uses a link title (with a trailing arrow) that navigates to the source, and a Badge-Status Mini on the right.',
           'Четыре типа. Info и Success спокойны — нейтральный фон и цветной маркер. Warning и Critical требуют внимания — тонированный фон и цветной текст. Critical-баннер ниже использует тайтл-ссылку (со стрелкой), ведущую к источнику, и Badge-Status Mini справа.'
@@ -576,8 +576,22 @@ a.sb-banner-title {
           'A slim strip at the very top of the screen, right under the Navigation Bar, stretching the full width. Content is centered by default or pinned to the left edge. The text may include clickable parts — for example, an apply link. Example: an unsaved-changes warning stuck on top.',
           'Тонкая полоса в самом верху экрана, сразу под Navigation Bar, на всю ширину. Контент по центру или прижат к левому краю. Текст может содержать кликабельные части — например, ссылку применения. Пример: закреплённое сверху предупреждение о несохранённых изменениях.'
         ) + sbDocNote('Tech Info', sbT(
-          'Height 28px · min-width 320px · padding 2/8 · gap 8 · border-left 4px in the type colour · tinted background (--primary-hover / --success-hover / --alert-hover / --error-hover). Text — Body M in the type colour; links — bold, underlined, inherit the colour. The height is fixed, long text truncates with an ellipsis. API: sbMkNotifBar({ type, text, lead, align }).',
-          'Высота 28px · min-width 320px · padding 2/8 · gap 8 · border-left 4px в цвет типа · тонированный фон (--primary-hover / --success-hover / --alert-hover / --error-hover). Текст — Body M в цвет типа; ссылки — bold, подчёркнуты, наследуют цвет. Высота фиксированная, длинный текст обрезается многоточием. API: sbMkNotifBar({ type, text, lead, align }).'
+          '<b>Geometry:</b>'
+          + '<ul><li>Height: 28px, fixed — long text truncates with an ellipsis;</li><li>Min-width: 320px;</li><li>Padding: 2/8;</li><li>Gap: 8;</li><li>Border-left: 4px in the type colour.</li></ul>'
+          + '<b>Background:</b>'
+          + '<ul><li>Tinted per type: <code>--primary-hover</code> / <code>--success-hover</code> / <code>--alert-hover</code> / <code>--error-hover</code>.</li></ul>'
+          + '<b>Text:</b>'
+          + '<ul><li>Body M in the type colour;</li><li>Links: bold, underlined, inherit the colour.</li></ul>'
+          + '<b>API:</b>'
+          + '<ul><li><code>sbMkNotifBar({ type, text, lead, align })</code>.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Высота: 28px, фиксированная — длинный текст обрезается многоточием;</li><li>Min-width: 320px;</li><li>Padding: 2/8;</li><li>Gap: 8;</li><li>Border-left: 4px в цвет типа.</li></ul>'
+          + '<b>Фон:</b>'
+          + '<ul><li>Тонированный под тип: <code>--primary-hover</code> / <code>--success-hover</code> / <code>--alert-hover</code> / <code>--error-hover</code>.</li></ul>'
+          + '<b>Текст:</b>'
+          + '<ul><li>Body M в цвет типа;</li><li>Ссылки: bold, подчёркнуты, наследуют цвет.</li></ul>'
+          + '<b>API:</b>'
+          + '<ul><li><code>sbMkNotifBar({ type, text, lead, align })</code>.</li></ul>'
         )),
         col: true,
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m);width:100%">

@@ -114,9 +114,9 @@ sbRegister({
     // TOC встраиваем вручную — стандартный auto-build из renderComponentPage
     // здесь не работает.
     const tocItems = [
-      { id: 'sec-color-palette', label: 'Color Palette' },
-      { id: 'sec-typography',    label: 'Typography' },
-      { id: 'sec-effect-styles', label: 'Effect Styles' },
+      { id: 'sec-color-palette', label: sbT('Color Palette', 'Цветовая палитра') },
+      { id: 'sec-typography',    label: sbT('Typography', 'Типографика') },
+      { id: 'sec-effect-styles', label: sbT('Effect Styles', 'Стили эффектов') },
     ];
 
     // Page-level breadcrumbs (site-wide pattern, см. core.js renderComponentPage).
@@ -132,7 +132,7 @@ sbRegister({
       )}</div>
 
       <div class="comp-section" id="sec-color-palette">
-        <h2 class="comp-title sb-title-l">Color Palette</h2>
+        <h2 class="comp-title sb-title-l">${sbT('Color Palette', 'Цветовая палитра')}</h2>
         <div class="comp-desc sb-body-m">${sbT(
           'Semantic color tokens that adapt between the light and dark themes. A click on a swatch copies the value. Currently showing the ' + (isDark ? 'dark' : 'light') + ' theme values.',
           'Семантические цветовые токены, адаптирующиеся между светлой и тёмной темой. Клик по свотчу копирует значение. Сейчас показаны значения ' + (isDark ? 'тёмной' : 'светлой') + ' темы.'
@@ -141,7 +141,7 @@ sbRegister({
       </div>
 
       <div class="comp-section" id="sec-typography">
-        <h2 class="comp-title sb-title-l">Typography</h2>
+        <h2 class="comp-title sb-title-l">${sbT('Typography', 'Типографика')}</h2>
         <div class="comp-desc sb-body-m">${sbT(
           'Roboto is used across all Spacebridge products. The scale ranges from the 96px display size down to the 10px subscription text. Each row copies its CSS; the brand font (SpaceBridge Classic) is available for download in the first row.',
           'Во всех продуктах Spacebridge используется Roboto. Шкала — от display-размера 96px до subscription-текста 10px. Каждая строка копирует свой CSS; брендовый шрифт (SpaceBridge Classic) можно скачать в первой строке.'
@@ -150,7 +150,7 @@ sbRegister({
       </div>
 
       <div class="comp-section" id="sec-effect-styles">
-        <h2 class="comp-title sb-title-l">Effect Styles</h2>
+        <h2 class="comp-title sb-title-l">${sbT('Effect Styles', 'Стили эффектов')}</h2>
         <div class="comp-desc sb-body-m">${sbT(
           'Shadows and effects, adapted to the light and dark themes via CSS tokens. The copy button takes the ready-made CSS.',
           'Тени и эффекты, адаптированные под светлую и тёмную тему через CSS-токены. Кнопка копирования забирает готовый CSS.'

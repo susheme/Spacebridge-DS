@@ -54,18 +54,38 @@ window.COMP_CSS.kbd = `.sb-kbd {
       'A small key-styled element for hotkeys and hints: ⌘+K, /, Esc. Examples: the KBS hint in the Search Bar, shortcuts in tooltips and dialogs. Not interactive — a hint, not a button.',
       'Маленький элемент в виде клавиши для хоткеев и подсказок: ⌘+K, /, Esc. Примеры: KBS-подсказка в Search Bar, шорткаты в тултипах и диалогах. Не интерактивен — подсказка, а не кнопка.'
     ) + sbDocNote('Tech Info', sbT(
-      'Min-height 20px · monospace font · background surface-2 · radius 4px.',
-      'Min-height 20px · monospace-шрифт · фон surface-2 · radius 4px.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Min-height: 20px;</li><li>Radius: 4px.</li></ul>'
+      + '<b>Colors:</b>'
+      + '<ul><li>Background: surface-2.</li></ul>'
+      + '<b>Typography:</b>'
+      + '<ul><li>Monospace font.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Min-height: 20px;</li><li>Radius: 4px.</li></ul>'
+      + '<b>Цвета:</b>'
+      + '<ul><li>Фон: surface-2.</li></ul>'
+      + '<b>Типографика:</b>'
+      + '<ul><li>Monospace-шрифт.</li></ul>'
     )),
     sections: [
       {
-        title: 'Anatomy — single key',
+        title: sbT('Anatomy — single key', 'Анатомия — одна клавиша'),
         desc: sbT(
           'A single key element.',
           'Один клавишный элемент.'
         ) + sbDocNote('Tech Info', sbT(
-          'Inline-flex, 20px tall · padding 2/8 · surface-2 background · monospace font at the subscription size.',
-          'Inline-flex, высота 20px · padding 2/8 · фон surface-2 · monospace-шрифт subscription-размера.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Inline-flex, 20px tall;</li><li>Padding: 2/8.</li></ul>'
+          + '<b>Colors:</b>'
+          + '<ul><li>Background: surface-2.</li></ul>'
+          + '<b>Typography:</b>'
+          + '<ul><li>Monospace font at the subscription size.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Inline-flex, высота 20px;</li><li>Padding: 2/8.</li></ul>'
+          + '<b>Цвета:</b>'
+          + '<ul><li>Фон: surface-2.</li></ul>'
+          + '<b>Типографика:</b>'
+          + '<ul><li>Monospace-шрифт subscription-размера.</li></ul>'
         )),
         preview: `<div class="sec-row" style="gap:var(--gap-vert-s);align-items:center">
           ${mkKbd('⌘K')}
@@ -80,7 +100,7 @@ window.COMP_CSS.kbd = `.sb-kbd {
         css: COMP_CSS.kbd,
       },
       {
-        title: 'Group — combo keys',
+        title: sbT('Group — combo keys', 'Группа — комбинация клавиш'),
         desc: sbT(
           'Several keys with a separator (+ by default). The sb-kbd-group wrapper builds chord combinations. The separator is plain text outside the key plates.',
           'Несколько клавиш с разделителем (по умолчанию +). Chord-комбинации собирает обёртка sb-kbd-group. Разделитель — обычный текст вне клавишных плашек.'
@@ -99,7 +119,7 @@ window.COMP_CSS.kbd = `.sb-kbd {
         css: COMP_CSS.kbd,
       },
       {
-        title: 'Inline в подсказках',
+        title: sbT('Inline in hints', 'Inline в подсказках'),
         desc: sbT(
           'Typical placements: inside a Search Bar, a tooltip, helper text, or the footer of a command palette.',
           'Типичные размещения: внутри Search Bar, тултипа, helper-текста или футера command-палитры.'

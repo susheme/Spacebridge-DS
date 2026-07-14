@@ -55,8 +55,10 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
       'A multi-line text field. States: Default, Placeholder, Selected, Critical, Disabled. Label and Subscription via sb-field. Example: a comment or description field.',
       'Многострочное текстовое поле. Состояния: Default, Placeholder, Selected, Critical, Disabled. Label и Subscription — через sb-field. Пример: поле комментария или описания.'
     ) + sbDocNote('Tech Info', sbT(
-      'Height from 96px · border-radius 2px.',
-      'Высота от 96px · border-radius 2px.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Height: from 96px;</li><li>Border-radius: 2px.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Высота: от 96px;</li><li>Border-radius: 2px.</li></ul>'
     )),
     playground: {
       title: 'Textarea Playground',
@@ -105,7 +107,7 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
     },
     sections: [
       {
-        title: 'States',
+        title: sbT('States', 'Состояния'),
         desc: sbT(
           'Default, Placeholder, Selected (ready for input), Critical, Disabled.',
           'Default, Placeholder, Selected (готов к вводу), Critical, Disabled.'
@@ -121,7 +123,7 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
         css: COMP_CSS.textarea,
       },
       {
-        title: 'With Label & Subscription',
+        title: sbT('With Label & Subscription', 'С Label и Subscription'),
         desc: sbT(
           'The textarea inside sb-field — the label above, the subscription below. The subscription turns error-colored in the Critical state.',
           'Textarea внутри sb-field — Label сверху, Subscription снизу. При Critical подпись красится в error.'
@@ -136,7 +138,7 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
         css: COMP_CSS.textarea + '\n' + COMP_CSS["input-field-wrap"],
       },
       {
-        title: '2-row Layout',
+        title: sbT('2-row Layout', 'Двухрядный layout'),
         desc: sbT(
           'The label on the left, the textarea on the right. The .sb-field-group wrapper aligns several fields.',
           'Label слева, Textarea справа. Обёртка .sb-field-group выравнивает несколько полей.'

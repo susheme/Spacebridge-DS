@@ -33,8 +33,10 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
       'A round icon button for direction control. Four directions: Down, Up, Left, Right. Examples: expanding an accordion, collapsing a toast, tree navigation. Two sizes: Normal and Mini.',
       'Круглая иконочная кнопка для управления направлением. Четыре направления: Down, Up, Left, Right. Примеры: раскрытие аккордеона, сворачивание toast-уведомления, навигация по дереву. Два размера: Normal и Mini.'
     ) + sbDocNote('Tech Info', sbT(
-      'Normal — 32px, Mini — 24px.',
-      'Normal — 32px, Mini — 24px.'
+      '<b>Sizes:</b>'
+      + '<ul><li>Normal: 32px;</li><li>Mini: 24px.</li></ul>',
+      '<b>Размеры:</b>'
+      + '<ul><li>Normal: 32px;</li><li>Mini: 24px.</li></ul>'
     )),
     playground: {
       title: 'Chevron Playground',
@@ -63,7 +65,7 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
     },
     sections: [
       {
-        title: 'Normal — All Directions',
+        title: sbT('Normal — All Directions', 'Normal — все направления'),
         preview: `<div class="sec-row gap-sm">
           ${mkChv({ dir: 'down' })}
           ${mkChv({ dir: 'up' })}
@@ -78,7 +80,7 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
         css: COMP_CSS.chevron,
       },
       {
-        title: 'Mini — All Directions',
+        title: sbT('Mini — All Directions', 'Mini — все направления'),
         preview: `<div class="sec-row gap-sm">
           ${mkChv({ dir: 'down',  mini: true })}
           ${mkChv({ dir: 'up',    mini: true })}

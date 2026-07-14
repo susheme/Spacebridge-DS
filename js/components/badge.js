@@ -119,12 +119,18 @@ sbRegister({
     'Text badges show an object’s status, category or state. Example: a deployment status in a device table — Active, Failed, Pending.',
     'Текстовые бейджи показывают статус, категорию или состояние объекта. Пример: статус деплоя в таблице устройств — Active, Failed, Pending.'
   ) + sbDocNote('Tech Info', sbT(
-    'Height 24px · border-radius 20px · Badge typography (10 / 500 / 12).',
-    'Высота 24px · border-radius 20px · типографика Badge (10 / 500 / 12).'
+    '<b>Geometry:</b>'
+    + '<ul><li>Height: 24px;</li><li>Border-radius: 20px.</li></ul>'
+    + '<b>Typography:</b>'
+    + '<ul><li>Badge (10 / 500 / 12).</li></ul>',
+    '<b>Геометрия:</b>'
+    + '<ul><li>Высота: 24px;</li><li>Border-radius: 20px.</li></ul>'
+    + '<b>Типографика:</b>'
+    + '<ul><li>Badge (10 / 500 / 12).</li></ul>'
   )),
   sections: [
     {
-      title: 'Text Badges',
+      title: sbT('Text Badges', 'Текстовые бейджи'),
       desc: sbT(
         'Five variants: Default, Active, Failed, Pending, Warning. Colors come from the theme’s alpha tokens.',
         'Пять вариантов: Default, Active, Failed, Pending, Warning. Цвета — из alpha-токенов темы.'
@@ -143,7 +149,7 @@ sbRegister({
       css: COMP_CSS.badge.text,
     },
     {
-      title: 'Symbol Badges',
+      title: sbT('Symbol Badges', 'Символьные бейджи'),
       desc: sbT(
         'Eleven icon badges: Info, Time, Warning, Critical, Check and their variants. Example: a warning badge in a toast header.',
         'Одиннадцать иконочных бейджей: Info, Time, Warning, Critical, Check и их варианты. Пример: warning-бейдж в хедере toast-уведомления.'

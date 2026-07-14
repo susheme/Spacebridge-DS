@@ -381,13 +381,27 @@ ${leftInner}
     },
     sections: [
       {
-        title: 'Anatomy',
+        title: sbT('Anatomy', 'Анатомия'),
         desc: sbT(
           'A single row with content pushed to opposite edges: identity on the left (an Info Pop-up and the headline), actions on the right (a status and the More button with an attached dropdown menu).',
           'Одна строка с разведённым по краям содержимым: слева идентификация (Info Pop-up и заголовок), справа действия (статус и More-кнопка с прикреплённым выпадающим меню).'
         ) + sbDocNote('Tech Info', sbT(
-          'Root: height up to 88px · row-flex · space-between · no border-radius · bottom border 1px (border-soft) · background --background. Headline — H5 (28 / 900 / 32). Slots: up to 700px each, gap 16. Breakpoint 768px: the slot gap shrinks to 8px, right-slot inline buttons collapse behind More (⋯).',
-          'Корень: высота до 88px · row-flex · space-between · без скругления · нижняя граница 1px (border-soft) · фон --background. Headline — H5 (28 / 900 / 32). Слоты: до 700px каждый, gap 16. Breakpoint 768px: gap слотов сжимается до 8px, inline-кнопки правого слота сворачиваются под More (⋯).'
+          '<b>Geometry:</b>'
+          + '<ul><li>Root: height up to 88px, row-flex, space-between;</li><li>No border-radius, bottom border 1px (border-soft);</li><li>Slots: up to 700px each, gap 16.</li></ul>'
+          + '<b>Colors:</b>'
+          + '<ul><li>Background: --background.</li></ul>'
+          + '<b>Typography:</b>'
+          + '<ul><li>Headline: H5 (28 / 900 / 32).</li></ul>'
+          + '<b>Behavior:</b>'
+          + '<ul><li>Breakpoint 768px: the slot gap shrinks to 8px, right-slot inline buttons collapse behind More (⋯).</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Корень: высота до 88px, row-flex, space-between;</li><li>Без скругления, нижняя граница 1px (border-soft);</li><li>Слоты: до 700px каждый, gap 16.</li></ul>'
+          + '<b>Цвета:</b>'
+          + '<ul><li>Фон: --background.</li></ul>'
+          + '<b>Типографика:</b>'
+          + '<ul><li>Headline: H5 (28 / 900 / 32).</li></ul>'
+          + '<b>Поведение:</b>'
+          + '<ul><li>Breakpoint 768px: gap слотов сжимается до 8px, inline-кнопки правого слота сворачиваются под More (⋯).</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:720px">
           ${mkHeaderL({
@@ -417,7 +431,7 @@ ${leftInner}
         css: COMP_CSS.headerL,
       },
       {
-        title: 'Title only',
+        title: sbT('Title only', 'Только тайтл'),
         desc: sbT(
           'The minimal configuration — only the headline in the left slot, no right slot.',
           'Минимальная конфигурация — только заголовок в левом слоте, без правого.'
@@ -435,7 +449,7 @@ ${leftInner}
         css: COMP_CSS.headerL,
       },
       {
-        title: 'Navigation pattern (Back button)',
+        title: sbT('Navigation pattern (Back button)', 'Паттерн навигации (кнопка «Назад»)'),
         desc: sbT(
           'A typical pattern for nested pages: a Secondary button with a back arrow in the left slot; a status, a primary Action and the More button with secondary options on the right.',
           'Типичный паттерн вложенных страниц: Secondary-кнопка «назад» в левом слоте; справа — статус, primary Action и More-кнопка с второстепенными действиями.'
@@ -478,13 +492,15 @@ ${leftInner}
         css: COMP_CSS.headerL,
       },
       {
-        title: 'Full slot composition',
+        title: sbT('Full slot composition', 'Полная композиция слотов'),
         desc: sbT(
           'Every slot filled: Back, an Info Pop-up and the headline on the left; a caption, a status, inline Add (icon), inline Action (text) and the More button on the right.',
           'Максимальное наполнение: слева Back, Info Pop-up и заголовок; справа caption, статус, inline Add (иконка), inline Action (текст) и More-кнопка.'
         ) + sbDocNote('Tech Info', sbT(
-          'Below 768px, Add and Action collapse into the dropdown behind the More button and the slot gap shrinks to 8px; the caption and status always stay visible.',
-          'При ширине меньше 768px Add и Action сворачиваются в меню под More-кнопкой, gap слотов сжимается до 8px; caption и статус остаются видимыми всегда.'
+          '<b>Behavior:</b>'
+          + '<ul><li>Below 768px: Add and Action collapse into the dropdown behind the More button, the slot gap shrinks to 8px;</li><li>The caption and status always stay visible.</li></ul>',
+          '<b>Поведение:</b>'
+          + '<ul><li>При ширине меньше 768px: Add и Action сворачиваются в меню под More-кнопкой, gap слотов сжимается до 8px;</li><li>Caption и статус остаются видимыми всегда.</li></ul>'
         )),
         preview: `<div style="width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)"><div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:960px">
           ${mkHeaderL({

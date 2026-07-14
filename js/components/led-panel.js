@@ -83,12 +83,26 @@ window.COMP_CSS["led-panel"] = `.sb-led-panel {
       'A horizontal bar of LED items. It mimics the LED panel of a real device. Each item: a NAME label on top, a status indicator below. Example: PWR / LINK / RX / TX / FAULT in a Sub Nav. Works inside a Sub Nav or standalone.',
       'Горизонтальный бар из LED-элементов. Имитирует LED-панель реального устройства. Каждый элемент: NAME-лейбл сверху, статус-индикатор снизу. Пример: PWR / LINK / RX / TX / FAULT в Sub Nav. Работает внутри Sub Nav или standalone.'
     ) + sbDocNote('Tech Info', sbT(
-      'Panel: surface-1 · radius 8 · padding 8/8 · gap 24 between items. Item: column flex, gap 4. The label is sb-caption uppercase. Reuses .sb-status-dot from Status with all its states.',
-      'Панель: surface-1 · radius 8 · padding 8/8 · gap 24 между элементами. Элемент: column flex, gap 4. Лейбл — sb-caption uppercase. Переиспользует .sb-status-dot из Status со всеми его статусами.'
+      '<b>Panel:</b>'
+      + '<ul><li>Background: surface-1;</li><li>Radius: 8;</li><li>Padding: 8/8;</li><li>Gap: 24 between items.</li></ul>'
+      + '<b>Item:</b>'
+      + '<ul><li>Column flex;</li><li>Gap: 4.</li></ul>'
+      + '<b>Typography:</b>'
+      + '<ul><li>The label is sb-caption uppercase.</li></ul>'
+      + '<b>Reuse:</b>'
+      + '<ul><li>Reuses .sb-status-dot from Status with all its states.</li></ul>',
+      '<b>Панель:</b>'
+      + '<ul><li>Фон: surface-1;</li><li>Radius: 8;</li><li>Padding: 8/8;</li><li>Gap: 24 между элементами.</li></ul>'
+      + '<b>Элемент:</b>'
+      + '<ul><li>Column flex;</li><li>Gap: 4.</li></ul>'
+      + '<b>Типографика:</b>'
+      + '<ul><li>Лейбл — sb-caption uppercase.</li></ul>'
+      + '<b>Переиспользование:</b>'
+      + '<ul><li>Переиспользует .sb-status-dot из Status со всеми его статусами.</li></ul>'
     )),
     sections: [
       {
-        title: 'Basic — 5 indicators',
+        title: sbT('Basic — 5 indicators', 'База — 5 индикаторов'),
         desc: sbT(
           'A typical real-device set. PWR — online. LINK — connecting (pulse). RX — online. TX — warning. FAULT — error.',
           'Типовой набор реального устройства. PWR — online. LINK — connecting (pulse). RX — online. TX — warning. FAULT — error.'
@@ -110,7 +124,7 @@ window.COMP_CSS["led-panel"] = `.sb-led-panel {
         css: COMP_CSS["led-panel"],
       },
       {
-        title: 'All status types',
+        title: sbT('All status types', 'Все типы статусов'),
         desc: sbT(
           'Every status from Status: online (green), offline (grey), error (red), warning (orange), maintenance (alert), connecting (primary, pulse), info (cyan).',
           'Все статусы из Status: online (зелёный), offline (серый), error (красный), warning (оранжевый), maintenance (alert), connecting (primary, pulse), info (cyan).'

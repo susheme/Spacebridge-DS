@@ -99,7 +99,7 @@ sbRegister({
   },
   sections: [
     {
-      title: 'Types',
+      title: sbT('Types', 'Типы'),
       desc: sbT(
         'Four avatar types: User (a user icon), Initials, Company (an organization icon), Image (a photo).',
         'Четыре типа аватаров: User (иконка пользователя), Initials (инициалы), Company (иконка организации), Image (фото).'
@@ -142,7 +142,7 @@ sbRegister({
       css: COMP_CSS.avatar,
     },
     {
-      title: 'User — All States',
+      title: sbT('User — All States', 'User — все состояния'),
       desc: sbT(
         'All states: Default, Hover (a blue ring), Status (a green dot), Badge (a pill). With a badge present, the dot moves to the top right corner.',
         'Все состояния: Default, Hover (синее кольцо), Status (зелёная точка), Badge (пилюля). При наличии бейджа точка переезжает в верхний правый угол.'
@@ -179,7 +179,7 @@ sbRegister({
       css: COMP_CSS.avatar,
     },
     {
-      title: 'Initials — All States',
+      title: sbT('Initials — All States', 'Инициалы — все состояния'),
       desc: sbT(
         'The Initials type — the user’s initials. Same states.',
         'Тип Initials — инициалы пользователя. Состояния те же.'
@@ -193,7 +193,7 @@ sbRegister({
       css: COMP_CSS.avatar,
     },
     {
-      title: 'Company — All States',
+      title: sbT('Company — All States', 'Компания — все состояния'),
       desc: sbT(
         'The Company type — an organization icon.',
         'Тип Company — иконка организации.'
@@ -207,7 +207,7 @@ sbRegister({
       css: COMP_CSS.avatar,
     },
     {
-      title: 'Image — All States',
+      title: sbT('Image — All States', 'Изображение — все состояния'),
       desc: sbT(
         'The Image type — a photo. The img element goes inside .sb-avatar-circle; object-fit: cover crops it to the circle.',
         'Тип Image — фотография. Элемент img кладётся внутрь .sb-avatar-circle; object-fit: cover обрезает по кругу.'

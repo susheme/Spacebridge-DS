@@ -312,8 +312,10 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
             'Each tab variant (text only, icon left, icon top) in all four states. In real usage, clicks switch the selection via sbSelectSegmentItem and hover reacts to the pointer; in the demo below, Hover is rendered statically with the .is-hover modifier.',
             'Каждый вариант таба (только текст, иконка слева, иконка сверху) во всех четырёх состояниях. В реальном использовании клики переключают выбор через sbSelectSegmentItem, hover реагирует на курсор; в демо ниже Hover показан статично модификатором .is-hover.'
           ) + sbDocNote('Tech Info', sbT(
-            'Default — text-secondary · Hover — text-primary · Selected — primary text plus an animated indicator under the item (GPU slide: transform/width 0.25s, cubic-bezier) · Disabled — text --border, non-interactive.',
-            'Default — text-secondary · Hover — text-primary · Selected — primary-текст и анимированный индикатор под элементом (GPU-slide: transform/width 0.25s, cubic-bezier) · Disabled — текст --border, без интеракции.'
+            '<b>States:</b>'
+            + '<ul><li>Default — text-secondary;</li><li>Hover — text-primary;</li><li>Selected — primary text plus an animated indicator under the item (GPU slide: transform/width 0.25s, cubic-bezier);</li><li>Disabled — text --border, non-interactive.</li></ul>',
+            '<b>Состояния:</b>'
+            + '<ul><li>Default — text-secondary;</li><li>Hover — text-primary;</li><li>Selected — primary-текст и анимированный индикатор под элементом (GPU-slide: transform/width 0.25s, cubic-bezier);</li><li>Disabled — текст --border, без интеракции.</li></ul>'
           )),
           preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xl);width:100%">
             ${stateGroup('Text only', 'none')}

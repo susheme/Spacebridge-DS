@@ -806,13 +806,23 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     },
     sections: [
       {
-        title: 'Single Item — states',
+        title: sbT('Single Item — states', 'Single Item — состояния'),
         desc: sbT(
           'The basic cell in all four states; the + Icon variant adds a leading icon.',
           'Базовая ячейка во всех четырёх состояниях; вариант + Icon добавляет leading-иконку.'
         ) + sbDocNote('Tech Info', sbT(
-          'Panel width 320px. Cell: 272×40, padding 8/8/8/16, radius 4. Item name — Title S (14/700), --text-secondary. Default — background --background · Hover — drop Shadow-S · Selected — surface-1 plus a pressed inset shadow · Disabled — text --border.',
-          'Ширина панели 320px. Ячейка: 272×40, padding 8/8/8/16, radius 4. Имя — Title S (14/700), --text-secondary. Default — фон --background · Hover — Shadow-S · Selected — surface-1 и Pressed-inset тень · Disabled — текст --border.'
+          '<b>Geometry:</b>'
+          + '<ul><li>Panel width: 320px;</li><li>Cell: 272×40, padding 8/8/8/16, radius 4.</li></ul>'
+          + '<b>Typography:</b>'
+          + '<ul><li>Item name: Title S (14/700), --text-secondary.</li></ul>'
+          + '<b>States:</b>'
+          + '<ul><li>Default: background --background;</li><li>Hover: drop Shadow-S;</li><li>Selected: surface-1 plus a pressed inset shadow;</li><li>Disabled: text --border.</li></ul>',
+          '<b>Геометрия:</b>'
+          + '<ul><li>Ширина панели: 320px;</li><li>Ячейка: 272×40, padding 8/8/8/16, radius 4.</li></ul>'
+          + '<b>Типографика:</b>'
+          + '<ul><li>Имя: Title S (14/700), --text-secondary.</li></ul>'
+          + '<b>Состояния:</b>'
+          + '<ul><li>Default: фон --background;</li><li>Hover: Shadow-S;</li><li>Selected: surface-1 и Pressed-inset тень;</li><li>Disabled: текст --border.</li></ul>'
         )),
         preview: stage(mkSideNav({
           header: demoHeader('logo', true),
@@ -829,7 +839,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Side Menu — anatomy',
+        title: sbT('Side Menu — anatomy', 'Side Menu — анатомия'),
         desc: sbT(
           'Variant one — a read-only replacement for the Navigation Bar menu in compact modes. The panel is an overlay with Shadow-L: a Header M with the logo, a search field, a flat list of single items and a footer with device info.',
           'Первый вариант — read-only замена меню Navigation Bar в компактных режимах. Панель — overlay с Shadow-L: Header M с логотипом, поиск, плоский список одиночных элементов и footer с информацией об устройстве.'
@@ -845,7 +855,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Side Menu — Parent + Children',
+        title: sbT('Side Menu — Parent + Children', 'Side Menu — Parent + Children'),
         desc: sbT(
           'A parent (the counterpart of a Navigation Bar dropdown tab) expands inline: its children appear in a surface-1 group with a continuous 1.5px guide line on the left. The expansion chevron is a Chevron Button; when expanded, it points up and the parent title turns blue. A child carries a status dot, a label and a right navigation chevron.',
           'Родитель (аналог таба с дропдауном в Navigation Bar) раскрывается инлайн: дети появляются в surface-1 группе с непрерывной направляющей 1.5px слева. Шеврон раскрытия — Chevron Button; при раскрытии он смотрит вверх, а заголовок родителя становится синим. Ребёнок несёт status-dot, подпись и правый навигационный шеврон.'
@@ -860,7 +870,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Section Header + text-status (slots)',
+        title: sbT('Section Header + text-status (slots)', 'Section Header + text-status (слоты)'),
         desc: sbT(
           'Section labels use the section-header role, which forwards slots to the DS Section Header (slotLeft — a caption, slotRight — an optional counter or a plus button). A cell can carry an arbitrary rightSlot — here, a text status. This turns the Side Menu into an application chrome sidebar, like the one in this design system.',
           'Лейблы секций используют роль section-header, которая прокидывает слоты в наш Section Header (slotLeft — caption, slotRight — опциональный счётчик или кнопка-плюс). Ячейка может нести произвольный rightSlot — здесь text-status. Так Side Menu становится хром-сайдбаром приложения, как в этой дизайн-системе.'
@@ -882,13 +892,27 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Side Bar — Grand-Parent (states)',
+        title: sbT('Side Bar — Grand-Parent (states)', 'Side Bar — Grand-Parent (состояния)'),
         desc: sbT(
           'The Grand-Parent role — an uppercase section label with a left accent stroke, a counter and a Chevron Button — in all four states.',
           'Роль Grand-Parent — UPPERCASE-лейбл секции с акцент-полоской слева, счётчиком и Chevron Button — во всех четырёх состояниях.'
         ) + sbDocNote('Tech Info', sbT(
-          'Label: CAPTION 12/500, uppercase, --text-muted. Accent stroke: border-left 4px --primary, stretching over the children when expanded. Counter: single or range. States: Default → Hover (Shadow-S) → Selected (surface-1) → Disabled (gray stroke, text --border, counter --/--).',
-          'Лейбл: CAPTION 12/500, uppercase, --text-muted. Акцент-полоска: border-left 4px --primary, при раскрытии растягивается на детей. Счётчик: single или range. Состояния: Default → Hover (Shadow-S) → Selected (surface-1) → Disabled (серый stroke, текст --border, счётчик --/--).'
+          '<b>Label:</b>'
+          + '<ul><li>CAPTION 12/500, uppercase, --text-muted.</li></ul>'
+          + '<b>Accent stroke:</b>'
+          + '<ul><li>Border-left: 4px --primary, stretching over the children when expanded.</li></ul>'
+          + '<b>Counter:</b>'
+          + '<ul><li>Single or range.</li></ul>'
+          + '<b>States:</b>'
+          + '<ul><li>Default → Hover (Shadow-S) → Selected (surface-1) → Disabled (gray stroke, text --border, counter --/--).</li></ul>',
+          '<b>Лейбл:</b>'
+          + '<ul><li>CAPTION 12/500, uppercase, --text-muted.</li></ul>'
+          + '<b>Акцент-полоска:</b>'
+          + '<ul><li>Border-left: 4px --primary, при раскрытии растягивается на детей.</li></ul>'
+          + '<b>Счётчик:</b>'
+          + '<ul><li>Single или range.</li></ul>'
+          + '<b>Состояния:</b>'
+          + '<ul><li>Default → Hover (Shadow-S) → Selected (surface-1) → Disabled (серый stroke, текст --border, счётчик --/--).</li></ul>'
         )),
         preview: stage(mkSideNav({
           variant: 'bar',
@@ -899,7 +923,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Side Bar — Groups + Children (WIP)',
+        title: sbT('Side Bar — Groups + Children (WIP)', 'Side Bar — группы + дети (WIP)'),
         desc: sbT(
           'Variant two — a navigator tree populated by the user (edit and delete actions on hover are coming). A group (parent) carries a folder icon and a counter; an expanded group shows its children with a guide line. This role is still being refined per a separate spec.',
           'Второй вариант — дерево-навигатор, наполняется пользователем (действия edit и delete по ховеру появятся позже). Группа (родитель) несёт folder-иконку и счётчик; раскрытая группа показывает детей с направляющей линией. Роль ещё дорабатывается по отдельной спеке.'
@@ -914,7 +938,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Side Bar — Deep nesting (WIP)',
+        title: sbT('Side Bar — Deep nesting (WIP)', 'Side Bar — глубокая вложенность (WIP)'),
         desc: sbT(
           'A Grand-Parent (section) — an uppercase label with a blue accent stroke and a range counter. Inside — groups nested to any depth (Great-Grand-Parent → Grand-Child). The Grand-Parent and edit/delete roles are in progress per a separate spec.',
           'Grand-Parent (секция) — UPPERCASE-лейбл с синим accent-stroke и range-счётчиком. Внутри — группы любой глубины (Great-Grand-Parent → Grand-Child). Роли Grand-Parent и edit/delete — в работе по отдельной спеке.'
@@ -929,7 +953,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Empty state',
+        title: sbT('Empty state', 'Пустое состояние'),
         desc: sbT(
           'When the tree is empty, a centered CTA button and a subscription text take its place; the chrome (header, Sub Nav, Tool Bar) stays.',
           'Когда дерево пустое, его место занимают центрированная CTA-кнопка и subscription-текст; хром (хедер, Sub Nav, Tool Bar) остаётся.'
@@ -944,7 +968,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
         css: COMP_CSS.sideNav,
       },
       {
-        title: 'Full composition — + Sub Nav + Tool Bar + Footer',
+        title: sbT('Full composition — + Sub Nav + Tool Bar + Footer', 'Полная композиция — + Sub Nav + Tool Bar + Footer'),
         desc: sbT(
           'The full chrome: a Header M, a Sub Nav (Tab Bar), a Tool Bar with search, the tree and a footer — the standard configuration of a working application.',
           'Полный хром: Header M, Sub Nav (Tab Bar), Tool Bar с поиском, дерево и footer — стандартная конфигурация рабочего приложения.'

@@ -79,12 +79,18 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
       'A universal bottom strip for tables and lists. Three slots. Left — a row count: Rows: X of N, or Selected: N during selection. Center — a jump input or utility. Right — Pagination. Example: the footer of a fleet table.',
       'Универсальная нижняя полоса для таблиц и списков. Три слота. Left — счётчик рядов: Rows: X of N, при выборе — Selected: N. Center — jump-инпут или utility. Right — Pagination. Пример: футер таблицы флота.'
     ) + sbDocNote('Tech Info', sbT(
-      'Border-top plus background. Radii inherit from the parent <code>.sb-table-wrap</code> via <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — slots take their natural width and wrap on narrow containers.',
-      'Border-top и background. Радиусы наследуются от родителя <code>.sb-table-wrap</code> через <code>overflow: hidden</code>. Layout: <code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину и переносятся на узких контейнерах.'
+      '<b>Geometry:</b>'
+      + '<ul><li>Border-top plus background;</li><li>Radii inherit from the parent <code>.sb-table-wrap</code> via <code>overflow: hidden</code>.</li></ul>'
+      + '<b>Layout:</b>'
+      + '<ul><li><code>flex + space-between + flex-wrap</code> — slots take their natural width and wrap on narrow containers.</li></ul>',
+      '<b>Геометрия:</b>'
+      + '<ul><li>Border-top и background;</li><li>Радиусы наследуются от родителя <code>.sb-table-wrap</code> через <code>overflow: hidden</code>.</li></ul>'
+      + '<b>Layout:</b>'
+      + '<ul><li><code>flex + space-between + flex-wrap</code> — слоты получают натуральную ширину и переносятся на узких контейнерах.</li></ul>'
     )),
     sections: [
       {
-        title: 'Row Count + Pagination',
+        title: sbT('Row Count + Pagination', 'Счётчик рядов + Pagination'),
         desc: sbT(
           'The base table layout: the row count on the left, Pagination on the right. <code>space-between</code> pushes the slots to the edges.',
           'Базовый layout для таблицы: счётчик рядов слева, Pagination справа. <code>space-between</code> разводит слоты по краям.'
@@ -105,7 +111,7 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
         css: COMP_CSS['table-footer'],
       },
       {
-        title: 'Selected mode',
+        title: sbT('Selected mode', 'Режим выбора'),
         desc: sbT(
           'During selection the left counter switches to Selected: N (--primary). Bulk actions (Download / Apply / Delete) live in the floating Tool Bar above the footer, not in the footer itself. The right slot keeps Pagination.',
           'При выборе рядов левый счётчик меняется на Selected: N (--primary). Bulk-действия (Download / Apply / Delete) живут во floating Tool Bar над футером, не в самом футере. Правый слот остаётся с Pagination.'
@@ -124,7 +130,7 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
         css: COMP_CSS['table-footer'],
       },
       {
-        title: 'Center Pagination (all 3 slots)',
+        title: sbT('Center Pagination (all 3 slots)', 'Pagination по центру (все 3 слота)'),
         desc: sbT(
           'Pagination in the center; Rows: X of N on the left, Selected: N on the right. All three slots in use. Note: with <code>space-between</code> the center shifts slightly with the side slots’ width. For a strict center, the side slots can be set to <code>flex:1</code>.',
           'Пагинация по центру; слева Rows: X of N, справа Selected: N. Заняты все три слота. Примечание: при <code>space-between</code> центр слегка смещается от ширины боковых слотов. Для строгого центра боковым слотам задаётся <code>flex:1</code>.'
@@ -146,7 +152,7 @@ window.COMP_CSS['table-footer'] = `.sb-table-footer {
         css: COMP_CSS['table-footer'],
       },
       {
-        title: 'Right-only (Pagination only)',
+        title: sbT('Right-only (Pagination only)', 'Только справа (только Pagination)'),
         desc: sbT(
           'No summary and no bulk actions — the left slot is empty, Pagination sits at the right edge.',
           'Без summary и bulk-действий — левый слот пуст, Pagination прижат к правому краю.'

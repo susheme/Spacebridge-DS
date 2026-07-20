@@ -1,0 +1,216 @@
+/* --- [SYNC:toast] Toast ---
+   Всплывающее уведомление (top-right, под Navigation Bar). Default-вариант:
+   хедер = Header XS (глиф/лоадер + тайтл + close), body-текст Body M.
+   Цветовая полоса справа — border-right в цвет severity; правые радиусы 4
+   (по Figma: 12 4 4 12), чтобы полоса не выглядела обрезанной.
+   Размеры (360 / min 288 / max 208 высоты) — из Figma-спеки, компонентных
+   токенов toast в Dimensions-DS.json нет → hardcoded.
+   Redirector / Collapsable / стеки — следующими заходами. */
+.sb-toast {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 360px;
+  min-width: 288px;
+  max-width: 360px;
+  min-height: 88px;
+  max-height: 208px;
+  border-radius: var(--radius-12) var(--radius-4) var(--radius-4) var(--radius-12);
+  background: var(--background);
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay); /* Shadow-L */
+  border-right: var(--border-width-4) solid var(--success);
+  box-sizing: border-box;
+}
+/* Severity — цвет полосы. Дефолт (success) задан выше. */
+.sb-toast.info     { border-right-color: var(--info); }
+.sb-toast.warning  { border-right-color: var(--alert); }
+.sb-toast.error    { border-right-color: var(--error); }
+.sb-toast.progress { border-right-color: var(--primary); }
+
+/* Body-текст: Body M, --text-muted, максимум 2 строки с многоточием
+   (высота 40 = 2 × line-height 20 по Figma). Отступ слева 40px ставит
+   текст в линию с тайтлом хедера (pad 8 + глиф 24 + gap 8); справа
+   симметрично — в Figma body 280px при карточке 360. Паддинги вместо
+   фикс-ширины: на min-width 288 текст сжимается сам. */
+.sb-toast-text {
+  /* Нижний отступ — margin, НЕ padding: у -webkit-line-clamp overflow
+     клипает только content-box, и обрезанная 3-я строка просвечивала
+     сквозь padding-bottom. */
+  padding: 0 var(--pad-horiz-40);
+  margin-bottom: var(--pad-vert-8);
+  color: var(--text-muted);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--letter-spacing);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ── Redirector ── тост побольше: до 3 строк body + Action Bar снизу
+   с одной текстовой кнопкой на всю ширину (sbMkActionBar align-center).
+   Правые радиусы ещё площе — 2 (по Figma: 12 2 2 12). */
+.sb-toast.redirector {
+  border-radius: var(--radius-12) var(--radius-2) var(--radius-2) var(--radius-12);
+}
+.sb-toast.redirector .sb-toast-text {
+  -webkit-line-clamp: 3;
+}
+/* Action Bar внутри тоста компактнее базового: paddings 8 вместо 16
+   (scoped-оверрайд у консьюмера, сам компонент Action Bar не трогаем).
+   Нижние радиусы повторяют карточку (BL 12 / BR 2) — иначе прямые углы
+   бара торчат из скруглённого низа тоста. */
+.sb-toast .sb-action-bar {
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  border-radius: 0 0 var(--radius-2) var(--radius-12);
+}
+
+/* ── Collapsable ── закрытый = Redirector (кнопка Details в Action Bar);
+   по клику раскрывается details-зона (пока список Info Cells из List,
+   контракт — любой контент), кнопка меняется на Hide (sbToastDetailsToggle).
+   max-height снимается: в раскрытом тост растёт под контент (в стеке /
+   у менеджера появится кап по высоте экрана — следующий заход). */
+.sb-toast.collapsable.expanded { max-height: none; }
+.sb-toast-details {
+  display: none;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap-horiz-s);
+  /* Ширина контента 280 при карточке 360 (Figma) — резиновые паддинги 40,
+     как у body; снизу 8 по спеке. */
+  padding: 0 var(--pad-horiz-40) var(--pad-vert-8);
+}
+.sb-toast.expanded .sb-toast-details { display: flex; }
+
+/* ── Stack ── стопка тостов ОДНОГО типа. Collapsed: виден верхний тост +
+   две псевдо-подложки (::before/::after — без фейковых DOM-тостов);
+   hover выдвигает подложки на 2px вниз и показывает чипсу Clear (N).
+   Клик по стопке или шеврону — раскрытие: столбец тостов с крестиками,
+   чипса становится Clear All, рядом круглая кнопка-шеврон сборки. */
+.sb-toast-stack {
+  display: flex;
+  flex-direction: column;
+  width: 360px;
+  max-width: 360px;
+}
+.sb-toast-stack-cards {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-vert-m);
+}
+/* Тосты поверх подложек. */
+.sb-toast-stack .sb-toast { position: relative; z-index: 1; }
+.sb-toast-stack .sb-toast-stack-cards { transition: padding-bottom 0.3s ease; }
+.sb-toast-stack:not(.expanded) .sb-toast-stack-cards {
+  cursor: pointer;
+  padding-bottom: 12px; /* место под подложки стопки */
+}
+/* Плавная сборка/раскрытие: display:none не анимируется — скрытые тосты
+   сжимаются max-height'ом в 0, отрицательный margin-top съедает flex-gap
+   ряда, opacity и лёгкий сдвиг дают «втягивание» под верхнюю карточку. */
+.sb-toast-stack .sb-toast {
+  transition: max-height 0.3s ease, opacity 0.25s ease, margin-top 0.3s ease,
+              transform 0.3s ease;
+}
+.sb-toast-stack:not(.expanded) .sb-toast:not(:first-child) {
+  max-height: 0;
+  min-height: 0;
+  opacity: 0;
+  margin-top: calc(-1 * var(--gap-vert-m));
+  transform: translateY(-8px);
+  overflow: hidden;
+  pointer-events: none;
+  box-shadow: none;
+}
+/* Подложки: нижние «срезы» карточек — фон, нижние радиусы, Shadow-L.
+   Живут всегда (для анимации), в expanded растворяются opacity. */
+.sb-toast-stack .sb-toast-stack-cards::before,
+.sb-toast-stack .sb-toast-stack-cards::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  height: 12px;
+  background: var(--background);
+  border-radius: 0 0 var(--radius-4) var(--radius-12);
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay); /* Shadow-L */
+  transition: transform 0.15s ease, opacity 0.3s ease;
+}
+.sb-toast-stack .sb-toast-stack-cards::before {
+  left: 0; right: 0; bottom: 6px;
+}
+.sb-toast-stack .sb-toast-stack-cards::after {
+  left: 0; right: 0; bottom: 0;
+}
+.sb-toast-stack.expanded .sb-toast-stack-cards::before,
+.sb-toast-stack.expanded .sb-toast-stack-cards::after { opacity: 0; }
+/* В стопке из двух — одна подложка. */
+.sb-toast-stack[data-count="2"]:not(.expanded) .sb-toast-stack-cards::after { display: none; }
+/* Hover: подложки выезжают на 2px вниз. */
+.sb-toast-stack:not(.expanded) .sb-toast-stack-cards:hover::before,
+.sb-toast-stack:not(.expanded) .sb-toast-stack-cards:hover::after {
+  transform: translateY(2px);
+}
+
+/* Правые контролы тостов в стеке: шеврон-подсказка (collapsed) ↔
+   крестик закрытия (expanded). Шеврон не ловит клики — раскрытием
+   занимается вся стопка (onclick на cards). */
+.sb-toast-stack-peek { pointer-events: none; }
+.sb-toast-stack:not(.expanded) .sb-toast-stack-x { display: none; }
+.sb-toast-stack.expanded .sb-toast-stack-peek { display: none; }
+
+/* Нижний ряд: чипса Clear + (в expanded) круглая кнопка-шеврон сборки. */
+.sb-toast-stack-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  margin-top: var(--gap-vert-m);
+}
+/* Чипса — инверсная пилюля (трюк снэкбара: text-токен фоном, surface
+   контентом — пара сама инвертируется темой). */
+.sb-toast-stack-clear {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  border: none;
+  cursor: pointer;
+  padding: var(--pad-vert-4) var(--pad-horiz-16);
+  border-radius: var(--radius-100);
+  background: var(--text-secondary);
+  color: var(--surface-1);
+  font-size: var(--body-font-size-s);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--body-line-height);
+  transition: opacity 0.15s ease;
+}
+/* Collapsed: чипса Clear (N) появляется только по ховеру на стек. */
+.sb-toast-stack:not(.expanded) .sb-toast-stack-clear {
+  opacity: 0;
+  pointer-events: none;
+}
+.sb-toast-stack:not(.expanded):hover .sb-toast-stack-clear {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sb-toast-stack:not(.expanded) .sb-toast-stack-clear-all { display: none; }
+.sb-toast-stack.expanded .sb-toast-stack-clear-n { display: none; }
+/* Кнопка сборки — только в expanded, круглая. */
+.sb-toast-stack-fold {
+  display: none;
+  border-radius: var(--radius-100);
+}
+.sb-toast-stack.expanded .sb-toast-stack-fold { display: inline-flex; }
+
+/* Уход тоста/стека (крестик, Clear): fade + сдвиг вправо, удаление из DOM
+   по таймеру в JS (250ms, синхронно с transition). */
+.sb-toast.is-leaving,
+.sb-toast-stack.is-leaving {
+  opacity: 0;
+  transform: translateX(16px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+/* --- [/SYNC:toast] --- */

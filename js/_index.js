@@ -28,6 +28,7 @@ window.SB_COMPONENTS = [
   { name: 'tags',          file: 'tags.js',           deps: [] },
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
   { name: 'tooltips',      file: 'tooltips.js',       deps: ['status'] },            // hover/click подсказка; demo-триггер юзает .sb-status-dot
+  { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
   { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
   { name: 'notifications', file: 'notifications.js',  deps: [] },

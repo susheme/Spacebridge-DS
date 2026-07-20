@@ -142,6 +142,7 @@ window.sbSelectInfoCell = function(cell) {
       state,       // undefined | 'hover' | 'selected' | 'disabled'
       indicator,   // { status: 'online'|'offline'|'error'|'warning'|'maintenance'|'connecting'|'info', pulse?: bool } | undefined
       mark,        // { status: 'success'|'error'|'warning'|'alert'|'info'|'neutral' } | undefined
+      selectable = true, // false — статичная ячейка без select-поведения (реюз вне List: Toast details и т.п.)
     } = opts;
     const stateCls =
       state === 'hover'    ? ' is-hover'    :
@@ -154,7 +155,7 @@ window.sbSelectInfoCell = function(cell) {
     const markEl = mark
       ? `<span class="sb-mark ${mark.status || 'info'}"></span>`
       : '';
-    return `<div class="sb-info-cell${modCls}${stateCls}" onclick="sbSelectInfoCell(this)">
+    return `<div class="sb-info-cell${modCls}${stateCls}"${selectable ? ' onclick="sbSelectInfoCell(this)"' : ''}>
       ${markEl}${indicatorEl}
       <div class="sb-info-cell-text">
         <span class="sb-title-s sb-fw-regular sb-info-cell-title">${title}</span>
@@ -162,6 +163,9 @@ window.sbSelectInfoCell = function(cell) {
       </div>
     </div>`;
   }
+  // Экспорт для реюза вне List (Toast Collapsable details). Прецедент —
+  // sbAntenna из status.js для Table.
+  window.sbMkInfoCell = mkInfoCell;
 
   function mkProfileCell(opts = {}) {
     const {

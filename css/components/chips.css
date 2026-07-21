@@ -1,0 +1,38 @@
+/* --- [SYNC:chips] Chips ---
+   Кнопка-пилюля: иконка 24×24 слева + лейбл. По Figma-спеке: высота 32,
+   радиус 100, фон --text-secondary, текст --background (Button 15/600,
+   line-height 12, tabular nums). Паддинги асимметричные: 4 слева под
+   иконку, 16 справа под текст (оси Figma-экспорта развёрнуты в наши
+   pad-токены). Dogfood: Clear-чипса стека тостов. */
+.sb-chip {
+  display: inline-flex;
+  height: 32px;
+  min-width: var(--btn-rounded-min-width);
+  max-height: var(--btn-rounded-max-height);
+  padding: var(--pad-vert-4) var(--pad-horiz-16) var(--pad-vert-4) var(--pad-horiz-4);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-100);
+  background: var(--text-secondary);
+  color: var(--background);
+  font-size: var(--button-font-size);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--button-line-height);
+  letter-spacing: var(--letter-spacing);
+  font-variant-numeric: lining-nums tabular-nums;
+  box-sizing: border-box;
+}
+/* Слот иконки — строго 24×24 (Close L по спеке). */
+.sb-chip .sb-icon-wrap {
+  width: 24px;
+  height: 24px;
+  max-width: 24px;
+  max-height: 24px;
+  flex-shrink: 0;
+}
+/* Без иконки паддинги симметричные. */
+.sb-chip.no-icon { padding-left: var(--pad-horiz-16); }
+/* --- [/SYNC:chips] --- */

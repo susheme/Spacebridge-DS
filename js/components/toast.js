@@ -200,23 +200,8 @@ window.COMP_CSS.toast = `.sb-toast {
   opacity: 1;
   pointer-events: auto;
 }
-/* Чипса — инверсная пилюля (трюк снэкбара: text-токен фоном, surface
-   контентом — пара сама инвертируется темой). */
-.sb-toast-stack-clear {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gap-horiz-xs);
-  border: none;
-  cursor: pointer;
-  padding: var(--pad-vert-4) var(--pad-horiz-16);
-  border-radius: var(--radius-100);
-  background: var(--text-secondary);
-  color: var(--surface-1);
-  font-size: var(--body-font-size-s);
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--body-line-height);
-  transition: opacity 0.15s ease;
-}
+/* Чипса Clear — DS-компонент Chips (sbMkChip, стили в chips.css);
+   здесь только переключение лейблов Clear (N) / Clear All по состоянию. */
 .sb-toast-stack:not(.expanded) .sb-toast-stack-clear-all { display: none; }
 .sb-toast-stack.expanded .sb-toast-stack-clear-n { display: none; }
 /* Кнопка сборки — только в expanded, круглая. */
@@ -386,7 +371,11 @@ window.COMP_CSS.toast = `.sb-toast {
     return `<div class="sb-toast-stack${expanded ? ' expanded' : ''}" data-count="${toasts.length}"${demoLoop ? ' data-demo-loop' : ''}>
       <div class="sb-toast-stack-cards" onclick="sbToastStackOpen(this)">${cards}</div>
       <div class="sb-toast-stack-bar">
-        <button type="button" class="sb-toast-stack-clear" onclick="sbToastStackClear(this)">${sbIcon('close-circle-fill', 'S')}<span class="sb-toast-stack-clear-n">Clear (${toasts.length})</span><span class="sb-toast-stack-clear-all">Clear All</span></button>
+        ${sbMkChip({
+          cls: 'sb-toast-stack-clear',
+          onClick: 'sbToastStackClear(this)',
+          label: `<span class="sb-toast-stack-clear-n">Clear (${toasts.length})</span><span class="sb-toast-stack-clear-all">Clear All</span>`,
+        })}
         <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-toast-stack-fold" aria-label="Collapse" onclick="sbToastStackFold(this)">${sbIcon('arrow-up-s-line', 'S')}</button>
       </div>
     </div>`;

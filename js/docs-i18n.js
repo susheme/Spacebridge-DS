@@ -34,7 +34,12 @@ function sbT(en, ru) {
 // ВАЖНО: возвращает <div> — обёртка описания в core.js должна быть <div>, не <p>.
 function sbDocNote(title, body) {
   const type = /important/i.test(title) ? 'warning' : 'info';
-  return `<div class="sb-banner ${type}">`
+  // Collapse — тем же контрактом, что sbMkBanner (notifications.js): правого
+  // слота нет → .collapsible, кламп 5 строк; Chevron Button в правом верхнем
+  // углу виден только при реальном переполнении (замер sbBannerSyncOverflow
+  // через MutationObserver). Длинные Tech Info сворачиваются из коробки.
+  // onclick резолвится в момент клика — notifications.js к тому времени загружен.
+  return `<div class="sb-banner ${type} collapsible">`
     + `<div class="sb-banner-content">`
     +   `<div class="sb-banner-titlerow">`
     +     `<span class="sb-banner-lead">${sbIcon('information-fill', 'L')}</span>`
@@ -42,6 +47,7 @@ function sbDocNote(title, body) {
     +   `</div>`
     +   `<div class="sb-banner-text sb-body-m">${body}</div>`
     + `</div>`
+    + `<div class="sb-chevron sb-banner-chevron" role="button" aria-label="Expand" onclick="sbBannerToggle(this)">${sbIcon('arrow-down-s-line', 'L')}</div>`
     + `</div>`;
 }
 

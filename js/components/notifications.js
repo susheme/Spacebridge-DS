@@ -84,6 +84,39 @@ a.sb-banner-title {
 .sb-banner.error .sb-banner-title,
 .sb-banner.error .sb-banner-text { color: var(--error); }
 
+/* ── Collapsible Banner ── правило контента: баннер С правым слотом несёт
+   не более 5 строк body — кламп молча (.capped), без раскрытия. Баннер
+   БЕЗ правого слота (.collapsible) тоже клампится 5 строками, но при
+   переполнении (замер sbBannerSyncOverflow → .has-overflow) получает
+   закреплённый Chevron Button в правом верхнем углу (16/16) — раскрытие
+   и сборка. docNote-плашки (sbDocNote в docs-i18n.js) собраны тем же
+   контрактом — длинные Tech Info сворачиваются из коробки. */
+.sb-banner { position: relative; }
+.sb-banner.capped .sb-banner-text,
+.sb-banner.collapsible .sb-banner-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+.sb-banner.collapsible.expanded .sb-banner-text {
+  -webkit-line-clamp: unset;
+  max-height: none;
+}
+.sb-banner-chevron {
+  display: none;
+  position: absolute;
+  top: var(--pad-vert-16);
+  right: var(--pad-horiz-16);
+}
+.sb-banner.has-overflow .sb-banner-chevron,
+.sb-banner.expanded .sb-banner-chevron { display: flex; }
+.sb-banner-chevron svg { transition: transform 0.2s ease; }
+.sb-banner.expanded .sb-banner-chevron svg { transform: rotate(180deg); }
+/* Контент не подлезает под закреплённый шеврон. */
+.sb-banner.has-overflow .sb-banner-content,
+.sb-banner.expanded .sb-banner-content { padding-right: var(--pad-horiz-32); }
+
 /* ── Notification Bar ── slim full-width strip right under the Navigation Bar.
    Content centered by default; .align-left pins it to the left edge.
    Text — Body M in the type colour; links inherit it, bold + underline. */
@@ -223,12 +256,54 @@ a.sb-banner-title {
     const titleRow = (lead || title) ? `<div class="sb-banner-titlerow">${lead}${title}</div>` : '';
     const text = c.text ? `<div class="sb-banner-text sb-body-m">${c.text}</div>` : '';
     const right = c.right ? `<div class="sb-banner-right">${c.right}</div>` : '';
-    return `<div class="sb-banner ${type}">`
+    // Collapse-правило: баннер С правым слотом — кламп 5 строк без раскрытия
+    // (.capped); БЕЗ правого слота — .collapsible + закреплённый Chevron
+    // Button (виден только при реальном переполнении — sbBannerSyncOverflow).
+    const modCls = c.right ? ' capped' : (c.text ? ' collapsible' : '');
+    const chevron = (!c.right && c.text)
+      ? `<div class="sb-chevron sb-banner-chevron" role="button" aria-label="Expand" onclick="sbBannerToggle(this)">${sbIcon('arrow-down-s-line', 'L')}</div>`
+      : '';
+    return `<div class="sb-banner ${type}${modCls}">`
       + `<div class="sb-banner-content">${titleRow}${text}</div>`
       + right
+      + chevron
       + `</div>`;
   }
   window.sbMkBanner = mkBanner;
+
+  // Раскрытие/сборка collapsible-баннера (Chevron Button в правом верхнем углу).
+  window.sbBannerToggle = function(el) {
+    const b = el.closest('.sb-banner');
+    if (b) b.classList.toggle('expanded');
+  };
+  // Замер переполнения: если кламп 5 строк скрыл часть текста → .has-overflow,
+  // шеврон становится видимым. Страницы рендерятся динамически (SPA), поэтому
+  // авто-вызов через MutationObserver (паттерн nav-bar smart-collapse);
+  // замеряем только свёрнутые — раскрытый оставляет шеврон для сборки.
+  function syncBannerOverflow(root) {
+    (root || document).querySelectorAll('.sb-banner.collapsible:not(.expanded)').forEach(b => {
+      const t = b.querySelector('.sb-banner-text');
+      if (!t) return;
+      b.classList.toggle('has-overflow', t.scrollHeight > t.clientHeight + 1);
+    });
+  }
+  window.sbBannerSyncOverflow = syncBannerOverflow;
+  if (!window.__sbBannerMO) {
+    window.__sbBannerMO = true;
+    const wire = () => {
+      const mo = new MutationObserver(() => {
+        if (window.__sbBannerRaf) return;
+        window.__sbBannerRaf = requestAnimationFrame(() => {
+          window.__sbBannerRaf = null;
+          syncBannerOverflow(document);
+        });
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+      syncBannerOverflow(document);
+    };
+    if (document.body) wire();
+    else document.addEventListener('DOMContentLoaded', wire);
+  }
 
   // Fill-иконки типов для лида Notification Bar — пути из наших Symbol Badges
   // (SB_BADGE_SPECS, badge.js грузится раньше). Регистрируем в ICON_PATHS,
@@ -360,6 +435,10 @@ a.sb-banner-title {
   // Per-type демо-контент для playground: цвет индикатора (Status), глиф
   // Symbol Badge, Badge-Status класс/лейбл, тайтл/описание баннера и тексты
   // Notification Bar (barText — обычный, barLink — с кликабельной частью).
+  // Long body (>5 строк) для демо collapse-правила: с right-слотом текст
+  // молча клампится (.capped), без него появляется Chevron Button.
+  const LONG_BODY_TAIL = ' Diagnostics show intermittent packet loss on the uplink path, and the modem has entered a self-recovery cycle twice in the last hour. Field engineers are advised to verify the antenna alignment, check the cable integrity and confirm the LNB power supply before escalating. If the condition persists after the corrective actions, open an incident ticket and attach the last 24 hours of telemetry for the affected terminal, including the demodulator lock history and the observed Es/No margins for both polarizations.';
+
   const PG_DEMO = {
     info:    { dot: 'info',        glyph: 'infoFilled',  bs: 'bs-blue',   bsLabel: 'Info',     title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.',
                barText: 'Firmware 3.2.1 rollout starts at 02:00 UTC.',                barLink: 'Firmware 3.2.1 is available. <a href="#">Release notes</a>.' },
@@ -380,7 +459,7 @@ a.sb-banner-title {
     ),
     playground: {
       title: 'Notifications Playground',
-      state: { comp: 'banner', type: 'info', lead: 'dot', right: 'badge', align: 'center', title: true, link: false, text: true, icon: true },
+      state: { comp: 'banner', type: 'info', lead: 'dot', right: 'badge', align: 'center', title: true, link: false, text: true, icon: true, longBody: false },
       controls(pg) {
         return `${sbPgGroup('Component', `
               ${pg.select('comp', [
@@ -407,6 +486,9 @@ a.sb-banner-title {
                 { value: 'close',   label: 'Close' },
                 { value: 'buttons', label: 'Buttons' },
               ], { label: 'Right Slot' })}
+              <div class="pg-toggles">
+                ${pg.toggle('longBody', 'Long')}
+              </div>
           `, { attrs: 'data-nb-scope="banner"' })}
           ${sbPgGroup('Alignment', `
               ${pg.select('align', [
@@ -461,7 +543,7 @@ a.sb-banner-title {
           lead,
           title: s.title ? d.title : '',
           href: s.title && s.link ? '#' : '',
-          text: s.text ? d.text : '',
+          text: s.text ? (s.longBody ? d.text + LONG_BODY_TAIL : d.text) : '',
           right,
         });
         // Width-обёртка: width:100% баннера в центрирующем playground-превью
@@ -516,7 +598,9 @@ a.sb-banner-title {
           + '<b>Info & Success:</b>'
           + '<ul><li>sit on --surface-1.</li></ul>'
           + '<b>Warning & Critical:</b>'
-          + '<ul><li>tint the surface (--alert-hover / --error-hover);</li><li>colour the title and text.</li></ul>',
+          + '<ul><li>tint the surface (--alert-hover / --error-hover);</li><li>colour the title and text.</li></ul>'
+          + '<b>Collapse:</b>'
+          + '<ul><li>A banner with a right-slot status carries at most 5 body lines — clamped silently;</li><li>Without a right slot, text over 5 lines pins a Chevron Button to the top-right corner (16/16) that expands and folds the banner;</li><li>The chevron appears only on real overflow (<code>sbBannerSyncOverflow</code> measures automatically).</li></ul>',
           '<b>Ширина: 100%</b>'
           + '<ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4;</li><li>border-left: 4px в цвет типа.</li></ul>'
           + '<b>Тайтл и описание:</b>'
@@ -525,6 +609,8 @@ a.sb-banner-title {
           + '<ul><li>сидят на --surface-1.</li></ul>'
           + '<b>Warning и Critical:</b>'
           + '<ul><li>тонируют фон (--alert-hover / --error-hover);</li><li>красят тайтл и текст.</li></ul>'
+          + '<b>Collapse:</b>'
+          + '<ul><li>Баннер со статусом в правом слоте несёт не более 5 строк body — клампится молча;</li><li>Без правого слота текст длиннее 5 строк закрепляет Chevron Button в правом верхнем углу (16/16) — раскрытие и сборка баннера;</li><li>Шеврон появляется только при реальном переполнении (<code>sbBannerSyncOverflow</code> замеряет автоматически).</li></ul>'
         )),
         col: true,
         preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
@@ -568,6 +654,30 @@ a.sb-banner-title {
   </div>
   <div class="sb-banner-right"><span class="sb-badge-status mini bs-red">Critical</span></div>
 </div>`,
+        css: COMP_CSS.notifications,
+      },
+      {
+        title: sbT('Collapsible Banner', 'Раскрывающийся баннер'),
+        desc: sbT(
+          'A banner without a right slot clamps its body at 5 lines; when the text is longer, a Chevron Button pinned to the top-right corner (16/16 offsets) expands and folds it. Banners with a right-slot status carry no chevron — their content rule is 5 lines maximum, clamped silently. The chevron shows up only on real overflow: <code>sbBannerSyncOverflow</code> measures the text automatically. Below: a collapsible Warning and, for contrast, an Info with a right-slot status — same long text, silent clamp.',
+          'Баннер без правого слота клампит body пятью строками; если текст длиннее, закреплённый в правом верхнем углу Chevron Button (отступы 16/16) раскрывает и сворачивает его. У баннеров со статусом в правом слоте шеврона нет — их контент-правило: максимум 5 строк, кламп молча. Шеврон появляется только при реальном переполнении: <code>sbBannerSyncOverflow</code> замеряет текст автоматически. Ниже: раскрывающийся Warning и для контраста Info со статусом справа — тот же длинный текст, молчаливый кламп.'
+        ),
+        col: true,
+        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
+          ${mkBanner({ type: 'warning', lead: dot('maintenance'), title: 'High Latency Detected', text: 'Terminal SB-003 latency exceeds the 500 ms threshold.' + LONG_BODY_TAIL })}
+          ${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.' + LONG_BODY_TAIL, right: badge('bs-blue', 'Info') })}
+        </div>`,
+        html: `<div class="sb-banner warning collapsible">
+  <div class="sb-banner-content">
+    <div class="sb-banner-titlerow">...</div>
+    <div class="sb-banner-text sb-body-m">Long text…</div>
+  </div>
+  <div class="sb-chevron sb-banner-chevron" onclick="sbBannerToggle(this)"><!-- arrow-down-s-line --></div>
+</div>
+
+<!-- Правило: есть right-слот → .capped (кламп 5 строк, без шеврона);
+     нет right-слота → .collapsible, шеврон виден при переполнении
+     (sbBannerSyncOverflow / MutationObserver — автоматически) -->`,
         css: COMP_CSS.notifications,
       },
       {

@@ -79,6 +79,39 @@ a.sb-banner-title {
 .sb-banner.error .sb-banner-title,
 .sb-banner.error .sb-banner-text { color: var(--error); }
 
+/* ── Collapsible Banner ── правило контента: баннер С правым слотом несёт
+   не более 5 строк body — кламп молча (.capped), без раскрытия. Баннер
+   БЕЗ правого слота (.collapsible) тоже клампится 5 строками, но при
+   переполнении (замер sbBannerSyncOverflow → .has-overflow) получает
+   закреплённый Chevron Button в правом верхнем углу (16/16) — раскрытие
+   и сборка. docNote-плашки (sbDocNote в docs-i18n.js) собраны тем же
+   контрактом — длинные Tech Info сворачиваются из коробки. */
+.sb-banner { position: relative; }
+.sb-banner.capped .sb-banner-text,
+.sb-banner.collapsible .sb-banner-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+.sb-banner.collapsible.expanded .sb-banner-text {
+  -webkit-line-clamp: unset;
+  max-height: none;
+}
+.sb-banner-chevron {
+  display: none;
+  position: absolute;
+  top: var(--pad-vert-16);
+  right: var(--pad-horiz-16);
+}
+.sb-banner.has-overflow .sb-banner-chevron,
+.sb-banner.expanded .sb-banner-chevron { display: flex; }
+.sb-banner-chevron svg { transition: transform 0.2s ease; }
+.sb-banner.expanded .sb-banner-chevron svg { transform: rotate(180deg); }
+/* Контент не подлезает под закреплённый шеврон. */
+.sb-banner.has-overflow .sb-banner-content,
+.sb-banner.expanded .sb-banner-content { padding-right: var(--pad-horiz-32); }
+
 /* ── Notification Bar ── slim full-width strip right under the Navigation Bar.
    Content centered by default; .align-left pins it to the left edge.
    Text — Body M in the type colour; links inherit it, bold + underline. */

@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  TOAST
 //  CSS в css/components/toast.css — SYNC-маркеры обязательны.
-//  Default-вариант: Header XS (глиф/лоадер + тайтл + close) + body Body M,
-//  цветовая полоса severity справа. Redirector / Collapsable / стеки и
-//  runtime-менеджер SB_TOAST — следующими заходами.
+//  Варианты: Default / Redirector / Collapsable + стеки (одного типа).
+//  Runtime-менеджер SB_TOAST: host под Navigation Bar, политика стекования
+//  (Default сразу, action-тосты — от 3+ с grace 8с). См. Tech Info.
 // ═══════════════════════════════════════════════════════════════════════════
 
 window.COMP_CSS.toast = `.sb-toast {
@@ -70,9 +70,20 @@ window.COMP_CSS.toast = `.sb-toast {
 /* ── Collapsable ── закрытый = Redirector (кнопка Details в Action Bar);
    по клику раскрывается details-зона (пока список Info Cells из List,
    контракт — любой контент), кнопка меняется на Hide (sbToastDetailsToggle).
-   max-height снимается: в раскрытом тост растёт под контент (в стеке /
-   у менеджера появится кап по высоте экрана — следующий заход). */
-.sb-toast.collapsable.expanded { max-height: none; }
+   Раскрытый тост растёт под контент, но капится высотой экрана до
+   футера: точный кап менеджер кладёт в --sb-toast-cap на хосте
+   (вьюпорт − top хоста − резерв под футер), вне менеджера — дефолт.
+   Если данных больше капа — details скроллятся внутри (функциональный
+   скролл, не косметика); хедер, body и Action Bar не сжимаются. */
+.sb-toast.collapsable.expanded { max-height: var(--sb-toast-cap, calc(100vh - 200px)); }
+.sb-toast.collapsable.expanded .sb-header-xs,
+.sb-toast.collapsable.expanded .sb-toast-text,
+.sb-toast.collapsable.expanded .sb-action-bar { flex-shrink: 0; }
+.sb-toast.collapsable.expanded .sb-toast-details {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
 .sb-toast-details {
   display: none;
   flex-direction: column;
@@ -158,16 +169,36 @@ window.COMP_CSS.toast = `.sb-toast {
    крестик закрытия (expanded). Шеврон не ловит клики — раскрытием
    занимается вся стопка (onclick на cards). */
 .sb-toast-stack-peek { pointer-events: none; }
+/* Redirector/Collapsable в стопке: пока стек собран, внутренние кнопки
+   (Check / Details) не кликаются — любой клик раскрывает стек. */
+.sb-toast-stack:not(.expanded) .sb-toast .sb-action-bar { pointer-events: none; }
 .sb-toast-stack:not(.expanded) .sb-toast-stack-x { display: none; }
 .sb-toast-stack.expanded .sb-toast-stack-peek { display: none; }
 
-/* Нижний ряд: чипса Clear + (в expanded) круглая кнопка-шеврон сборки. */
+/* Нижний ряд: чипса Clear + (в expanded) круглая кнопка-шеврон сборки.
+   В collapsed ряд схлопнут в 0 и не резервирует место; по ховеру на стек
+   плавно выезжает (max-height + margin) и сдвигает нижестоящие тосты. */
 .sb-toast-stack-bar {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: var(--gap-horiz-s);
   margin-top: var(--gap-vert-m);
+  max-height: 32px;
+  overflow: hidden;
+  transition: max-height 0.25s ease, margin-top 0.25s ease, opacity 0.2s ease;
+}
+.sb-toast-stack:not(.expanded) .sb-toast-stack-bar {
+  max-height: 0;
+  margin-top: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.sb-toast-stack:not(.expanded):hover .sb-toast-stack-bar {
+  max-height: 32px;
+  margin-top: var(--gap-vert-m);
+  opacity: 1;
+  pointer-events: auto;
 }
 /* Чипса — инверсная пилюля (трюк снэкбара: text-токен фоном, surface
    контентом — пара сама инвертируется темой). */
@@ -186,15 +217,6 @@ window.COMP_CSS.toast = `.sb-toast {
   line-height: var(--body-line-height);
   transition: opacity 0.15s ease;
 }
-/* Collapsed: чипса Clear (N) появляется только по ховеру на стек. */
-.sb-toast-stack:not(.expanded) .sb-toast-stack-clear {
-  opacity: 0;
-  pointer-events: none;
-}
-.sb-toast-stack:not(.expanded):hover .sb-toast-stack-clear {
-  opacity: 1;
-  pointer-events: auto;
-}
 .sb-toast-stack:not(.expanded) .sb-toast-stack-clear-all { display: none; }
 .sb-toast-stack.expanded .sb-toast-stack-clear-n { display: none; }
 /* Кнопка сборки — только в expanded, круглая. */
@@ -212,7 +234,40 @@ window.COMP_CSS.toast = `.sb-toast {
   transform: translateX(16px);
   transition: opacity 0.25s ease, transform 0.25s ease;
   pointer-events: none;
-}`;
+}
+/* ── Host (runtime SB_TOAST) ── fixed-контейнер справа сверху, под
+   Navigation Bar (top задаёт менеджер: высота нав-бара + 16, или + 32
+   в padded-режиме «с подложкой»). Пустая зона хоста клики не ловит;
+   при переполнении экрана хост скроллится (кап высоты — функционал). */
+.sb-toast-host {
+  position: fixed;
+  right: 0;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--gap-vert-m);
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+  /* Не косметика: overflow-y:auto делает overflow-x тоже auto, и въезд
+     карточки (translateX) мигал горизонтальным скроллбаром. Попапов
+     внутри тостов нет — клип по X безопасен. */
+  overflow-x: hidden;
+  pointer-events: none;
+  /* Воздух под Shadow-L (0 10px 20px): overflow-y:auto клипал тени по
+     краям хоста. Карточки остаются в 16px от края экрана (right:0 +
+     padding-right), снизу запас больше — тень смещена вниз. */
+  padding: var(--pad-vert-8) var(--pad-horiz-16) var(--pad-vert-32) var(--pad-horiz-32);
+}
+.sb-toast-host > * { pointer-events: auto; }
+/* Вход нового тоста. Класс .anim менеджер ставит только на рендеры с
+   НОВЫМИ тостами — служебные перегруппировки (grace-таймеры) проходят
+   без анимации, карточки не мелькают. */
+@keyframes sb-toast-in {
+  from { opacity: 0; transform: translateX(16px); }
+}
+.sb-toast-host.anim .sb-toast,
+.sb-toast-host.anim .sb-toast-stack { animation: sb-toast-in 0.2s ease; }`;
 
 // --- TOAST ---
 (() => {
@@ -358,10 +413,19 @@ window.COMP_CSS.toast = `.sb-toast {
     const stack = el.closest('.sb-toast-stack');
     if (stack && !stack.classList.contains('expanded')) stack.classList.add('expanded');
   };
-  // Сборка обратно — круглая кнопка-шеврон в баре.
+  // Сборка обратно — круглая кнопка-шеврон в баре. Раскрытые details
+  // вложенных Collapsable-тостов схлопываем тоже (иначе collapsed-стопка
+  // получает верхнюю карточку в полный рост), кнопки Details/Hide — в
+  // исходное состояние.
   window.sbToastStackFold = function(btn) {
     const stack = btn.closest('.sb-toast-stack');
-    if (stack) stack.classList.remove('expanded');
+    if (!stack) return;
+    stack.classList.remove('expanded');
+    stack.querySelectorAll('.sb-toast.expanded').forEach(t => {
+      t.classList.remove('expanded');
+      const dBtn = t.querySelector('.sb-action-bar .sb-btn-text');
+      if (dBtn) dBtn.innerHTML = (dBtn.dataset.lblShow || 'Details') + ' ' + sbIcon('arrow-down-s-line', 'L');
+    });
   };
   // Крестик на тосте в expanded: fade-out тоста, затем remove + пересчёт
   // счётчика чипсы; последний закрытый — сносит стек целиком (с loop'ом).
@@ -383,6 +447,167 @@ window.COMP_CSS.toast = `.sb-toast {
   window.sbToastStackClear = function(btn) {
     const stack = btn.closest('.sb-toast-stack');
     if (stack) removeStack(stack);
+  };
+
+  // ── SB_TOAST — runtime-менеджер ───────────────────────────────────────
+  // Host: fixed справа сверху, top = высота .sb-nav-bar + 16 (или + 32 в
+  // padded-режиме «с подложкой», см. configure). Политика стекования:
+  //   - группа = вариант (default/redirector/collapsable) + severity;
+  //   - Default: 2+ в группе → сразу собираются в стек;
+  //   - Redirector/Collapsable (action-тосты): стек только как защита от
+  //     потопа — при 3+; свежий action-тост держится ОТДЕЛЬНОЙ карточкой
+  //     сверху группы GRACE_MS (8с), чтобы призыв к действию был виден,
+  //     и только потом уезжает в стек;
+  //   - клики по крестикам/Clear в стеке синкают модель менеджера
+  //     (delegated-слушатель на host), DOM-анимации делают хендлеры стека.
+  const GRACE_MS = 8000;
+  const TOAST_MGR = {
+    items: [],   // { id, opts, kind, fresh, timer }
+    seq: 0,
+    padded: false,
+    host: null,
+
+    configure(opts) {
+      this.padded = !!(opts && opts.padded);
+      if (this.items.length) this.render();
+    },
+    kindOf(opts) {
+      const variant = opts.details ? 'collapsable' : (opts.action ? 'redirector' : 'default');
+      return variant + ':' + (opts.severity || 'success');
+    },
+    ensureHost() {
+      if (this.host && document.body.contains(this.host)) return this.host;
+      const el = document.createElement('div');
+      el.className = 'sb-toast-host';
+      el.addEventListener('click', e => this.syncFromDom(e));
+      document.body.appendChild(el);
+      this.host = el;
+      return el;
+    },
+    offsetTop() {
+      const nav = document.querySelector('.sb-nav-bar');
+      const navH = nav ? nav.getBoundingClientRect().height : 0;
+      return Math.round(navH + (this.padded ? 32 : 16));
+    },
+
+    show(opts) {
+      const id = 't' + (++this.seq);
+      const kind = this.kindOf(opts || {});
+      const item = { id, opts: opts || {}, kind, fresh: !kind.startsWith('default'), timer: null };
+      if (item.fresh) {
+        item.timer = setTimeout(() => { item.fresh = false; item.timer = null; this.render(); }, GRACE_MS);
+      }
+      this.items.push(item);
+      this.render();
+      return id;
+    },
+    hide(id) {
+      const it = this.items.find(i => i.id === id);
+      if (it && it.timer) clearTimeout(it.timer);
+      this.items = this.items.filter(i => i.id !== id);
+      this.render();
+    },
+    clearAll() {
+      this.items.forEach(i => i.timer && clearTimeout(i.timer));
+      this.items = [];
+      this.render();
+    },
+
+    // Крестик/Clear внутри менеджерского стека: модель — источник правды,
+    // но немедленный re-render не нужен — DOM-хендлеры стека уже сделали
+    // правильную вещь (анимация + удаление).
+    syncFromDom(e) {
+      const stack = e.target.closest('.sb-toast-stack[data-kind]');
+      if (!stack) return;
+      const kind = stack.getAttribute('data-kind');
+      if (e.target.closest('.sb-toast-stack-clear')) {
+        this.items = this.items.filter(i => i.kind !== kind || i.fresh);
+        return;
+      }
+      const x = e.target.closest('.sb-toast-stack-x');
+      if (x) {
+        const toastEl = x.closest('.sb-toast');
+        const idx = Array.prototype.indexOf.call(stack.querySelectorAll('.sb-toast'), toastEl);
+        const rest = this.items.filter(i => i.kind === kind && !i.fresh);
+        const victim = rest[idx];
+        if (victim) this.items = this.items.filter(i => i !== victim);
+      }
+    },
+
+    single(item, expandedIds) {
+      const closeBtn = `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Close" onclick="sbToastHide('${item.id}')">${sbIcon('close-line', 'S')}</button>`;
+      const opts = Object.assign({}, item.opts, { right: closeBtn });
+      if (opts.details && expandedIds && expandedIds.has(item.id)) {
+        opts.details = Object.assign({}, opts.details, { expanded: true });
+      }
+      return mkToast(opts)
+        .replace('<div class="sb-toast', `<div data-toast-id="${item.id}" class="sb-toast`);
+    },
+    render() {
+      const host = this.ensureHost();
+      const top = this.offsetTop();
+      host.style.top = top + 'px';
+      // Кап раскрытого Collapsable: до низа экрана минус резерв под футер
+      // (высота .sb-info-footer, если он есть, + воздух).
+      const footer = document.querySelector('.sb-info-footer');
+      const reserve = (footer ? Math.round(footer.getBoundingClientRect().height) : 0) + 32;
+      host.style.setProperty('--sb-toast-cap', `calc(100vh - ${top + reserve}px)`);
+
+      // Снапшот раскрытий из DOM: innerHTML-пересборка иначе схлопывала
+      // открытые details и стеки при каждой перегруппировке.
+      const openToasts = new Set(
+        Array.from(host.querySelectorAll('.sb-toast.expanded[data-toast-id]'))
+          .map(el => el.getAttribute('data-toast-id')));
+      const openStacks = new Set(
+        Array.from(host.querySelectorAll('.sb-toast-stack.expanded[data-kind]'))
+          .map(el => el.getAttribute('data-kind')));
+
+      // Входную анимацию получают только рендеры с новыми тостами.
+      const ids = this.items.map(i => i.id);
+      const prev = this._renderedIds || [];
+      host.classList.toggle('anim', ids.some(id => !prev.includes(id)));
+      this._renderedIds = ids;
+
+      const order = [];
+      const groups = {};
+      this.items.forEach(it => {
+        if (!groups[it.kind]) { groups[it.kind] = []; order.push(it.kind); }
+        groups[it.kind].push(it);
+      });
+      let html = '';
+      order.forEach(kind => {
+        const fresh = groups[kind].filter(i => i.fresh);
+        const rest  = groups[kind].filter(i => !i.fresh);
+        const threshold = kind.startsWith('default') ? 2 : 3;
+        fresh.forEach(i => { html += this.single(i, openToasts); });
+        if (rest.length >= threshold) {
+          html += mkToastStack({ toasts: rest.map(i => i.opts), expanded: openStacks.has(kind) })
+            .replace('<div class="sb-toast-stack', `<div data-kind="${kind}" class="sb-toast-stack`);
+        } else {
+          rest.forEach(i => { html += this.single(i, openToasts); });
+        }
+      });
+      host.innerHTML = html;
+    },
+  };
+  window.SB_TOAST = TOAST_MGR;
+  window.sbToastShow = o => TOAST_MGR.show(o);
+  window.sbToastHide = id => TOAST_MGR.hide(id);
+  window.sbToastClearAll = () => TOAST_MGR.clearAll();
+
+  // Live-демо из playground: собирает opts из текущих контролов и зовёт
+  // настоящий sbToastShow — политика стекования видна вживую.
+  window.sbToastPgShow = function() {
+    const s = (typeof SB_PG !== 'undefined' && SB_PG._states) ? SB_PG._states['toast'] : null;
+    if (!s) return;
+    const d = DEMO[s.severity];
+    sbToastShow({
+      severity: s.severity,
+      title: d.title,
+      text: d.text,
+      action: s.withAction ? { label: 'Check' } : undefined,
+      details: s.collapsable ? { items: DEMO_STEPS.slice(0, 4) } : undefined,
+    });
   };
 
   // ── Demo-контент ──────────────────────────────────────────────────────
@@ -421,11 +646,13 @@ window.COMP_CSS.toast = `.sb-toast {
       + '<b>Redirector:</b>'
       + '<ul><li>Body: up to 3 lines;</li><li>Footer: Action Bar with one text button stretched across the container (<code>align: center</code>);</li><li>Radius: 12 / 2 / 2 / 12.</li></ul>'
       + '<b>Collapsable:</b>'
-      + '<ul><li>Closed: same as Redirector, the button is Details;</li><li>Expanded: a details zone — Info Cells from List (status + timestamp), the contract takes any content; the button turns into Hide;</li><li>Toggle: <code>sbToastDetailsToggle</code> flips <code>.expanded</code> and swaps the label with the chevron.</li></ul>'
+      + '<ul><li>Closed: same as Redirector, the button is Details;</li><li>Expanded: a details zone — Info Cells from List (status + timestamp), the contract takes any content; the button turns into Hide;</li><li>Toggle: <code>sbToastDetailsToggle</code> flips <code>.expanded</code> and swaps the label with the chevron;</li><li>Expanded height is capped at the screen height down to the footer (<code>--sb-toast-cap</code>, set by the manager); longer details scroll inside.</li></ul>'
       + '<b>Stack:</b>'
-      + '<ul><li>Only one toast type collects into a stack;</li><li>Collapsed: the top toast with a chevron + two pseudo-underlays (<code>::before/::after</code>, no fake DOM); hover slides the underlays 2px down and reveals the Clear (N) chip;</li><li>Expanded (click the pile or the chevron): a column of toasts with individual close buttons, the chip turns into Clear All with a round fold chevron next to it.</li></ul>'
+      + '<ul><li>Only one toast type collects into a stack — Default, Redirector and Collapsable all stack;</li><li>While the stack is collapsed, the inner Check / Details buttons are inert — any click expands the stack; folding the stack also folds expanded details;</li><li>Collapsed: the top toast with a chevron + two pseudo-underlays (<code>::before/::after</code>, no fake DOM); hover slides the underlays 2px down and reveals the Clear (N) chip;</li><li>Expanded (click the pile or the chevron): a column of toasts with individual close buttons, the chip turns into Clear All with a round fold chevron next to it.</li></ul>'
+      + '<b>Manager (SB_TOAST):</b>'
+      + '<ul><li>Host: fixed at the top-right, below the Navigation Bar — nav height + 16px (or + 32px in the padded mode, <code>SB_TOAST.configure({ padded: true })</code>);</li><li>API: <code>sbToastShow(opts) → id</code>, <code>sbToastHide(id)</code>, <code>sbToastClearAll()</code>;</li><li>Grouping: variant + severity; Default — 2+ collapse into a stack immediately;</li><li>Redirector / Collapsable: stacking is flood-protection only (3+); a fresh action toast stays a separate card above its group for 8s, then joins the stack;</li><li>Close / Clear clicks inside a stack sync the manager model automatically.</li></ul>'
       + '<b>API:</b>'
-      + '<ul><li><code>sbMkToast({ severity, title, text, lead, right, action, details })</code>;</li><li><code>sbMkToastStack({ toasts, expanded })</code>.</li></ul>',
+      + '<ul><li><code>sbMkToast({ severity, title, text, lead, right, action, details })</code>;</li><li><code>sbMkToastStack({ toasts, expanded })</code>;</li><li><code>sbToastShow / sbToastHide / sbToastClearAll</code>.</li></ul>',
       '<b>Геометрия:</b>'
       + '<ul><li>Ширина: 360px (min 288 / max 360);</li><li>Высота: 88px (min 88 / max 208);</li><li>Радиусы: 12 / 4 / 4 / 12 — правые углы площе из-за полосы;</li><li>Тень: Shadow-L.</li></ul>'
       + '<b>Полоса severity:</b>'
@@ -435,11 +662,13 @@ window.COMP_CSS.toast = `.sb-toast {
       + '<b>Redirector:</b>'
       + '<ul><li>Body: до 3 строк;</li><li>Футер: Action Bar с одной текстовой кнопкой на всю ширину (<code>align: center</code>);</li><li>Радиусы: 12 / 2 / 2 / 12.</li></ul>'
       + '<b>Collapsable:</b>'
-      + '<ul><li>Закрытый: как Redirector, кнопка — Details;</li><li>Раскрытый: details-зона — Info Cells из List (статус + timestamp), контракт принимает любой контент; кнопка меняется на Hide;</li><li>Toggle: <code>sbToastDetailsToggle</code> переключает <code>.expanded</code> и свапает лейбл с шевроном.</li></ul>'
+      + '<ul><li>Закрытый: как Redirector, кнопка — Details;</li><li>Раскрытый: details-зона — Info Cells из List (статус + timestamp), контракт принимает любой контент; кнопка меняется на Hide;</li><li>Toggle: <code>sbToastDetailsToggle</code> переключает <code>.expanded</code> и свапает лейбл с шевроном;</li><li>Высота раскрытого капится экраном до футера (<code>--sb-toast-cap</code>, задаёт менеджер); длинные details скроллятся внутри.</li></ul>'
       + '<b>Stack:</b>'
-      + '<ul><li>В стек собирается только один тип тостов;</li><li>Collapsed: верхний тост с шевроном + две псевдо-подложки (<code>::before/::after</code>, без фейкового DOM); hover выдвигает подложки на 2px и показывает чипсу Clear (N);</li><li>Expanded (клик по стопке или шеврону): столбец тостов с крестиками, чипса становится Clear All, рядом круглая кнопка-шеврон сборки.</li></ul>'
+      + '<ul><li>В стек собирается только один тип тостов — стекуются и Default, и Redirector, и Collapsable;</li><li>Пока стек собран, внутренние кнопки Check / Details не кликаются — любой клик раскрывает стек; сборка стека схлопывает и раскрытые details;</li><li>Collapsed: верхний тост с шевроном + две псевдо-подложки (<code>::before/::after</code>, без фейкового DOM); hover выдвигает подложки на 2px и показывает чипсу Clear (N);</li><li>Expanded (клик по стопке или шеврону): столбец тостов с крестиками, чипса становится Clear All, рядом круглая кнопка-шеврон сборки.</li></ul>'
+      + '<b>Менеджер (SB_TOAST):</b>'
+      + '<ul><li>Host: fixed справа сверху, под Navigation Bar — высота нав-бара + 16px (или + 32px в padded-режиме, <code>SB_TOAST.configure({ padded: true })</code>);</li><li>API: <code>sbToastShow(opts) → id</code>, <code>sbToastHide(id)</code>, <code>sbToastClearAll()</code>;</li><li>Группировка: вариант + severity; Default — 2+ собираются в стек сразу;</li><li>Redirector / Collapsable: стек — только защита от потопа (3+); свежий action-тост держится отдельной карточкой над группой 8с, затем уезжает в стек;</li><li>Клики Close / Clear внутри стека синкают модель менеджера автоматически.</li></ul>'
       + '<b>API:</b>'
-      + '<ul><li><code>sbMkToast({ severity, title, text, lead, right, action, details })</code>;</li><li><code>sbMkToastStack({ toasts, expanded })</code>.</li></ul>'
+      + '<ul><li><code>sbMkToast({ severity, title, text, lead, right, action, details })</code>;</li><li><code>sbMkToastStack({ toasts, expanded })</code>;</li><li><code>sbToastShow / sbToastHide / sbToastClearAll</code>.</li></ul>'
     )),
     playground: {
       title: 'Toast Playground',
@@ -478,13 +707,12 @@ window.COMP_CSS.toast = `.sb-toast {
       },
       // Взаимоисключение вариантов: Redirector и Collapsable вместе не живут
       // (details в render перебивал бы action — тогл висел бы включённым
-      // без эффекта). Stack — стопка ДЕФОЛТНЫХ тостов (правило юзера: в стек
-      // собирается один тип), поэтому гасит оба варианта и наоборот.
+      // без эффекта). Stack комбинируется с любым из них: стопка — всегда
+      // из тостов ОДНОГО типа (Default / Redirector / Collapsable).
       // Чекбоксы синкает _syncControls после render.
       onControlChange(key, value, s) {
-        if (key === 'collapsable' && value) { s.withAction = false; s.stack = false; }
-        if (key === 'withAction'  && value) { s.collapsable = false; s.stack = false; }
-        if (key === 'stack'       && value) { s.withAction = false; s.collapsable = false; }
+        if (key === 'collapsable' && value) s.withAction = false;
+        if (key === 'withAction'  && value) s.collapsable = false;
       },
       render(s) {
         const d = DEMO[s.severity];
@@ -493,10 +721,12 @@ window.COMP_CSS.toast = `.sb-toast {
           : d.text;
         // Паддинги под Shadow-L, чтобы тень не резалась краем превью.
         const action  = s.withAction ? { label: 'Check' } : undefined;
-        const details = s.collapsable ? { items: DEMO_STEPS } : undefined;
+        const details = s.collapsable ? { items: s.stack ? DEMO_STEPS.slice(0, 4) : DEMO_STEPS } : undefined;
         const single  = mkToast({ severity: s.severity, title: s.longText ? d.title + ' — a very long title to demonstrate the ellipsis' : d.title, text, right: s.right, action, details });
+        // Стек наследует выбранный вариант: Default / Redirector / Collapsable —
+        // все тосты стопки одного типа.
         const content = s.stack
-          ? mkToastStack({ toasts: [1, 2, 3].map(() => ({ severity: s.severity, title: d.title, text })), demoLoop: true })
+          ? mkToastStack({ toasts: [1, 2, 3].map(() => ({ severity: s.severity, title: d.title, text, action, details })), demoLoop: true })
           : single;
         // Scroll view для интерактивных режимов (Stack / Collapsable):
         // высота ФИКСИРОВАННАЯ, не max-height — иначе обёртка растёт при
@@ -509,11 +739,20 @@ window.COMP_CSS.toast = `.sb-toast {
           ? `<div style="height:480px;overflow-y:auto" data-pg-preserve-scroll>${inner}</div>`
           : inner;
       },
+      // Live-демо менеджера SB_TOAST: настоящие тосты поверх страницы.
+      // Несколько кликов подряд — видно политику стекования.
+      extraPreview() {
+        return `<div style="display:flex;justify-content:center;padding:0 0 var(--pad-vert-16)">
+          <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbToastPgShow()">Show Live</button>
+        </div>`;
+      },
       genCode(s) {
         const d = DEMO[s.severity];
         if (s.stack) {
+          const gAction  = s.withAction ? { label: 'Check' } : undefined;
+          const gDetails = s.collapsable ? { items: DEMO_STEPS.slice(0, 3) } : undefined;
           return {
-            html: mkToastStack({ toasts: [1, 2].map(() => ({ severity: s.severity, title: d.title, text: d.text })) }),
+            html: mkToastStack({ toasts: [1, 2].map(() => ({ severity: s.severity, title: d.title, text: d.text, action: gAction, details: gDetails })) }),
             css: window.COMP_CSS.toast,
           };
         }

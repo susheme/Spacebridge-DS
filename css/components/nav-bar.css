@@ -88,35 +88,41 @@
 }
 
 /* ── NAV BUTTON ──────────────────────────────────────────────────────
-   Эксклюзив Navigation Bar: 28px высоты, radius 100, --text-secondary.
-   Hover → Shadow-S; Selected → --primary-hover bg + Pressed-inset shadow.
-   28px / min-width 104 / max-width 144 — нет в Figma JSON, hardcoded
-   до согласования с дизайнером. */
+   Эксклюзив Navigation Bar. По Figma-спеке:
+   высота 40px (--btn-primary-max-height), radius 100, padding 8×16,
+   ширина hug-content. Hover → --background + Shadow-S;
+   Selected → --surface-1 + Pressed-inset shadow. */
 .sb-nav-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--gap-horiz-xs);
-  height: 28px;
-  min-width: 88px;
-  max-width: 144px;
-  padding: 0 var(--pad-horiz-8);
+  gap: var(--gap-horiz-0);
+  height: var(--btn-primary-max-height);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
   border: none;
   border-radius: var(--radius-100);
   background: transparent;
   color: var(--text-secondary);
   font-size: var(--button-font-size);
-  font-weight: var(--font-weight-medium);
-  /* НЕ var(--button-line-height) (=12px) — она меньше font-size 15px и
-     режет descender'ы (g/p/y/q) при overflow:hidden на .label. */
-  line-height: var(--body-line-height);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: var(--button-line-height);
   font-family: inherit;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
-/* Label с многоточием — текст обрезается на max-width 144px. */
+/* Вариант с правым слотом (chevron / counter / indicator mini):
+   Figma «Layout с правым слотом» — правый padding 8 вместо 16, gap 4. */
+.sb-nav-btn.with-slot {
+  gap: var(--gap-horiz-xs);
+  padding-right: var(--pad-horiz-8);
+}
+
+/* Label. Ellipsis срабатывает, когда бару не хватает места (flex-сжатие).
+   line-height здесь НЕ спековая --button-line-height (=12px) — она меньше
+   font-size 15px и режет descender'ы (g/p/y/q) при overflow:hidden. */
 .sb-nav-btn-label {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,27 +138,26 @@
   flex-shrink: 0;
   color: inherit;
 }
-/* Optical balance: невидимый spacer слева той же ширины что chevron справа.
-   С justify-content:center группа [ghost][label][chevron] оказывается
-   симметричной → label визуально по центру кнопки, а не сдвинут влево.
-   Стандартный design-приём для кнопок с trailing icon. */
-.sb-nav-btn-chevron-spacer {
+
+/* Правый слот с Counter или Indicator Mini — альтернатива chevron'у. */
+.sb-nav-btn-slot {
   display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
-  width: 16px;
-  visibility: hidden;
 }
 
-/* Hover — Shadow-S. */
+/* Hover — фон --background + Shadow-S; текст и иконка окрашиваются
+   в --primary (chevron наследует через color: inherit). */
 .sb-nav-btn:hover:not(.disabled):not(.selected) {
-  box-shadow: 0 2px 8px 0 var(--shadow-sm);
-  color: var(--text-tertiary);
+  background: var(--background);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+  color: var(--primary);
 }
 
-/* Selected — фоновая заливка --primary-hover + Pressed-inset shadow
+/* Selected — фоновая заливка --surface-1 + Pressed-inset shadow
    (как «Pressed» effect в Figma: вложенная поверхность). */
 .sb-nav-btn.selected {
-  background: var(--primary-hover);
+  background: var(--surface-1);
   color: var(--primary);
   box-shadow:
      1px  1px 2px 0 var(--shadow-overlay) inset,

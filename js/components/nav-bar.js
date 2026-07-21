@@ -16,12 +16,13 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 .sb-nav-bar.align-right .sb-nav-bar-tabs { margin-right: var(--pad-horiz-24); }
 .sb-nav-bar-tabs { display: flex; align-items: center; gap: var(--gap-horiz-xxs); min-width: 0; }
 .sb-nav-bar-right { display: flex; align-items: center; gap: var(--gap-horiz-s); flex-shrink: 0; padding-right: var(--pad-horiz-24); }
-.sb-nav-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--gap-horiz-xs); height: 28px; min-width: 88px; max-width: 144px; padding: 0 var(--pad-horiz-8); border: none; border-radius: var(--radius-100); background: transparent; color: var(--text-secondary); font-size: var(--button-font-size); font-weight: var(--font-weight-medium); line-height: var(--body-line-height); font-family: inherit; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
+.sb-nav-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--gap-horiz-0); height: var(--btn-primary-max-height); padding: var(--pad-vert-8) var(--pad-horiz-16); border: none; border-radius: var(--radius-100); background: transparent; color: var(--text-secondary); font-size: var(--button-font-size); font-weight: var(--font-weight-semibold); font-variant-numeric: lining-nums tabular-nums; line-height: var(--button-line-height); font-family: inherit; cursor: pointer; white-space: nowrap; transition: background 0.15s, color 0.15s, box-shadow 0.15s; }
+.sb-nav-btn.with-slot { gap: var(--gap-horiz-xs); padding-right: var(--pad-horiz-8); }
 .sb-nav-btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; line-height: var(--body-line-height); }
 .sb-nav-btn-chevron { display: inline-flex; align-items: center; flex-shrink: 0; color: inherit; }
-.sb-nav-btn-chevron-spacer { display: inline-flex; flex-shrink: 0; width: 16px; visibility: hidden; }
-.sb-nav-btn:hover:not(.disabled):not(.selected) { box-shadow: 0 2px 8px 0 var(--shadow-sm); color: var(--text-tertiary); }
-.sb-nav-btn.selected { background: var(--primary-hover); color: var(--primary); box-shadow: 1px 1px 2px 0 var(--shadow-overlay) inset, -1px -1px 2px 0 var(--shadow-lg) inset; }
+.sb-nav-btn-slot { display: inline-flex; align-items: center; flex-shrink: 0; }
+.sb-nav-btn:hover:not(.disabled):not(.selected) { background: var(--background); box-shadow: 0 2px 8px 0 var(--shadow-overlay); color: var(--primary); }
+.sb-nav-btn.selected { background: var(--surface-1); color: var(--primary); box-shadow: 1px 1px 2px 0 var(--shadow-overlay) inset, -1px -1px 2px 0 var(--shadow-lg) inset; }
 .sb-nav-btn.disabled { color: var(--border); cursor: not-allowed; pointer-events: none; }
 .sb-nav-bar.floating { position: sticky; top: 16px; z-index: 10; margin: 16px; max-width: calc(100% - 32px); border-bottom: none; border-radius: var(--radius-12); box-shadow: 0 2px 8px 0 var(--shadow-sm); transition: margin 0.25s ease, max-width 0.25s ease, border-radius 0.25s ease, top 0.25s ease, box-shadow 0.25s ease; }
 .sb-nav-bar.floating.is-stuck { top: 0; margin: 0; max-width: 100%; border-radius: 0; box-shadow: 0 4px 12px 0 var(--shadow-sm); }
@@ -67,31 +68,43 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 
 // --- NAV BAR ---
 (() => {
-  const CHEVRON_DOWN = sbIcon('arrow-down-s-line', 16);
+  // Наш DS-шеврон: Name=arrow-down-s-line, Size=L (24px) — как в Figma-спеке.
+  const CHEVRON_DOWN = sbIcon('arrow-down-s-line', 'L');
   const BURGER       = sbIcon('menu-line', 'L');
 
   /**
    * sbMkNavBtn(opts) — одна кнопка раздела.
-   *   label      — текст (обрезается многоточием при > max-width 144)
-   *   selected   — активный раздел (--primary-hover bg + Pressed shadow)
+   *   label      — текст (ellipsis при flex-сжатии в баре)
+   *   selected   — активный раздел (--surface-1 bg + Pressed shadow)
    *   disabled   — серый текст --border, не кликается
    *   hasChevron — chevron-down в right-slot (для dropdown-кнопок)
+   *   counter    — число в right-slot (.sb-counter из Counters)
+   *   indicator  — Indicator Mini в right-slot (.sb-status-dot.mini из Status);
+   *                true = online, либо строка-статус ('error', 'warning'…)
+   *   Right-slot взаимоисключающий: chevron > counter > indicator.
    */
   function mkNavBtn(opts = {}) {
-    const { label = 'Section', selected, disabled, hasChevron, menuItems } = opts;
+    const { label = 'Section', selected, disabled, hasChevron, counter, indicator, menuItems } = opts;
     let cls = 'sb-nav-btn';
     if (selected) cls += ' selected';
     if (disabled) cls += ' disabled';
-    const chev = hasChevron ? `<span class="sb-nav-btn-chevron">${CHEVRON_DOWN}</span>` : '';
-    // Optical balance: невидимый spacer слева балансирует chevron справа,
-    // чтобы label визуально оказался по центру кнопки.
-    const chevSpacer = hasChevron ? `<span class="sb-nav-btn-chevron-spacer" aria-hidden="true"></span>` : '';
+    // Right slot по Figma-спеке: у кнопки со слотом правый padding 8
+    // (вместо 16) и gap 4 — класс .with-slot.
+    let chev = '';
+    if (hasChevron) {
+      chev = `<span class="sb-nav-btn-chevron">${CHEVRON_DOWN}</span>`;
+    } else if (counter != null) {
+      chev = `<span class="sb-nav-btn-slot"><span class="sb-counter">${counter}</span></span>`;
+    } else if (indicator) {
+      chev = `<span class="sb-nav-btn-slot"><span class="sb-status-dot mini ${indicator === true ? 'online' : indicator}"></span></span>`;
+    }
+    if (chev) cls += ' with-slot';
 
     // Без menuItems — обычная кнопка с click-select handler'ом.
     if (!menuItems || !menuItems.length) {
       const onclickAttr = disabled ? '' : ' onclick="sbSelectNavBtn(this)"';
       return `<button class="${cls}" type="button"${disabled ? ' disabled' : ''}${onclickAttr}>
-        ${chevSpacer}<span class="sb-nav-btn-label">${label}</span>${chev}
+        <span class="sb-nav-btn-label">${label}</span>${chev}
       </button>`;
     }
 
@@ -108,7 +121,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
                  onmouseenter="sbNavBarDropdownOpen(this)"
                  onmouseleave="sbNavBarDropdownClose(this)">
       <button class="${cls}" type="button"${disabled ? ' disabled' : ''}${clickHandler}>
-        ${chevSpacer}<span class="sb-nav-btn-label">${label}</span>${chev}
+        <span class="sb-nav-btn-label">${label}</span>${chev}
       </button>
       <div class="sb-ctx-card">${cells}</div>
     </div>`;
@@ -845,21 +858,33 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           'Кнопка раздела, эксклюзивная для Navigation Bar — не из компонента Buttons.'
         ) + sbDocNote('Tech Info', sbT(
           '<b>Geometry:</b>'
-          + '<ul><li>Height: 28px;</li><li>Radius: 100;</li><li>Width: 104–144px — long labels truncate with an ellipsis.</li></ul>'
+          + '<ul><li>Height: 40px (--btn-primary-max-height);</li><li>Radius: 100;</li><li>Padding: 8×16; with a right slot — right padding 8 and a 4px gap;</li><li>Width hugs the content — the label truncates with an ellipsis when the bar runs out of space.</li></ul>'
           + '<b>States:</b>'
-          + '<ul><li>Default color — --text-secondary;</li><li>Hover — Shadow-S;</li><li>Selected — --primary-hover background plus a pressed inset shadow;</li><li>Disabled — --border, non-interactive.</li></ul>',
+          + '<ul><li>Default color — --text-secondary;</li><li>Hover — --background fill plus Shadow-S, text and icon turn --primary;</li><li>Selected — --surface-1 fill plus a pressed inset shadow;</li><li>Disabled — --border, non-interactive.</li></ul>'
+          + '<b>Right slot (mutually exclusive):</b>'
+          + '<ul><li>Chevron — arrow-down-s-line icon, Size L (dropdown trigger);</li><li>Counter — the Counters component;</li><li>Indicator Mini — the Status component.</li></ul>',
           '<b>Геометрия:</b>'
-          + '<ul><li>Высота: 28px;</li><li>Radius: 100;</li><li>Ширина: 104–144px — длинные подписи обрезаются многоточием.</li></ul>'
+          + '<ul><li>Высота: 40px (--btn-primary-max-height);</li><li>Radius: 100;</li><li>Padding: 8×16; с правым слотом — правый padding 8 и gap 4;</li><li>Ширина hug-content — подпись обрезается многоточием, когда бару не хватает места.</li></ul>'
           + '<b>Состояния:</b>'
-          + '<ul><li>Цвет по умолчанию — --text-secondary;</li><li>Hover — Shadow-S;</li><li>Selected — фон --primary-hover и Pressed-inset тень;</li><li>Disabled — --border, без интеракции.</li></ul>'
+          + '<ul><li>Цвет по умолчанию — --text-secondary;</li><li>Hover — фон --background и Shadow-S, текст и иконка окрашиваются в --primary;</li><li>Selected — фон --surface-1 и Pressed-inset тень;</li><li>Disabled — --border, без интеракции.</li></ul>'
+          + '<b>Правый слот (взаимоисключающий):</b>'
+          + '<ul><li>Chevron — иконка arrow-down-s-line, Size L (триггер dropdown);</li><li>Counter — компонент Counters;</li><li>Indicator Mini — компонент Status.</li></ul>'
         )),
-        preview: `<div class="sec-row" style="gap:var(--gap-horiz-s);align-items:center;padding:24px;background:var(--surface-1);border-radius:var(--radius-8)">
-          ${mkNavBtn({ label: 'Default' })}
-          ${mkNavBtn({ label: 'Selected', selected: true })}
-          ${mkNavBtn({ label: 'Disabled', disabled: true })}
-          ${mkNavBtn({ label: 'With chevron', hasChevron: true })}
-          ${mkNavBtn({ label: 'Selected + chevron', selected: true, hasChevron: true })}
-          ${mkNavBtn({ label: 'A very long section name that will truncate' })}
+        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);padding:24px;background:var(--surface-1);border-radius:var(--radius-8)">
+          <div class="sec-row wrap gap-sm">
+            ${mkNavBtn({ label: 'Default' })}
+            ${mkNavBtn({ label: 'Selected', selected: true })}
+            ${mkNavBtn({ label: 'Disabled', disabled: true })}
+          </div>
+          <div class="sec-row wrap gap-sm">
+            ${mkNavBtn({ label: 'Chevron', hasChevron: true })}
+            ${mkNavBtn({ label: 'Selected', selected: true, hasChevron: true })}
+            ${mkNavBtn({ label: 'Counter', counter: 5 })}
+            ${mkNavBtn({ label: 'Indicator', indicator: true })}
+          </div>
+          <div class="sec-row wrap gap-sm">
+            <div style="display:flex;width:220px">${mkNavBtn({ label: 'A very long section name that will truncate' })}</div>
+          </div>
         </div>`,
         html: `<!-- Default -->
 <button class="sb-nav-btn"><span class="sb-nav-btn-label">Default</span></button>
@@ -871,9 +896,21 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 <button class="sb-nav-btn disabled" disabled><span class="sb-nav-btn-label">Disabled</span></button>
 
 <!-- With chevron (dropdown trigger) -->
-<button class="sb-nav-btn">
-  <span class="sb-nav-btn-label">With chevron</span>
-  <span class="sb-nav-btn-chevron"><!-- arrow-down-s-line --></span>
+<button class="sb-nav-btn with-slot">
+  <span class="sb-nav-btn-label">Chevron</span>
+  <span class="sb-nav-btn-chevron"><!-- arrow-down-s-line, Size L --></span>
+</button>
+
+<!-- With counter (Counters component) -->
+<button class="sb-nav-btn with-slot">
+  <span class="sb-nav-btn-label">Counter</span>
+  <span class="sb-nav-btn-slot"><span class="sb-counter">5</span></span>
+</button>
+
+<!-- With Indicator Mini (Status component) -->
+<button class="sb-nav-btn with-slot">
+  <span class="sb-nav-btn-label">Indicator</span>
+  <span class="sb-nav-btn-slot"><span class="sb-status-dot mini online"></span></span>
 </button>`,
         css: COMP_CSS["nav-bar"],
       },

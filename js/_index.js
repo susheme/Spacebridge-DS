@@ -25,6 +25,7 @@ window.SB_COMPONENTS = [
   { name: 'textarea',      file: 'textarea.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'password',      file: 'password.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'selectors',     file: 'selectors.js',      deps: ['chevron', 'input'] },  // uses chevron + inputFieldWrap
+  { name: 'file-uploader', file: 'file-uploader.js',  deps: ['badge', 'header-xs'] },// дропзона + Upload Cell + композит; SB_SVG из badge.js, sbMkHeaderXS из header-xs.js
   { name: 'tags',          file: 'tags.js',           deps: [] },
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
   { name: 'tooltips',      file: 'tooltips.js',       deps: ['status'] },            // hover/click подсказка; demo-триггер юзает .sb-status-dot

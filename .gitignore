@@ -15,3 +15,23 @@
 *.zip
 *.pyc
 __pycache__/
+
+# Заготовки, не подключённые к DS. Перечислены поимённо, а не маской:
+# рабочие иконки лежат в Icons/<группа>/, и маска Icons/*.svg молча
+# съедала бы будущие настоящие экспорты, свалённые в корень.
+Icons/Type=beam-v2.svg
+Icons/Type=beam.svg
+Icons/Type=return-allocation.svg
+Icons/Type=transponder.svg
+Icons/Type=transport-stream.svg
+Icons/Type=user-terminal-group.svg
+
+# Дампы описаний из внешнего экспорта
+descriptions.export.json
+descriptions.export-RUS.json
+
+# Референсы от дизайнера. Сама docs/screenshots/ ОТСЛЕЖИВАЕТСЯ (там живут
+# скриншоты доков) — поэтому папку целиком игнорировать нельзя, только эти.
+docs/screenshots/Desktop.png
+docs/screenshots/New Terminal - Coordinates (Selecting on map).png
+docs/screenshots/photo_2026-03-05 16.02.12.jpeg

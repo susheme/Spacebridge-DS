@@ -477,6 +477,13 @@ a.sb-banner-title {
   // молча клампится (.capped), без него появляется Chevron Button.
   const LONG_BODY_TAIL = ' Diagnostics show intermittent packet loss on the uplink path, and the modem has entered a self-recovery cycle twice in the last hour. Field engineers are advised to verify the antenna alignment, check the cable integrity and confirm the LNB power supply before escalating. If the condition persists after the corrective actions, open an incident ticket and attach the last 24 hours of telemetry for the affected terminal, including the demodulator lock history and the observed Es/No margins for both polarizations.';
 
+  // Демо-тела Doc Note (playground). Long доклеивает LONG_BODY_TAIL —
+  // на нём видно кламп, шеврон и плавное раскрытие.
+  const PG_NOTE_BODY = {
+    tech: '<b>Width: 100%</b><ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16; radius: 4;</li><li>left stroke 4px in the type colour.</li></ul>',
+    imp:  'Breaking contract: a banner with a right slot switches to the silent 5-line clamp — no chevron, no expand. Recheck consumers after changing slots.',
+  };
+
   const PG_DEMO = {
     info:    { dot: 'info',        glyph: 'infoFilled',  bs: 'bs-blue',   bsLabel: 'Info',     title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.',
                barText: 'Firmware 3.2.1 rollout starts at 02:00 UTC.',                barLink: 'Firmware 3.2.1 is available. <a href="#">Release notes</a>.' },
@@ -497,12 +504,13 @@ a.sb-banner-title {
     ),
     playground: {
       title: 'Notifications Playground',
-      state: { comp: 'banner', type: 'info', lead: 'dot', right: 'badge', align: 'center', title: true, link: false, text: true, icon: true, longBody: false },
+      state: { comp: 'banner', type: 'info', lead: 'dot', right: 'badge', align: 'center', title: true, link: false, text: true, icon: true, longBody: false, noteKind: 'tech' },
       controls(pg) {
         return `${sbPgGroup('Component', `
               ${pg.select('comp', [
                 { value: 'banner', label: 'Banner' },
                 { value: 'bar',    label: 'Notification Bar' },
+                { value: 'note',   label: 'Doc Note' },
               ], { label: 'Component' })}
               ${pg.select('type', [
                 { value: 'info',    label: 'Info' },
@@ -534,6 +542,15 @@ a.sb-banner-title {
                 { value: 'left',   label: 'Left' },
               ], { label: 'Align' })}
           `, { attrs: 'data-nb-scope="bar"' })}
+          ${sbPgGroup('Note', `
+              <div class="pg-toggles">
+                ${pg.radio('noteKind', [
+                  { value: 'tech', label: 'Tech Info' },
+                  { value: 'imp',  label: 'Important' },
+                ])}
+                ${pg.toggle('longBody', 'Long')}
+              </div>
+          `, { attrs: 'data-nb-scope="note"' })}
           ${sbPgGroup('Content', `
               <div class="pg-toggles">
                 ${pg.toggle('title', 'Title')}
@@ -541,22 +558,39 @@ a.sb-banner-title {
                 ${pg.toggle('text', 'Text')}
                 ${pg.toggle('icon', 'Icon')}
               </div>
-          `, { fullRow: true })}`;
+          `, { fullRow: true, attrs: 'data-nb-content' })}`;
       },
-      // Banner и Bar делят playground: нерелевантные контролы прячем.
-      // Banner: Lead / Right Slot / Title / Text. Bar: Align / Icon. Link — общий.
+      // Banner, Bar и Doc Note делят playground: нерелевантные контролы прячем.
+      // Banner: Lead / Right Slot / Title / Text. Bar: Align / Icon. Link — у
+      // banner и bar. Note: только своя группа (Kind + Long) — Type тоже прячем,
+      // тип у плашки диктует Kind (Important → warning).
       syncControls(s, container) {
-        const isBar = s.comp === 'bar';
+        const scope = s.comp === 'bar' ? 'bar' : s.comp === 'note' ? 'note' : 'banner';
         container.querySelectorAll('[data-nb-scope]').forEach(el => {
-          el.style.display = el.getAttribute('data-nb-scope') === (isBar ? 'bar' : 'banner') ? '' : 'none';
+          el.style.display = el.getAttribute('data-nb-scope') === scope ? '' : 'none';
         });
-        const show = { title: !isBar, text: !isBar, icon: isBar, link: true };
+        const isBar = scope === 'bar', isNote = scope === 'note';
+        const typeSel = container.querySelector('select[data-pg-ctrl="type"]');
+        const typeField = typeSel && typeSel.closest('.sb-field');
+        if (typeField) typeField.style.display = isNote ? 'none' : '';
+        // Для note вся Content-группа пуста — прячем рамку целиком,
+        // иначе висел бы пустой fieldset с тайтлом (грабли из toggles).
+        const contentGroup = container.querySelector('[data-nb-content]');
+        if (contentGroup) contentGroup.style.display = isNote ? 'none' : '';
+        const show = { title: !isBar && !isNote, text: !isBar && !isNote, icon: isBar, link: !isNote };
         Object.keys(show).forEach(k => {
           const el = container.querySelector(`.tgl-ctrl-wrap[data-pg-ctrl="${k}"]`);
           if (el) el.style.display = show[k] ? '' : 'none';
         });
       },
       render(s) {
+        // Doc Note — плашка доков: собирается sbDocNote (та же, что под
+        // описаниями компонентов). Тип диктует Kind: Important → warning.
+        if (s.comp === 'note') {
+          const kind = s.noteKind === 'imp' ? 'Important' : 'Tech Info';
+          const note = sbDocNote(kind, PG_NOTE_BODY[s.noteKind] + (s.longBody ? LONG_BODY_TAIL : ''));
+          return `<div style="overflow-x:auto;width:100%"><div style="width:680px;max-width:100%;padding:var(--pad-vert-8) 0">${note}</div></div>`;
+        }
         if (s.comp === 'bar') {
           const d = PG_DEMO[s.type];
           const bar = mkNotifBar({
@@ -589,6 +623,26 @@ a.sb-banner-title {
         return `<div style="overflow-x:auto;width:100%"><div style="width:680px;max-width:100%;padding:var(--pad-vert-8) 0">${banner}</div></div>`;
       },
       genCode(s) {
+        if (s.comp === 'note') {
+          const kind = s.noteKind === 'imp' ? 'Important' : 'Tech Info';
+          const type = s.noteKind === 'imp' ? 'warning' : 'info';
+          const html = `<!-- Собирается хелпером (docs-i18n.js): -->
+sbDocNote('${kind}', body)
+// → sbMkBanner({ type: '${type}', lead: <information-fill L>, title: '${kind}', text: body })
+
+<!-- Разметка — обычный collapsible-баннер: -->
+<div class="sb-banner ${type} collapsible">
+  <div class="sb-banner-content">
+    <div class="sb-banner-titlerow">
+      <span class="sb-banner-lead"><!-- information-fill L --></span>
+      <span class="sb-banner-title sb-title-m">${kind}</span>
+    </div>
+    <div class="sb-banner-text sb-body-m">Body…</div>
+  </div>
+  <div class="sb-chevron sb-banner-chevron" onclick="sbBannerToggle(this)"><!-- arrow-down-s-line --></div>
+</div>`;
+          return { html, css: COMP_CSS.notifications };
+        }
         const d = PG_DEMO[s.type];
         if (s.comp === 'bar') {
           const cls = `sb-notif-bar ${s.type}` + (s.align === 'left' ? ' align-left' : '');

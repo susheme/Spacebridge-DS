@@ -19,19 +19,28 @@ window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; 
 
 // --- RADIO ---
 (() => {
+  /**
+   * sbMkRadio(opts) — радиокнопка DS.
+   *   selected / hover / disabled — состояния
+   *   label      — текст, labelLeft — слева от кружка
+   *   cls        — доп. классы потребителя
+   *   attrs      — сырые атрибуты (onclick, data-*); нужны pg.radio в core
+   */
   function mkRb(opts = {}) {
-    const { selected, hover, disabled, label, labelLeft } = opts;
+    const { selected, hover, disabled, label, labelLeft, cls: extra = '', attrs = '' } = opts;
     let cls = 'sb-radio';
     if (hover)     cls += ' hover';
     if (selected)  cls += ' selected';
     if (disabled)  cls += ' disabled';
     if (labelLeft) cls += ' label-left';
+    if (extra)     cls += ' ' + extra;
     const dot = selected && disabled
       ? `<div class="sb-radio-dot" style="background:var(--border)"></div>`
       : `<div class="sb-radio-dot"></div>`;
     const lbl = label ? `<span class="sb-radio-label">${label}</span>` : '';
-    return `<div class="${cls}"><div class="sb-radio-circle">${dot}</div>${lbl}</div>`;
+    return `<div class="${cls}"${attrs ? ' ' + attrs : ''}><div class="sb-radio-circle">${dot}</div>${lbl}</div>`;
   }
+  window.sbMkRadio = mkRb;
 
   sbRegister({
     name: 'radio',

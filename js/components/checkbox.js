@@ -170,17 +170,14 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
           `)}
         ${sbPgGroup('Type', `
             <div class="pg-toggles">
-              <div class="sb-radio selected" data-pg-radio-left onclick="SB_PG.set('checkbox','type','check')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Check</span></div>
-              <div class="sb-radio" data-pg-radio-right onclick="SB_PG.set('checkbox','type','unselect')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Unselect All</span></div>
+              ${pg.radio('type', [
+                { value: 'check',    label: 'Check' },
+                { value: 'unselect', label: 'Unselect All' },
+              ])}
             </div>
           `)}`;
       },
-      syncControls(s, container) {
-        const rbCheck = container.querySelector('[data-pg-radio-left]');
-        const rbUnselect = container.querySelector('[data-pg-radio-right]');
-        if (rbCheck) rbCheck.classList.toggle('selected', s.type === 'check');
-        if (rbUnselect) rbUnselect.classList.toggle('selected', s.type === 'unselect');
-      },
+      // syncControls не нужен: подсветку радиогруппы держит SB_PG (pg.radio).
       render(s) {
         const indeterminate = s.type === 'unselect';
         // static + свой onclick: состояние живёт в SB_PG, а не в классе, иначе

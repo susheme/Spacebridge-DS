@@ -79,8 +79,10 @@ sbRegister({
           `)}
       ${sbPgGroup('Label', `
           <div class="pg-toggles">
-            <div class="sb-radio" data-pg-radio-left onclick="SB_PG.set('toggles','labelPos','left')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Left</span></div>
-            <div class="sb-radio selected" data-pg-radio-right onclick="SB_PG.set('toggles','labelPos','right')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Right</span></div>
+            ${pg.radio('labelPos', [
+              { value: 'left',  label: 'Left' },
+              { value: 'right', label: 'Right' },
+            ])}
           </div>
           `, { attrs: 'data-tgl-label-group' })}`;
     },
@@ -105,15 +107,9 @@ sbRegister({
       const hasLabelCb = container.querySelector('[data-pg-key="hasLabel"]');
       if (hasLabelCb) hasLabelCb.checked = s.hasLabel;
       // Прячем всю группу Label — иначе оставалась пустая рамка с тайтлом.
-      const radioLeft = container.querySelector('[data-pg-radio-left]');
-      const radioRight = container.querySelector('[data-pg-radio-right]');
       const lblGroup = container.querySelector('[data-tgl-label-group]');
       if (lblGroup) lblGroup.style.display = s.hasLabel ? '' : 'none';
-      // Sync radio selection
-      const rbLeft = container.querySelector('[data-pg-radio-left]');
-      const rbRight = container.querySelector('[data-pg-radio-right]');
-      if (rbLeft) rbLeft.classList.toggle('selected', s.labelPos === 'left');
-      if (rbRight) rbRight.classList.toggle('selected', s.labelPos === 'right');
+      // Подсветку радио labelPos держит SB_PG (pg.radio) — вручную не трогаем.
     },
     genCode(s) {
       const wrapCls = tglClass(s);

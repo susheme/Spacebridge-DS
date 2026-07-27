@@ -12,12 +12,12 @@ window.SB_COMPONENTS = [
   // name                 file                       deps             notes
   { name: 'buttons',       file: 'buttons.js',        deps: ['checkbox'] },          // контролы playground'а = sbMkCheckbox
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
-  { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav
+  { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
   { name: 'separators',    file: 'separators.js',     deps: [] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },
   { name: 'toggles',       file: 'toggles.js',        deps: [] },
   { name: 'checkbox',      file: 'checkbox.js',       deps: [] },
-  { name: 'radio',         file: 'radio.js',          deps: [] },
+  { name: 'radio',         file: 'radio.js',          deps: [] },                    // sbMkRadio; ЯДРО зовёт его из pg.radio (core.js) при рендере плейграунда
   { name: 'counters',      file: 'counters.js',       deps: [] },
   { name: 'kbd',           file: 'kbd.js',            deps: [] },                    // keyboard shortcut hint, used by search-bar
   { name: 'search-bar',    file: 'search-bar.js',     deps: ['kbd'] },               // uses sbMkKbd / sbMkKbdGroup in sections

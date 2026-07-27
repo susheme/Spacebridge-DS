@@ -50,8 +50,10 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
       controls(pg) {
         return `${sbPgGroup('Type', `
             <div class="pg-toggles">
-              <div class="sb-radio selected" data-cnt-single onclick="SB_PG.set('counters','type','single')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Single</span></div>
-              <div class="sb-radio" data-cnt-range onclick="SB_PG.set('counters','type','range')"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div><span class="sb-radio-label">Range</span></div>
+              ${pg.radio('type', [
+                { value: 'single', label: 'Single' },
+                { value: 'range',  label: 'Range' },
+              ])}
             </div>
           `)}
         ${sbPgGroup('State', `
@@ -60,12 +62,7 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
             </div>
           `)}`;
       },
-      syncControls(s, container) {
-        const rbSingle = container.querySelector('[data-cnt-single]');
-        const rbRange  = container.querySelector('[data-cnt-range]');
-        if (rbSingle) rbSingle.classList.toggle('selected', s.type === 'single');
-        if (rbRange)  rbRange.classList.toggle('selected', s.type === 'range');
-      },
+      // syncControls не нужен: подсветку радиогруппы держит SB_PG (pg.radio).
       render(s) { return mkCnt(s); },
       genCode(s) { return { html: mkCnt(s), css: COMP_CSS.counter }; },
     },

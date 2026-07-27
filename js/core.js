@@ -717,6 +717,23 @@ const SB_PG = {
         </span>
         <span class="sb-toggle-label-text">${label}</span>
       </label>`,
+      // Группа радиокнопок для взаимоисключающего выбора. Раньше её копировали
+      // руками в каждом плейграунде (checkbox/counters/toggles) вместе с личным
+      // syncControls — потому что здесь был только toggle и select.
+      // Возвращает сами радио, без обёртки: оборачивает вызывающий (обычно
+      // .pg-toggles внутри sbPgGroup), как и с toggle.
+      radio: (key, options) => {
+        const state = SB_PG._states[name] || {};
+        const current = options.find(o => o.value === state[key]) || options[0];
+        return options.map(o => sbMkRadio({
+          selected: o.value === current?.value,
+          label: o.label,
+          // data-pg-radio/-val читает _syncControls: подсветку держит он,
+          // ручной syncControls в компоненте больше не нужен.
+          attrs: `data-pg-radio="${key}" data-pg-val="${o.value}"`
+               + ` onclick="SB_PG.set('${name}','${key}','${o.value}')"`,
+        })).join('');
+      },
       select: (key, options, opts2 = {}) => {
         const { label } = opts2;
         const state = SB_PG._states[name] || {};
@@ -731,7 +748,7 @@ const SB_PG = {
           </select>
           <div class="sb-sel">
             <span class="sb-sel-val">${currentOpt?.label ?? ''}</span>
-            <div class="sb-sel-right"><div class="sb-chevron">${sbIcon('arrow-down-s-line','L')}</div></div>
+            <div class="sb-sel-right">${sbMkChevron()}</div>
           </div>
         </div>`;
         if (label) {
@@ -760,6 +777,11 @@ const SB_PG = {
       const wrap = sel.closest('.pg-sel-wrap');
       const val = wrap && wrap.querySelector('.sb-sel-val');
       if (val && sel.options[sel.selectedIndex]) val.textContent = sel.options[sel.selectedIndex].text;
+    });
+    // Радиогруппы pg.radio: подсветку держит ядро, а не сам компонент.
+    container.querySelectorAll('[data-pg-radio]').forEach(rb => {
+      const key = rb.getAttribute('data-pg-radio');
+      if (key in s) rb.classList.toggle('selected', rb.getAttribute('data-pg-val') === String(s[key]));
     });
     container.querySelectorAll('[data-pg-requires]').forEach(wrap => {
       const req = wrap.getAttribute('data-pg-requires');

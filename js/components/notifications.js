@@ -111,7 +111,15 @@ a.sb-banner-title {
 }
 .sb-banner.has-overflow .sb-banner-chevron,
 .sb-banner.expanded .sb-banner-chevron { display: flex; }
-.sb-banner-chevron svg { transition: transform 0.2s ease; }
+/* Плавный collapse: line-clamp не анимируется, поэтому sbBannerToggle ведёт
+   высоту инлайновым max-height (px→px) — transition ниже его подхватывает.
+   0.28s — синхронно с таймаутом в JS (300ms). Без inline max-height переход
+   не срабатывает вовсе (none→none), так что первичный рендер мгновенный. */
+.sb-banner.collapsible .sb-banner-text { transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .sb-banner.collapsible .sb-banner-text { transition: none; }
+}
+.sb-banner-chevron svg { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
 .sb-banner.expanded .sb-banner-chevron svg { transform: rotate(180deg); }
 /* Контент не подлезает под закреплённый шеврон. */
 .sb-banner.has-overflow .sb-banner-content,
@@ -244,6 +252,9 @@ a.sb-banner-title {
   // title: строка; href → тайтл становится ссылкой (переход к источнику ошибки)
   // text:  описание (Body M) — произвольный HTML, дизайнер верстает как нужно
   // right: правый слот — Badge-Status Mini / close / кнопки / любой HTML
+  // [SYNC:doc-note-fallback] sbDocNote (docs-i18n.js) держит bootstrap-зеркало
+  // collapsible-ветки этой разметки для chevron.js (регистрируется до нас).
+  // Меняешь структуру баннера — синхронизируй фолбэк.
   function mkBanner(o) {
     const c = o || {};
     const type = c.type || 'info';
@@ -272,9 +283,36 @@ a.sb-banner-title {
   window.sbMkBanner = mkBanner;
 
   // Раскрытие/сборка collapsible-баннера (Chevron Button в правом верхнем углу).
+  // Плавно: line-clamp не анимируется, поэтому высоту ведём инлайновым
+  // max-height (px → px) с transition из CSS (0.28s — синхронно с таймаутом).
+  // Раскрытие: снять кламп → анимировать от клампнутой высоты к полной.
+  // Сборка: кламп вернуть ТОЛЬКО по завершении, иначе многоточие прыгает
+  // в первый же кадр. Повторный клик до конца анимации — отменяем хвост.
   window.sbBannerToggle = function(el) {
     const b = el.closest('.sb-banner');
-    if (b) b.classList.toggle('expanded');
+    if (!b) return;
+    const t = b.querySelector('.sb-banner-text');
+    if (!t) { b.classList.toggle('expanded'); return; }
+    if (t._sbAnim) { clearTimeout(t._sbAnim); t._sbAnim = null; t.style.maxHeight = ''; }
+    const expanding = !b.classList.contains('expanded');
+    const from = t.getBoundingClientRect().height;
+    let to;
+    if (expanding) {
+      b.classList.add('expanded');                 // кламп снят — меряем полную
+      to = t.getBoundingClientRect().height;
+    } else {
+      b.classList.remove('expanded');              // кламп на месте — меряем цель
+      to = t.getBoundingClientRect().height;
+      b.classList.add('expanded');                 // и снимаем обратно на время анимации
+    }
+    t.style.maxHeight = from + 'px';
+    void t.offsetHeight;                            // reflow: стартовая точка зафиксирована
+    t.style.maxHeight = to + 'px';
+    t._sbAnim = setTimeout(() => {
+      t._sbAnim = null;
+      if (!expanding) b.classList.remove('expanded');
+      t.style.maxHeight = '';
+    }, 300);
   };
   // Замер переполнения: если кламп 5 строк скрыл часть текста → .has-overflow,
   // шеврон становится видимым. Страницы рендерятся динамически (SPA), поэтому
@@ -678,6 +716,40 @@ a.sb-banner-title {
 <!-- Правило: есть right-слот → .capped (кламп 5 строк, без шеврона);
      нет right-слота → .collapsible, шеврон виден при переполнении
      (sbBannerSyncOverflow / MutationObserver — автоматически) -->`,
+        css: COMP_CSS.notifications,
+      },
+      {
+        title: sbT('Doc Note — Tech Info / Important', 'Doc Note — Tech Info / Important'),
+        desc: sbT(
+          'The collapsible banner the DS docs themselves run on: the Tech Info / Important note under every component description — including the one at the top of this very page — is this exact type. Built by <code>sbDocNote(title, body)</code>, a thin wrapper over <code>sbMkBanner</code>: an information-fill lead, «Important» in the title switches the type to warning, everything else is info; no right slot is passed, so by the banner contract the note is collapsible out of the box — 5-line clamp, a chevron on real overflow, smooth expand and collapse. Nothing hand-rolled inside: the banner, the chevron and the toggle all come from their own components.',
+          'Раскрывающийся баннер, на котором ездят сами доки DS: плашка Tech Info / Important под описанием каждого компонента — включая ту, что выше на этой самой странице — это ровно он. Собирается <code>sbDocNote(title, body)</code> — тонкой обёрткой над <code>sbMkBanner</code>: лид information-fill, «Important» в тайтле переключает тип на warning, всё остальное — info; правый слот не передаётся, поэтому по контракту баннера плашка сворачиваема из коробки — кламп 5 строк, шеврон при реальном переполнении, плавное раскрытие и сборка. Внутри ничего рукописного: баннер, шеврон и тогл — из своих компонентов.'
+        ),
+        col: true,
+        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
+          ${sbDocNote('Tech Info', sbT(
+            '<b>Width: 100%</b><ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4; left stroke 4px in the type colour;</li><li>title — Title M, lead — Symbol 24px;</li><li>body — Body M --text-secondary.</li></ul>',
+            '<b>Width: 100%</b><ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4; левый строук 4px цвета типа;</li><li>тайтл — Title M, лид — Symbol 24px;</li><li>body — Body M --text-secondary.</li></ul>'
+          ))}
+          ${sbDocNote('Important', sbT(
+            'Warning-toned note for things a developer must not miss: breaking contracts, load-order traps, deprecations.',
+            'Warning-плашка для того, что разработчику нельзя пропустить: ломающие контракты, ловушки порядка загрузки, депрекейшены.'
+          ))}
+        </div>`,
+        html: `<!-- Собирается хелпером (docs-i18n.js): -->
+sbDocNote('Tech Info', body)   // → sbMkBanner({ type:'info',    lead, title, text })
+sbDocNote('Important', body)   // → sbMkBanner({ type:'warning', lead, title, text })
+
+<!-- Разметка — обычный collapsible-баннер: -->
+<div class="sb-banner info collapsible">
+  <div class="sb-banner-content">
+    <div class="sb-banner-titlerow">
+      <span class="sb-banner-lead"><!-- information-fill L --></span>
+      <span class="sb-banner-title sb-title-m">Tech Info</span>
+    </div>
+    <div class="sb-banner-text sb-body-m">Body…</div>
+  </div>
+  <div class="sb-chevron sb-banner-chevron" onclick="sbBannerToggle(this)"><!-- arrow-down-s-line --></div>
+</div>`,
         css: COMP_CSS.notifications,
       },
       {

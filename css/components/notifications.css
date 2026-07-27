@@ -106,7 +106,15 @@ a.sb-banner-title {
 }
 .sb-banner.has-overflow .sb-banner-chevron,
 .sb-banner.expanded .sb-banner-chevron { display: flex; }
-.sb-banner-chevron svg { transition: transform 0.2s ease; }
+/* Плавный collapse: line-clamp не анимируется, поэтому sbBannerToggle ведёт
+   высоту инлайновым max-height (px→px) — transition ниже его подхватывает.
+   0.28s — синхронно с таймаутом в JS (300ms). Без inline max-height переход
+   не срабатывает вовсе (none→none), так что первичный рендер мгновенный. */
+.sb-banner.collapsible .sb-banner-text { transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .sb-banner.collapsible .sb-banner-text { transition: none; }
+}
+.sb-banner-chevron svg { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
 .sb-banner.expanded .sb-banner-chevron svg { transform: rotate(180deg); }
 /* Контент не подлезает под закреплённый шеврон. */
 .sb-banner.has-overflow .sb-banner-content,

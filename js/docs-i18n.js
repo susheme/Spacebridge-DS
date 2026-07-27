@@ -25,29 +25,33 @@ function sbT(en, ru) {
 
 // sbDocNote(title, body) — инфо-плашка в описаниях: Tech Info (параметры,
 // анатомия) или Important (критичное для разработчиков/дизайнеров).
-// Dogfood: рендерит НАШ Banner (notifications). 'Important' → warning, всё
-// остальное ('Tech Info') → info. Разметку баннера инлайним (не зовём
-// sbMkBanner) — он живёт в notifications.js, который грузится ПОЗЖЕ большинства
-// компонентов, а sbDocNote вызывается ими на этапе sbRegister. Визуал берётся
-// из .sb-banner CSS (грузится глобально), так что это настоящий баннер.
+// Dogfood: НАСТОЯЩИЙ Banner — собирается фабрикой sbMkBanner (notifications.js,
+// грузится первой парой с chevron, ДО остальных компонентов). 'Important' →
+// warning, всё остальное ('Tech Info') → info. Правый слот не передаём → по
+// контракту mkBanner плашка становится .collapsible: кламп 5 строк, Chevron
+// Button при реальном переполнении, плавное раскрытие (sbBannerToggle).
 // body может быть sbT(...) — тогда плашка одна, текст переключается.
 // ВАЖНО: возвращает <div> — обёртка описания в core.js должна быть <div>, не <p>.
 function sbDocNote(title, body) {
   const type = /important/i.test(title) ? 'warning' : 'info';
-  // Collapse — тем же контрактом, что sbMkBanner (notifications.js): правого
-  // слота нет → .collapsible, кламп 5 строк; Chevron Button в правом верхнем
-  // углу виден только при реальном переполнении (замер sbBannerSyncOverflow
-  // через MutationObserver). Длинные Tech Info сворачиваются из коробки.
-  // onclick резолвится в момент клика — notifications.js к тому времени загружен.
+  const lead = sbIcon('information-fill', 'L');
+  if (typeof sbMkBanner === 'function') {
+    return sbMkBanner({ type, lead, title, text: body });
+  }
+  // ── BOOTSTRAP-ФОЛБЭК: ЕДИНСТВЕННЫЙ потребитель — chevron.js ────────────
+  // Он регистрируется раньше notifications.js (тот сам зовёт sbMkChevron при
+  // регистрации — цикл), поэтому для него sbMkBanner ещё не существует.
+  // [SYNC:doc-note-fallback] — зеркало разметки mkBanner (notifications.js,
+  // ветка collapsible). Меняешь mkBanner — меняй и здесь.
   return `<div class="sb-banner ${type} collapsible">`
     + `<div class="sb-banner-content">`
     +   `<div class="sb-banner-titlerow">`
-    +     `<span class="sb-banner-lead">${sbIcon('information-fill', 'L')}</span>`
+    +     `<span class="sb-banner-lead">${lead}</span>`
     +     `<span class="sb-banner-title sb-title-m">${title}</span>`
     +   `</div>`
     +   `<div class="sb-banner-text sb-body-m">${body}</div>`
     + `</div>`
-    + `<div class="sb-chevron sb-banner-chevron" role="button" aria-label="Expand" onclick="sbBannerToggle(this)">${sbIcon('arrow-down-s-line', 'L')}</div>`
+    + sbMkChevron({ cls: 'sb-banner-chevron', attrs: 'role="button" aria-label="Expand" onclick="sbBannerToggle(this)"' })
     + `</div>`;
 }
 

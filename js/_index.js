@@ -10,9 +10,11 @@
 
 window.SB_COMPONENTS = [
   // name                 file                       deps             notes
+  { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
+  { name: 'badge',         file: 'badge.js',          deps: ['chevron'] },           // в ТРОЙКЕ первых: SB_BADGE_SPECS нужен notifications при регистрации; doc-note через фолбэк (зовёт sbMkChevron)
+  { name: 'notifications', file: 'notifications.js',  deps: ['chevron', 'badge'] },  // замыкает ТРОЙКУ первых: sbDocNote → sbMkBanner при регистрации ВСЕХ ниже; сам зовёт sbMkChevron + fill-иконки из SB_BADGE_SPECS
   { name: 'buttons',       file: 'buttons.js',        deps: ['checkbox'] },          // контролы playground'а = sbMkCheckbox
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
-  { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
   { name: 'separators',    file: 'separators.js',     deps: ['toggles'] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },                    // sbMkAvatar — nav-bar, table
   { name: 'toggles',       file: 'toggles.js',        deps: [] },                    // sbMkToggle; ЯДРО зовёт из pg.toggle; ВЫШЕ separators (тот зовёт в preview при регистрации)
@@ -32,8 +34,6 @@ window.SB_COMPONENTS = [
   { name: 'chips',         file: 'chips.js',          deps: [] },                    // кнопка-пилюля; реюзается Clear-чипсой стека тостов
   { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list', 'chips', 'chevron'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell, чипса = sbMkChip
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
-  { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
-  { name: 'notifications', file: 'notifications.js',  deps: ['chevron'] },
   { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
   { name: 'list',          file: 'list.js',           deps: ['toggles'] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },

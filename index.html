@@ -120,6 +120,17 @@
 
 <!-- Components (порядок: сначала те, чей COMP_CSS-ключ используют другие —
      chevron и input перед selector/textarea/password) -->
+<!-- chevron + badge + notifications — ПЕРВАЯ ТРОЙКА, до всех остальных:
+     sbDocNote (docs-i18n.js) собирает Tech Info/Important плашки через
+     sbMkBanner при регистрации КАЖДОГО компонента ниже. notifications при
+     регистрации зовёт sbMkChevron (→ после chevron) и sbIcon с fill-иконками
+     из SB_BADGE_SPECS (→ после badge); SB_SVG нужен только в рантайме
+     плейграунда. Двое регистрируются ДО sbMkBanner — chevron и badge: их
+     плашки идут через bootstrap-фолбэк sbDocNote (зеркало mkBanner, см. SYNC;
+     фолбэк зовёт sbMkChevron — потому chevron строго первый). -->
+<script src="js/components/chevron.js"></script>
+<script src="js/components/badge.js"></script>
+<script src="js/components/notifications.js"></script>
 <!-- Базовые контролы идут первыми: их фабрики (sbMkCheckbox / sbMkToggle)
      зовут и другие компоненты в своих preview-шаблонах, и САМО ЯДРО из
      pg.toggle / pg.radio. Им из core нужен только SB_GLYPHS и boolAttr.
@@ -130,7 +141,6 @@
 <script src="js/components/buttons.js"></script>
 <!-- action-bar — кнопки .sb-btn (CSS из buttons), sbIcon из core. -->
 <script src="js/components/action-bar.js"></script>
-<script src="js/components/chevron.js"></script>
 <script src="js/components/separators.js"></script>
 <script src="js/components/avatar.js"></script>
 <script src="js/components/radio.js"></script>
@@ -147,8 +157,6 @@
 <script src="js/components/tooltips.js"></script>
 <!-- info-footer — юзает классы .sb-status-dot / .sb-sep / .sb-sub; esc из core. -->
 <script src="js/components/info-footer.js"></script>
-<script src="js/components/badge.js"></script>
-<script src="js/components/notifications.js"></script>
 <script src="js/components/table.js"></script>
 <script src="js/components/list.js"></script>
 <script src="js/components/context-menu.js"></script>

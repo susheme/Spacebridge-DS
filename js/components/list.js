@@ -122,10 +122,7 @@ window.sbSelectInfoCell = function(cell) {
 (() => {
   function mkToggle(opts = {}) {
     const { on, disabled } = opts;
-    const wrapCls = 'sb-toggle-wrap' + (disabled ? ' is-disabled' : '');
-    const checkedAttr = boolAttr('checked', on);
-    const disabledAttr = boolAttr('disabled', disabled);
-    return `<label class="${wrapCls}"><span class="sb-toggle"><input type="checkbox"${checkedAttr}${disabledAttr}><span class="sb-toggle-track"></span><span class="sb-toggle-thumb"></span></span></label>`;
+    return sbMkToggle({ on, disabled });
   }
 
   function mkControlCell(pos, label, toggleOpts = {}) {

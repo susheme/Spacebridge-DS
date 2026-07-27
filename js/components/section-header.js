@@ -221,13 +221,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
           `,
           slotRight: `
             <span class="sb-sub" style="color:var(--text-secondary)">subscription</span>
-            <label class="sb-toggle-wrap">
-              <span class="sb-toggle">
-                <input type="checkbox" checked>
-                <span class="sb-toggle-track"></span>
-                <span class="sb-toggle-thumb"></span>
-              </span>
-            </label>
+            ${sbMkToggle({ on: true })}
             <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>
             ${sbMkChevron({ dir: 'up' })}
           `,

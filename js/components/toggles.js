@@ -57,6 +57,35 @@ function tglClass(s) {
   if (s.hasLabel && s.labelPos === 'left') cls += ' sb-toggle-label-left';
   return cls;
 }
+
+/**
+ * sbMkToggle(opts) — переключатель. Фабрики у Toggle не было вообще, поэтому
+ * его разметку копировали руками семь раз, включая pg.toggle в самом ядре.
+ *   on / disabled — состояния
+ *   label         — текст рядом; labelLeft — слева от переключателя
+ *   cls           — доп. классы на <label> (напр. tgl-ctrl-wrap у pg.toggle)
+ *   attrs         — сырые атрибуты на <label> (data-* маркеры потребителя)
+ *   inputAttrs    — сырые атрибуты на <input> (onchange, data-pg-key):
+ *                   состояние живёт в нативном чекбоксе, слушать надо его,
+ *                   а не обёртку
+ */
+function sbMkToggle(opts = {}) {
+  const { on = false, disabled = false, label = '', labelLeft = false,
+          cls = '', attrs = '', inputAttrs = '' } = opts;
+  let wrapCls = 'sb-toggle-wrap';
+  if (disabled)          wrapCls += ' is-disabled';
+  if (label && labelLeft) wrapCls += ' sb-toggle-label-left';
+  if (cls)               wrapCls += ' ' + cls;
+  return `<label class="${wrapCls}"${attrs ? ' ' + attrs : ''}>`
+    + `<span class="sb-toggle">`
+    + `<input type="checkbox"${on ? ' checked' : ''}${disabled ? ' disabled' : ''}${inputAttrs ? ' ' + inputAttrs : ''}>`
+    + `<span class="sb-toggle-track"></span>`
+    + `<span class="sb-toggle-thumb"></span>`
+    + `</span>`
+    + (label ? `<span class="sb-toggle-label-text">${label}</span>` : '')
+    + `</label>`;
+}
+window.sbMkToggle = sbMkToggle;
 sbRegister({
   name: 'toggles',
   title: 'Toggles',

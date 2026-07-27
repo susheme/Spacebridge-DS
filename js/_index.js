@@ -13,9 +13,9 @@ window.SB_COMPONENTS = [
   { name: 'buttons',       file: 'buttons.js',        deps: ['checkbox'] },          // контролы playground'а = sbMkCheckbox
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
   { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
-  { name: 'separators',    file: 'separators.js',     deps: [] },
+  { name: 'separators',    file: 'separators.js',     deps: ['toggles'] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },                    // sbMkAvatar — nav-bar, table
-  { name: 'toggles',       file: 'toggles.js',        deps: [] },
+  { name: 'toggles',       file: 'toggles.js',        deps: [] },                    // sbMkToggle; ЯДРО зовёт из pg.toggle; ВЫШЕ separators (тот зовёт в preview при регистрации)
   { name: 'checkbox',      file: 'checkbox.js',       deps: [] },
   { name: 'radio',         file: 'radio.js',          deps: [] },                    // sbMkRadio; ЯДРО зовёт его из pg.radio (core.js) при рендере плейграунда
   { name: 'counters',      file: 'counters.js',       deps: [] },                    // sbMkCounter — side-nav, nav-bar, file-uploader
@@ -25,7 +25,7 @@ window.SB_COMPONENTS = [
   { name: 'textarea',      file: 'textarea.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'password',      file: 'password.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'selectors',     file: 'selectors.js',      deps: ['chevron', 'input'] },  // uses chevron + inputFieldWrap
-  { name: 'file-uploader', file: 'file-uploader.js',  deps: ['badge', 'header-xs', 'counters'] },// дропзона + Upload Cell + композит; SB_SVG из badge.js, sbMkHeaderXS из header-xs.js
+  { name: 'file-uploader', file: 'file-uploader.js',  deps: ['badge', 'header-xs', 'counters', 'toggles'] },// дропзона + Upload Cell + композит; SB_SVG из badge.js, sbMkHeaderXS из header-xs.js
   { name: 'tags',          file: 'tags.js',           deps: [] },
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
   { name: 'tooltips',      file: 'tooltips.js',       deps: ['status'] },            // hover/click подсказка; demo-триггер юзает .sb-status-dot
@@ -34,8 +34,8 @@ window.SB_COMPONENTS = [
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
   { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
   { name: 'notifications', file: 'notifications.js',  deps: ['chevron'] },
-  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
-  { name: 'list',          file: 'list.js',           deps: [] },
+  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
+  { name: 'list',          file: 'list.js',           deps: ['toggles'] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'segment-menu',  file: 'segment-menu.js',   deps: [] },
   { name: 'tabs',          file: 'tabs.js',           deps: ['status'] },            // building block для Tab Bar (Status Mini indicator)

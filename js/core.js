@@ -709,14 +709,12 @@ const SB_PG = {
   _api(name) {
     return {
       name,
-      toggle: (key, label, opts = {}) => `<label class="sb-toggle-wrap tgl-ctrl-wrap" data-pg-ctrl="${key}"${opts.requires ? ` data-pg-requires="${opts.requires}"` : ''}>
-        <span class="sb-toggle">
-          <input type="checkbox" data-pg-key="${key}" onchange="SB_PG.set('${name}','${key}',this.checked)">
-          <span class="sb-toggle-track"></span>
-          <span class="sb-toggle-thumb"></span>
-        </span>
-        <span class="sb-toggle-label-text">${label}</span>
-      </label>`,
+      toggle: (key, label, opts = {}) => sbMkToggle({
+        label,
+        cls: 'tgl-ctrl-wrap',
+        attrs: `data-pg-ctrl="${key}"` + (opts.requires ? ` data-pg-requires="${opts.requires}"` : ''),
+        inputAttrs: `data-pg-key="${key}" onchange="SB_PG.set('${name}','${key}',this.checked)"`,
+      }),
       // Группа радиокнопок для взаимоисключающего выбора. Раньше её копировали
       // руками в каждом плейграунде (checkbox/counters/toggles) вместе с личным
       // syncControls — потому что здесь был только toggle и select.

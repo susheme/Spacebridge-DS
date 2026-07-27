@@ -286,7 +286,7 @@ window.COMP_CSS.table = `.sb-table {
   const _chv  = () => sbMkChevron();  // Chevron Button (вниз — раскрытие ряда)
   const _drag = () => `<span class="sb-td-drag">${sbIconRaw('draggable', 'S')}</span>`;        // Drawer / drag-handle
   const _cb   = () => sbMkCheckbox({ static: true });  // витрина типа ячейки: выбором не рулит, Tab не забирает
-  const _tgl  = () => `<label class="sb-toggle-wrap"><span class="sb-toggle"><input type="checkbox" checked><span class="sb-toggle-track"></span><span class="sb-toggle-thumb"></span></span></label>`;
+  const _tgl  = () => sbMkToggle({ on: true });
   const _btn  = () => `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button">${sbIcon('more-2-line', 'M')}</button>`;
   const _inp  = v => `<div class="sb-tf"><input class="sb-tf-input" placeholder="${v || 'Value'}"></div>`;
   const _badge = (c, l) => `<span class="sb-badge-status mini ${c}">${l}</span>`;  // Badge-Status Mini

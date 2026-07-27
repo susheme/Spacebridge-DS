@@ -42,14 +42,7 @@ sbRegister({
       col: true,
       preview: `
         <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-lg);width:100%">
-          <label class="sb-toggle-wrap">
-            <span class="sb-toggle">
-              <input type="checkbox" onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))">
-              <span class="sb-toggle-track"></span>
-              <span class="sb-toggle-thumb"></span>
-            </span>
-            <span class="sb-toggle-label-text">Soft color</span>
-          </label>
+          ${sbMkToggle({ label: 'Soft color', inputAttrs: `onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))"` })}
           <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-s);width:100%">
             <span class="sb-body-s" style="color:var(--text-tertiary)">L — 2px</span>
             <div class="sb-sep sep-h sep-l"></div>
@@ -74,14 +67,7 @@ sbRegister({
       ),
       preview: `
         <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-lg);width:100%">
-          <label class="sb-toggle-wrap">
-            <span class="sb-toggle">
-              <input type="checkbox" onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))">
-              <span class="sb-toggle-track"></span>
-              <span class="sb-toggle-thumb"></span>
-            </span>
-            <span class="sb-toggle-label-text">Soft color</span>
-          </label>
+          ${sbMkToggle({ label: 'Soft color', inputAttrs: `onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))"` })}
           <div style="display:flex;align-items:flex-end;gap: var(--gap-horiz-xl)">
             <div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">
               <div class="sb-sep sep-v sep-l"></div>

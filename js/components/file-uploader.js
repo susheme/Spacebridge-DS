@@ -435,20 +435,8 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           <div style="flex:1 1 220px;min-width:200px;max-width:320px;display:flex;flex-direction:column;gap:var(--gap-vert-m)">
             ${sbPgGroup('Style', `
               <div style="display:flex;flex-direction:column;gap:var(--gap-vert-s)">
-                <label class="sb-toggle-wrap" data-style-card>
-                  <span class="sb-toggle">
-                    <input type="checkbox" checked onchange="sbUploaderDemoStyle(this, false)">
-                    <span class="sb-toggle-track"></span>
-                    <span class="sb-toggle-thumb"></span>
-                  </span><span class="sb-toggle-label-text">Card</span>
-                </label>
-                <label class="sb-toggle-wrap" data-style-framed>
-                  <span class="sb-toggle">
-                    <input type="checkbox" onchange="sbUploaderDemoStyle(this, true)">
-                    <span class="sb-toggle-track"></span>
-                    <span class="sb-toggle-thumb"></span>
-                  </span><span class="sb-toggle-label-text">Framed</span>
-                </label>
+                ${sbMkToggle({ on: true, label: 'Card', attrs: 'data-style-card', inputAttrs: 'onchange="sbUploaderDemoStyle(this, false)"' })}
+                ${sbMkToggle({ label: 'Framed', attrs: 'data-style-framed', inputAttrs: 'onchange="sbUploaderDemoStyle(this, true)"' })}
               </div>
             `)}
             <div class="sb-body-m" style="color:var(--text-secondary)">${sbT(

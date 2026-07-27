@@ -120,6 +120,10 @@
 
 <!-- Components (порядок: сначала те, чей COMP_CSS-ключ используют другие —
      chevron и input перед selector/textarea/password) -->
+<!-- checkbox — базовый контрол, от него зависят buttons (контролы playground'а),
+     table (выбор рядов) и dialogues (consent). Нужен только SB_GLYPHS из core,
+     поэтому стоит первым среди компонентов. -->
+<script src="js/components/checkbox.js"></script>
 <script src="js/components/buttons.js"></script>
 <!-- action-bar — кнопки .sb-btn (CSS из buttons), sbIcon из core. -->
 <script src="js/components/action-bar.js"></script>
@@ -127,7 +131,6 @@
 <script src="js/components/separators.js"></script>
 <script src="js/components/avatar.js"></script>
 <script src="js/components/toggles.js"></script>
-<script src="js/components/checkbox.js"></script>
 <script src="js/components/radio.js"></script>
 <script src="js/components/counters.js"></script>
 <script src="js/components/kbd.js"></script>

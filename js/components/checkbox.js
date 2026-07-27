@@ -7,7 +7,14 @@
 window.COMP_CSS.checkbox = `.sb-checkbox {
   display: inline-flex; align-items: center; gap: var(--gap-horiz-s);
   cursor: pointer; user-select: none;
+  outline: none; -webkit-tap-highlight-color: transparent; vertical-align: middle;
 }
+.sb-checkbox:focus-visible {
+  outline: var(--border-width-2) solid var(--primary);
+  outline-offset: 2px; border-radius: var(--radius-4);
+}
+.sb-checkbox-box { outline: none; }
+.sb-checkbox-box > svg { display: block; }
 .sb-checkbox-box {
   width: 20px; height: 20px; flex-shrink: 0;
   border-radius: var(--radius-4); border: var(--border-width-1-5) solid var(--text-secondary);
@@ -29,16 +36,109 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
 (() => {
   const { check: CHECK, checkDisabled: CHECK_DIS, minus: MINUS } = SB_GLYPHS;
 
+  /**
+   * sbMkCheckbox(opts) — DS-чекбокс. Не <input>: коробка рисуется дивом,
+   * поэтому доступность приходится собирать руками (role/tabindex/aria).
+   *   checked / indeterminate / disabled / hover — состояния
+   *   label   — текст справа от коробки
+   *   cls     — доп. классы потребителя (модификаторы вроде sb-dialogue-check)
+   *   attrs   — сырые атрибуты (свой onclick/id); нужен playground'у, чтобы
+   *             вешать SB_PG.set вместо штатного тогла
+   *   static  — презентационный режим: без фокуса и обработчиков.
+   *             Для витрин состояний в доках, где 5 чекбоксов подряд не
+   *             должны собирать на себя Tab. Живой контрол — по умолчанию.
+   *   managed — семантика есть (role/tabindex/aria), встроенного тогла нет.
+   *             Для потребителей, где источник правды снаружи и поведением
+   *             владеют они сами — так Table рулит выбором ряда.
+   *
+   * Состояние наружу: событие 'sb-checkbox:change' (bubbles, detail.checked)
+   * либо sbCheckboxChecked(el). Класс .checked — источник правды.
+   */
   function mkCb(opts = {}) {
-    const { checked, indeterminate, disabled, hover, label } = opts;
+    const { checked, indeterminate, disabled, hover, label, cls: extra = '', attrs = '', static: isStatic = false, managed = false } = opts;
     let cls = 'sb-checkbox';
     if (hover)         cls += ' hover';
     if (checked)       cls += ' checked';
     if (indeterminate) cls += ' indeterminate';
     if (disabled)      cls += ' disabled';
+    if (extra)         cls += ' ' + extra;
     const icon = indeterminate ? MINUS : (checked && disabled) ? CHECK_DIS : checked ? CHECK : '';
     const lbl  = label ? `<span class="sb-checkbox-label">${label}</span>` : '';
-    return `<div class="${cls}"><div class="sb-checkbox-box">${icon}</div>${lbl}</div>`;
+    // ARIA-состояние: indeterminate — это 'mixed', а не false.
+    const ariaChecked = indeterminate ? 'mixed' : checked ? 'true' : 'false';
+    // Disabled не забираем в таб-очередь, но роль оставляем — скринридер
+    // должен объявить «чекбокс, недоступен», а не молча пропустить.
+    // managed — семантика без data-sb-checkbox: делегированный тогл его не
+    // тронет, поведение целиком на потребителе.
+    const a11y = isStatic ? '' :
+      `${managed ? ' ' : ' data-sb-checkbox '}role="checkbox" aria-checked="${ariaChecked}"`
+      + (disabled ? ' aria-disabled="true"' : ' tabindex="0"');
+    return `<div class="${cls}"${a11y}${attrs ? ' ' + attrs : ''}><div class="sb-checkbox-box">${icon}</div>${lbl}</div>`;
+  }
+  window.sbMkCheckbox = mkCb;
+
+  // Программная установка состояния — включая indeterminate, который тоглом
+  // не выражается. Нужен потребителям вроде Table, где источник правды снаружи
+  // (выбор ряда), а чекбокс лишь отражает его. Событие НЕ шлём: это не действие
+  // юзера, а синхронизация отображения — иначе поймаем эхо-циклы.
+  window.sbCheckboxSet = function(el, { checked = false, indeterminate = false } = {}) {
+    if (!el) return;
+    el.classList.toggle('checked', checked && !indeterminate);
+    el.classList.toggle('indeterminate', indeterminate);
+    const box = el.querySelector('.sb-checkbox-box');
+    if (box) box.innerHTML = indeterminate ? MINUS : (checked ? CHECK : '');
+    // Роль может жить не на самом чекбоксе, а на кликабельной обёртке
+    // (в Table это ячейка) — тогда aria обновляет потребитель.
+    if (el.hasAttribute('role')) {
+      el.setAttribute('aria-checked', indeterminate ? 'mixed' : checked ? 'true' : 'false');
+    }
+  };
+
+  // Переключение состояния. Публичное — потребитель может дёрнуть programmatically.
+  window.sbCheckboxToggle = function(el) {
+    if (!el || el.classList.contains('disabled')) return;
+    // Из indeterminate уходим в checked — как ведёт себя нативный «select all».
+    const on = el.classList.contains('indeterminate') ? true : !el.classList.contains('checked');
+    window.sbCheckboxSet(el, { checked: on });
+    el.dispatchEvent(new CustomEvent('sb-checkbox:change', { bubbles: true, detail: { checked: on } }));
+    return on;
+  };
+
+  // Чтение состояния — чтобы потребителю не лезть в классы руками.
+  window.sbCheckboxChecked = function(el) {
+    return !!(el && el.classList.contains('checked'));
+  };
+
+  // Делегирование, один раз на документ: работает и для разметки, вставленной
+  // после загрузки (доки перерисовываются). Скоуп — только [data-sb-checkbox],
+  // чтобы не перехватывать легаси-чекбоксы со своими inline-onclick.
+  if (!window.__sbCheckboxBound) {
+    window.__sbCheckboxBound = true;
+    document.addEventListener('click', (e) => {
+      const cb = e.target.closest('[data-sb-checkbox]');
+      if (cb) window.sbCheckboxToggle(cb);
+    });
+    document.addEventListener('keydown', (e) => {
+      // Только Space — как у нативного чекбокса. Enter не трогаем: в диалоге
+      // он принадлежит кнопке подтверждения, перехват сломал бы форму.
+      if (e.key !== ' ' && e.key !== 'Spacebar') return;
+      const cb = e.target.closest && e.target.closest('[data-sb-checkbox]');
+      if (!cb) return;
+      e.preventDefault(); // иначе Space проскроллит страницу
+      window.sbCheckboxToggle(cb);
+    });
+  }
+
+  // Code-samples для доков — генерим из самой фабрики, чтобы разметка в
+  // примерах не разъезжалась с боевой (aria/tabindex забыли бы обновить).
+  function sample(items) {
+    return items.map(([caption, opts]) => {
+      const markup = mkCb(opts)
+        .replace('><div class="sb-checkbox-box"', '>\n  <div class="sb-checkbox-box"')
+        .replace('</div><span', '</div>\n  <span')
+        .replace(/<\/(div|span)><\/div>$/, '</$1>\n</div>');
+      return `<!-- ${caption} -->\n${markup}`;
+    }).join('\n\n');
   }
 
   sbRegister({
@@ -49,9 +149,13 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
       'Элемент формы для выбора опций — отметить можно любое количество. Примеры: выбор рядов в таблице, список фильтров. Состояния: Default, Hover, Checked, Disabled, Indeterminate (Unselect All). Поддерживает Label.'
     ) + sbDocNote('Tech Info', sbT(
       '<b>Geometry:</b>'
-      + '<ul><li>Size: 20×20px;</li><li>Border-radius: 4px.</li></ul>',
+      + '<ul><li>Size: 20×20px;</li><li>Border-radius: 4px.</li></ul>'
+      + '<b>Keyboard and state:</b>'
+      + '<ul><li>Not an &lt;input&gt; — the box is a div, so the semantics are hand-built: role="checkbox", tabindex="0", aria-checked (indeterminate reports "mixed");</li><li>Space toggles. Enter deliberately does not: inside a dialogue it belongs to the confirm button;</li><li>Disabled keeps the role but leaves the tab order — a screen reader announces it instead of skipping it silently;</li><li>Focus ring — the same one Button uses, on :focus-visible only, so it does not flash on mouse clicks;</li><li>Read the state with sbCheckboxChecked(el) or the sb-checkbox:change event (bubbles, detail.checked). The .checked class is the source of truth;</li><li>Handlers are delegated on the document and scoped to [data-sb-checkbox], so markup injected later works too;</li><li>static: true renders a presentational box with no focus or handlers — for the state showcases above.</li></ul>',
       '<b>Геометрия:</b>'
       + '<ul><li>Размер: 20×20px;</li><li>Border-radius: 4px.</li></ul>'
+      + '<b>Клавиатура и состояние:</b>'
+      + '<ul><li>Это не &lt;input&gt; — коробка рисуется дивом, поэтому семантика собрана руками: role="checkbox", tabindex="0", aria-checked (у indeterminate — "mixed");</li><li>Переключает Space. Enter сознательно не трогаем: в диалоге он принадлежит кнопке подтверждения;</li><li>Disabled сохраняет роль, но уходит из таб-очереди — скринридер объявит его, а не пропустит молча;</li><li>Кольцо фокуса — то же, что у Button, и только на :focus-visible, чтобы не мигало по клику мышью;</li><li>Состояние читается через sbCheckboxChecked(el) или событие sb-checkbox:change (всплывает, detail.checked). Источник правды — класс .checked;</li><li>Обработчики делегированы на документ и ограничены [data-sb-checkbox], поэтому разметка, вставленная позже, тоже живая;</li><li>static: true — презентационная коробка без фокуса и обработчиков, для витрин состояний выше.</li></ul>'
     )),
     playground: {
       title: 'Checkbox Playground',
@@ -79,25 +183,38 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
       },
       render(s) {
         const indeterminate = s.type === 'unselect';
-        const icon = indeterminate ? MINUS : (s.checked && s.disabled) ? CHECK_DIS : s.checked ? CHECK : '';
-        let cls = 'sb-checkbox';
-        if (s.checked)      cls += ' checked';
-        if (indeterminate)  cls += ' indeterminate';
-        if (s.disabled)     cls += ' disabled';
-        const click = (!s.disabled && !indeterminate)
-          ? ` onclick="SB_PG.set('checkbox','checked',!SB_PG.state('checkbox').checked)"` : '';
-        const lbl = s.hasLabel ? `<span class="sb-checkbox-label">Title</span>` : '';
-        return `<div class="${cls}" style="cursor:pointer"${click}><div class="sb-checkbox-box">${icon}</div>${lbl}</div>`;
+        // static + свой onclick: состояние живёт в SB_PG, а не в классе, иначе
+        // штатный тогл и playground-стейт разъедутся на первом же клике.
+        return mkCb({
+          checked: s.checked,
+          indeterminate,
+          disabled: s.disabled,
+          label: s.hasLabel ? 'Title' : '',
+          static: true,
+          attrs: (!s.disabled && !indeterminate)
+            ? `style="cursor:pointer" onclick="SB_PG.set('checkbox','checked',!SB_PG.state('checkbox').checked)"`
+            : 'style="cursor:pointer"',
+        });
       },
       genCode(s) {
-        const isUnselect = s.type === 'unselect';
-        const icon = isUnselect ? MINUS : (s.checked && s.disabled) ? CHECK_DIS : s.checked ? CHECK : '';
-        let cls = 'sb-checkbox';
-        if (s.checked)    cls += ' checked';
-        if (isUnselect)   cls += ' indeterminate';
-        if (s.disabled)   cls += ' disabled';
-        const lbl = s.hasLabel ? `\n  <span class="sb-checkbox-label">Title</span>` : '';
-        const html = `<div class="${cls}">\n  <div class="sb-checkbox-box">${icon}</div>${lbl}\n</div>`;
+        // Отдаём боевую разметку — с role/tabindex/aria, как её увидит потребитель.
+        const call = `sbMkCheckbox({ ${[
+          s.checked ? 'checked: true' : '',
+          s.type === 'unselect' ? 'indeterminate: true' : '',
+          s.disabled ? 'disabled: true' : '',
+          s.hasLabel ? `label: 'Title'` : '',
+        ].filter(Boolean).join(', ')} })`;
+        const markup = mkCb({
+          checked: s.checked,
+          indeterminate: s.type === 'unselect',
+          disabled: s.disabled,
+          label: s.hasLabel ? 'Title' : '',
+        }).replace('><div class="sb-checkbox-box"', '>\n  <div class="sb-checkbox-box"')
+          .replace('</div><span', '</div>\n  <span')
+          .replace(/<\/(div|span)><\/div>$/, '</$1>\n</div>');
+        const html = `<!-- Собирается фабрикой: -->\n${call}\n\n`
+          + `<!-- Разметка (Space переключает, состояние читать через\n`
+          + `     sbCheckboxChecked(el) или событие sb-checkbox:change): -->\n${markup}`;
         return { html, css: COMP_CSS.checkbox };
       },
     },
@@ -105,25 +222,34 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
       {
         title: sbT('States — No Label', 'Состояния — без лейбла'),
         preview: `<div class="sec-row gap-lg">
-          ${mkCb({})}
-          ${mkCb({ hover: true })}
-          ${mkCb({ checked: true })}
-          ${mkCb({ checked: true, disabled: true })}
-          ${mkCb({ indeterminate: true })}
+          ${mkCb({ static: true })}
+          ${mkCb({ hover: true, static: true })}
+          ${mkCb({ checked: true, static: true })}
+          ${mkCb({ checked: true, disabled: true, static: true })}
+          ${mkCb({ indeterminate: true, static: true })}
         </div>`,
-        html: `<!-- Default -->\n<div class="sb-checkbox"><div class="sb-checkbox-box"></div></div>\n\n<!-- Checked -->\n<div class="sb-checkbox checked"><div class="sb-checkbox-box">${CHECK}</div></div>\n\n<!-- Disabled + Checked -->\n<div class="sb-checkbox disabled checked"><div class="sb-checkbox-box">${CHECK_DIS}</div></div>\n\n<!-- Indeterminate -->\n<div class="sb-checkbox indeterminate"><div class="sb-checkbox-box">${MINUS}</div></div>`,
+        html: sample([
+          ['Default', {}],
+          ['Checked', { checked: true }],
+          ['Disabled + Checked', { checked: true, disabled: true }],
+          ['Indeterminate', { indeterminate: true }],
+        ]),
         css: COMP_CSS.checkbox,
       },
       {
         title: sbT('States — With Label', 'Состояния — с лейблом'),
         preview: `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap: var(--gap-horiz-m) 8px;width:100%">
-          ${mkCb({ label: 'Title' })}
-          ${mkCb({ hover: true, label: 'Title' })}
-          ${mkCb({ checked: true, label: 'Title' })}
-          ${mkCb({ disabled: true, label: 'Title' })}
-          ${mkCb({ indeterminate: true, label: 'Unselect All' })}
+          ${mkCb({ label: 'Title', static: true })}
+          ${mkCb({ hover: true, label: 'Title', static: true })}
+          ${mkCb({ checked: true, label: 'Title', static: true })}
+          ${mkCb({ disabled: true, label: 'Title', static: true })}
+          ${mkCb({ indeterminate: true, label: 'Unselect All', static: true })}
         </div>`,
-        html: `<!-- Default -->\n<div class="sb-checkbox">\n  <div class="sb-checkbox-box"></div>\n  <span class="sb-checkbox-label">Title</span>\n</div>\n\n<!-- Checked -->\n<div class="sb-checkbox checked">\n  <div class="sb-checkbox-box">${CHECK}</div>\n  <span class="sb-checkbox-label">Title</span>\n</div>\n\n<!-- Unselect All -->\n<div class="sb-checkbox indeterminate">\n  <div class="sb-checkbox-box">${MINUS}</div>\n  <span class="sb-checkbox-label">Unselect All</span>\n</div>`,
+        html: sample([
+          ['Default', { label: 'Title' }],
+          ['Checked', { checked: true, label: 'Title' }],
+          ['Unselect All', { indeterminate: true, label: 'Unselect All' }],
+        ]),
         css: COMP_CSS.checkbox,
       },
     ],

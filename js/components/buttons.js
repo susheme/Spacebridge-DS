@@ -151,34 +151,29 @@ sbRegister({
       return btnHtml;
     },
     extraPreview(s) {
+      // Контрол плейграунда на НАТИВНОМ DS-чекбоксе (был <input class="sb-checkbox">
+      // — нативный инпут под чужим классом, мимо компонента). Режим static: состояние
+      // живёт в SB_PG, поэтому тогл наш, а не встроенный. Лейбл встроен в компонент,
+      // отдельный <label> и обёртка .pg-cb-group больше не нужны.
+      const cb = (key, label) => sbMkCheckbox({
+        label,
+        checked: !!s[key],
+        static: true,
+        attrs: `onclick="SB_PG.set('buttons','${key}',!SB_PG.state('buttons').${key})"`,
+      });
       // Текстовая кнопка: чекбокс Mini (24px, типографика Button-Mini).
       if (!s.iconOnly) {
         return `<div class="pg-extras-row" style="display:grid;grid-template-columns:auto;justify-content:center">
-          <div class="pg-cb-group">
-            <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-mini"${boolAttr('checked', s.mini)} onchange="SB_PG.set('buttons','mini',this.checked)">
-            <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-mini">Mini</label>
-          </div>
+          ${cb('mini', 'Mini')}
         </div>`;
       }
       // 4 чекбокса в сетке 2×2 (2 столбца). Inline-style чтобы не плодить
       // буттон-специфичный класс в playground.css.
       return `<div class="pg-extras-row" style="display:grid;grid-template-columns:auto auto;gap:var(--gap-vert-s) var(--gap-horiz-lg);justify-content:center">
-        <div class="pg-cb-group">
-          <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-2icons"${boolAttr('checked', s.twoIcons)} onchange="SB_PG.set('buttons','twoIcons',this.checked)">
-          <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-2icons">2 Icons</label>
-        </div>
-        <div class="pg-cb-group">
-          <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-small"${boolAttr('checked', s.small)} onchange="SB_PG.set('buttons','small',this.checked)">
-          <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-small">Small</label>
-        </div>
-        <div class="pg-cb-group">
-          <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-labelL"${boolAttr('checked', s.labelLeft)} onchange="SB_PG.set('buttons','labelLeft',this.checked)">
-          <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-labelL">Label Left</label>
-        </div>
-        <div class="pg-cb-group">
-          <input type="checkbox" class="sb-checkbox" id="pg-buttons-cb-labelR"${boolAttr('checked', s.labelRight)} onchange="SB_PG.set('buttons','labelRight',this.checked)">
-          <label class="pg-cb-label sb-body-m" for="pg-buttons-cb-labelR">Label Right</label>
-        </div>
+        ${cb('twoIcons', '2 Icons')}
+        ${cb('small', 'Small')}
+        ${cb('labelLeft', 'Label Left')}
+        ${cb('labelRight', 'Label Right')}
       </div>`;
     },
     genCode(s) {

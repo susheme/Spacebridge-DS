@@ -12,6 +12,14 @@
 .sb-checkbox-box {
   outline: none;
 }
+/* Клавиатурный фокус. Ринг тот же, что у Button (buttons.css) — DS не должна
+   показывать два разных фокуса. Без него Tab по форме невидим: юзер не
+   понимает, где стоит. Только :focus-visible — по мышиному клику не мигает. */
+.sb-checkbox:focus-visible {
+  outline: var(--border-width-2) solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-4);
+}
 .sb-checkbox-box > svg {
   display: block;
 }

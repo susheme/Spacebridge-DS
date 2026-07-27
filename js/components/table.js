@@ -207,12 +207,14 @@ window.COMP_CSS.table = `.sb-table {
 (() => {
   // mkTable({ columns:[{title, sort?:'asc'|'desc'}], selectable:bool })
   // Фаза 1 — только Header Primary. Ряды / типы ячеек / тулбар — далее.
-  // Чекбокс-ячейка select-all (div-компонент .sb-checkbox, не <input>).
-  // Клик по всей ячейке → sbTableSelectAll.
+  // Чекбокс-ячейка select-all. Чекбокс — нативный DS-компонент в режиме
+  // managed: роль и Tab у него есть, а тогл — наш (источник правды это
+  // .is-selected на рядах, а не класс чекбокса). Клик по всей ячейке
+  // → sbTableSelectAll; Space по чекбоксу — туда же (см. keydown ниже).
   const checkCell = () => ({
     cls: 'sb-th sb-th-check',
     attrs: ' onclick="sbTableSelectAll(this)"',
-    body: `<div class="sb-checkbox"><div class="sb-checkbox-box"></div></div>`,
+    body: sbMkCheckbox({ managed: true }),
   });
 
   // Сборка хедер-ряда из ячеек {cls, attrs?, body}. Separator живёт ВНУТРИ ячейки
@@ -283,7 +285,7 @@ window.COMP_CSS.table = `.sb-table {
   const _ic   = n => `<span class="sb-td-ic">${sbIconRaw(n || 'radar-line', 'L')}</span>`;
   const _chv  = () => `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`;  // Chevron Button (вниз — раскрытие ряда)
   const _drag = () => `<span class="sb-td-drag">${sbIconRaw('draggable', 'S')}</span>`;        // Drawer / drag-handle
-  const _cb   = () => `<div class="sb-checkbox"><div class="sb-checkbox-box"></div></div>`;
+  const _cb   = () => sbMkCheckbox({ static: true });  // витрина типа ячейки: выбором не рулит, Tab не забирает
   const _tgl  = () => `<label class="sb-toggle-wrap"><span class="sb-toggle"><input type="checkbox" checked><span class="sb-toggle-track"></span><span class="sb-toggle-thumb"></span></span></label>`;
   const _btn  = () => `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button">${sbIcon('more-2-line', 'M')}</button>`;
   const _inp  = v => `<div class="sb-tf"><input class="sb-tf-input" placeholder="${v || 'Value'}"></div>`;
@@ -402,7 +404,7 @@ window.COMP_CSS.table = `.sb-table {
     const totalPages = paged ? Math.max(1, Math.ceil(total / pageSize)) : 1;
     // Header Primary: чекбокс-ячейка + колонки (sort-иконка, separator на стыках) +
     // (опц.) пустая kebab-ячейка в конце.
-    const h = [`<div class="sb-th sb-th-check" role="columnheader"${w(checkW)} onclick="sbTableSelectAll(this)"><div class="sb-checkbox"><div class="sb-checkbox-box"></div></div>${sep}</div>`];
+    const h = [`<div class="sb-th sb-th-check" role="columnheader"${w(checkW)} onclick="sbTableSelectAll(this)">${sbMkCheckbox({ managed: true })}${sep}</div>`];
     columns.forEach((c, i) => {
       const dir = c.sort ? ` data-sort="${c.sort}"` : '';
       const isLast = i === columns.length - 1 && !rowMenu;  // kebab-колонка идёт после
@@ -413,7 +415,7 @@ window.COMP_CSS.table = `.sb-table {
     // Body: ряды с row-чекбоксом (выровнен под хедер-чекбокс) + (опц.) kebab в конце.
     const body = rows.map((row, ri) => {
       const hidden = paged && ri >= pageSize ? ' style="display:none"' : '';  // видна только 1-я страница
-      const cells = [`<div class="sb-td sb-td-ctrl" role="cell"${w(checkW)} onclick="sbTableRowSelect(this)"><div class="sb-checkbox"><div class="sb-checkbox-box"></div></div></div>`];
+      const cells = [`<div class="sb-td sb-td-ctrl" role="cell"${w(checkW)} onclick="sbTableRowSelect(this)">${sbMkCheckbox({ managed: true })}</div>`];
       columns.forEach((c, i) => cells.push(mkCell({ type: c.type || 'text', value: row[i], width: c.width })));
       if (rowMenu) cells.push(_rowKebab(menuItems, w(kebabW)));
       return `<div class="sb-trow" role="row"${hidden}>${cells.join('')}</div>`;
@@ -501,12 +503,25 @@ window.COMP_CSS.table = `.sb-table {
   window.sbTableSort = sbTableSort;
 
   // --- Checkbox-логика таблицы ---
-  // Визуально выставить чекбокс: checked / indeterminate (minus) / пусто.
-  function _setCb(cb, { checked = false, indeterminate = false } = {}) {
-    cb.classList.toggle('checked', checked && !indeterminate);
-    cb.classList.toggle('indeterminate', indeterminate);
-    const box = cb.querySelector('.sb-checkbox-box');
-    if (box) box.innerHTML = indeterminate ? SB_GLYPHS.minus : (checked ? SB_GLYPHS.check : '');
+  // Отрисовку и aria делает сам компонент Checkbox (sbCheckboxSet). Таблица
+  // только решает, ЧТО показать: источник правды — .is-selected на рядах.
+  const _setCb = (cb, state) => sbCheckboxSet(cb, state);
+
+  // Space по чекбоксу = клик по его ячейке. Чекбоксы тут managed, поэтому
+  // делегированный тогл из checkbox.js их не трогает — клавиатуру таблица
+  // разводит сама, чтобы не разъехаться с выбором ряда.
+  if (!window.__sbTableKeysBound) {
+    window.__sbTableKeysBound = true;
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== ' ' && e.key !== 'Spacebar') return;
+      const cb = e.target.closest && e.target.closest('.sb-checkbox[role="checkbox"]');
+      if (!cb) return;
+      const cell = cb.closest('.sb-th-check, .sb-td-ctrl');
+      if (!cell) return;
+      e.preventDefault();  // иначе Space проскроллит страницу
+      if (cell.classList.contains('sb-th-check')) sbTableSelectAll(cell);
+      else sbTableRowSelect(cell);
+    });
   }
   // Синхронизировать хедер-чекбокс по числу выбранных рядов:
   //   0 → пусто, все → checked, часть → indeterminate (minus, «Unselect All»).

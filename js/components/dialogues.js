@@ -15,9 +15,8 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
 .sb-dialogue-title   { color: var(--text-tertiary);  text-align: center; }
 .sb-dialogue-message { color: var(--text-secondary); text-align: center; }
 .sb-dialogue .sb-action-bar { padding-left: var(--pad-horiz-0); padding-right: var(--pad-horiz-0); }
-.sb-dialogue-check { align-self: flex-start; margin-bottom: calc(var(--gap-vert-s) - var(--gap-vert-m)); }
-.sb-dialogue-check.below { margin-top: calc(-1 * var(--gap-vert-m)); margin-bottom: var(--pad-vert-16); }
-.sb-dialogue-check .sb-checkbox-label { white-space: normal; }
+.sb-dialogue-check { align-self: flex-start; margin-top: calc(-1 * var(--gap-vert-m)); margin-bottom: var(--pad-vert-16); }
+.sb-dialogue-check .sb-checkbox-label { white-space: normal; text-transform: none; }
 .sb-dialogue.no-symbol { padding-top: var(--pad-vert-24); }`;
 
 // --- DIALOGUES ---
@@ -32,8 +31,9 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
    *             рендерятся align center — одна кнопка = full-width, две = поровну.
    *             ПРАВИЛО: critical-кнопка без явного variant — Secondary
    *             (красный деструктив не должен быть главным CTA по умолчанию)
-   *   check   — consent-чекбокс: { label, below, checked } | false;
-   *             above (default) — между слотом и баром, below — под баром
+   *   check   — consent-чекбокс: { label, checked } | false;
+   *             всегда ПОД Action Bar'ом, вплотную к нему (размещение над
+   *             баром выпилено — визуально не прижилось)
    *
    * Modal-режим — композиция с примитивом Overlay:
    *   sbMkOverlay({ content: sbMkDialogue({...}) }) + sbOverlayOpen(...)
@@ -53,26 +53,46 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
       : `<span class="sb-dialogue-symbol">${(typeof SB_SVG === 'object' && SB_SVG[symbol]) ? SB_SVG[symbol] : symbol}</span>`;
     // Critical по умолчанию Secondary — явный variant в пропсе побеждает.
     const btns = buttons.map(b => (b.critical && !b.variant) ? { ...b, variant: 'secondary' } : b);
-    const checkHtml = check ? `<div class="sb-checkbox sb-dialogue-check${check.below ? ' below' : ''}${check.checked ? ' checked' : ''}" onclick="sbDialogueToggleCheck(this)"><div class="sb-checkbox-box">${check.checked ? SB_GLYPHS.check : ''}</div><span class="sb-checkbox-label">${check.label || 'Don&#39;t ask again'}</span></div>` : '';
+    // Нативный DS-чекбокс (не копия разметки): вместе с ним приезжают
+    // Tab/Space, aria-checked и событие sb-checkbox:change.
+    const checkHtml = check ? sbMkCheckbox({
+      label: check.label || 'Don’t ask again',
+      checked: !!check.checked,
+      cls: 'sb-dialogue-check',
+    }) : '';
     return `<div class="sb-dialogue${symbol ? '' : ' no-symbol'}" role="alertdialog" aria-label="${title}">
       <div class="sb-dialogue-center">
         ${sym}
         <div class="sb-dialogue-title sb-h8">${title}</div>
-        <div class="sb-dialogue-message sb-body-l">${message}</div>
+        ${message ? `<div class="sb-dialogue-message sb-body-l">${message}</div>` : ''}
       </div>
-      ${check && !check.below ? checkHtml : ''}
       ${sbMkActionBar({ buttons: btns, align: 'center' })}
-      ${check && check.below ? checkHtml : ''}
+      ${checkHtml}
     </div>`;
   }
   window.sbMkDialogue = mkDialogue;
 
-  // Живой тогл consent-чекбокса (DS-чекбокс — div, не input).
-  window.sbDialogueToggleCheck = function(cb) {
-    const on = cb.classList.toggle('checked');
-    const box = cb.querySelector('.sb-checkbox-box');
-    if (box) box.innerHTML = on ? SB_GLYPHS.check : '';
-  };
+  // sbDialogueToggleCheck снесён: тогл, клавиатура и aria приехали вместе
+  // с нативным Checkbox (делегирование в checkbox.js).
+  // Прочитать согласие: sbCheckboxChecked(dlg.querySelector('.sb-dialogue-check'))
+  // либо слушать событие 'sb-checkbox:change' — оно всплывает до диалога.
+
+  // Playground state → опции mkDialogue. Вынесено, чтобы render и genCode
+  // собирали ОДНО И ТО ЖЕ: превью и скопированный код не расходятся.
+  function pgOpts(s) {
+    const buttons = s.critical
+      ? [{ label: 'Delete', critical: true }, { label: 'Cancel', variant: 'secondary' }]
+      : [{ label: 'Button', variant: 'primary' }, { label: 'Button', variant: 'secondary' }];
+    return {
+      symbol: s.symbol === 'none' ? false : s.symbol,
+      title: s.critical ? 'Delete this file?' : 'Changes are not saved',
+      message: s.message
+        ? (s.critical ? 'This file will be removed permanently.' : 'All changes will be lost if you go back.')
+        : '',
+      buttons: s.second ? buttons : buttons.slice(0, 1),
+      check: s.consent ? { label: 'Don’t ask again' } : false,
+    };
+  }
 
   // ── Register ────────────────────────────────────────────────────────
   sbRegister({
@@ -87,14 +107,62 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
       + '<b>Typography:</b>'
       + '<ul><li>Headline — H8, --text-tertiary, centered;</li><li>Message — Body L, --text-secondary, centered.</li></ul>'
       + '<b>Slots:</b>'
-      + '<ul><li>Top (optional) — a Symbol Badge, icon or image;</li><li>Footer — the Action Bar component, align center: one button goes full-width, two split evenly; its side padding is zeroed — the card provides the 16px inset;</li><li>Consent check (optional) — a Checkbox with a label at the left edge: above the Action Bar (16px from the center slot, 8px to the bar) or below it (flush to the bar, 0px);</li><li>A critical (red) button defaults to Secondary — a destructive action must not be the main CTA; an explicit variant overrides.</li></ul>',
+      + '<ul><li>Top (optional) — a Symbol Badge, icon or image;</li><li>Footer — the Action Bar component, align center: one button goes full-width, two split evenly; its side padding is zeroed — the card provides the 16px inset;</li><li>Consent check (optional) — a Checkbox with a label at the left edge, always below the Action Bar and flush to it (0px);</li><li>A critical (red) button defaults to Secondary — a destructive action must not be the main CTA; an explicit variant overrides.</li></ul>',
       '<b>Геометрия (Alert):</b>'
       + '<ul><li>Ширина: 320px (min 296 / max 320);</li><li>Radius: 16; Shadow-L; заливка --background;</li><li>Padding: 16/16/0/16 — низ отдан Action Bar\'у; gap карточки 16, центрального слота 8;</li><li>Без Very Top символа — верхний padding вырастает до 24.</li></ul>'
       + '<b>Типографика:</b>'
       + '<ul><li>Headline — H8, --text-tertiary, по центру;</li><li>Message — Body L, --text-secondary, по центру.</li></ul>'
       + '<b>Слоты:</b>'
-      + '<ul><li>Верхний (опциональный) — Symbol Badge, иконка или картинка;</li><li>Футер — компонент Action Bar, align center: одна кнопка — во всю ширину, две — поровну; его боковой padding обнулён — отступ 16 даёт карточка;</li><li>Consent check (опциональный) — Checkbox с лейблом у левого края: над Action Bar (16px от центрального слота, 8px до бара) или под ним (вплотную к бару, 0px);</li><li>Критическая (красная) кнопка по умолчанию Secondary — деструктив не должен быть главным CTA; явный variant побеждает.</li></ul>'
+      + '<ul><li>Верхний (опциональный) — Symbol Badge, иконка или картинка;</li><li>Футер — компонент Action Bar, align center: одна кнопка — во всю ширину, две — поровну; его боковой padding обнулён — отступ 16 даёт карточка;</li><li>Consent check (опциональный) — Checkbox с лейблом у левого края, всегда под Action Bar и вплотную к нему (0px);</li><li>Критическая (красная) кнопка по умолчанию Secondary — деструктив не должен быть главным CTA; явный variant побеждает.</li></ul>'
     )),
+    playground: {
+      title: 'Dialogues Playground',
+      // Лейблы тоглов — одним словом: ячейка .pg-toggles узкая, режет длинные.
+      state: { symbol: 'warnLine', message: true, second: true, critical: false, consent: false },
+      controls(pg) {
+        return sbPgGroup('Symbol', `
+          ${pg.select('symbol', [
+            { value: 'warnLine',    label: 'Warning' },
+            { value: 'critLine',    label: 'Critical' },
+            { value: 'infoLine',    label: 'Info' },
+            { value: 'checkCircle', label: 'Success' },
+            { value: 'none',        label: 'None' },
+          ])}
+        `) + sbPgGroup('Content', `
+          <div class="pg-toggles">${pg.toggle('message', 'Message')}${pg.toggle('consent', 'Consent')}</div>
+        `) + sbPgGroup('Actions', `
+          <div class="pg-toggles">${pg.toggle('second', 'Second')}${pg.toggle('critical', 'Critical')}</div>
+        `);
+      },
+      render(s) {
+        return mkDialogue(pgOpts(s));
+      },
+      genCode(s) {
+        const o = pgOpts(s);
+        const call = `sbMkDialogue({\n`
+          + `  symbol: ${o.symbol ? `'${o.symbol}'` : 'false'},\n`
+          + `  title: '${o.title}',\n`
+          + (o.message ? `  message: '${o.message}',\n` : `  message: '',\n`)
+          + `  buttons: [${o.buttons.map(b =>
+              '{ ' + Object.entries(b).map(([k, v]) =>
+                `${k}: ${typeof v === 'string' ? `'${v}'` : v}`).join(', ') + ' }'
+            ).join(', ')}],\n`
+          + (o.check ? `  check: { label: '${o.check.label}' },\n` : '')
+          + `})`;
+        const html = `<!-- Собирается хелпером: -->\n${call}\n\n`
+          + `<!-- Разметка: -->\n`
+          + `<div class="sb-dialogue${o.symbol ? '' : ' no-symbol'}" role="alertdialog">\n`
+          + `  <div class="sb-dialogue-center">\n`
+          + (o.symbol ? `    <span class="sb-dialogue-symbol"><!-- ${o.symbol} 24px --></span>\n` : '')
+          + `    <div class="sb-dialogue-title sb-h8">${o.title}</div>\n`
+          + (o.message ? `    <div class="sb-dialogue-message sb-body-l">${o.message}</div>\n` : '')
+          + `  </div>\n`
+          + `  <nav class="sb-action-bar align-center" aria-label="Actions"> ... </nav>\n`
+          + (o.check ? `  <div class="sb-checkbox sb-dialogue-check">\n    <div class="sb-checkbox-box"></div>\n    <span class="sb-checkbox-label">${o.check.label}</span>\n  </div>\n` : '')
+          + `</div>`;
+        return { html, css: COMP_CSS.dialogues };
+      },
+    },
     sections: [
       {
         title: sbT('Alert — anatomy and variants', 'Alert — анатомия и варианты'),
@@ -138,8 +206,8 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
       {
         title: sbT('Consent check', 'Consent check'),
         desc: sbT(
-          'An optional Checkbox with a label for confirmations and agreements («don’t ask again», terms consent). Two placements: above the Action Bar — at the left edge, 16px from the center slot and 8px to the bar; or below the bar, flush to it (0px). The checkbox is alive — click it.',
-          'Опциональный Checkbox с лейблом для подтверждений и согласий («не спрашивать снова», принятие условий). Два размещения: над Action Bar — у левого края, 16px от центрального слота и 8px до бара; или под баром, вплотную к нему (0px). Чекбокс живой — кликни.'
+          'An optional Checkbox with a label for confirmations and agreements («don’t ask again», terms consent). It always sits below the Action Bar, flush to it (0px), at the left edge — the buttons stay the last thing before the card ends. This is the DS Checkbox itself, not a copy of its markup, so it comes with Tab and Space out of the box — important here, because a modal alert traps focus and has Esc switched off. Read the answer with sbCheckboxChecked(el), or listen for the sb-checkbox:change event — it bubbles up to the dialogue. Click it or tab to it.',
+          'Опциональный Checkbox с лейблом для подтверждений и согласий («не спрашивать снова», принятие условий). Всегда под Action Bar, вплотную к нему (0px), у левого края — кнопки остаются последним, что видно перед краем карточки. Это сам DS-Checkbox, а не копия его разметки, поэтому Tab и Space работают из коробки — здесь это важно: модальный алерт держит фокус внутри и Esc у него выключен. Ответ читается через sbCheckboxChecked(el) или по событию sb-checkbox:change — оно всплывает до диалога. Кликни или дойди табом.'
         ),
         preview: `<div class="sec-row wrap gap-lg" style="align-items:flex-start;padding:var(--pad-vert-24);background:var(--surface-1);border-radius:var(--radius-12)">
           ${mkDialogue({
@@ -150,20 +218,26 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
             title: 'Accept the terms',
             message: 'Please review the terms of service before continuing.',
             buttons: [{ label: 'Continue', variant: 'primary' }],
-            check: { label: 'I agree to the terms of service', below: true },
+            check: { label: 'I agree to the terms of service' },
           })}
         </div>`,
-        html: `<!-- Above the Action Bar (default) -->
+        html: `<!-- Чекбокс всегда под Action Bar -->
 sbMkDialogue({ ..., check: { label: 'Don’t ask again' } })
 
-<!-- Below the Action Bar -->
-sbMkDialogue({ ..., check: { label: 'I agree to the terms of service', below: true } })
+<!-- Внутри собирается нативным чекбоксом: -->
+sbMkCheckbox({ label: 'Don’t ask again', cls: 'sb-dialogue-check' })
 
-<!-- Разметка: DS Checkbox у левого края -->
-<div class="sb-checkbox sb-dialogue-check">
+<!-- Разметка: DS Checkbox у левого края, ПОСЛЕ .sb-action-bar -->
+<div class="sb-checkbox sb-dialogue-check"
+     data-sb-checkbox role="checkbox" aria-checked="false" tabindex="0">
   <div class="sb-checkbox-box"></div>
   <span class="sb-checkbox-label">Don’t ask again</span>
-</div>`,
+</div>
+
+<!-- Прочитать согласие -->
+const agreed = sbCheckboxChecked(dlg.querySelector('.sb-dialogue-check'));
+// либо реактивно:
+dlg.addEventListener('sb-checkbox:change', e => console.log(e.detail.checked));`,
         css: COMP_CSS.dialogues,
       },
       {

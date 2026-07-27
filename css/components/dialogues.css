@@ -44,20 +44,19 @@
 }
 
 /* Consent-чекбокс (согласия, «не спрашивать снова» и т.п.), у левого края.
-   Above (default): между центральным слотом и Action Bar — 16 от слота
-   (card gap) и 8 до бара (card gap 16 минус 8 снизу). */
+   Всегда ПОД Action Bar'ом, вплотную к нему (gap 0 — card gap 16 гасим),
+   до низа карточки 16 (её padding-bottom = 0). Размещение над баром было
+   вторым вариантом и выпилено: чекбокс разрывал связку «текст → кнопки». */
 .sb-dialogue-check {
   align-self: flex-start;
-  margin-bottom: calc(var(--gap-vert-s) - var(--gap-vert-m));
-}
-/* Below: под Action Bar'ом ВПЛОТНУЮ (gap 0 — card gap 16 гасим),
-   до низа карточки 16 (её padding-bottom = 0). */
-.sb-dialogue-check.below {
   margin-top: calc(-1 * var(--gap-vert-m));
   margin-bottom: var(--pad-vert-16);
 }
-/* Consent-тексты бывают длинными — переносим (у базового лейбла nowrap). */
-.sb-dialogue-check .sb-checkbox-label { white-space: normal; }
+/* Consent-тексты бывают длинными — переносим (у базового лейбла nowrap).
+   Опт-аут из Title-Case (typography.css): consent — это предложение, а не
+   лейбл, заглавная только у первого слова. Регистр берём из source, а не
+   форсим lowercase: иначе полегли бы акронимы (API, URL) и имена. */
+.sb-dialogue-check .sb-checkbox-label { white-space: normal; text-transform: none; }
 
 /* Без Very Top символа заголовок ближе к краю — компенсируем: 24 сверху. */
 .sb-dialogue.no-symbol { padding-top: var(--pad-vert-24); }

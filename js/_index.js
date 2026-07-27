@@ -48,7 +48,7 @@ window.SB_COMPONENTS = [
   { name: 'led-panel',     file: 'led-panel.js',      deps: ['status'] },            // Status Indicators Panel, NAME + Status dot. ДОЛЖЕН быть до sub-nav.js (он юзает sbMkLedPanel в demo)
   { name: 'sub-nav',       file: 'sub-nav.js',        deps: ['segment-menu', 'led-panel'] }, // sub-bar под Nav Bar; demo юзает sbMkSegmentMenu + sbMkLedPanel
   { name: 'overlay',       file: 'overlay.js',        deps: ['file-uploader'] },     // примитив модальности; live-демо юзает sbMkUploader (framed в модалке)
-  { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay'] }, // Alert: SB_SVG символ + sbMkActionBar футер; modal-демо = sbMkOverlay
+  { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay', 'checkbox'] }, // Alert: SB_SVG символ + sbMkActionBar футер; consent = sbMkCheckbox; modal-демо = sbMkOverlay
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

@@ -292,7 +292,7 @@ window.COMP_CSS.table = `.sb-table {
   const _badge = (c, l) => `<span class="sb-badge-status mini ${c}">${l}</span>`;  // Badge-Status Mini
   const _dot  = c => `<span class="sb-status-dot ${c}"></span>`;
   const _mark = c => `<span class="sb-mark sm ${c}"></span>`;  // Mark Horizontal (10×3px)
-  const _av   = i => `<div class="sb-avatar"><div class="sb-avatar-circle"><span class="sb-avatar-initials">${i || 'NS'}</span></div></div>`;
+  const _av   = i => sbMkAvatar({ type: 'initials', initials: i || 'NS' });
 
   // Table Cell (body-ячейка ряда, 40px). Типы контента в слотовой системе:
   // левый слот = ведущая группа, правый = трейлинг. Узкие control-ячейки

@@ -274,7 +274,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
     const doneFiles   = files.filter(f => !f.status || f.status === 'completed');
     const activeFiles = files.filter(f => f.status && f.status !== 'completed');
     const counterHtml = counter
-      ? `<div class="sb-counter range sb-uploader-counter"><span class="sb-counter-online">${doneFiles.length}</span><span class="sb-counter-sep">/</span><span class="sb-counter-total">${files.length}</span></div>`
+      ? sbMkCounter({ type: 'range', value: doneFiles.length, max: files.length, cls: 'sb-uploader-counter' })
       : '';
     return `<div class="sb-uploader${framed ? ' framed' : ''}">
       ${mkUploaderArea({ title: opts.areaTitle, hint: opts.hint, accept: opts.accept, multiple: opts.multiple, wide: true })}

@@ -14,18 +14,18 @@ window.SB_COMPONENTS = [
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
   { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
   { name: 'separators',    file: 'separators.js',     deps: [] },
-  { name: 'avatar',        file: 'avatar.js',         deps: [] },
+  { name: 'avatar',        file: 'avatar.js',         deps: [] },                    // sbMkAvatar — nav-bar, table
   { name: 'toggles',       file: 'toggles.js',        deps: [] },
   { name: 'checkbox',      file: 'checkbox.js',       deps: [] },
   { name: 'radio',         file: 'radio.js',          deps: [] },                    // sbMkRadio; ЯДРО зовёт его из pg.radio (core.js) при рендере плейграунда
-  { name: 'counters',      file: 'counters.js',       deps: [] },
+  { name: 'counters',      file: 'counters.js',       deps: [] },                    // sbMkCounter — side-nav, nav-bar, file-uploader
   { name: 'kbd',           file: 'kbd.js',            deps: [] },                    // keyboard shortcut hint, used by search-bar
   { name: 'search-bar',    file: 'search-bar.js',     deps: ['kbd'] },               // uses sbMkKbd / sbMkKbdGroup in sections
   { name: 'input',         file: 'input.js',          deps: [] },                    // defines inputField + inputFieldWrap
   { name: 'textarea',      file: 'textarea.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'password',      file: 'password.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'selectors',     file: 'selectors.js',      deps: ['chevron', 'input'] },  // uses chevron + inputFieldWrap
-  { name: 'file-uploader', file: 'file-uploader.js',  deps: ['badge', 'header-xs'] },// дропзона + Upload Cell + композит; SB_SVG из badge.js, sbMkHeaderXS из header-xs.js
+  { name: 'file-uploader', file: 'file-uploader.js',  deps: ['badge', 'header-xs', 'counters'] },// дропзона + Upload Cell + композит; SB_SVG из badge.js, sbMkHeaderXS из header-xs.js
   { name: 'tags',          file: 'tags.js',           deps: [] },
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
   { name: 'tooltips',      file: 'tooltips.js',       deps: ['status'] },            // hover/click подсказка; demo-триггер юзает .sb-status-dot
@@ -34,7 +34,7 @@ window.SB_COMPONENTS = [
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
   { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
   { name: 'notifications', file: 'notifications.js',  deps: ['chevron'] },
-  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
+  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
   { name: 'list',          file: 'list.js',           deps: [] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'segment-menu',  file: 'segment-menu.js',   deps: [] },
@@ -44,7 +44,7 @@ window.SB_COMPONENTS = [
   { name: 'breadcrumbs',   file: 'breadcrumbs.js',    deps: [] },                    // path-nav, типографика синхронна с toc
   { name: 'pagination',    file: 'pagination.js',     deps: ['buttons', 'input'] },  // на базе sb-btn-secondary + sb-tf
   { name: 'table-footer',  file: 'table-footer.js',   deps: ['pagination'] },        // demo юзает sbMkPagination → ПОСЛЕ pagination
-  { name: 'nav-bar',       file: 'nav-bar.js',        deps: ['buttons', 'avatar', 'search-bar', 'kbd', 'context-menu', 'overlay'] }, // top bar; search-overlay = sbMkOverlay (примитив)
+  { name: 'nav-bar',       file: 'nav-bar.js',        deps: ['buttons', 'avatar', 'search-bar', 'kbd', 'context-menu', 'overlay', 'counters'] }, // top bar; search-overlay = sbMkOverlay (примитив)
   { name: 'led-panel',     file: 'led-panel.js',      deps: ['status'] },            // Status Indicators Panel, NAME + Status dot. ДОЛЖЕН быть до sub-nav.js (он юзает sbMkLedPanel в demo)
   { name: 'sub-nav',       file: 'sub-nav.js',        deps: ['segment-menu', 'led-panel'] }, // sub-bar под Nav Bar; demo юзает sbMkSegmentMenu + sbMkLedPanel
   { name: 'overlay',       file: 'overlay.js',        deps: ['file-uploader'] },     // примитив модальности; live-демо юзает sbMkUploader (framed в модалке)

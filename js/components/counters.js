@@ -18,15 +18,34 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
     return n;
   }
 
+  /**
+   * sbMkCounter(opts) — числовой счётчик.
+   *   type  — 'single' (одно число) | 'range' (текущее / максимум)
+   *   value / max — числа, прогоняются через fmtN
+   *   empty — плейсхолдер («--» / «--/--»)
+   *   cls   — доп. классы потребителя (напр. sb-uploader-counter)
+   *   attrs — сырые атрибуты
+   *   tag   — 'div' по умолчанию; 'span' там, где счётчик лежит внутри
+   *           инлайнового контейнера (nav-bar кладёт его в <span>-слот,
+   *           и div внутри span — невалидная вложенность)
+   */
   function mkCnt(opts = {}) {
-    const { type = 'single', value = 9, max = 9999, empty = false } = opts;
+    const { type = 'single', value = 9, max = 9999, empty = false,
+            cls: extra = '', attrs = '', tag = 'div' } = opts;
+    const cls = (base) => `sb-counter${base ? ' ' + base : ''}${extra ? ' ' + extra : ''}`;
+    const a = attrs ? ' ' + attrs : '';
+    const wrap = (c, inner) => `<${tag} class="${c}"${a}>${inner}</${tag}>`;
     if (type === 'range') {
-      if (empty) return `<div class="sb-counter range empty">--/--</div>`;
-      return `<div class="sb-counter range"><span class="sb-counter-online">${fmtN(value)}</span><span class="sb-counter-sep">/</span><span class="sb-counter-total">${fmtN(max)}</span></div>`;
+      if (empty) return wrap(cls('range empty'), '--/--');
+      return wrap(cls('range'),
+        `<span class="sb-counter-online">${fmtN(value)}</span>`
+        + `<span class="sb-counter-sep">/</span>`
+        + `<span class="sb-counter-total">${fmtN(max)}</span>`);
     }
-    if (empty) return `<div class="sb-counter empty">--</div>`;
-    return `<div class="sb-counter">${fmtN(value)}</div>`;
+    if (empty) return wrap(cls('empty'), '--');
+    return wrap(cls(''), fmtN(value));
   }
+  window.sbMkCounter = mkCnt;
 
   sbRegister({
     name: 'counters',

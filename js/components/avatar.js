@@ -31,13 +31,31 @@ function _avContent(type, initials) {
   if (type === 'company')  return sbIcon('building-2-line', 'L');
   return sbIcon('user-line', 'L');
 }
-function mkAv(type, opts, initials) {
-  const o = opts || {};
-  return `<div class="sb-avatar"${o.hover ? ' data-hover="true"' : ''}${o.badge ? ' data-badge="true"' : ''}>`
+/**
+ * sbMkAvatar(opts) — аватар. Объектная сигнатура для потребителей;
+ * mkAv с позиционными аргументами остаётся внутренней для витрин в доках.
+ *   type     — 'user' (default) | 'initials' | 'image' | 'company'
+ *   initials — текст для type: 'initials'
+ *   hover / status / badge — состояния
+ *   cls      — доп. классы потребителя
+ *   attrs    — сырые атрибуты (onclick, style, …)
+ */
+function sbMkAvatar(opts = {}) {
+  const { type = 'user', initials, hover, status, badge, cls = '', attrs = '' } = opts;
+  return `<div class="sb-avatar${cls ? ' ' + cls : ''}"`
+    + (hover ? ' data-hover="true"' : '')
+    + (badge ? ' data-badge="true"' : '')
+    + (attrs ? ' ' + attrs : '')
+    + `>`
     + `<div class="sb-avatar-circle">${_avContent(type, initials)}</div>`
-    + (o.status ? '<span class="sb-status-dot mini online"></span>' : '')
-    + (o.badge  ? '<span class="sb-pin">ADMIN ★</span>' : '')
+    + (status ? '<span class="sb-status-dot mini online"></span>' : '')
+    + (badge  ? '<span class="sb-pin">ADMIN ★</span>' : '')
     + `</div>`;
+}
+window.sbMkAvatar = sbMkAvatar;
+
+function mkAv(type, opts, initials) {
+  return sbMkAvatar({ ...(opts || {}), type, initials });
 }
 function avStateRow(type, initials) {
   const states = [

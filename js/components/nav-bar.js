@@ -91,7 +91,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     if (hasChevron) {
       chev = `<span class="sb-nav-btn-chevron">${CHEVRON_DOWN}</span>`;
     } else if (counter != null) {
-      chev = `<span class="sb-nav-btn-slot"><span class="sb-counter">${counter}</span></span>`;
+      chev = `<span class="sb-nav-btn-slot">${sbMkCounter({ value: counter, tag: 'span' })}</span>`;
     } else if (indicator) {
       chev = `<span class="sb-nav-btn-slot"><span class="sb-status-dot mini ${indicator === true ? 'online' : indicator}"></span></span>`;
     }
@@ -536,9 +536,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   // (Settings / Logout). Используем штатный sb-overflow-menu pattern
   // и .sb-ctx-card.with-tip из context-menu component.
   const DEMO_AVATAR = `<div class="sb-overflow-menu">
-    <div class="sb-avatar" onclick="sbOverflowMenuToggle(this)" style="cursor:pointer">
-      <div class="sb-avatar-circle"><span class="sb-avatar-initials">VS</span></div>
-    </div>
+    ${sbMkAvatar({ type: 'initials', initials: 'VS', attrs: 'onclick="sbOverflowMenuToggle(this)" style="cursor:pointer"' })}
     <div class="sb-ctx-card with-tip">
       ${sbMkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' })}
       ${sbMkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' })}

@@ -343,13 +343,14 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   window.sbSideNavRow = sbSideNavRow;
 
   // ── Мелкие билдеры ───────────────────────────────────────────────────
+  // Раньше здесь лежала копия всей логики Counter (range / empty / single).
+  // Теперь только маппинг «наш проп → опции фабрики».
   function cnt(counter) {
     if (counter == null) return '';
     if (typeof counter === 'object') {
-      if (counter.empty) return `<div class="sb-counter range empty">--/--</div>`;
-      return `<div class="sb-counter range"><span class="sb-counter-online">${counter.value}</span><span class="sb-counter-sep">/</span><span class="sb-counter-total">${counter.max}</span></div>`;
+      return sbMkCounter({ type: 'range', value: counter.value, max: counter.max, empty: counter.empty });
     }
-    return `<div class="sb-counter">${counter}</div>`;
+    return sbMkCounter({ value: counter });
   }
   function badge(b) {
     if (!b) return '';
@@ -888,7 +889,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
             { role: 'item', label: 'Single Item', rightSlot: '<span class="sb-status"><span class="sb-status-dot online"></span>Online</span>' },
             { role: 'item', label: 'Single Item', selected: true },
             { role: 'item', label: 'Single Item' },
-            { role: 'section-header', slotLeft: '<span class="sb-caption">Section</span>', slotRight: '<span class="sb-counter">2</span>' },
+            { role: 'section-header', slotLeft: '<span class="sb-caption">Section</span>', slotRight: sbMkCounter({ value: 2, tag: 'span' }) },
             { role: 'item', label: 'Single Item', rightSlot: '<span class="sb-status"><span class="sb-status-dot maintenance"></span>Away</span>' },
             { role: 'item', label: 'Single Item' },
           ],

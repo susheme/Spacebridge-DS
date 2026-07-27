@@ -28,7 +28,6 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
 
 // --- SELECTORS ---
 (() => {
-  const CHEVRON_DOWN = sbIcon('arrow-down-s-line', 'L');
   const GEMINI_ICON  = sbIcon('gemini-fill', 'L');
   const ADD_ICON     = sbIcon('add-line', 'L');
 
@@ -45,7 +44,7 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
     return `<div class="${cls} ${widthCls}">
       <span class="sb-sel-val">${displayVal}</span>
       <div class="sb-sel-right">
-        <div class="sb-chevron">${CHEVRON_DOWN}</div>
+        ${sbMkChevron()}
       </div>
     </div>`;
   }

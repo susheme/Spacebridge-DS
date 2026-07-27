@@ -283,7 +283,7 @@ window.COMP_CSS.table = `.sb-table {
   const _date = v => `<span class="sb-td-text sb-td-date sb-caption">${v || '30.06.2026'}</span>`;
   const _lnk  = v => `<a class="sb-td-text sb-link-s" href="#" onclick="return false">${v}</a>`;
   const _ic   = n => `<span class="sb-td-ic">${sbIconRaw(n || 'radar-line', 'L')}</span>`;
-  const _chv  = () => `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`;  // Chevron Button (вниз — раскрытие ряда)
+  const _chv  = () => sbMkChevron();  // Chevron Button (вниз — раскрытие ряда)
   const _drag = () => `<span class="sb-td-drag">${sbIconRaw('draggable', 'S')}</span>`;        // Drawer / drag-handle
   const _cb   = () => sbMkCheckbox({ static: true });  // витрина типа ячейки: выбором не рулит, Tab не забирает
   const _tgl  = () => `<label class="sb-toggle-wrap"><span class="sb-toggle"><input type="checkbox" checked><span class="sb-toggle-track"></span><span class="sb-toggle-thumb"></span></span></label>`;

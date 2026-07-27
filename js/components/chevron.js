@@ -17,14 +17,24 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
     right: 'arrow-right-s-line',
   };
 
+  /**
+   * sbMkChevron(opts) — круглая иконочная кнопка направления.
+   *   dir      — down (default) | up | left | right
+   *   mini     — 24px вместо 32px
+   *   disabled — неактивна
+   *   cls      — доп. классы потребителя (sb-side-nav-chev, sb-toast-stack-peek…)
+   *   attrs    — сырые атрибуты (onclick/role/aria), если шеврон кликабельный
+   */
   function mkChv(opts = {}) {
-    const { dir = 'down', disabled = false, mini = false } = opts;
+    const { dir = 'down', disabled = false, mini = false, cls: extra = '', attrs = '' } = opts;
     let cls = 'sb-chevron';
     if (mini)     cls += ' mini';
     if (disabled) cls += ' disabled';
+    if (extra)    cls += ' ' + extra;
     const size = mini ? 'S' : 'L';
-    return `<div class="${cls}">${sbIcon(DIRS[dir], size)}</div>`;
+    return `<div class="${cls}"${attrs ? ' ' + attrs : ''}>${sbIcon(DIRS[dir], size)}</div>`;
   }
+  window.sbMkChevron = mkChv;
 
   sbRegister({
     name: 'chevron',

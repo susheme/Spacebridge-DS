@@ -261,7 +261,7 @@ a.sb-banner-title {
     // Button (виден только при реальном переполнении — sbBannerSyncOverflow).
     const modCls = c.right ? ' capped' : (c.text ? ' collapsible' : '');
     const chevron = (!c.right && c.text)
-      ? `<div class="sb-chevron sb-banner-chevron" role="button" aria-label="Expand" onclick="sbBannerToggle(this)">${sbIcon('arrow-down-s-line', 'L')}</div>`
+      ? sbMkChevron({ cls: 'sb-banner-chevron', attrs: 'role="button" aria-label="Expand" onclick="sbBannerToggle(this)"' })
       : '';
     return `<div class="sb-banner ${type}${modCls}">`
       + `<div class="sb-banner-content">${titleRow}${text}</div>`

@@ -128,7 +128,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%">
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Section title</span>`,
-            slotRight: `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
+            slotRight: sbMkChevron(),
           })}
         </div>`,
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="true">
@@ -191,11 +191,11 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
         preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Expanded section</span>`,
-            slotRight: `<div class="sb-chevron">${sbIcon('arrow-up-s-line', 'L')}</div>`,
+            slotRight: sbMkChevron({ dir: 'up' }),
           })}
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Collapsed section</span>`,
-            slotRight: `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
+            slotRight: sbMkChevron(),
           })}
         </div>`,
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="true">
@@ -229,7 +229,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
               </span>
             </label>
             <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>
-            <div class="sb-chevron">${sbIcon('arrow-up-s-line', 'L')}</div>
+            ${sbMkChevron({ dir: 'up' })}
           `,
         }),
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="true">

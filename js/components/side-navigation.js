@@ -419,7 +419,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   function renderParent(node) {
     const exp = node.expanded ? ' expanded' : '';
     const kids = (node.children || []).map(c => renderNode(c, 0)).join('');
-    const chev = `<div class="sb-chevron sb-side-nav-chev">${sbIcon('arrow-down-s-line', 'L')}</div>`;
+    const chev = sbMkChevron({ cls: 'sb-side-nav-chev' });
     const lead = node.icon ? `<span class="sb-side-nav-row-lead">${sbIcon(node.icon, 'L')}</span>` : '';
     return `<div class="sb-side-nav-node is-parent${exp}">
       <div class="sb-side-nav-row is-parent" onclick="sbSideNavRow(this, true, false)">
@@ -448,7 +448,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
       // Grand-Parent: шеврон — Chevron Button (кружок). Клик = ТОЛЬКО раскрытие
       // (контейнер навигации, не selectable — иначе ячейка залипает в surface-1
       // после сворачивания). Selected-визуал доступен через data (states-демо).
-      const chevBtn = `<div class="sb-chevron sb-side-nav-chev">${sbIcon('arrow-down-s-line', 'L')}</div>`;
+      const chevBtn = sbMkChevron({ cls: 'sb-side-nav-chev' });
       const dis = node.disabled ? ' is-disabled' : '';
       const selRow = node.selected ? ' is-selected' : '';
       const onclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, false)"';

@@ -269,8 +269,8 @@ window.COMP_CSS.toast = `.sb-toast {
   const RIGHT = {
     none:  () => '',
     close: () => `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Close">${sbIcon('close-line', 'S')}</button>`,
-    'chevron-down': () => `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
-    'chevron-up':   () => `<div class="sb-chevron">${sbIcon('arrow-up-s-line', 'L')}</div>`,
+    'chevron-down': () => sbMkChevron(),
+    'chevron-up':   () => sbMkChevron({ dir: 'up' }),
   };
 
   /**
@@ -365,7 +365,7 @@ window.COMP_CSS.toast = `.sb-toast {
    */
   function mkToastStack(opts) {
     const { toasts = [], expanded = false, demoLoop = false } = opts || {};
-    const right = `<div class="sb-chevron sb-toast-stack-peek">${sbIcon('arrow-down-s-line', 'L')}</div>`
+    const right = sbMkChevron({ cls: 'sb-toast-stack-peek' })
       + `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-toast-stack-x" aria-label="Close" onclick="sbToastStackDismiss(this)">${sbIcon('close-line', 'S')}</button>`;
     const cards = toasts.map(t => mkToast(Object.assign({}, t, { right }))).join('');
     return `<div class="sb-toast-stack${expanded ? ' expanded' : ''}" data-count="${toasts.length}"${demoLoop ? ' data-demo-loop' : ''}>

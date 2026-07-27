@@ -209,7 +209,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
         }
         if (useAction) inline.push({ type: 'text', label: 'Action', icon: 'arrow-right-s-line' });
         const actionsHtml = mkHeaderMActions({ inline, more: { items: DEMO_MORE_ITEMS } });
-        const chevronHtml = s.chevron ? `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>` : '';
+        const chevronHtml = s.chevron ? sbMkChevron() : '';
         const slotRight = staticParts.join('') + actionsHtml + chevronHtml;
 
         // ── Optional Sub Nav (4 варианта) + Tool Bar ──
@@ -338,7 +338,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
           ${mkHeaderM({
             slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>`,
             title: 'Headline',
-            slotRight: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderMActions({ more: { items: DEMO_MORE_ITEMS } })}<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
+            slotRight: `<span class="sb-badge-status mini bs-grey">Status</span>${mkHeaderMActions({ more: { items: DEMO_MORE_ITEMS } })}${sbMkChevron()}`,
           })}
         </div>`,
         html: `<div class="sb-header-m">
@@ -384,7 +384,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
                 { type: 'text', label: 'Action', icon: 'arrow-right-s-line' },
               ],
               more: { items: DEMO_MORE_ITEMS },
-            })}<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
+            })}${sbMkChevron()}`,
           })}
         </div></div>`,
         html: `<div class="sb-header-m">

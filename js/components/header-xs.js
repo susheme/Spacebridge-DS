@@ -106,8 +106,8 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
   const RIGHT_BUILDERS = {
     none:        () => '',
     close:       () => `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
-    chevronDown: () => `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
-    chevronUp:   () => `<div class="sb-chevron">${sbIcon('arrow-up-s-line',   'L')}</div>`,
+    chevronDown: () => sbMkChevron(),
+    chevronUp:   () => sbMkChevron({ dir: 'up' }),
   };
   const RIGHT_CODE = {
     none:        null,
@@ -299,7 +299,7 @@ ${leftInner}
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `<span class="sb-status-dot online"></span><span class="sb-header-xs-title sb-title-m sb-fw-semibold">Connection</span>`,
-            slotRight: `<div class="sb-chevron">${sbIcon('arrow-down-s-line', 'L')}</div>`,
+            slotRight: sbMkChevron(),
           })}
         </div>`,
         html: `<div class="sb-header-xs">

@@ -12,7 +12,7 @@ window.SB_COMPONENTS = [
   // name                 file                       deps             notes
   { name: 'buttons',       file: 'buttons.js',        deps: ['checkbox'] },          // контролы playground'а = sbMkCheckbox
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
-  { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // used by selectors
+  { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav
   { name: 'separators',    file: 'separators.js',     deps: [] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },
   { name: 'toggles',       file: 'toggles.js',        deps: [] },
@@ -30,11 +30,11 @@ window.SB_COMPONENTS = [
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
   { name: 'tooltips',      file: 'tooltips.js',       deps: ['status'] },            // hover/click подсказка; demo-триггер юзает .sb-status-dot
   { name: 'chips',         file: 'chips.js',          deps: [] },                    // кнопка-пилюля; реюзается Clear-чипсой стека тостов
-  { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list', 'chips'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell, чипса = sbMkChip
+  { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list', 'chips', 'chevron'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell, чипса = sbMkChip
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
   { name: 'badge',         file: 'badge.js',          deps: [] },                    // includes SB_BADGE_SPECS + downloadSymbolBadgeZip
-  { name: 'notifications', file: 'notifications.js',  deps: [] },
-  { name: 'table',         file: 'table.js',          deps: ['checkbox'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
+  { name: 'notifications', file: 'notifications.js',  deps: ['chevron'] },
+  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
   { name: 'list',          file: 'list.js',           deps: [] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'segment-menu',  file: 'segment-menu.js',   deps: [] },

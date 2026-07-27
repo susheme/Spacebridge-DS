@@ -47,6 +47,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 .sb-side-nav-toolbar,
 .sb-side-nav-footer { flex-shrink: 0; }
 
+.sb-side-nav-subnav .sb-sub-nav { padding: 0 var(--pad-horiz-16); }
 .sb-side-nav-toolbar { padding: var(--pad-vert-8) var(--pad-horiz-16); }
 .sb-side-nav-toolbar .sb-search { width: 100%; }
 /* Toolbar-зона (внутри — Search): нижний divider, пока toolbar присутствует —
@@ -67,8 +68,10 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   scrollbar-gutter: stable;
   /* horiz 16 — вровень с Header M / Search (панель-padding по спеке Side Menu).
      Ячейки заполняют ширину панели (≈288), «272» из спеки ячейки — номинал.
-     top 16 — отступ ячеек от вышестоящей зоны (Header / Sub Nav / Search). */
-  padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8);
+     top 16 — отступ ячеек от вышестоящей зоны (Header / Sub Nav / Search).
+     Справа 16 МИНУС 6px (ширина скроллбара из reset.css): gutter живёт
+     внутри паддинга → визуальный отступ справа равен левому. */
+  padding: var(--pad-vert-16) calc(var(--pad-horiz-16) - 6px) var(--pad-vert-8) var(--pad-horiz-16);
   display: flex;
   flex-direction: column;
   gap: var(--gap-vert-m);
@@ -184,7 +187,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 .sb-side-nav-node.is-section:not(.expanded):has(> .sb-side-nav-row:hover) {
   box-shadow: 0 2px 8px 0 var(--shadow-overlay);
 }
-.sb-side-nav-node.is-section.expanded > .sb-side-nav-row:hover,
+.sb-side-nav-node.is-section > .sb-side-nav-row:hover { box-shadow: none; }
 .sb-side-nav-node.is-parent.expanded  > .sb-side-nav-row:hover,
 .sb-side-nav-node.is-group.expanded   > .sb-side-nav-row:hover { box-shadow: none; }
 .sb-side-nav-node.is-section:has(> .sb-side-nav-row.is-selected) {
@@ -537,7 +540,9 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   function demoSubNav(divider = true) {
     if (typeof sbMkSubNav !== 'function' || typeof sbMkTabBar !== 'function') return '';
     return sbMkSubNav({
-      content: `<div style="width:272px">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`,
+      // Без фикс-обёртки: .sb-tab-bar (width:100%) заполняет контентную
+      // ширину панели — вровень с Header / Search / ячейками.
+      content: `<div style="width:100%">${sbMkTabBar(['Section', 'Section', 'Section'], { selectedIndex: 0 })}</div>`,
       variant: 'tab-bar',
       divider,
     });

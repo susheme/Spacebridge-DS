@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   DIALOGUES
+   Зеркало в window.COMP_CSS.dialogues (js/components/dialogues.js).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* --- [SYNC:dialogues] Dialogue --- */
+/* Окно-разговор. Figma-спека Alert: 320px (min 296 / max 320), radius 16,
+   Shadow-L, padding 16/16/0/16 — низ отдан Action Bar'у. */
+.sb-dialogue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  width: 320px;
+  min-width: 296px;
+  max-width: 320px;
+  padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-0) var(--pad-horiz-16);
+  box-sizing: border-box;
+  border-radius: var(--radius-16);
+  background: var(--background);
+  /* Shadow-L */
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay);
+}
+
+/* Центральный слот: [символ?] + headline + description, gap 8. */
+.sb-dialogue-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  align-self: stretch;
+}
+.sb-dialogue-symbol  { display: inline-flex; }
+.sb-dialogue-title   { color: var(--text-tertiary);  text-align: center; }
+.sb-dialogue-message { color: var(--text-secondary); text-align: center; }
+
+/* Футер — штатный Action Bar (align center: кнопки тянутся поровну).
+   Свой горизонтальный padding бара гасим: боковой отступ уже даёт карточка
+   (16), иначе кнопки уезжали бы на 32 от края. Divider — border-top бара. */
+.sb-dialogue .sb-action-bar {
+  padding-left: var(--pad-horiz-0);
+  padding-right: var(--pad-horiz-0);
+}
+
+/* Consent-чекбокс (согласия, «не спрашивать снова» и т.п.), у левого края.
+   Above (default): между центральным слотом и Action Bar — 16 от слота
+   (card gap) и 8 до бара (card gap 16 минус 8 снизу). */
+.sb-dialogue-check {
+  align-self: flex-start;
+  margin-bottom: calc(var(--gap-vert-s) - var(--gap-vert-m));
+}
+/* Below: под Action Bar'ом ВПЛОТНУЮ (gap 0 — card gap 16 гасим),
+   до низа карточки 16 (её padding-bottom = 0). */
+.sb-dialogue-check.below {
+  margin-top: calc(-1 * var(--gap-vert-m));
+  margin-bottom: var(--pad-vert-16);
+}
+/* Consent-тексты бывают длинными — переносим (у базового лейбла nowrap). */
+.sb-dialogue-check .sb-checkbox-label { white-space: normal; }
+
+/* Без Very Top символа заголовок ближе к краю — компенсируем: 24 сверху. */
+.sb-dialogue.no-symbol { padding-top: var(--pad-vert-24); }
+/* --- [/SYNC:dialogues] --- */

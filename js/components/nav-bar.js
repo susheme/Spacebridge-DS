@@ -26,7 +26,8 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 .sb-nav-btn.disabled { color: var(--border); cursor: not-allowed; pointer-events: none; }
 .sb-nav-bar.floating { position: sticky; top: 16px; z-index: 10; margin: 16px; max-width: calc(100% - 32px); border-bottom: none; border-radius: var(--radius-12); box-shadow: 0 2px 8px 0 var(--shadow-sm); transition: margin 0.25s ease, max-width 0.25s ease, border-radius 0.25s ease, top 0.25s ease, box-shadow 0.25s ease; }
 .sb-nav-bar.floating.is-stuck { top: 0; margin: 0; max-width: 100%; border-radius: 0; box-shadow: 0 4px 12px 0 var(--shadow-sm); }
-.sb-nav-bar-search-wide { display: inline-flex; align-items: center; }
+.sb-nav-bar-search-wide { display: inline-flex; align-items: center; width: 240px; }
+.sb-nav-bar-search-wide .sb-search { width: 100%; }
 .sb-nav-bar-search-compact-trigger { display: none; }
 .sb-nav-bar:where([data-density="L1"],[data-density="L2"],[data-density="L3"],[data-density="L4"],[data-density="L5"]) .sb-nav-bar-badge { display: none; }
 .sb-nav-bar:where([data-density="L2"],[data-density="L3"],[data-density="L4"],[data-density="L5"]) .sb-nav-bar-logo-title { display: none; }
@@ -56,12 +57,8 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 @container navbar (max-width: 640px) {
   .sb-nav-bar.floating { margin: 8px; max-width: calc(100% - 16px); }
 }
-.sb-nav-bar-search-overlay { position: fixed; inset: 0; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
-.sb-nav-bar-search-overlay.is-open { opacity: 1; pointer-events: auto; }
-.sb-nav-bar-search-overlay-backdrop { position: absolute; inset: 0; background: var(--shadow-overlay); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-.sb-nav-bar-search-overlay-content { position: absolute; top: 12px; left: 50%; transform: translate(-50%, -8px); width: calc(100% - var(--pad-horiz-32)); max-width: 600px; display: flex; align-items: center; gap: var(--gap-horiz-s); opacity: 0; transition: transform 0.2s ease, opacity 0.2s ease; }
-.sb-nav-bar-search-overlay.is-open .sb-nav-bar-search-overlay-content { transform: translate(-50%, 0); opacity: 1; }
-.sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }
+.sb-nav-bar-search-overlay .sb-overlay-content { display: flex; align-items: center; gap: var(--gap-horiz-s); width: min(560px, 100%); margin-top: 12vh; padding: var(--pad-vert-8); border-radius: var(--radius-12); background: var(--background); box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
+.sb-nav-bar-search-overlay .sb-overlay-content > .sb-search { flex: 1; min-width: 0; }
 .sb-nav-lang-btn { min-width: auto; }
 .sb-nav-lang-switcher.is-open .sb-nav-lang-btn svg { transform: rotate(180deg); }
 .sb-nav-lang-btn svg { transition: transform 0.15s ease; }`;
@@ -243,17 +240,19 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     if (floating)          cls += ' floating';
 
     // Search slot: wide-вариант (full search) + compact-trigger (icon-only кнопка).
-    // Container query показывает один из двух. Overlay рендерим внутри header'а
-    // — fixed-positioning выходит из всех ancestor-clip'ов.
+    // Container query показывает один из двух. Overlay — на примитиве
+    // sbMkOverlay (placement top): скрим/Esc/portal/focus trap даёт примитив,
+    // здесь только контентная строка search + close.
     let searchSlot = '';
     let searchOverlay = '';
     if (search) {
       searchSlot = `<div class="sb-nav-bar-search-wide">${search}</div>` +
         `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-nav-bar-search-compact-trigger" type="button" onclick="sbNavBarOpenSearch(this)" aria-label="Open search">${sbIcon('search-line', 'L')}</button>`;
-      searchOverlay = `<div class="sb-nav-bar-search-overlay">
-        <div class="sb-nav-bar-search-overlay-backdrop" onclick="sbNavBarCloseSearch(this)"></div>
-        <div class="sb-nav-bar-search-overlay-content">${search}<button class="sb-btn sb-btn-secondary sb-btn-icon" type="button" onclick="sbNavBarCloseSearch(this)" aria-label="Close search">${sbIcon('close-line', 'L')}</button></div>
-      </div>`;
+      searchOverlay = sbMkOverlay({
+        cls: 'sb-nav-bar-search-overlay',
+        placement: 'top',
+        content: `${search}<button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" onclick="sbNavBarCloseSearch(this)" aria-label="Close search">${sbIcon('close-line', 'S')}</button>`,
+      });
     }
 
     return `<header class="${cls}">
@@ -264,31 +263,21 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     </header>`;
   }
 
-  // Search-overlay handlers — открывают/закрывают полноразмерный search
-  // в overlay'е поверх nav-bar'а. ESC и outside-click тоже закрывают.
+  // Search-overlay handlers — тонкие обёртки над примитивом Overlay:
+  // скрим, Esc, focus trap и portal в body делает sbOverlayOpen/Close.
   window.sbNavBarOpenSearch = function(triggerEl) {
     const bar = triggerEl.closest('.sb-nav-bar');
-    if (!bar) return;
-    const overlay = bar.querySelector('.sb-nav-bar-search-overlay');
+    const overlay = bar && bar.querySelector('.sb-nav-bar-search-overlay');
     if (!overlay) return;
-    overlay.classList.add('is-open');
+    sbOverlayOpen(overlay);
     const input = overlay.querySelector('.sb-search-input');
     if (input) setTimeout(() => input.focus(), 50);
   };
   window.sbNavBarCloseSearch = function(srcEl) {
-    const overlay = srcEl.closest('.sb-nav-bar-search-overlay');
-    if (!overlay) return;
-    overlay.classList.remove('is-open');
+    sbOverlayClose(srcEl.closest('.sb-overlay'));
   };
-  // One-time global ESC listener — закрывает любые открытые overlay'ы.
-  if (!window.__sbNavBarSearchBound) {
-    window.__sbNavBarSearchBound = true;
-    document.addEventListener('keydown', (e) => {
-      if (e.key !== 'Escape') return;
-      document.querySelectorAll('.sb-nav-bar-search-overlay.is-open')
-        .forEach(el => el.classList.remove('is-open'));
-    });
-  }
+  // Esc / клик в подложку / focus trap — примитив Overlay, свой глобальный
+  // listener больше не нужен (снесён при миграции на sbMkOverlay).
 
   /**
    * sbWireNavBarFloating(container, navBar) — публичный helper для
@@ -540,7 +529,9 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     <span class="sb-nav-bar-button-icon-compact">${BURGER}</span>
   </button>`;
   const DEMO_BELL = `<button class="sb-btn sb-btn-secondary sb-btn-icon" type="button" aria-label="Notifications">${sbIcon('notification-3-fill', 'L')}</button>`;
-  const DEMO_SEARCH = `<div style="width:240px">${sbMkSearch({ iconLeft: true, placeholder: 'Search', rightSlot: sbMkKbdGroup(['⌘','K']) })}</div>`;
+  // Без фикс-обёртки: ширину wide-слоту даёт .sb-nav-bar-search-wide (240px),
+  // а в overlay тот же search-html растягивается панелью (flex:1).
+  const DEMO_SEARCH = sbMkSearch({ iconLeft: true, placeholder: 'Search', rightSlot: sbMkKbdGroup(['⌘','K']) });
   // Avatar — кликабельный, по нажатию открывает context-menu c tip
   // (Settings / Logout). Используем штатный sb-overflow-menu pattern
   // и .sb-ctx-card.with-tip из context-menu component.
@@ -977,7 +968,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 
 <!-- search + bell + avatar -->
 <div class="sb-nav-bar-right">
-  <div style="width:240px"><div class="sb-search icon-left">...</div></div>
+  <div class="sb-nav-bar-search-wide"><div class="sb-search icon-left">...</div></div>
   <button class="sb-btn sb-btn-secondary sb-btn-icon">...</button>
   <div class="sb-avatar sb-avatar-m">...</div>
 </div>
@@ -985,6 +976,39 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
 <!-- minimal: только Login -->
 <div class="sb-nav-bar-right">
   <button class="sb-btn sb-btn-primary">Login</button>
+</div>`,
+        css: COMP_CSS["nav-bar"],
+      },
+      {
+        title: sbT('Compact Search Overlay', 'Compact Search Overlay'),
+        desc: sbT(
+          'Below the 1024px container threshold the search bar collapses into an icon button; clicking it opens a search panel — a card (radius 12, Shadow-S) in the upper third of the screen, up to 560px wide, with a small close button. Runs on the Overlay primitive (placement top): the scrim, Esc, backdrop click, focus trap and the portal to body all come from there — see the Overlay page. This bar only owns the content row (search plus a close button). Also reachable in the playground: turn on Compact and click the search icon.',
+          'Ниже контейнерного порога 1024px серч-бар схлопывается в иконку-кнопку; клик открывает поисковую панель — карточку (radius 12, Shadow-S) в верхней трети экрана, шириной до 560px, с маленькой кнопкой закрытия. Работает на примитиве Overlay (placement top): скрим, Esc, клик в подложку, focus trap и portal в body — оттуда, см. страницу Overlay. За баром — только контентная строка (search и кнопка закрытия). Доступно и в playground: включи Compact и кликни иконку поиска.'
+        ),
+        preview: `<button class="sb-btn sb-btn-secondary" type="button" onclick="sbOverlayOpen('#sb-nav-search-overlay-demo')">${sbIcon('search-line', 'S')}<span class="sb-btn-text">Open Search Overlay</span></button>
+          ${sbMkOverlay({
+            id: 'sb-nav-search-overlay-demo',
+            cls: 'sb-nav-bar-search-overlay',
+            placement: 'top',
+            content: `${sbMkSearch({ iconLeft: true, placeholder: 'Search' })}<button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" onclick="sbNavBarCloseSearch(this)" aria-label="Close search">${sbIcon('close-line', 'S')}</button>`,
+          })}`,
+        html: `<!-- Собирается примитивом:
+sbMkOverlay({
+  cls: 'sb-nav-bar-search-overlay',   // контентные стили строки
+  placement: 'top',
+  content: search + close-button,
+})
+Открытие/закрытие: sbNavBarOpenSearch(trigger) / sbNavBarCloseSearch(el) —
+тонкие обёртки над sbOverlayOpen/Close. -->
+
+<div class="sb-overlay placement-top sb-nav-bar-search-overlay">
+  <div class="sb-overlay-scrim" onclick="sbOverlayBackdrop(this)"></div>
+  <!-- Контент — панель-карточка: --background, radius 12, Shadow-S,
+       верхняя треть экрана (margin-top 12vh), width до 560px -->
+  <div class="sb-overlay-content">
+    <div class="sb-search icon-left"> ... </div>
+    <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Close search"><!-- close-line S --></button>
+  </div>
 </div>`,
         css: COMP_CSS["nav-bar"],
       },

@@ -22,7 +22,8 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
 .sb-uploader-cell-badge { display: inline-flex; justify-content: center; align-items: center; width: 16px; height: 16px; flex-shrink: 0; }
 .sb-uploader-cell-badge svg { width: 16px; height: 16px; }
 .sb-uploader-cell-status { font-size: var(--badge-font-size); font-weight: var(--font-weight-medium); line-height: var(--title-line-height-s); }
-.sb-uploader { display: inline-flex; flex-direction: column; align-items: flex-start; gap: var(--gap-vert-m); padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-24) var(--pad-horiz-16); box-sizing: border-box; border-radius: var(--radius-18); background: var(--background); box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
+.sb-uploader { display: inline-flex; flex-direction: column; align-items: flex-start; gap: var(--gap-vert-m); padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-24) var(--pad-horiz-16); box-sizing: border-box; border-radius: var(--radius-18); border: var(--border-width-1) solid transparent; background: var(--background); box-shadow: 0 2px 8px 0 var(--shadow-overlay); }
+.sb-uploader.framed { box-shadow: none; border-color: var(--border); }
 .sb-uploader > .sb-uploader-area, .sb-uploader > .sb-header-xs { align-self: stretch; }
 .sb-uploader-list { display: flex; flex-direction: column; align-self: stretch; gap: var(--gap-vert-m); }
 .sb-uploader-list-done, .sb-uploader-list-active { display: flex; flex-direction: column; }
@@ -177,6 +178,17 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
     if (root) sbUploaderSyncCounter(root);
   };
 
+  // Демо-контроллер Style (Card ↔ Framed) в доках: тоглы взаимоисключающие,
+  // клик переключает класс .framed на карточке внутри той же demo-обёртки.
+  window.sbUploaderDemoStyle = function(input, framed) {
+    const wrap = input.closest('[data-uploader-style-demo]');
+    if (!wrap) return;
+    const card = wrap.querySelector('.sb-uploader');
+    if (card) card.classList.toggle('framed', framed);
+    wrap.querySelectorAll('[data-style-card] input').forEach(i => { i.checked = !framed; });
+    wrap.querySelectorAll('[data-style-framed] input').forEach(i => { i.checked = framed; });
+  };
+
   // Retry: Failed-ячейка перезапускается в Uploading с нуля и «доезжает»
   // до Completed (демо; в реальном аппе тут повторный запрос на загрузку).
   window.sbUploaderRetry = function(btn) {
@@ -253,17 +265,18 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
    *   title     — заголовок списка ('Uploads')
    *   files     — стартовые ячейки: [{ name, size, status, loaded, progress }]
    *   counter   — счётчик в хедере (default true)
+   *   framed    — бордер вместо тени (Card ↔ Framed стили карточки)
    *   areaTitle / hint / accept / multiple — прокидываются в дропзону
    */
   function mkUploader(opts = {}) {
-    const { title = 'Uploads', files = [], counter = true } = opts;
+    const { title = 'Uploads', files = [], counter = true, framed = false } = opts;
     // Два процесса раздельно: Completed сверху, активные снизу.
     const doneFiles   = files.filter(f => !f.status || f.status === 'completed');
     const activeFiles = files.filter(f => f.status && f.status !== 'completed');
     const counterHtml = counter
       ? `<div class="sb-counter range sb-uploader-counter"><span class="sb-counter-online">${doneFiles.length}</span><span class="sb-counter-sep">/</span><span class="sb-counter-total">${files.length}</span></div>`
       : '';
-    return `<div class="sb-uploader">
+    return `<div class="sb-uploader${framed ? ' framed' : ''}">
       ${mkUploaderArea({ title: opts.areaTitle, hint: opts.hint, accept: opts.accept, multiple: opts.multiple, wide: true })}
       ${sbMkHeaderXS({
         slotLeft: `<span class="sb-header-xs-title sb-title-m sb-fw-semibold">${title}</span>`,
@@ -294,7 +307,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
       + '<b>Upload Cell:</b>'
       + '<ul><li>Width: 272px (min 80 / max 1024), height 50 fixed; padding 8×8, gap 8;</li><li>Divider — 1px --border-soft (spec says --surface-2, which vanishes in dark — translated per the border rule);</li><li>File Icon — 32×32, radius 1, 1.5px --border-soft, --surface-1 fill;</li><li>Title S --text-tertiary with an ellipsis; info line — Subscription, --text-secondary;</li><li>Status name — 10px medium; Completed — --success plus Symbol Badge S (16px check-circle);</li><li>Uploading — loaded-of-total size, --primary time badge and status, close-line S (stop), 2px progress bar (--primary, radius 2) running right over the bottom divider — no track, the divider itself plays that role;</li><li>Failed — no size; warning-dialogue-line badge and status name in --error, then a dash and a Retry text button (Badge typography, --primary) that restarts the upload; the right slot keeps the cross;</li><li>Remove — Button Secondary Small (delete-bin-line S).</li></ul>'
       + '<b>Assembled Uploader:</b>'
-      + '<ul><li>Card — radius 18, --background, Shadow-S; padding 16/16/24, gap 16;</li><li>List header — Header XS plus a Counter (range, completed of total, auto-updating);</li><li>List — two groups: Completed on top, active (Uploading / Failed) below, 16px gap between them; a finished file moves up to Completed;</li><li>Live — sb-uploader:files (bubbles) carries the picked File objects; the demo simulates progress.</li></ul>',
+      + '<ul><li>Card — radius 18, --background, Shadow-S; padding 16/16/24, gap 16;</li><li>Framed — the .framed modifier: a 1px --border instead of the shadow;</li><li>List header — Header XS plus a Counter (range, completed of total, auto-updating);</li><li>List — two groups: Completed on top, active (Uploading / Failed) below, 16px gap between them; a finished file moves up to Completed;</li><li>Live — sb-uploader:files (bubbles) carries the picked File objects; the demo simulates progress.</li></ul>',
       '<b>Геометрия:</b>'
       + '<ul><li>Ширина: 328px (min 320 / max 1024);</li><li>Высота: min 96 / max 640;</li><li>Padding: 16;</li><li>Radius: 4;</li><li>Бордер: 1px dashed --border.</li></ul>'
       + '<b>Состояния:</b>'
@@ -304,7 +317,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
       + '<b>Upload Cell:</b>'
       + '<ul><li>Ширина: 272px (min 80 / max 1024), высота 50 фикс; padding 8×8, gap 8;</li><li>Разделитель — 1px --border-soft (в спеке --surface-2, который пропадает в dark — транслирован по правилу границ);</li><li>File Icon — 32×32, radius 1, 1.5px --border-soft, заливка --surface-1;</li><li>Title S --text-tertiary с многоточием; инфострока — Subscription, --text-secondary;</li><li>Имя статуса — 10px medium; Completed — --success и Symbol Badge S (16px check-circle);</li><li>Uploading — размер «сколько из скольки», часы и статус --primary, close-line S (стоп), progress bar 2px (--primary, radius 2) прямо по нижнему разделителю — трека нет, его роль играет сам строук;</li><li>Failed — без размера; warning-dialogue-line бейдж и имя статуса в --error, затем тире и текст-кнопка Retry (Badge-типографика, --primary), перезапускающая загрузку; в правом слоте крестик;</li><li>Remove — Button Secondary Small (delete-bin-line S).</li></ul>'
       + '<b>Составной Uploader:</b>'
-      + '<ul><li>Карточка — radius 18, --background, Shadow-S; padding 16/16/24, gap 16;</li><li>Хедер списка — Header XS и Counter (range, completed из total, обновляется сам);</li><li>Список — две группы: сверху Completed, ниже активные (Uploading / Failed), между ними gap 16; докачавшийся файл переезжает наверх;</li><li>Live — sb-uploader:files (bubbles) несёт настоящие File-объекты; в демо прогресс симулируется.</li></ul>'
+      + '<ul><li>Карточка — radius 18, --background, Shadow-S; padding 16/16/24, gap 16;</li><li>Framed — модификатор .framed: бордер 1px --border вместо тени;</li><li>Хедер списка — Header XS и Counter (range, completed из total, обновляется сам);</li><li>Список — две группы: сверху Completed, ниже активные (Uploading / Failed), между ними gap 16; докачавшийся файл переезжает наверх;</li><li>Live — sb-uploader:files (bubbles) несёт настоящие File-объекты; в демо прогресс симулируется.</li></ul>'
     )),
     playground: {
       title: 'File Uploader Playground',
@@ -412,19 +425,41 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           'The full component for real UI: a card (radius 18, Shadow-S) with the drop area, an Uploads header (Header XS with a Counter — completed of total) and the list split into two processes: Completed on top, active uploads (Uploading / Failed) below, with a 16px gap between the groups. A finished file moves up to the Completed group. The consumer sets the card width; everything inside stretches.',
           'Полный компонент для боевого UI: карточка (radius 18, Shadow-S) с дропзоной, хедером Uploads (Header XS со счётчиком — completed из total) и списком, разделённым на два процесса: сверху Completed, ниже активные загрузки (Uploading / Failed), между группами gap 16. Докачавшийся файл переезжает наверх, к загруженным. Ширину карточки задаёт consumer, внутренности тянутся.'
         ),
-        preview: `<div class="sec-row wrap" style="gap:var(--gap-horiz-xl);align-items:flex-start">
+        preview: `<div class="sec-row wrap" style="gap:var(--gap-horiz-xl);align-items:flex-start" data-uploader-style-demo>
           <div style="width:min(420px, 100%)">${mkUploader({
             files: [
               { name: 'backup-file-name-1.json', size: '110 Mb' },
               { name: 'backup-file-name-2.json', size: '110 Mb' },
             ],
           }).replace('class="sb-uploader"', 'class="sb-uploader" style="width:100%"')}</div>
-          <div class="sb-body-m" style="flex:1 1 220px;min-width:200px;max-width:320px;color:var(--text-secondary)">${sbT(
-            'The example is alive and shows the real process: drop or pick real files — an Uploading cell with a progress bar appears in the lower group, runs to Completed and jumps up to the finished ones. The trash and crosses remove rows, and the counter keeps up by itself.',
-            'Пример живой и показывает реальный процесс: брось или выбери настоящие файлы — в нижней группе появится Uploading-ячейка с прогрессом, доедет до Completed и перепрыгнет наверх, к загруженным. Корзина и крестики удаляют строки, счётчик обновляется сам.'
-          )}</div>
+          <div style="flex:1 1 220px;min-width:200px;max-width:320px;display:flex;flex-direction:column;gap:var(--gap-vert-m)">
+            ${sbPgGroup('Style', `
+              <div style="display:flex;flex-direction:column;gap:var(--gap-vert-s)">
+                <label class="sb-toggle-wrap" data-style-card>
+                  <span class="sb-toggle">
+                    <input type="checkbox" checked onchange="sbUploaderDemoStyle(this, false)">
+                    <span class="sb-toggle-track"></span>
+                    <span class="sb-toggle-thumb"></span>
+                  </span><span class="sb-toggle-label-text">Card</span>
+                </label>
+                <label class="sb-toggle-wrap" data-style-framed>
+                  <span class="sb-toggle">
+                    <input type="checkbox" onchange="sbUploaderDemoStyle(this, true)">
+                    <span class="sb-toggle-track"></span>
+                    <span class="sb-toggle-thumb"></span>
+                  </span><span class="sb-toggle-label-text">Framed</span>
+                </label>
+              </div>
+            `)}
+            <div class="sb-body-m" style="color:var(--text-secondary)">${sbT(
+              'The example is alive and shows the real process: drop or pick real files — an Uploading cell with a progress bar appears in the lower group, runs to Completed and jumps up to the finished ones. The trash and crosses remove rows, and the counter keeps up by itself.',
+              'Пример живой и показывает реальный процесс: брось или выбери настоящие файлы — в нижней группе появится Uploading-ячейка с прогрессом, доедет до Completed и перепрыгнет наверх, к загруженным. Корзина и крестики удаляют строки, счётчик обновляется сам.'
+            )}</div>
+          </div>
         </div>`,
-        html: `<div class="sb-uploader">
+        html: `<!-- Стили карточки: Card (Shadow-S, default) — class="sb-uploader",
+     Framed (1px --border вместо тени) — class="sb-uploader framed" -->
+<div class="sb-uploader">
   <!-- 1. Дропзона -->
   <div class="sb-uploader-area"> ... </div>
 

@@ -146,9 +146,17 @@
   padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-24) var(--pad-horiz-16);
   box-sizing: border-box;
   border-radius: var(--radius-18);
+  /* Прозрачный бордер ВСЕГДА: резервирует место под Framed-рамку,
+     иначе габариты прыгали на 2px при переключении Card ↔ Framed. */
+  border: var(--border-width-1) solid transparent;
   background: var(--background);
   /* Shadow-S */
   box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+/* Framed-вариант: бордер вместо тени (для плотных лэйаутов без elevation). */
+.sb-uploader.framed {
+  box-shadow: none;
+  border-color: var(--border);
 }
 .sb-uploader > .sb-uploader-area,
 .sb-uploader > .sb-header-xs { align-self: stretch; }

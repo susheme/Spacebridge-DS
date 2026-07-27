@@ -229,7 +229,8 @@
    Wide-вариант — полный sbMkSearch. Compact-trigger — обычная secondary
    icon-only кнопка (не модифицированный search-bar). По клику открывается
    overlay с полноразмерным search'ем (см. .sb-nav-bar-search-overlay). */
-.sb-nav-bar-search-wide { display: inline-flex; align-items: center; }
+.sb-nav-bar-search-wide { display: inline-flex; align-items: center; width: 240px; }
+.sb-nav-bar-search-wide .sb-search { width: 100%; }
 .sb-nav-bar-search-compact-trigger { display: none; }
 
 /* ── SMART COLLAPSE — density levels ─────────────────────────────────
@@ -290,46 +291,25 @@
 }
 
 /* ── SEARCH OVERLAY ──────────────────────────────────────────────────
-   По клику на compact-trigger — backdrop затемняет фон, поверх него
-   slide-in полноразмерный search-bar. Закрытие: клик по backdrop / Esc /
-   blur инпута. position: fixed → escape любой containing block. */
-.sb-nav-bar-search-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-.sb-nav-bar-search-overlay.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-.sb-nav-bar-search-overlay-backdrop {
-  position: absolute;
-  inset: 0;
-  background: var(--shadow-overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-.sb-nav-bar-search-overlay-content {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translate(-50%, -8px);
-  width: calc(100% - var(--pad-horiz-32));
-  max-width: 600px;
+   С июля 2026 — на примитиве Overlay (sbMkOverlay, placement top):
+   скрим --shadow-overlay БЕЗ блюра, Esc, клик в подложку, focus trap и
+   portal в body даёт примитив. Здесь — только контентная строка
+   (search + close): ширина, gap. Класс живёт на корне .sb-overlay. */
+/* Контент — панель-карточка в верхней трети экрана (spotlight-паттерн):
+   свой фон/radius/Shadow-S, чтобы search не «висел голым» на скриме.
+   12vh и 560px — вне Figma JSON, согласовать с дизайнером. */
+.sb-nav-bar-search-overlay .sb-overlay-content {
   display: flex;
   align-items: center;
   gap: var(--gap-horiz-s);
-  opacity: 0;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  width: min(560px, 100%);
+  margin-top: 12vh;
+  padding: var(--pad-vert-8);
+  border-radius: var(--radius-12);
+  background: var(--background);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
 }
-.sb-nav-bar-search-overlay.is-open .sb-nav-bar-search-overlay-content {
-  transform: translate(-50%, 0);
-  opacity: 1;
-}
-.sb-nav-bar-search-overlay-content > .sb-search { flex: 1; min-width: 0; }
+.sb-nav-bar-search-overlay .sb-overlay-content > .sb-search { flex: 1; min-width: 0; }
 
 /* Language switcher — компактная Secondary кнопка: без min-width 112,
    ширина под контент (3 буквы + chevron). Chevron поворачивается на 180°

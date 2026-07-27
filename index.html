@@ -36,6 +36,8 @@
 <link rel="stylesheet" href="css/components/search-bar.css">
 <link rel="stylesheet" href="css/components/input.css">
 <link rel="stylesheet" href="css/components/file-uploader.css">
+<link rel="stylesheet" href="css/components/overlay.css">
+<link rel="stylesheet" href="css/components/dialogues.css">
 <link rel="stylesheet" href="css/components/textarea.css">
 <link rel="stylesheet" href="css/components/password.css">
 <link rel="stylesheet" href="css/components/selector.css">
@@ -161,6 +163,9 @@
 <script src="js/components/header-xs.js"></script>
 <!-- file-uploader — юзает SB_SVG (badge.js) и sbMkHeaderXS (header-xs.js) → ПОСЛЕ обоих -->
 <script src="js/components/file-uploader.js"></script>
+<!-- overlay — примитив модальности; демо юзает sbMkUploader → ПОСЛЕ file-uploader,
+     и ДО nav-bar (его search-overlay собирается через sbMkOverlay при регистрации) -->
+<script src="js/components/overlay.js"></script>
 <!-- chips — кнопка-пилюля; реюзается стеком тостов → ДО toast.js -->
 <script src="js/components/chips.js"></script>
 <!-- toast — demo реюзает sbMkHeaderXS + SB_SVG (badge.js) → ПОСЛЕ header-xs и badge -->
@@ -180,6 +185,8 @@
 <!-- side-navigation — композит: демо/render юзают sbMkHeaderM, sbMkSearch,
      sbMkSubNav, sbMkTabBar → должен грузиться ПОСЛЕ всех них. -->
 <script src="js/components/side-navigation.js"></script>
+<!-- dialogues — архитектурный стаб (окно поверх Overlay; спека ожидается) -->
+<script src="js/components/dialogues.js"></script>
 <script src="js/components/getting-started.js"></script>
 
 <script src="js/init.js"></script>

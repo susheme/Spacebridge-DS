@@ -1,0 +1,50 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   OVERLAY
+   Зеркало в window.COMP_CSS.overlay (js/components/overlay.js).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* --- [SYNC:overlay] Overlay --- */
+.sb-overlay {
+  position: fixed;
+  inset: 0;
+  /* Тот же слой, что search-overlay Nav Bar. */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  box-sizing: border-box;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease, visibility 0.2s;
+}
+.sb-overlay.is-open {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Placement top — контент у верхней кромки (search-style оверлеи). */
+.sb-overlay.placement-top { align-items: flex-start; }
+
+/* Scrim — затемняющая подложка: --shadow-overlay, БЕЗ блюра (спека). */
+.sb-overlay-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--shadow-overlay);
+}
+
+/* Контент-слот: центрируется. overflow НЕ ставим (правило no cosmetic
+   overflow:hidden) — auto клипал Shadow-L диалога; скролл при переполнении —
+   забота самого окна (свой max-height + overflow на контенте). */
+.sb-overlay-content {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  transform: translateY(8px);
+  transition: transform 0.2s ease;
+}
+.sb-overlay.is-open .sb-overlay-content { transform: translateY(0); }
+
+/* Scroll lock — вешается на <html> пока оверлей открыт. */
+.sb-overlay-lock { overflow: hidden; }
+/* --- [/SYNC:overlay] --- */

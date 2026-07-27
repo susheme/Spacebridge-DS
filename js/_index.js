@@ -44,9 +44,11 @@ window.SB_COMPONENTS = [
   { name: 'breadcrumbs',   file: 'breadcrumbs.js',    deps: [] },                    // path-nav, типографика синхронна с toc
   { name: 'pagination',    file: 'pagination.js',     deps: ['buttons', 'input'] },  // на базе sb-btn-secondary + sb-tf
   { name: 'table-footer',  file: 'table-footer.js',   deps: ['pagination'] },        // demo юзает sbMkPagination → ПОСЛЕ pagination
-  { name: 'nav-bar',       file: 'nav-bar.js',        deps: ['buttons', 'avatar', 'search-bar', 'kbd', 'context-menu'] }, // top bar (avatar opens overflow-menu)
+  { name: 'nav-bar',       file: 'nav-bar.js',        deps: ['buttons', 'avatar', 'search-bar', 'kbd', 'context-menu', 'overlay'] }, // top bar; search-overlay = sbMkOverlay (примитив)
   { name: 'led-panel',     file: 'led-panel.js',      deps: ['status'] },            // Status Indicators Panel, NAME + Status dot. ДОЛЖЕН быть до sub-nav.js (он юзает sbMkLedPanel в demo)
   { name: 'sub-nav',       file: 'sub-nav.js',        deps: ['segment-menu', 'led-panel'] }, // sub-bar под Nav Bar; demo юзает sbMkSegmentMenu + sbMkLedPanel
+  { name: 'overlay',       file: 'overlay.js',        deps: ['file-uploader'] },     // примитив модальности; live-демо юзает sbMkUploader (framed в модалке)
+  { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay'] }, // Alert: SB_SVG символ + sbMkActionBar футер; modal-демо = sbMkOverlay
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];
 

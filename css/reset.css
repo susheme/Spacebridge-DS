@@ -14,6 +14,15 @@ body {
   line-height: 1.5;
   overflow: hidden;
   height: 100vh;
+  /* Grayscale-антиалиасинг — как рендерит Figma. Дефолтный субпиксельный
+     AA в macOS-браузерах утолщает глифы, из-за чего Title M 600 в лейблах
+     выглядел заметно жирнее макета. Раньше это чинили точечно (buttons.css),
+     теперь правило одно на всю DS. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Синтетические начертания запрещены: если нужного веса в файле нет,
+     пусть будет визуально видно, а не «поддельный» жирный от браузера. */
+  font-synthesis: none;
 }
 
 a { color: var(--primary); text-decoration: none; }

@@ -145,4 +145,12 @@
   /* sb-h7 даёт font-size 22 / line-height 16 по Figma-спеке Header S.
      Дополнительный override не нужен. */
 }
+
+/* Popover уносит карточку меню порталом в <body>, где @container выше её уже
+   не достаёт — а зеркала так и остались бы скрытыми, и на узком хедере
+   действие пропало бы совсем (ни inline, ни в меню). Класс на панель вешает
+   sbHeaderSSyncMenu при открытии, померив хедер на месте. */
+.sb-header-s-narrow .sb-header-s-menu-extra {
+  display: flex;
+}
 /* --- [/SYNC:headerS] --- */

@@ -60,13 +60,14 @@ window.COMP_CSS.headerL = `.sb-header-l {
   .sb-header-l-right     { gap: var(--gap-vert-s); }
   .sb-header-l-action    { display: none; }
   .sb-header-l-menu-extra { display: flex; }
-}`;
+}
+.sb-header-l-narrow .sb-header-l-menu-extra { display: flex; }`;
 
 // --- HEADER L ---
-// Overflow-menu open/close behavior, click-outside handling, and the global
-// SB_DEMO_MORE_ITEMS list now live in context-menu.js (generic for any
-// .sb-overflow-menu wrapper). Header L just renders the markup with the
-// shared class and sbOverflowMenuToggle hook.
+// Позиционирование и поведение More-меню держит примитив Popover
+// (sbMkPopover): flip у нижнего края, shift у правого, portal в <body>.
+// Header L отдаёт ему только содержимое карточки и свой класс на обёртку.
+// Общий список SB_DEMO_MORE_ITEMS живёт в context-menu.js.
 (() => {
   function mkHeaderL({ slotLeft, title, slotRight } = {}) {
     const hasLeft  = slotLeft  != null && slotLeft  !== false && slotLeft  !== '';
@@ -127,15 +128,29 @@ window.COMP_CSS.headerL = `.sb-header-l {
       .map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' }))
       .join('');
 
-    const moreBlock = `<div class="sb-header-l-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'L')}</button>
-      <div class="sb-ctx-card">${extraCells}${moreCells}</div>
-    </div>`;
+    const moreBlock = sbMkPopover({
+      wrapCls: 'sb-header-l-more',
+      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      placement: 'bottom-end',
+      onOpen: 'sbHeaderLSyncMenu',
+    });
 
     return inlineHtml + moreBlock;
   }
   window.sbMkHeaderLActions = mkHeaderLActions;
+
+  // Зеркала inline-действий в меню. @container ниже 768px прячет inline-кнопки
+  // и показывает их копии в карточке — но Popover уносит карточку порталом в
+  // <body>, где @container хедера её уже не достаёт. Поэтому состояние снимаем
+  // с самого хедера в момент открытия: inline-кнопка скрыта → хедер узкий →
+  // ставим на панель .sb-header-l-narrow (правило в header-l.css).
+  window.sbHeaderLSyncMenu = function(pop, anchor) {
+    const hdr = anchor.closest('.sb-header-l');
+    const act = hdr && hdr.querySelector('.sb-header-l-action');
+    pop.classList.toggle('sb-header-l-narrow',
+      !!act && getComputedStyle(act).display === 'none');
+  };
 
   // ── Playground content builders ───────────────────────────
   const LEFT_SYMBOL_BUILD = {
@@ -364,7 +379,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
           `<div class="sb-ctx-cell is-action" onclick="sbActionContextCell(this)">\n        <span class="sb-ctx-cell-icon-left"><!-- ${it.icon} L --></span>\n        <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">${it.label}</span>\n        <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check"><!-- check-line S --></span></span>\n      </div>`
         );
         const cardCells = extraCellsCode.concat(nativeCellsCode).join('\n      ');
-        rightLines.push(`<div class="sb-header-l-more sb-overflow-menu">\n      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"\n              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">\n        <!-- more-2-line L -->\n      </button>\n      <div class="sb-ctx-card">\n      ${cardCells}\n      </div>\n    </div>`);
+        rightLines.push(`<span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">\n      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">\n        <!-- more-2-line L -->\n      </button>\n      <div class="sb-popover" role="dialog" tabindex="-1"\n           data-placement="bottom-end" data-side="bottom">\n        <div class="sb-ctx-card">\n        ${cardCells}\n        </div>\n      </div>\n    </span>`);
 
         const rightInner = rightLines.map(l => '    ' + l).join('\n');
         const rightBlock = rightLines.length
@@ -417,15 +432,17 @@ ${leftInner}
   </div>
   <div class="sb-header-l-right">
     <span class="sb-badge-status bs-grey">Status</span>
-    <div class="sb-header-l-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
         <!-- more-2-line L -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- ctx-cells: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- ctx-cells: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
   </div>
 </div>`,
         css: COMP_CSS.headerL,
@@ -477,16 +494,18 @@ ${leftInner}
     <button type="button" class="sb-btn sb-btn-secondary sb-header-l-action">
       <span>Action</span>
     </button>
-    <div class="sb-header-l-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
         <!-- more-2-line L -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- extras (visible @narrow): Action -->
-        <!-- native: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- extras (visible @narrow): Action -->
+          <!-- native: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
   </div>
 </div>`,
         css: COMP_CSS.headerL,
@@ -535,16 +554,18 @@ ${leftInner}
       <span>Action</span>
     </button>
     <!-- More button + dropdown card -->
-    <div class="sb-header-l-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
         <!-- more-2-line L -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- extras (visible @narrow): Add, Action -->
-        <!-- native: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- extras (visible @narrow): Add, Action -->
+          <!-- native: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
   </div>
 </div>`,
         css: COMP_CSS.headerL,

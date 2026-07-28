@@ -63,4 +63,12 @@
   .sb-header-m-action     { display: none; }
   .sb-header-m-menu-extra { display: flex; }
 }
+
+/* Popover уносит карточку меню порталом в <body>, где @container выше её уже
+   не достаёт — а зеркала так и остались бы скрытыми, и на узком хедере
+   действие пропало бы совсем (ни inline, ни в меню). Класс на панель вешает
+   sbHeaderMSyncMenu при открытии, померив хедер на месте. */
+.sb-header-m-narrow .sb-header-m-menu-extra {
+  display: flex;
+}
 /* --- [/SYNC:headerM] --- */

@@ -380,11 +380,18 @@ window.COMP_CSS.table = `.sb-table {
     const cells = (typeof sbMkContextCell === 'function')
       ? items.map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' })).join('')
       : '';
-    return `<div class="sb-td sb-td-ctrl" role="cell"${wStyle}>`
-      + `<div class="sb-overflow-menu">`
-      + `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button" aria-label="Row actions" onclick="sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'M')}</button>`
-      + `<div class="sb-ctx-card with-tip">${cells}</div>`
-      + `</div></div>`;
+    // Позиционирование — примитив Popover: bottom-end повторяет прежний вид
+    // (меню под кнопкой, прижато вправо), но добавляет flip у нижнего края
+    // экрана и portal — kebab в последнем ряду больше не режется таблицей.
+    // Носик динамический (arrow), поэтому .with-tip у карточки не нужен:
+    // тот прибит к right:16px и после сдвига переставал смотреть на кнопку.
+    const menu = sbMkPopover({
+      trigger: `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button" aria-label="Row actions">${sbIcon('more-2-line', 'M')}</button>`,
+      content: `<div class="sb-ctx-card">${cells}</div>`,
+      placement: 'bottom-end',
+      arrow: true,
+    });
+    return `<div class="sb-td sb-td-ctrl" role="cell"${wStyle}>${menu}</div>`;
   }
 
   // Полная таблица: Header Primary + N рядов body-ячеек. Колонки выровнены —

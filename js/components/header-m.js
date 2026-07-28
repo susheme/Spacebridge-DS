@@ -56,12 +56,14 @@ window.COMP_CSS.headerM = `.sb-header-m {
 @container (max-width: 600px) {
   .sb-header-m-action     { display: none; }
   .sb-header-m-menu-extra { display: flex; }
-}`;
+}
+.sb-header-m-narrow .sb-header-m-menu-extra { display: flex; }`;
 
 // --- HEADER M ---
-// Overflow-menu open/close, click-outside, scroll-close, and the global
-// SB_DEMO_MORE_ITEMS list live in context-menu.js (generic for any
-// .sb-overflow-menu wrapper).
+// Позиционирование и поведение More-меню держит примитив Popover
+// (sbMkPopover): flip, shift, portal в <body>. Header M отдаёт ему только
+// содержимое карточки и свой класс на обёртку. Общий список
+// SB_DEMO_MORE_ITEMS живёт в context-menu.js.
 (() => {
   function mkHeaderM({ slotLeft, title, slotRight, divider = false } = {}) {
     const hasLeft  = slotLeft  != null && slotLeft  !== false && slotLeft  !== '';
@@ -108,13 +110,27 @@ window.COMP_CSS.headerM = `.sb-header-m {
       .map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' }))
       .join('');
 
-    return inlineHtml + `<div class="sb-header-m-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'L')}</button>
-      <div class="sb-ctx-card">${extraCells}${moreCells}</div>
-    </div>`;
+    return inlineHtml + sbMkPopover({
+      wrapCls: 'sb-header-m-more',
+      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      placement: 'bottom-end',
+      onOpen: 'sbHeaderMSyncMenu',
+    });
   }
   window.sbMkHeaderMActions = mkHeaderMActions;
+
+  // Зеркала inline-действий в меню. @container прячет inline-кнопки на узком
+  // хедере и показывает их копии в карточке — но Popover уносит карточку
+  // порталом в <body>, где @container хедера её уже не достаёт. Поэтому
+  // состояние снимаем с хедера в момент открытия: inline-кнопка скрыта →
+  // хедер узкий → ставим на панель .sb-header-m-narrow (правило в header-m.css).
+  window.sbHeaderMSyncMenu = function(pop, anchor) {
+    const hdr = anchor.closest('.sb-header-m');
+    const act = hdr && hdr.querySelector('.sb-header-m-action');
+    pop.classList.toggle('sb-header-m-narrow',
+      !!act && getComputedStyle(act).display === 'none');
+  };
 
   const DEMO_MORE_ITEMS = window.SB_DEMO_MORE_ITEMS;
 
@@ -297,15 +313,17 @@ window.COMP_CSS.headerM = `.sb-header-m {
   </div>
   <div class="sb-header-m-right">
     <span class="sb-badge-status mini bs-grey">Status</span>
-    <div class="sb-header-m-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-header-m-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
         <!-- more-2-line L -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- ctx-cells: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- ctx-cells: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
   </div>
 </div>`,
         css: COMP_CSS.headerM,
@@ -351,15 +369,17 @@ window.COMP_CSS.headerM = `.sb-header-m {
   </div>
   <div class="sb-header-m-right">
     <span class="sb-badge-status mini bs-grey">Status</span>
-    <div class="sb-header-m-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-header-m-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
         <!-- more-2-line L -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- ctx-cells: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- ctx-cells: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
     <div class="sb-chevron"><!-- arrow-down-s-line L --></div>
   </div>
 </div>`,
@@ -406,16 +426,18 @@ window.COMP_CSS.headerM = `.sb-header-m {
     <button type="button" class="sb-btn sb-btn-secondary sb-header-m-action">
       <span>Action</span>
     </button>
-    <div class="sb-header-m-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-header-m-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
         <!-- more-2-line L -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- extras (visible @narrow): Add, Action -->
-        <!-- native: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- extras (visible @narrow): Add, Action -->
+          <!-- native: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
     <div class="sb-chevron"><!-- arrow-down-s-line L --></div>
   </div>
 </div>`,

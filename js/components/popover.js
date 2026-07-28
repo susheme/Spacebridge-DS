@@ -44,17 +44,26 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
    *   matchWidth    — min-width панели = ширине триггера (для Selectors)
    *   closeOnSelect — клик по ячейке внутри закрывает (default true)
    *   id, cls       — id панели (для sbPopoverOpen('#id')) и доп. классы
+   *   wrapCls       — классы на обёртку-якорь. Нужен потребителям, у которых
+   *                   на обёртке висит своя геометрия: .sb-header-l-more и
+   *                   родня держат на ней flex-shrink: 0 в правом слоте.
+   *   onOpen        — ИМЯ глобальной функции (строка), зовётся при открытии
+   *                   как fn(panel, anchor). Нужен из-за портала: панель
+   *                   уезжает в <body> и выпадает из @container потребителя,
+   *                   поэтому состояние, которое считал CSS, приходится
+   *                   снимать с якоря на месте и стемпить классом на панель.
    *
    * Для готовой разметки — sbPopoverToggle / sbPopoverOpen / sbPopoverClose.
    */
   function mkPopover(opts = {}) {
-    const { trigger = '', ...rest } = opts;
-    return `<span class="sb-popover-wrap" onclick="sbPopoverToggle(this, event)">${trigger}${mkPanel(rest)}</span>`;
+    const { trigger = '', wrapCls = '', ...rest } = opts;
+    return `<span class="sb-popover-wrap${wrapCls ? ' ' + wrapCls : ''}" onclick="sbPopoverToggle(this, event)">${trigger}${mkPanel(rest)}</span>`;
   }
 
   function mkPanel(opts = {}) {
     const { content = '', placement = 'bottom-start', arrow = false,
-            matchWidth = false, closeOnSelect = true, id = '', cls = '' } = opts;
+            matchWidth = false, closeOnSelect = true, id = '', cls = '',
+            onOpen = '' } = opts;
     const side = String(placement).split('-')[0];
     // tabindex="-1" — панель сама принимает фокус, если внутри нет ни одного
     // фокусируемого элемента (напр. Context Cell'ы — это div'ы с onclick).
@@ -62,7 +71,7 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
     return `<div class="sb-popover${cls ? ' ' + cls : ''}" id="${id || 'sb-pop-' + (++uid)}"
      role="dialog" tabindex="-1" data-placement="${placement}" data-side="${side}"
      data-arrow="${!!arrow}" data-match-width="${!!matchWidth}"
-     data-close-select="${closeOnSelect !== false}">${arrow ? '<span class="sb-popover-arrow"></span>' : ''}${content}</div>`;
+     data-close-select="${closeOnSelect !== false}"${onOpen ? ` data-on-open="${onOpen}"` : ''}>${arrow ? '<span class="sb-popover-arrow"></span>' : ''}${content}</div>`;
   }
 
   window.sbMkPopover = mkPopover;
@@ -155,6 +164,12 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
       document.body.appendChild(pop);
     }
 
+    // Хук ДО замера: он может показать/скрыть содержимое (напр. зеркала
+    // inline-действий в узком хедере), а от этого зависят размеры панели.
+    // Имя функции, а не код — никакого eval, и работает из file://.
+    const hook = pop.dataset.onOpen && window[pop.dataset.onOpen];
+    if (typeof hook === 'function') hook(pop, anc);
+
     place(pop, anc);
     pop.classList.add('is-open');
 
@@ -214,6 +229,12 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
     if (ev && ev.target.closest && ev.target.closest('.sb-popover')) return;
     const wrap = el.closest('.sb-popover-wrap');
     if (!wrap) return;
+    // Клик по триггеру дальше не всплывает: у предков свои реакции — ряд
+    // таблицы выделяется, хедер сворачивается, таб переключается. Каждый
+    // потребитель времянки писал event.stopPropagation() руками; теперь это
+    // поведение примитива. sbPopoverOpen сам гасит другие панели, так что
+    // глобальный слушатель для этого не нужен.
+    if (ev && typeof ev.stopPropagation === 'function') ev.stopPropagation();
     // После портала панели в обёртке уже нет — держим ссылку на ней.
     const pop = wrap._sbPop || wrap.querySelector('.sb-popover');
     if (!pop) return;
@@ -257,8 +278,10 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
   }
 
   // ── Демо-контент ────────────────────────────────────────────────────
-  // Guard на sbMkContextCell — секция не должна ронять IIFE, если
-  // context-menu.js вдруг окажется ниже по порядку загрузки.
+  // Guard на sbMkContextCell обязателен, а не «на всякий случай»: popover.js
+  // грузится РАНЬШЕ context-menu.js, а sbRegister один раз трогает геттер
+  // sections при регистрации (валидация html/css) — в этот момент фабрики
+  // ячеек ещё нет. На реальном рендере страницы она уже загружена.
   function demoCard(items) {
     if (typeof sbMkContextCell !== 'function') {
       return '<div class="sb-ctx-card"><div class="sb-body-m">Menu</div></div>';
@@ -353,7 +376,13 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
       },
     },
 
-    sections: [
+    // Геттер, а не массив-литерал: демо зовут sbMkContextCell и sbMkOverlay,
+    // и как литерал они бы вычислились при регистрации — то есть привязали бы
+    // popover.js к месту в очереди <script> ПОСЛЕ context-menu и overlay.
+    // А примитиву надо грузиться РАНЬШЕ своих потребителей (table.js,
+    // section-header.js идут в начале списка). Геттер сдвигает вычисление на
+    // момент открытия страницы, когда загружено уже всё.
+    get sections() { return [
       {
         title: sbT('Flip and shift', 'Flip и shift'),
         desc: sbT(
@@ -397,6 +426,6 @@ sbPopoverCloseAll();`,
 .sb-popover.above-overlay { z-index: 10000; }`,
         css: COMP_CSS.popover,
       },
-    ],
+    ]; },
   });
 })();

@@ -142,6 +142,12 @@
 <script src="js/components/buttons.js"></script>
 <!-- action-bar — кнопки .sb-btn (CSS из buttons), sbIcon из core. -->
 <script src="js/components/action-bar.js"></script>
+<!-- popover — примитив якорного позиционирования. Грузится РАНО и намеренно:
+     его зовут потребители, стоящие в начале списка (table, section-header), а
+     ReferenceError при регистрации = Coming Soon на их страницах. Своих
+     тяжёлых зависимостей у него нет: демо-секции спрятаны за геттером
+     sections и вычисляются при открытии страницы, а не при регистрации. -->
+<script src="js/components/popover.js"></script>
 <script src="js/components/separators.js"></script>
 <script src="js/components/avatar.js"></script>
 <script src="js/components/radio.js"></script>
@@ -181,10 +187,6 @@
 <!-- overlay — примитив модальности; демо юзает sbMkUploader → ПОСЛЕ file-uploader,
      и ДО nav-bar (его search-overlay собирается через sbMkOverlay при регистрации) -->
 <script src="js/components/overlay.js"></script>
-<!-- popover — второй примитив позиционирования (якорный, без скрима).
-     Демо-секции юзают sbMkContextCell (context-menu.js) и sbMkOverlay
-     (overlay.js) — оба вычисляются при регистрации, поэтому строго ПОСЛЕ них. -->
-<script src="js/components/popover.js"></script>
 <!-- chips — кнопка-пилюля; реюзается стеком тостов → ДО toast.js -->
 <script src="js/components/chips.js"></script>
 <!-- toast — demo реюзает sbMkHeaderXS + SB_SVG (badge.js) → ПОСЛЕ header-xs и badge -->

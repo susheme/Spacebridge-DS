@@ -48,7 +48,8 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
 @container (max-width: 320px) {
   .sb-section-header-action     { display: none; }
   .sb-section-header-menu-extra { display: flex; }
-}`;
+}
+.sb-section-header-narrow .sb-section-header-menu-extra { display: flex; }`;
 
 // --- SECTION HEADER ---
 (() => {
@@ -88,13 +89,27 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
       .map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' }))
       .join('');
 
-    return inlineHtml + `<div class="sb-section-header-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'S')}</button>
-      <div class="sb-ctx-card">${extraCells}${moreCells}</div>
-    </div>`;
+    return inlineHtml + sbMkPopover({
+      wrapCls: 'sb-section-header-more',
+      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('more-2-line', 'S')}</button>`,
+      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      placement: 'bottom-end',
+      onOpen: 'sbSectionHeaderSyncMenu',
+    });
   }
   window.sbMkSectionHeaderActions = mkSectionHeaderActions;
+
+  // Зеркала inline-действий в меню. @container прячет inline-кнопки на узком
+  // хедере и показывает их копии в карточке — но Popover уносит карточку
+  // порталом в <body>, где @container хедера её уже не достаёт. Поэтому
+  // состояние снимаем с хедера в момент открытия: inline-кнопка скрыта →
+  // хедер узкий → ставим на панель .sb-section-header-narrow (правило в section-header.css).
+  window.sbSectionHeaderSyncMenu = function(pop, anchor) {
+    const hdr = anchor.closest('.sb-section-header');
+    const act = hdr && hdr.querySelector('.sb-section-header-action');
+    pop.classList.toggle('sb-section-header-narrow',
+      !!act && getComputedStyle(act).display === 'none');
+  };
 
   const DEMO_MORE_ITEMS = window.SB_DEMO_MORE_ITEMS;
 
@@ -267,15 +282,17 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
     <span class="sb-caption">Section title</span>
   </div>
   <div class="sb-section-header-right">
-    <div class="sb-section-header-more sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    <span class="sb-popover-wrap sb-section-header-more" onclick="sbPopoverToggle(this, event)">
+      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
         <!-- more-2-line S -->
       </button>
-      <div class="sb-ctx-card">
-        <!-- ctx-cells: Copy / Download / Send via email -->
+      <div class="sb-popover" role="dialog" tabindex="-1"
+           data-placement="bottom-end" data-side="bottom">
+        <div class="sb-ctx-card">
+          <!-- ctx-cells: Copy / Download / Send via email -->
+        </div>
       </div>
-    </div>
+    </span>
   </div>
 </div>`,
         css: COMP_CSS.sectionHeader,

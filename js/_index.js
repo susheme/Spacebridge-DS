@@ -15,6 +15,7 @@ window.SB_COMPONENTS = [
   { name: 'notifications', file: 'notifications.js',  deps: ['chevron', 'badge'] },  // замыкает ТРОЙКУ первых: sbDocNote → sbMkBanner при регистрации ВСЕХ ниже; сам зовёт sbMkChevron + fill-иконки из SB_BADGE_SPECS
   { name: 'buttons',       file: 'buttons.js',        deps: ['checkbox'] },          // контролы playground'а = sbMkCheckbox
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
+  { name: 'popover',       file: 'popover.js',        deps: [] },                    // примитив якорного позиционирования (flip/shift/portal); РАНО в списке — его зовут table/section-header/хедеры/nav-bar/tool-bar; демо за геттером sections, поэтому своих deps на загрузке нет
   { name: 'separators',    file: 'separators.js',     deps: ['toggles'] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },                    // sbMkAvatar — nav-bar, table
   { name: 'toggles',       file: 'toggles.js',        deps: [] },                    // sbMkToggle; ЯДРО зовёт из pg.toggle; ВЫШЕ separators (тот зовёт в preview при регистрации)
@@ -48,7 +49,6 @@ window.SB_COMPONENTS = [
   { name: 'led-panel',     file: 'led-panel.js',      deps: ['status'] },            // Status Indicators Panel, NAME + Status dot. ДОЛЖЕН быть до sub-nav.js (он юзает sbMkLedPanel в demo)
   { name: 'sub-nav',       file: 'sub-nav.js',        deps: ['segment-menu', 'led-panel'] }, // sub-bar под Nav Bar; demo юзает sbMkSegmentMenu + sbMkLedPanel
   { name: 'overlay',       file: 'overlay.js',        deps: ['file-uploader'] },     // примитив модальности; live-демо юзает sbMkUploader (framed в модалке)
-  { name: 'popover',       file: 'popover.js',        deps: ['context-menu', 'overlay', 'buttons'] }, // примитив якорного позиционирования (flip/shift/portal); демо-карточки = sbMkContextCell, «в модалке» = sbMkOverlay
   { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay', 'checkbox'] }, // Alert: SB_SVG символ + sbMkActionBar футер; consent = sbMkCheckbox; modal-демо = sbMkOverlay
   { name: 'getting-started', file: 'getting-started.js', deps: [] },                 // docs page, не playground
 ];

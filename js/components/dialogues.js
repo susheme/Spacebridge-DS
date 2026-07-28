@@ -99,8 +99,8 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
     name: 'dialogues',
     title: 'Dialogues',
     description: sbT(
-      'A conversation window: it asks a question or requests input and waits for the answer. A Dialogue is defined by its content — an optional symbol, a headline, a message and actions — while modality is not baked in: a modal Dialogue mounts on the Overlay primitive (over its Scrim backdrop), a non-modal one floats on its own. Assembled from DS parts: Symbol Badges on top, an Action Bar with Buttons at the bottom. The Alert variant is specced; Confirm and Form are coming next.',
-      'Окно-разговор: задаёт вопрос или просит ввод и ждёт ответа. Dialogue определяется контентом — опциональный символ, headline, message и экшены — а модальность не вшита: модальный диалог монтируется на примитив Overlay (поверх его Scrim-подложки), немодальный плавает сам. Собран из частей DS: Symbol Badges сверху, Action Bar с Buttons снизу. Вариант Alert по спеке; Confirm и Form — следующие заходы.'
+      'A conversation window asks a question or requests input, waiting for a response. A dialogue consists of various elements: a picture, title, message, and clickable buttons. It can float independently rather than covering the entire screen. Dialogues feature symbols at the top and buttons at the bottom. They come in two types: full-screen and floating. Additional dialogue types include alerts and forms.',
+      'Окно-разговор задаёт вопрос или просит ввод и ждёт ответа. Диалог состоит из разных элементов: картинки, заголовка, сообщения и кликабельных кнопок. Он может плавать сам по себе, а не закрывать весь экран. У диалогов символы сверху и кнопки снизу. Бывают двух типов: полноэкранные и плавающие. Дополнительные типы диалогов — алерты и формы.'
     ) + sbDocNote('Tech Info', sbT(
       '<b>Geometry (Alert):</b>'
       + '<ul><li>Width: 320px (min 296 / max 320);</li><li>Radius: 16; Shadow-L; --background fill;</li><li>Padding: 16/16/0/16 — the bottom belongs to the Action Bar; card gap 16, center slot gap 8;</li><li>No top symbol — the top padding grows to 24.</li></ul>'

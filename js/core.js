@@ -65,7 +65,7 @@ const NAV = [
     { id: 'loaders', label: 'Loaders' },
     { id: 'notifications', label: 'Notifications & Banners', incomplete: true },
     { id: 'overlay', label: 'Overlay', inProgress: true },
-    { id: 'pop-ups', label: 'Pop-Ups' },
+    { id: 'popover', label: 'Popover', ready: true },
     { id: 'toast', label: 'Toast', ready: true },
   ]},
   { category: 'Utility', items: [

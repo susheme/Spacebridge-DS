@@ -38,6 +38,7 @@
 <link rel="stylesheet" href="css/components/input.css">
 <link rel="stylesheet" href="css/components/file-uploader.css">
 <link rel="stylesheet" href="css/components/overlay.css">
+<link rel="stylesheet" href="css/components/popover.css">
 <link rel="stylesheet" href="css/components/dialogues.css">
 <link rel="stylesheet" href="css/components/textarea.css">
 <link rel="stylesheet" href="css/components/password.css">
@@ -180,6 +181,10 @@
 <!-- overlay — примитив модальности; демо юзает sbMkUploader → ПОСЛЕ file-uploader,
      и ДО nav-bar (его search-overlay собирается через sbMkOverlay при регистрации) -->
 <script src="js/components/overlay.js"></script>
+<!-- popover — второй примитив позиционирования (якорный, без скрима).
+     Демо-секции юзают sbMkContextCell (context-menu.js) и sbMkOverlay
+     (overlay.js) — оба вычисляются при регистрации, поэтому строго ПОСЛЕ них. -->
+<script src="js/components/popover.js"></script>
 <!-- chips — кнопка-пилюля; реюзается стеком тостов → ДО toast.js -->
 <script src="js/components/chips.js"></script>
 <!-- toast — demo реюзает sbMkHeaderXS + SB_SVG (badge.js) → ПОСЛЕ header-xs и badge -->

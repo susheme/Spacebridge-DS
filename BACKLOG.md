@@ -4,6 +4,64 @@
 
 ---
 
+## 🚨 АЛЯАААРМ! MAJOR!!! — Popover есть, `sbOverflowMenuToggle` — времянка в 6+ местах
+
+Долг догмы Клементия, вскрыт 28.07.2026 вместе с рождением примитива Popover.
+Появился нативный компонент → все времянки обязаны уехать. `sbOverflowMenuToggle`
+(`context-menu.js:96`) делает ровно то же, что Popover, но хуже.
+
+### Чем времянка хуже примитива
+
+| | `sbOverflowMenuToggle` | Popover |
+|---|---|---|
+| Позиции | только снизу-справа | 12 placements |
+| Не влезло по вертикали | вылезает за экран | flip |
+| Упёрлось в край | обрезается | shift, носик остаётся на якоре |
+| Предок с `transform`/`contain` | **уезжает вместе с ним** (`position: fixed` не спасает) | portal в `<body>` |
+| Внутри модалки | уходит ПОД скрим | `.above-overlay`, z 10000 |
+| Замер | pre-measure хак с `visibility` | не нужен |
+| Клавиатура | нет фокуса и aria | фокус внутрь + возврат, `aria-expanded/haspopup` |
+
+### Скоп (пересчитано 28.07.2026, `grep -rno "sb-overflow-menu" js/components/*.js`)
+
+| Файл | Мест | Что именно |
+|---|---|---|
+| `nav-bar.js` | 8 | dropdown-таб, меню аватара, **переключатель языка** |
+| `header-l.js` | 6 | More-меню «⋯» |
+| `header-m.js` | 5 | More-меню «⋯» |
+| `header-s.js` | 4 | More-меню «⋯» |
+| `tool-bar.js` | 2 | More-меню |
+| `section-header.js` | 2 | More-меню |
+| `table.js` | 1 | kebab в ряду |
+| `context-menu.js` | 12 | сама времянка + её доки |
+
+Разобрать: `sbMkPopover` / `sbPopoverToggle` с `placement: 'bottom-end'`
+(сохранить текущий вид), затем снести саму времянку и CSS-блок
+`.sb-overflow-menu` из `context-menu.css` + зеркало в `COMP_CSS.contextMenu`
+(SYNC — оба места).
+
+### Грабли
+
+**Hover-триггеры.** Переключатель языка и dropdown-табы в Nav Bar открываются по
+`onmouseenter`, а не по клику (`nav-bar.js:567`). У Popover декларативный
+`sbPopoverToggle` — только клик. Менять примитив не нужно: на ховере звать
+императивный `sbPopoverOpen('#id', this)` / `sbPopoverClose('#id')`. Но проверить,
+что клик-вне и Esc не конфликтуют с mouseleave.
+
+
+`popover.js` в `index.html` стоит ПОСЛЕ `context-menu.js` и `overlay.js`. Если на
+Popover переедут компоненты, стоящие ВЫШЕ (nav-bar, header-\*, section-header,
+tool-bar), и позовут `sbMkPopover` при регистрации (в `preview`/`desc`) — будет
+ReferenceError и Coming Soon. Тогда поднимать `popover.js` выше, заменив
+демо-карточки на статичную разметку.
+
+### Триггер
+
+Запущено отдельной сессией 28.07.2026 — ждём её. Не трогать параллельно:
+файлы общие, правки перетрут друг друга.
+
+---
+
 ## 🚨 АЛЯАААРМ! MAJOR!!! — Button: фабрики НЕТ, ~95 рукописных мест в 20 файлах
 
 Последний и самый большой долг догмы Клементия (аудит 27.07.2026). У кнопки —

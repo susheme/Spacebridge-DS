@@ -1,0 +1,80 @@
+/* --- [SYNC:popover] Popover — примитив якорного позиционирования --------- */
+/* Оболочка без собственного вида: рисует контент (обычно .sb-ctx-card),
+   а сама только держит координаты. Всё, что видно, приходит из слота. */
+
+/* Обёртка вокруг триггера. inline-flex — её rect совпадает с триггером,
+   поэтому именно она служит якорем для расчёта позиции. */
+.sb-popover-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Панель. position: fixed + portal в <body> (см. sbPopoverOpen) — только
+   так гарантированно вырывается из clipping/stacking предков.
+   top/left ставит JS; visibility:hidden сохраняет layout для замера. */
+.sb-popover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  /* Потолок на узких экранах: 100vw минус два поля по 8px (MARGIN в JS).
+     Панель шире вьюпорта иначе прижимается к левому краю и уезжает вправо. */
+  max-width: calc(100vw - 16px);
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(0.96);
+  transform-origin: top left;
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s;
+}
+.sb-popover.is-open {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0s;
+}
+/* Origin «растёт от якоря» — зависит от финальной стороны (её ставит JS). */
+.sb-popover[data-side="top"]   { transform-origin: bottom left; }
+.sb-popover[data-side="left"]  { transform-origin: top right; }
+
+/* Якорь внутри Overlay (z-index 9999) — панель обязана быть выше скрима,
+   иначе меню внутри модалки уезжает ПОД затемнение. */
+.sb-popover.above-overlay { z-index: 10000; }
+
+/* Носик — треугольник 6px, цвет равен фону карточки (шва не видно), как у
+   .sb-ctx-card.with-tip. Смещение вдоль грани — --sb-arrow, ставит JS
+   (центр якоря, но не ближе 12px к углу панели). */
+.sb-popover-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.sb-popover[data-side="bottom"] > .sb-popover-arrow {
+  top: -6px;
+  left: var(--sb-arrow, 16px);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--background);
+}
+.sb-popover[data-side="top"] > .sb-popover-arrow {
+  bottom: -6px;
+  left: var(--sb-arrow, 16px);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--background);
+}
+.sb-popover[data-side="right"] > .sb-popover-arrow {
+  left: -6px;
+  top: var(--sb-arrow, 16px);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 6px solid var(--background);
+}
+.sb-popover[data-side="left"] > .sb-popover-arrow {
+  right: -6px;
+  top: var(--sb-arrow, 16px);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid var(--background);
+}
+/* --- [/SYNC:popover] --- */

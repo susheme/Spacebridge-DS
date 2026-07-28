@@ -161,7 +161,7 @@ Every component is registered through `sbRegister(...)` in `js/components/<name>
 - Toast
 - Dialogues / Modals
 - Loaders
-- Pop-Ups
+- Popover
 
 ### Utility
 - Icons

@@ -37,6 +37,13 @@
   transform: scale(1);
   transition-delay: 0s;
 }
+/* Панель фокусируется программно (tabindex="-1"), чтобы работали Esc и Tab
+   внутрь. Но это контейнер, а не контрол — рамка вокруг всего меню читается
+   как ошибка. Фокус-кольца остаются у контролов ВНУТРИ панели. */
+.sb-popover:focus,
+.sb-popover:focus-visible {
+  outline: none;
+}
 /* Origin «растёт от якоря» — зависит от финальной стороны (её ставит JS). */
 .sb-popover[data-side="top"]   { transform-origin: bottom left; }
 .sb-popover[data-side="left"]  { transform-origin: top right; }

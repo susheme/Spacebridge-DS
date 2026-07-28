@@ -16,6 +16,7 @@
 window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inline-flex; align-items: center; flex-shrink: 0; }
 .sb-popover { position: fixed; top: 0; left: 0; z-index: 1000; max-width: calc(100vw - 16px); visibility: hidden; opacity: 0; transform: scale(0.96); transform-origin: top left; transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s; }
 .sb-popover.is-open { visibility: visible; opacity: 1; transform: scale(1); transition-delay: 0s; }
+.sb-popover:focus, .sb-popover:focus-visible { outline: none; }
 .sb-popover[data-side="top"]   { transform-origin: bottom left; }
 .sb-popover[data-side="left"]  { transform-origin: top right; }
 .sb-popover.above-overlay { z-index: 10000; }
@@ -145,7 +146,14 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
   const triggerBtn = a => (a && a.matches && a.matches('button, [role="button"]'))
     ? a : (a && a.querySelector ? a.querySelector('button, [role="button"]') : null);
 
-  window.sbPopoverOpen = function(target, anchor) {
+  /**
+   * sbPopoverOpen(target, anchor, opts)
+   *   opts.focus — уводить ли фокус внутрь панели (default true).
+   *     Ховер-меню обязаны передавать false: человек ведёт мышью, а не
+   *     навигирует с клавиатуры — у него не должен уезжать каретка/фокус,
+   *     и на триггере не должно вспыхивать focus-кольцо при закрытии.
+   */
+  window.sbPopoverOpen = function(target, anchor, opts) {
     const pop = resolve(target);
     if (!pop || pop.classList.contains('is-open')) return;
     sbPopoverCloseAll(pop);
@@ -185,8 +193,13 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
     // Фокус уводим внутрь, но без прокрутки страницы к панели. Фолбэк на саму
     // панель: контент бывает без интерактивных элементов (Context Cell — div
     // с onclick), и тогда фокус остался бы снаружи — Esc и Tab мимо цели.
-    pop._sbPrevFocus = document.activeElement;
-    (pop.querySelector(FOCUSABLE) || pop).focus({ preventScroll: true });
+    // При opts.focus === false не трогаем фокус вообще (ховер-меню): иначе на
+    // закрытии он возвращается на кнопку и та вспыхивает focus-кольцом.
+    pop._sbTookFocus = !opts || opts.focus !== false;
+    if (pop._sbTookFocus) {
+      pop._sbPrevFocus = document.activeElement;
+      (pop.querySelector(FOCUSABLE) || pop).focus({ preventScroll: true });
+    }
   };
 
   window.sbPopoverClose = function(target) {
@@ -199,9 +212,13 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
 
     const btn = triggerBtn(pop._sbAnchor);
     if (btn) btn.setAttribute('aria-expanded', 'false');
-    if (pop._sbPrevFocus && typeof pop._sbPrevFocus.focus === 'function' && pop._sbPrevFocus.isConnected) {
+    // Возвращаем фокус, только если сами его забирали. Иначе ховер-меню
+    // дёргало бы фокус у того, кто им реально пользуется.
+    if (pop._sbTookFocus && pop._sbPrevFocus
+        && typeof pop._sbPrevFocus.focus === 'function' && pop._sbPrevFocus.isConnected) {
       pop._sbPrevFocus.focus({ preventScroll: true });
     }
+    pop._sbTookFocus = false;
 
     // Возврат из портала — после фейда (0.15s, см. transition в CSS).
     // Если родной дом снесён (страницу перерендерили) — не сиротеть в body.

@@ -159,7 +159,9 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     if (!pop || pop.classList.contains('is-open') || wrap._navBtnOpenTimer) return;
     wrap._navBtnOpenTimer = setTimeout(() => {
       wrap._navBtnOpenTimer = null;
-      if (!pop.classList.contains('is-open')) sbPopoverOpen(pop, wrap);
+      // focus:false — открытие по ховеру не должно уводить фокус: иначе
+      // при закрытии он прыгает на кнопку и та вспыхивает focus-кольцом.
+      if (!pop.classList.contains('is-open')) sbPopoverOpen(pop, wrap, { focus: false });
     }, 100);
   };
   window.sbNavBarDropdownClose = function(wrap) {
@@ -610,7 +612,9 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     if (!pop || pop.classList.contains('is-open') || wrap._langOpenTimer) return;
     wrap._langOpenTimer = setTimeout(() => {
       wrap._langOpenTimer = null;
-      if (!pop.classList.contains('is-open')) sbPopoverOpen(pop, wrap);
+      // focus:false — открытие по ховеру не должно уводить фокус: иначе
+      // при закрытии он прыгает на кнопку и та вспыхивает focus-кольцом.
+      if (!pop.classList.contains('is-open')) sbPopoverOpen(pop, wrap, { focus: false });
     }, 100);
   };
   window.sbNavBarLangClose = function(wrap) {

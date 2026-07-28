@@ -57,9 +57,9 @@
 
 /* ── Overflow-menu trigger ─────────────────────────────────────────── */
 /* The "..." (more-2-line) button + dropdown card. Wrapper carries both
-   .sb-header-l-more (component-scoped) and .sb-overflow-menu (generic
-   behavior — positioning, animation, JS toggle, click-outside live in
-   context-menu.css/js). */
+   .sb-header-l-more (component-scoped) and .sb-popover-wrap — positioning,
+   flip/shift, portal, click-outside and Esc live in the Popover primitive
+   (css/components/popover.css + js/components/popover.js). */
 .sb-header-l-more {
   flex-shrink: 0;
 }

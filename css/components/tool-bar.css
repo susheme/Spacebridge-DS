@@ -161,4 +161,12 @@
   .sb-tool-bar-action     { display: none; }
   .sb-tool-bar-menu-extra { display: flex; }
 }
+
+/* Popover уносит карточку меню порталом в <body>, где именованный контейнер
+   tool-bar её уже не достаёт — дубликаты так и остались бы скрытыми, и в
+   compact-режиме действия пропали бы совсем. Класс вешает sbToolBarSyncMenu
+   при открытии, померив бар на месте. */
+.sb-tool-bar-narrow .sb-tool-bar-menu-extra {
+  display: flex;
+}
 /* --- [/SYNC:tool-bar] --- */

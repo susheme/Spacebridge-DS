@@ -54,16 +54,6 @@ window.COMP_CSS.contextMenu = `.sb-ctx-cell {
   box-shadow: 0 2px 8px 0 var(--shadow-sm);
 }
 .sb-ctx-card > .sb-ctx-cell { border-radius: var(--radius-4); }
-.sb-overflow-menu { position: relative; flex-shrink: 0; }
-.sb-overflow-menu .sb-ctx-card {
-  position: fixed; top: 0; left: 0; z-index: 1000;
-  transform: scale(0.95); transform-origin: top right;
-  opacity: 0; pointer-events: none;
-  transition: transform 0.15s, opacity 0.15s;
-}
-.sb-overflow-menu.is-open .sb-ctx-card {
-  transform: scale(1); opacity: 1; pointer-events: auto;
-}
 .sb-ctx-card.with-tip::before {
   content: '';
   position: absolute;
@@ -83,65 +73,19 @@ window.sbSelectContextCell = function(cell) {
   cell.classList.add('is-selected');
 };
 
-// Action click handler — does NOT toggle .is-selected. Closes any open
-// overflow-menu wrapper containing the cell (one-shot action UX: tap →
-// done → close). Works for any wrapper carrying the .sb-overflow-menu class
-// (Header L/M/S/Section overflow buttons all share it).
+// Action click handler — does NOT toggle .is-selected. One-shot action UX:
+// tap → done → close. Закрытием владеет Popover (closeOnSelect), поэтому
+// здесь остаётся только guard на disabled — но хендлер сохранён: ячейки
+// вне попапа (standalone-карточки в доках) на него по-прежнему ссылаются.
 window.sbActionContextCell = function(cell) {
   if (!cell || cell.classList.contains('is-disabled')) return;
-  const wrap = cell.closest('.sb-overflow-menu');
-  if (wrap) wrap.classList.remove('is-open');
 };
 
-// Generic overflow-menu toggle. Used by every "More button + .sb-ctx-card"
-// pair across DS. The trigger button must be a direct child of an element
-// with .sb-overflow-menu (and .sb-overflow-menu must contain a .sb-ctx-card
-// child as the dropdown). Card position is computed in fixed coords from
-// the trigger's bounding rect so it escapes any clipping ancestor.
-window.sbOverflowMenuToggle = function(triggerBtn) {
-  const wrap = triggerBtn.closest('.sb-overflow-menu');
-  if (!wrap) return;
-  const willOpen = !wrap.classList.contains('is-open');
-  // Close every other open overflow menu first.
-  document.querySelectorAll('.sb-overflow-menu.is-open').forEach(el => {
-    if (el !== wrap) el.classList.remove('is-open');
-  });
-  if (willOpen) {
-    const card = wrap.querySelector('.sb-ctx-card');
-    if (card) {
-      // Pre-measure while still hidden (visibility:hidden gives layout).
-      const prev = card.style.cssText;
-      card.style.cssText = prev + ';visibility:hidden;opacity:1;pointer-events:none;transform:none';
-      const cardW = card.offsetWidth;
-      card.style.cssText = prev;
-      const r = triggerBtn.getBoundingClientRect();
-      card.style.top  = (r.bottom + 4) + 'px';
-      card.style.left = Math.max(8, r.right - cardW) + 'px';
-    }
-  }
-  wrap.classList.toggle('is-open', willOpen);
-};
-
-// One-time global listeners — outside-click / Escape / scroll close any
-// open overflow menu across the whole DS.
-if (!window.__sbOverflowMenuBound) {
-  window.__sbOverflowMenuBound = true;
-  const closeAll = () => {
-    document.querySelectorAll('.sb-overflow-menu.is-open')
-      .forEach(el => el.classList.remove('is-open'));
-  };
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('.sb-overflow-menu')) return;
-    closeAll();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeAll();
-  });
-  // Capture-phase scroll catches every scrolling ancestor (page + nested).
-  // Fixed-position dropdown would otherwise stay glued to its old viewport
-  // location while content under it moves.
-  window.addEventListener('scroll', closeAll, true);
-}
+// sbOverflowMenuToggle и .sb-overflow-menu удалены 28.07.2026 — их заменил
+// примитив Popover (js/components/popover.js). Времянка умела только
+// «снизу-справа», без flip, без shift и без портала (position: fixed не
+// спасает под предком с transform/contain), и не давала ни фокуса, ни aria.
+// Все 30 мест переехали на sbMkPopover — см. CHANGELOG.
 
 // Default demo items used across header overflow menus (Header M / S / L /
 // Section…) so the same dropdown content reads consistently in docs.
@@ -378,16 +322,15 @@ window.SB_DEMO_MORE_ITEMS = [
             ${mkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' })}
           </div>
         </div>`,
-        html: `<!-- Card с tip — используется в паре с триггером выше (avatar, kebab-кнопка),
-     который JS позиционирует через sbOverflowMenuToggle(triggerEl) -->
-<div class="sb-overflow-menu">
-  <div class="sb-avatar" onclick="sbOverflowMenuToggle(this)">
-    <div class="sb-avatar-circle"><span class="sb-avatar-initials">VS</span></div>
-  </div>
-  <div class="sb-ctx-card with-tip">
-    <!-- sb-ctx-cell .is-action items -->
-  </div>
-</div>`,
+        html: `<!-- Статичный .with-tip — носик прибит к right:16px. Для живых
+     выпадашек бери Popover: он даёт носик, который едет за якорем
+     при сдвиге, плюс flip, portal и закрытие по клику-вне. -->
+sbMkPopover({
+  trigger: sbMkAvatar({ type: 'initials', initials: 'VS' }),
+  content: '<div class="sb-ctx-card"><!-- sb-ctx-cell .is-action items --></div>',
+  placement: 'bottom-end',
+  arrow: true,
+})`,
         css: COMP_CSS.contextMenu,
       },
     ],

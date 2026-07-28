@@ -106,30 +106,10 @@
   border-radius: var(--radius-4);
 }
 
-/* Overflow-menu wrapper — a "More button + dropdown" pairing used across
-   DS (Header L/M/S/Section, etc.). The trigger sits in normal flow; the
-   dropdown is lifted to fixed positioning so it escapes any clipping
-   ancestor. JS computes top/left at open time. */
-.sb-overflow-menu {
-  position: relative;
-  flex-shrink: 0;
-}
-.sb-overflow-menu .sb-ctx-card {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  transform: scale(0.95);
-  transform-origin: top right;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.15s, opacity 0.15s;
-}
-.sb-overflow-menu.is-open .sb-ctx-card {
-  transform: scale(1);
-  opacity: 1;
-  pointer-events: auto;
-}
+/* Блок .sb-overflow-menu удалён 28.07.2026 — позиционированием и анимацией
+   выпадающих карточек владеет примитив Popover (css/components/popover.css).
+   Карточка остаётся чистым контейнером: её кладут в слот, а координаты,
+   flip/shift, портал и появление даёт Popover. */
 
 /* Tip-modifier — маленький треугольник сверху-справа карточки, «указывает»
    на триггер. Канонично для callout-меню над аватаром, kebab-кнопками,

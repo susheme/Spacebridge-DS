@@ -13,7 +13,7 @@
 //  Info Pop-up в хедерах, Picker'ы. Это ОДИН движок под все эти места.
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inline-flex; align-items: center; }
+window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inline-flex; align-items: center; flex-shrink: 0; }
 .sb-popover { position: fixed; top: 0; left: 0; z-index: 1000; max-width: calc(100vw - 16px); visibility: hidden; opacity: 0; transform: scale(0.96); transform-origin: top left; transition: opacity 0.15s ease, transform 0.15s ease, visibility 0s linear 0.15s; }
 .sb-popover.is-open { visibility: visible; opacity: 1; transform: scale(1); transition-delay: 0s; }
 .sb-popover[data-side="top"]   { transform-origin: bottom left; }
@@ -47,6 +47,9 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
    *   wrapCls       — классы на обёртку-якорь. Нужен потребителям, у которых
    *                   на обёртке висит своя геометрия: .sb-header-l-more и
    *                   родня держат на ней flex-shrink: 0 в правом слоте.
+   *   wrapAttrs     — доп. атрибуты на обёртку (Nav Bar вешает ховер-intent).
+   *                   Пока панель открыта, обёртка носит .is-open — по нему
+   *                   триггер держит активный вид (шеврон Nav Bar разворачивается).
    *   onOpen        — ИМЯ глобальной функции (строка), зовётся при открытии
    *                   как fn(panel, anchor). Нужен из-за портала: панель
    *                   уезжает в <body> и выпадает из @container потребителя,
@@ -56,8 +59,8 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
    * Для готовой разметки — sbPopoverToggle / sbPopoverOpen / sbPopoverClose.
    */
   function mkPopover(opts = {}) {
-    const { trigger = '', wrapCls = '', ...rest } = opts;
-    return `<span class="sb-popover-wrap${wrapCls ? ' ' + wrapCls : ''}" onclick="sbPopoverToggle(this, event)">${trigger}${mkPanel(rest)}</span>`;
+    const { trigger = '', wrapCls = '', wrapAttrs = '', ...rest } = opts;
+    return `<span class="sb-popover-wrap${wrapCls ? ' ' + wrapCls : ''}" onclick="sbPopoverToggle(this, event)"${wrapAttrs ? ' ' + wrapAttrs : ''}>${trigger}${mkPanel(rest)}</span>`;
   }
 
   function mkPanel(opts = {}) {
@@ -172,6 +175,9 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
 
     place(pop, anc);
     pop.classList.add('is-open');
+    // Зеркалим состояние на обёртку: пока панель открыта, триггер держит
+    // свой «активный» вид (у Nav Bar по этому классу разворачивается шеврон).
+    if (anc.classList.contains('sb-popover-wrap')) anc.classList.add('is-open');
 
     const btn = triggerBtn(anc);
     if (btn) { btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-haspopup', 'true'); }
@@ -187,6 +193,9 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
     const pop = resolve(target);
     if (!pop || !pop.classList.contains('is-open')) return;
     pop.classList.remove('is-open');
+    if (pop._sbAnchor && pop._sbAnchor.classList.contains('sb-popover-wrap')) {
+      pop._sbAnchor.classList.remove('is-open');
+    }
 
     const btn = triggerBtn(pop._sbAnchor);
     if (btn) btn.setAttribute('aria-expanded', 'false');

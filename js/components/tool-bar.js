@@ -109,7 +109,8 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   .sb-tool-bar:not(.compact-disabled) .sb-btn-icon svg { width: 16px; height: 16px; }
   .sb-tool-bar-action     { display: none; }
   .sb-tool-bar-menu-extra { display: flex; }
-}`;
+}
+.sb-tool-bar-narrow .sb-tool-bar-menu-extra { display: flex; }`;
 
 // --- TOOL BAR ---
 (() => {
@@ -175,15 +176,29 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
     // More-кнопка показывается всегда (нет смысла в Tool Bar action group без
     // overflow). Если только inline без more — More-кнопку всё равно рендерим,
     // потому что в compact это единственный способ доступа к actions.
-    const moreBtn = `<div class="sb-overflow-menu">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">${sbIcon('more-2-line', 'L')}</button>
-      <div class="sb-ctx-card">${extraCells}${moreCells}</div>
-    </div>`;
+    const moreBtn = sbMkPopover({
+      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      placement: 'bottom-end',
+      onOpen: 'sbToolBarSyncMenu',
+    });
 
     return inlineHtml + moreBtn;
   }
   window.sbMkToolBarActions = mkToolBarActions;
+
+  // Дубликаты inline-действий в overflow-меню. @container tool-bar ниже 600px
+  // прячет inline-кнопки и показывает их копии в карточке — но Popover уносит
+  // карточку порталом в <body>, где именованный контейнер её уже не достаёт.
+  // Поэтому состояние снимаем с самого бара при открытии. Меряем computed
+  // display реальной кнопки, а не ширину — так бесплатно учитывается
+  // .compact-disabled, который отключает авто-компакт.
+  window.sbToolBarSyncMenu = function(pop, anchor) {
+    const bar = anchor.closest('.sb-tool-bar');
+    const act = bar && bar.querySelector('.sb-tool-bar-action');
+    pop.classList.toggle('sb-tool-bar-narrow',
+      !!act && getComputedStyle(act).display === 'none');
+  };
 
   /**
    * sbWireToolBarFloating(scrollRoot, toolBar) — IntersectionObserver wiring
@@ -452,18 +467,21 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   <button class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">…</button>
   <button class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">…</button>
 
-  <!-- Always visible — More button + dropdown: -->
-  <div class="sb-overflow-menu">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon"
-            onclick="sbOverflowMenuToggle(this)">…</button>
-    <div class="sb-ctx-card">
-      <!-- Inline duplicates (hidden @wide, visible @narrow): -->
-      <div class="sb-ctx-cell is-action sb-tool-bar-menu-extra">…</div>
-      <div class="sb-ctx-cell is-action sb-tool-bar-menu-extra">…</div>
-      <!-- Permanent more items: -->
-      <div class="sb-ctx-cell is-action">…</div>
+  <!-- Always visible — More button + Popover dropdown: -->
+  <span class="sb-popover-wrap" onclick="sbPopoverToggle(this, event)">
+    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    <div class="sb-popover" role="dialog" tabindex="-1"
+         data-placement="bottom-end" data-side="bottom"
+         data-on-open="sbToolBarSyncMenu">
+      <div class="sb-ctx-card">
+        <!-- Inline duplicates (hidden @wide, visible @narrow): -->
+        <div class="sb-ctx-cell is-action sb-tool-bar-menu-extra">…</div>
+        <div class="sb-ctx-cell is-action sb-tool-bar-menu-extra">…</div>
+        <!-- Permanent more items: -->
+        <div class="sb-ctx-cell is-action">…</div>
+      </div>
     </div>
-  </div>
+  </span>
 </div>`,
         css: COMP_CSS["tool-bar"],
       },

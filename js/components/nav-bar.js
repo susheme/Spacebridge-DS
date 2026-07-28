@@ -105,8 +105,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       </button>`;
     }
 
-    // С menuItems — оборачиваем в .sb-overflow-menu с .sb-ctx-card,
-    // hover-intent + click-toggle для открытия dropdown'а.
+    // С menuItems — Popover с .sb-ctx-card внутри, hover-intent + click-toggle.
     // Items идут как sb-ctx-cell mode='select' (sticky check, без иконок).
     const cells = menuItems.map(item => sbMkContextCell({
       label: item.label,
@@ -114,19 +113,24 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       mode: 'select',
     })).join('');
     const clickHandler = disabled ? '' : ' onclick="sbNavBarDropdownClick(this)"';
-    return `<div class="sb-overflow-menu sb-nav-btn-dropdown"
-                 onmouseenter="sbNavBarDropdownOpen(this)"
-                 onmouseleave="sbNavBarDropdownClose(this)">
-      <button class="${cls}" type="button"${disabled ? ' disabled' : ''}${clickHandler}>
+    // Ховер-обработчики живут на обёртке; onOpen довешивает их на панель —
+    // та уезжает порталом, и без моста переход мыши на меню читался бы как уход.
+    return sbMkPopover({
+      wrapCls: 'sb-nav-btn-dropdown',
+      wrapAttrs: 'onmouseenter="sbNavBarDropdownOpen(this)" onmouseleave="sbNavBarDropdownClose(this)"',
+      trigger: `<button class="${cls}" type="button"${disabled ? ' disabled' : ''}${clickHandler}>
         <span class="sb-nav-btn-label">${label}</span>${chev}
-      </button>
-      <div class="sb-ctx-card">${cells}</div>
-    </div>`;
+      </button>`,
+      content: `<div class="sb-ctx-card">${cells}</div>`,
+      placement: 'bottom-start',
+      closeOnSelect: false,
+      onOpen: 'sbNavBarDropdownBridge',
+    });
   }
 
   // Single-select handler — snap .selected на нажатой кнопке, снимаем
   // с соседей в том же .sb-nav-bar-tabs контейнере. Через .closest, чтобы
-  // работало и когда btn вложен в .sb-overflow-menu wrapper (dropdown-таб).
+  // работало и когда btn вложен в .sb-popover-wrap (dropdown-таб).
   window.sbSelectNavBtn = function(btn) {
     if (!btn || btn.classList.contains('disabled')) return;
     const tabs = btn.closest('.sb-nav-bar-tabs');
@@ -141,33 +145,49 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   //   mouseenter → open через 100ms
   //   mouseleave → close через 200ms (cancel'ится при возврате)
   // Click работает мгновенно, отменяя все таймеры (для тача/клавиатуры).
+  // Панель живёт в <body> (портал), поэтому «открыт ли» спрашиваем у неё,
+  // а не у обёртки. Ссылку держим на обёртке — после портала querySelector
+  // внутри неё уже ничего не найдёт.
+  function navPop(wrap) {
+    const pop = wrap._sbPop || wrap.querySelector('.sb-popover');
+    if (pop) wrap._sbPop = pop;
+    return pop;
+  }
   window.sbNavBarDropdownOpen = function(wrap) {
     clearTimeout(wrap._navBtnCloseTimer); wrap._navBtnCloseTimer = null;
-    if (wrap.classList.contains('is-open') || wrap._navBtnOpenTimer) return;
+    const pop = navPop(wrap);
+    if (!pop || pop.classList.contains('is-open') || wrap._navBtnOpenTimer) return;
     wrap._navBtnOpenTimer = setTimeout(() => {
       wrap._navBtnOpenTimer = null;
-      if (wrap.classList.contains('is-open')) return;
-      const trigger = wrap.querySelector('.sb-nav-btn');
-      if (trigger) sbOverflowMenuToggle(trigger);
+      if (!pop.classList.contains('is-open')) sbPopoverOpen(pop, wrap);
     }, 100);
   };
   window.sbNavBarDropdownClose = function(wrap) {
     clearTimeout(wrap._navBtnOpenTimer); wrap._navBtnOpenTimer = null;
-    if (!wrap.classList.contains('is-open') || wrap._navBtnCloseTimer) return;
+    const pop = navPop(wrap);
+    if (!pop || !pop.classList.contains('is-open') || wrap._navBtnCloseTimer) return;
     wrap._navBtnCloseTimer = setTimeout(() => {
       wrap._navBtnCloseTimer = null;
-      wrap.classList.remove('is-open');
+      sbPopoverClose(pop);
     }, 200);
   };
-  // Click: cancel any pending hover-таймеры + toggle сразу.
+  // Ховер-мост: панель уносится порталом и перестаёт быть потомком обёртки,
+  // поэтому переход мыши с кнопки на меню = mouseleave обёртки и закрытие.
+  // Вешаем те же intent-таймеры на панель — зазор в 8px мышь проскакивает
+  // быстрее, чем истекает close-таймер (200ms).
+  window.sbNavBarDropdownBridge = function(pop, wrap) {
+    pop.onmouseenter = () => sbNavBarDropdownOpen(wrap);
+    pop.onmouseleave = () => sbNavBarDropdownClose(wrap);
+  };
+  // Click: гасим hover-таймеры и выбираем таб. Само переключение панели
+  // делает onclick обёртки (sbPopoverToggle) — клик всплывает туда.
   window.sbNavBarDropdownClick = function(btn) {
-    const wrap = btn.closest('.sb-overflow-menu');
+    const wrap = btn.closest('.sb-popover-wrap');
     if (wrap) {
       clearTimeout(wrap._navBtnOpenTimer);  wrap._navBtnOpenTimer = null;
       clearTimeout(wrap._navBtnCloseTimer); wrap._navBtnCloseTimer = null;
     }
     sbSelectNavBtn(btn);
-    sbOverflowMenuToggle(btn);
   };
 
   /**
@@ -532,16 +552,18 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   // Без фикс-обёртки: ширину wide-слоту даёт .sb-nav-bar-search-wide (240px),
   // а в overlay тот же search-html растягивается панелью (flex:1).
   const DEMO_SEARCH = sbMkSearch({ iconLeft: true, placeholder: 'Search', rightSlot: sbMkKbdGroup(['⌘','K']) });
-  // Avatar — кликабельный, по нажатию открывает context-menu c tip
-  // (Settings / Logout). Используем штатный sb-overflow-menu pattern
-  // и .sb-ctx-card.with-tip из context-menu component.
-  const DEMO_AVATAR = `<div class="sb-overflow-menu">
-    ${sbMkAvatar({ type: 'initials', initials: 'VS', attrs: 'onclick="sbOverflowMenuToggle(this)" style="cursor:pointer"' })}
-    <div class="sb-ctx-card with-tip">
+  // Avatar — кликабельный, по нажатию открывает меню (Settings / Logout).
+  // Носик даёт сам Popover (arrow) — он едет за якорем при сдвиге, в отличие
+  // от статичного .with-tip, прибитого к right:16px.
+  const DEMO_AVATAR = sbMkPopover({
+    trigger: sbMkAvatar({ type: 'initials', initials: 'VS', attrs: 'style="cursor:pointer"' }),
+    content: `<div class="sb-ctx-card">
       ${sbMkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' })}
       ${sbMkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' })}
-    </div>
-  </div>`;
+    </div>`,
+    placement: 'bottom-end',
+    arrow: true,
+  });
   const DEMO_PRIMARY = `<button class="sb-btn sb-btn-primary" type="button">Login</button>`;
 
   // ── Language Switcher ──────────────────────────────────────────────
@@ -564,15 +586,17 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check">${sbIcon('check-line', 'S')}</span></span>
       </div>`;
     }).join('');
-    return `<div class="sb-overflow-menu sb-nav-lang-switcher"
-         onmouseenter="sbNavBarLangOpen(this)"
-         onmouseleave="sbNavBarLangClose(this)">
-      <button class="sb-btn sb-btn-secondary sb-nav-lang-btn" type="button"
-              onclick="event.stopPropagation(); sbOverflowMenuToggle(this)">
+    return sbMkPopover({
+      wrapCls: 'sb-nav-lang-switcher',
+      wrapAttrs: 'onmouseenter="sbNavBarLangOpen(this)" onmouseleave="sbNavBarLangClose(this)"',
+      trigger: `<button class="sb-btn sb-btn-secondary sb-nav-lang-btn" type="button">
         <span class="sb-nav-lang-label">${selected}</span>${sbIcon('arrow-drop-down-line', 'L')}
-      </button>
-      <div class="sb-ctx-card">${cells}</div>
-    </div>`;
+      </button>`,
+      content: `<div class="sb-ctx-card">${cells}</div>`,
+      placement: 'bottom-end',
+      closeOnSelect: false,
+      onOpen: 'sbNavBarLangBridge',
+    });
   }
 
   window.sbMkLangSwitcher = mkLangSwitcher;
@@ -582,21 +606,26 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   // меню не «прыгало» при случайном проходе мышью.
   window.sbNavBarLangOpen = function(wrap) {
     clearTimeout(wrap._langCloseTimer); wrap._langCloseTimer = null;
-    if (wrap.classList.contains('is-open') || wrap._langOpenTimer) return;
+    const pop = navPop(wrap);
+    if (!pop || pop.classList.contains('is-open') || wrap._langOpenTimer) return;
     wrap._langOpenTimer = setTimeout(() => {
       wrap._langOpenTimer = null;
-      if (wrap.classList.contains('is-open')) return;
-      const trigger = wrap.querySelector('.sb-nav-lang-btn');
-      if (trigger) sbOverflowMenuToggle(trigger);
+      if (!pop.classList.contains('is-open')) sbPopoverOpen(pop, wrap);
     }, 100);
   };
   window.sbNavBarLangClose = function(wrap) {
     clearTimeout(wrap._langOpenTimer); wrap._langOpenTimer = null;
-    if (!wrap.classList.contains('is-open') || wrap._langCloseTimer) return;
+    const pop = navPop(wrap);
+    if (!pop || !pop.classList.contains('is-open') || wrap._langCloseTimer) return;
     wrap._langCloseTimer = setTimeout(() => {
       wrap._langCloseTimer = null;
-      wrap.classList.remove('is-open');
+      sbPopoverClose(pop);
     }, 200);
+  };
+  // Ховер-мост для панели, уехавшей порталом (см. sbNavBarDropdownBridge).
+  window.sbNavBarLangBridge = function(pop, wrap) {
+    pop.onmouseenter = () => sbNavBarLangOpen(wrap);
+    pop.onmouseleave = () => sbNavBarLangClose(wrap);
   };
   // Pick: обновляем выбранный cell + лейбл кнопки + закрываем dropdown.
   // Если внутри playground'а (есть SB_PG state с ключом 'lang') — синкаем
@@ -607,11 +636,14 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       card.querySelectorAll('.sb-ctx-cell').forEach(c => c.classList.remove('is-selected'));
     }
     cell.classList.add('is-selected');
-    const wrap = cell.closest('.sb-overflow-menu');
+    // Панель уехала порталом в <body>, поэтому обёртку через closest() уже не
+    // найти — идём по обратной ссылке, которую примитив кладёт на панель.
+    const pop = cell.closest('.sb-popover');
+    const wrap = pop && pop._sbAnchor;
     if (!wrap) return;
     const label = wrap.querySelector('.sb-nav-lang-label');
     if (label) label.textContent = code;
-    wrap.classList.remove('is-open');
+    sbPopoverClose(pop);
     // Sync into playground state if we're inside one. SB_PG — top-level const
     // в core.js, не на window — поэтому проверяем через typeof.
     if (typeof SB_PG !== 'undefined' && SB_PG._states && SB_PG._states['nav-bar']) {

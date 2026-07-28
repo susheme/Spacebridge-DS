@@ -8,6 +8,10 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  /* Якорь не сжимается: в тесном flex-ряду (правый слот хедера, Tool Bar)
+     кнопка-триггер иначе схлопывается вместе с соседями. Времянка держала
+     это на .sb-overflow-menu — свойство переехало сюда. */
+  flex-shrink: 0;
 }
 
 /* Панель. position: fixed + portal в <body> (см. sbPopoverOpen) — только

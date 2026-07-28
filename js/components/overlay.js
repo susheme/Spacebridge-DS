@@ -60,6 +60,7 @@ window.COMP_CSS.overlay = `.sb-overlay { position: fixed; inset: 0; z-index: 999
     // Portal в <body>: вырываемся из stacking-context'ов контентной зоны —
     // иначе sticky-хром (search бар, section-header'ы) рисуется ПОВЕРХ скрима.
     // Запоминаем родной дом, на close вернёмся (см. sbOverlayClose).
+    clearTimeout(ov._sbReturnT);  // переоткрыли до конца фейда — отменяем возврат
     if (ov.parentElement !== document.body) {
       ov._sbHome = { parent: ov.parentElement, next: ov.nextSibling };
       document.body.appendChild(ov);
@@ -92,11 +93,16 @@ window.COMP_CSS.overlay = `.sb-overlay { position: fixed; inset: 0; z-index: 999
     if (ov._sbPrevFocus && typeof ov._sbPrevFocus.focus === 'function') ov._sbPrevFocus.focus();
     // Возврат из portal'а — после close-фейда (0.2s, см. transition в CSS).
     // Если родной дом снесён (страницу перерендерили) — не сиротеть в body.
-    if (ov._sbHome) setTimeout(() => {
+    // Таймер строго один: быстрый open/close/open копил их пачками, и
+    // опоздавший видел уже обнулённый _sbHome → уходил в else и УДАЛЯЛ оверлей
+    // из DOM (воспроизводилось за 20 циклов). Отсюда clearTimeout + ранний выход.
+    clearTimeout(ov._sbReturnT);
+    if (ov._sbHome) ov._sbReturnT = setTimeout(() => {
       if (ov.classList.contains('is-open')) return; // успели переоткрыть
       const home = ov._sbHome;
+      if (!home) return;                            // уже вернули домой
       ov._sbHome = null;
-      if (home && home.parent && home.parent.isConnected) {
+      if (home.parent && home.parent.isConnected) {
         home.parent.insertBefore(ov, home.next && home.next.isConnected ? home.next : null);
       } else {
         ov.remove();

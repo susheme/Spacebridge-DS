@@ -59,7 +59,13 @@ a.sb-banner-title {
   justify-content: flex-end;
   gap: var(--gap-horiz-s);
   flex: 0 1 20%;
-  align-self: stretch;
+  /* НЕ stretch: растянутый слот центрировал контент по всей высоте, и при
+     росте баннера (длинный текст, раскрытие) Badge-Status уезжал к середине.
+     Прижимаем слот к верху; min-height 28 = 60(min-height баннера) − 2×16
+     (padding) — в компактном баннере позиция та же, что была при центре,
+     в выросшем бейдж остаётся на месте (паттерн закреплённого шеврона). */
+  align-self: flex-start;
+  min-height: 28px;
 }
 
 /* Types. Info / Success — neutral surface, coloured marker only.

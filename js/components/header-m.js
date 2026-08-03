@@ -113,7 +113,7 @@ window.COMP_CSS.headerM = `.sb-header-m {
     return inlineHtml + sbMkPopover({
       wrapCls: 'sb-header-m-more',
       trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
-      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',
       onOpen: 'sbHeaderMSyncMenu',
     });

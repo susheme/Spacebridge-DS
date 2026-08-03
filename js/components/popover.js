@@ -309,11 +309,14 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
   // sections при регистрации (валидация html/css) — в этот момент фабрики
   // ячеек ещё нет. На реальном рендере страницы она уже загружена.
   function demoCard(items) {
-    if (typeof sbMkContextCell !== 'function') {
+    if (typeof sbMkContextCard !== 'function' || typeof sbMkContextCell !== 'function') {
+      // [SYNC:ctx-card-fallback] — зеркало sbMkContextCard (context-menu.js).
+      // Единственный потребитель: валидация геттера sections при регистрации,
+      // когда фабрик ещё нет. Меняешь карточку — меняй и здесь.
       return '<div class="sb-ctx-card"><div class="sb-body-m">Menu</div></div>';
     }
-    return `<div class="sb-ctx-card">${items.map(i =>
-      sbMkContextCell({ iconLeft: i.icon, label: i.label, mode: 'action' })).join('')}</div>`;
+    return sbMkContextCard(items.map(i =>
+      sbMkContextCell({ iconLeft: i.icon, label: i.label, mode: 'action' })));
   }
 
   const MENU = [

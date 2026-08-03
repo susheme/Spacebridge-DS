@@ -131,7 +131,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
     const moreBlock = sbMkPopover({
       wrapCls: 'sb-header-l-more',
       trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
-      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',
       onOpen: 'sbHeaderLSyncMenu',
     });

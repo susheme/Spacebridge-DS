@@ -168,9 +168,11 @@
 <script src="js/components/tooltips.js"></script>
 <!-- info-footer — юзает классы .sb-status-dot / .sb-sep / .sb-sub; esc из core. -->
 <script src="js/components/info-footer.js"></script>
-<script src="js/components/table.js"></script>
 <script src="js/components/list.js"></script>
 <script src="js/components/context-menu.js"></script>
+<!-- table — kebab ряда собирается sbMkContextCard + sbMkContextCell прямо
+     на этапе регистрации, поэтому строго ПОСЛЕ context-menu.js. -->
+<script src="js/components/table.js"></script>
 <!-- section-header — зависит от sbMkContextCell, поэтому ПОСЛЕ context-menu.
      Но должен идти ДО segment-menu / nav-bar, которые юзают sbMkSectionHeader в превью. -->
 <script src="js/components/section-header.js"></script>

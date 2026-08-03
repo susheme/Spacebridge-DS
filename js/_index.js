@@ -36,9 +36,9 @@ window.SB_COMPONENTS = [
   { name: 'chips',         file: 'chips.js',          deps: [] },                    // кнопка-пилюля; реюзается Clear-чипсой стека тостов
   { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list', 'chips', 'chevron'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell, чипса = sbMkChip
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
-  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles'] },  // чекбоксы выбора рядов = sbMkCheckbox (managed)
   { name: 'list',          file: 'list.js',           deps: ['toggles'] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
+  { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles', 'context-menu'] }, // чекбоксы выбора рядов = sbMkCheckbox (managed); kebab ряда = sbMkContextCard/Cell при регистрации → ПОСЛЕ context-menu
   { name: 'segment-menu',  file: 'segment-menu.js',   deps: [] },
   { name: 'tabs',          file: 'tabs.js',           deps: ['status'] },            // building block для Tab Bar (Status Mini indicator)
   { name: 'tab-bar',       file: 'tab-bar.js',        deps: ['tabs'] },              // container, юзает sbMkTab из tabs.js

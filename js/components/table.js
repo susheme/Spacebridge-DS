@@ -377,9 +377,10 @@ window.COMP_CSS.table = `.sb-table {
     { icon: 'delete-bin-line', label: 'Delete' },
   ];
   function _rowKebab(items, wStyle) {
-    const cells = (typeof sbMkContextCell === 'function')
-      ? items.map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' })).join('')
-      : '';
+    // Фабрики Context Menu доступны без guard'а: table.js грузится ПОСЛЕ
+    // context-menu.js (см. index.html и _index.js). Раньше здесь стоял
+    // typeof-фолбэк на пустые ячейки — он молча рисовал пустой kebab.
+    const cells = items.map(it => sbMkContextCell({ iconLeft: it.icon, label: it.label, mode: 'action' }));
     // Позиционирование — примитив Popover: bottom-end повторяет прежний вид
     // (меню под кнопкой, прижато вправо), но добавляет flip у нижнего края
     // экрана и portal — kebab в последнем ряду больше не режется таблицей.
@@ -387,7 +388,7 @@ window.COMP_CSS.table = `.sb-table {
     // тот прибит к right:16px и после сдвига переставал смотреть на кнопку.
     const menu = sbMkPopover({
       trigger: `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button" aria-label="Row actions">${sbIcon('more-2-line', 'M')}</button>`,
-      content: `<div class="sb-ctx-card">${cells}</div>`,
+      content: sbMkContextCard(cells),
       placement: 'bottom-end',
       arrow: true,
     });

@@ -121,7 +121,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       trigger: `<button class="${cls}" type="button"${disabled ? ' disabled' : ''}${clickHandler}>
         <span class="sb-nav-btn-label">${label}</span>${chev}
       </button>`,
-      content: `<div class="sb-ctx-card">${cells}</div>`,
+      content: sbMkContextCard(cells),
       placement: 'bottom-start',
       closeOnSelect: false,
       onOpen: 'sbNavBarDropdownBridge',
@@ -559,10 +559,10 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   // от статичного .with-tip, прибитого к right:16px.
   const DEMO_AVATAR = sbMkPopover({
     trigger: sbMkAvatar({ type: 'initials', initials: 'VS', attrs: 'style="cursor:pointer"' }),
-    content: `<div class="sb-ctx-card">
-      ${sbMkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' })}
-      ${sbMkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' })}
-    </div>`,
+    content: sbMkContextCard([
+      sbMkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' }),
+      sbMkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' }),
+    ]),
     placement: 'bottom-end',
     arrow: true,
   });
@@ -594,7 +594,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
       trigger: `<button class="sb-btn sb-btn-secondary sb-nav-lang-btn" type="button">
         <span class="sb-nav-lang-label">${selected}</span>${sbIcon('arrow-drop-down-line', 'L')}
       </button>`,
-      content: `<div class="sb-ctx-card">${cells}</div>`,
+      content: sbMkContextCard(cells),
       placement: 'bottom-end',
       closeOnSelect: false,
       onOpen: 'sbNavBarLangBridge',

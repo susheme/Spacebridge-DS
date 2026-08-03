@@ -92,7 +92,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
     return inlineHtml + sbMkPopover({
       wrapCls: 'sb-section-header-more',
       trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('more-2-line', 'S')}</button>`,
-      content: `<div class="sb-ctx-card">${extraCells}${moreCells}</div>`,
+      content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',
       onOpen: 'sbSectionHeaderSyncMenu',
     });

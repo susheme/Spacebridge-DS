@@ -130,6 +130,20 @@ window.SB_DEMO_MORE_ITEMS = [
   // Expose for other components (Header L overflow menu, etc.).
   window.sbMkContextCell = mkContextCell;
 
+  // Карточка меню — плашка, внутри которой лежат ячейки. Раньше её верстали
+  // руками (`<div class="sb-ctx-card">`) в каждом потребителе; теперь фабрика.
+  //   cells — html ячеек: строка или массив строк (sbMkContextCell)
+  //   tip   — носик .with-tip (статичный, right:16px). Живым панелям он не
+  //           нужен: у Popover свой динамический arrow, считаемый от якоря.
+  //   cls, attrs — доп. классы и атрибуты на карточку
+  function mkContextCard(cells = '', opts = {}) {
+    const { tip = false, cls = '', attrs = '' } = opts;
+    const inner = Array.isArray(cells) ? cells.join('') : cells;
+    const clsAttr = 'sb-ctx-card' + (tip ? ' with-tip' : '') + (cls ? ' ' + cls : '');
+    return `<div class="${clsAttr}"${attrs ? ' ' + attrs : ''}>${inner}</div>`;
+  }
+  window.sbMkContextCard = mkContextCard;
+
   // Static demo matrix: 4 states × { with iconLeft, without iconLeft }
   function mkStateRow(label, withIconLeft) {
     const iconLeft = withIconLeft ? 'gemini-fill' : undefined;
@@ -283,13 +297,13 @@ window.SB_DEMO_MORE_ITEMS = [
           + '<ul><li>Radius: 12;</li><li>Padding: 8/8;</li><li>Gap: 8 между ячейками;</li><li>Тень: --shadow-sm.</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
-          <div class="sb-ctx-card">
-            ${mkContextCell({ iconLeft: 'file-copy-line',  label: 'Copy',          mode: 'action' })}
-            ${mkContextCell({ iconLeft: 'download-2-line', label: 'Download',      mode: 'action' })}
-            ${mkContextCell({ iconLeft: 'mail-line',       label: 'Send via email',mode: 'action' })}
-            ${mkContextCell({ iconLeft: 'loop-left-line',  label: 'Reset',         mode: 'action' })}
-            ${mkContextCell({ iconLeft: 'close-line',      label: 'Remove',        mode: 'action' })}
-          </div>
+          ${mkContextCard([
+            mkContextCell({ iconLeft: 'file-copy-line',  label: 'Copy',           mode: 'action' }),
+            mkContextCell({ iconLeft: 'download-2-line', label: 'Download',       mode: 'action' }),
+            mkContextCell({ iconLeft: 'mail-line',       label: 'Send via email', mode: 'action' }),
+            mkContextCell({ iconLeft: 'loop-left-line',  label: 'Reset',          mode: 'action' }),
+            mkContextCell({ iconLeft: 'close-line',      label: 'Remove',         mode: 'action' }),
+          ])}
         </div>`,
         html: `<div class="sb-ctx-card">
   <div class="sb-ctx-cell is-action" onclick="sbActionContextCell(this)">
@@ -317,10 +331,10 @@ window.SB_DEMO_MORE_ITEMS = [
           + '<ul><li>Цвет треугольника равен фону карточки, поэтому шва не видно.</li></ul>'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);display:flex;justify-content:center">
-          <div class="sb-ctx-card with-tip" style="position:relative">
-            ${mkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' })}
-            ${mkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' })}
-          </div>
+          ${mkContextCard([
+            mkContextCell({ iconLeft: 'user-line',   label: 'Settings', mode: 'action' }),
+            mkContextCell({ iconLeft: 'lock-2-line', label: 'Logout',   mode: 'action' }),
+          ], { tip: true, attrs: 'style="position:relative"' })}
         </div>`,
         html: `<!-- Статичный .with-tip — носик прибит к right:16px. Для живых
      выпадашек бери Popover: он даёт носик, который едет за якорем

@@ -16,7 +16,7 @@
 ### Масштаб (боевой рендер, code-samples в доках не считаны)
 
 ~95 мест: tool-bar ×25, header-l ×21, header-m ×19, header-s ×16, nav-bar ×12,
-notifications ×11, header-xs ×10, file-uploader, section-header, side-navigation,
+banners ×6, snackbar ×5, header-xs ×10, file-uploader, section-header, side-navigation,
 toast, dialogues, list, pagination, table и др. Числа аудита — верхняя граница:
 фильтр отличал `html:`-доки, но не `genCode`.
 

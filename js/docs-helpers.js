@@ -78,7 +78,7 @@ function copyCodeSection(btn) {
   navigator.clipboard.writeText(code).then(() => {
     btn.style.color = 'var(--success)';
     setTimeout(() => btn.style.color = '', 1200);
-    // Dogfood: снэкбар «Copied / Скопировано» (sbShowSnackbar из notifications.js).
+    // Dogfood: снэкбар «Copied / Скопировано» (sbShowSnackbar из snackbar.js).
     if (typeof sbShowSnackbar === 'function') sbShowSnackbar();
   });
 }
@@ -150,7 +150,7 @@ function copyColor(swatch, hex) {
   navigator.clipboard.writeText(hex).then(() => {
     swatch.classList.add('copied');
     setTimeout(() => swatch.classList.remove('copied'), 1500);
-    // Dogfood: снэкбар вместо локального тоста (sbShowSnackbar из notifications.js).
+    // Dogfood: снэкбар вместо локального тоста (sbShowSnackbar из snackbar.js).
     if (typeof sbShowSnackbar === 'function') {
       sbShowSnackbar();
       return;

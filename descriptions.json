@@ -330,12 +330,21 @@
         }
       ]
     },
-    "notifications": {
-      "title": "Notifications & Banners",
+    "banners": {
+      "title": "Banners",
       "description": "Banners provide contextual feedback about system events, errors, and informational messages.",
       "sections": [
         {
           "title": "Banner Types"
+        }
+      ]
+    },
+    "snackbar": {
+      "title": "Snackbar",
+      "description": "A floating plate at the bottom of the screen that reports an action: feedback or an undoable operation.",
+      "sections": [
+        {
+          "title": "Snackbar Types"
         }
       ]
     },

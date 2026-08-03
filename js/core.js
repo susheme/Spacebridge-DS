@@ -61,11 +61,12 @@ const NAV = [
     { id: 'toggles', label: 'Toggles', ready: true },
   ]},
   { category: 'Feedback', items: [
+    { id: 'banners', label: 'Banners', incomplete: true },
     { id: 'dialogues', label: 'Dialogues', inProgress: true },
     { id: 'loaders', label: 'Loaders' },
-    { id: 'notifications', label: 'Notifications & Banners', incomplete: true },
-    { id: 'overlay', label: 'Overlay', inProgress: true },
+    { id: 'overlay', label: 'Overlay', ready: true, done: true },
     { id: 'popover', label: 'Popover', ready: true },
+    { id: 'snackbar', label: 'Snackbar', ready: true },
     { id: 'toast', label: 'Toast', ready: true },
   ]},
   { category: 'Utility', items: [
@@ -653,7 +654,7 @@ const SB_PG = {
       const idx = type === 'html' ? 'first-child' : 'last-child';
       const copyBtn = document.querySelector(`#pg-${name}-code-panel .pg-code-section:${idx} .pg-code-copy-btn`);
       if (copyBtn) { copyBtn.style.color = 'var(--success)'; setTimeout(() => copyBtn.style.color = '', 1200); }
-      // Dogfood: снэкбар «Copied / Скопировано» (sbShowSnackbar из notifications.js).
+      // Dogfood: снэкбар «Copied / Скопировано» (sbShowSnackbar из snackbar.js).
       if (typeof sbShowSnackbar === 'function') sbShowSnackbar();
     });
   },

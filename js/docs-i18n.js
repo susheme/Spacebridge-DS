@@ -25,7 +25,7 @@ function sbT(en, ru) {
 
 // sbDocNote(title, body) — инфо-плашка в описаниях: Tech Info (параметры,
 // анатомия) или Important (критичное для разработчиков/дизайнеров).
-// Dogfood: НАСТОЯЩИЙ Banner — собирается фабрикой sbMkBanner (notifications.js,
+// Dogfood: НАСТОЯЩИЙ Banner — собирается фабрикой sbMkBanner (banners.js,
 // грузится первой парой с chevron, ДО остальных компонентов). 'Important' →
 // warning, всё остальное ('Tech Info') → info. Правый слот не передаём → по
 // контракту mkBanner плашка становится .collapsible: кламп 5 строк, Chevron
@@ -39,9 +39,9 @@ function sbDocNote(title, body) {
     return sbMkBanner({ type, lead, title, text: body });
   }
   // ── BOOTSTRAP-ФОЛБЭК: ЕДИНСТВЕННЫЙ потребитель — chevron.js ────────────
-  // Он регистрируется раньше notifications.js (тот сам зовёт sbMkChevron при
+  // Он регистрируется раньше banners.js (тот сам зовёт sbMkChevron при
   // регистрации — цикл), поэтому для него sbMkBanner ещё не существует.
-  // [SYNC:doc-note-fallback] — зеркало разметки mkBanner (notifications.js,
+  // [SYNC:doc-note-fallback] — зеркало разметки mkBanner (banners.js,
   // ветка collapsible). Меняешь mkBanner — меняй и здесь.
   return `<div class="sb-banner ${type} collapsible">`
     + `<div class="sb-banner-content">`

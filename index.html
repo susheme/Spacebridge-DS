@@ -49,7 +49,8 @@
 <link rel="stylesheet" href="css/components/info-footer.css">
 <link rel="stylesheet" href="css/components/badge.css">
 <link rel="stylesheet" href="css/components/pin.css">
-<link rel="stylesheet" href="css/components/notifications.css">
+<link rel="stylesheet" href="css/components/banners.css">
+<link rel="stylesheet" href="css/components/snackbar.css">
 <link rel="stylesheet" href="css/components/table.css">
 <link rel="stylesheet" href="css/components/list.css">
 <link rel="stylesheet" href="css/components/context-menu.css">
@@ -121,17 +122,20 @@
 
 <!-- Components (порядок: сначала те, чей COMP_CSS-ключ используют другие —
      chevron и input перед selector/textarea/password) -->
-<!-- chevron + badge + notifications — ПЕРВАЯ ТРОЙКА, до всех остальных:
+<!-- chevron + badge + banners — ПЕРВАЯ ТРОЙКА, до всех остальных:
      sbDocNote (docs-i18n.js) собирает Tech Info/Important плашки через
-     sbMkBanner при регистрации КАЖДОГО компонента ниже. notifications при
+     sbMkBanner при регистрации КАЖДОГО компонента ниже. banners при
      регистрации зовёт sbMkChevron (→ после chevron) и sbIcon с fill-иконками
      из SB_BADGE_SPECS (→ после badge); SB_SVG нужен только в рантайме
      плейграунда. Двое регистрируются ДО sbMkBanner — chevron и badge: их
      плашки идут через bootstrap-фолбэк sbDocNote (зеркало mkBanner, см. SYNC;
-     фолбэк зовёт sbMkChevron — потому chevron строго первый). -->
+     фолбэк зовёт sbMkChevron — потому chevron строго первый).
+     snackbar — сразу за тройкой: его секция зовёт sbDocNote (→ нужен
+     sbMkBanner из banners), а лид success-fill берётся из SB_BADGE_SPECS. -->
 <script src="js/components/chevron.js"></script>
 <script src="js/components/badge.js"></script>
-<script src="js/components/notifications.js"></script>
+<script src="js/components/banners.js"></script>
+<script src="js/components/snackbar.js"></script>
 <!-- Базовые контролы идут первыми: их фабрики (sbMkCheckbox / sbMkToggle)
      зовут и другие компоненты в своих preview-шаблонах, и САМО ЯДРО из
      pg.toggle / pg.radio. Им из core нужен только SB_GLYPHS и boolAttr.

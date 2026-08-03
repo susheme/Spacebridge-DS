@@ -11,8 +11,9 @@
 window.SB_COMPONENTS = [
   // name                 file                       deps             notes
   { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
-  { name: 'badge',         file: 'badge.js',          deps: ['chevron'] },           // в ТРОЙКЕ первых: SB_BADGE_SPECS нужен notifications при регистрации; doc-note через фолбэк (зовёт sbMkChevron)
-  { name: 'notifications', file: 'notifications.js',  deps: ['chevron', 'badge'] },  // замыкает ТРОЙКУ первых: sbDocNote → sbMkBanner при регистрации ВСЕХ ниже; сам зовёт sbMkChevron + fill-иконки из SB_BADGE_SPECS
+  { name: 'badge',         file: 'badge.js',          deps: ['chevron'] },           // в ТРОЙКЕ первых: SB_BADGE_SPECS нужен banners при регистрации; doc-note через фолбэк (зовёт sbMkChevron)
+  { name: 'banners',       file: 'banners.js',        deps: ['chevron', 'badge'] },  // замыкает ТРОЙКУ первых: sbDocNote → sbMkBanner при регистрации ВСЕХ ниже; сам зовёт sbMkChevron + fill-иконки из SB_BADGE_SPECS
+  { name: 'snackbar',      file: 'snackbar.js',       deps: ['badge', 'banners'] },  // success-fill из SB_BADGE_SPECS; sbDocNote в секции → после banners
   { name: 'buttons',       file: 'buttons.js',        deps: ['checkbox'] },          // контролы playground'а = sbMkCheckbox
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
   { name: 'popover',       file: 'popover.js',        deps: [] },                    // примитив якорного позиционирования (flip/shift/portal); РАНО в списке — его зовут table/section-header/хедеры/nav-bar/tool-bar; демо за геттером sections, поэтому своих deps на загрузке нет

@@ -28,7 +28,6 @@ window.SB_COMPONENTS = [
   { name: 'input',         file: 'input.js',          deps: [] },                    // defines inputField + inputFieldWrap
   { name: 'textarea',      file: 'textarea.js',       deps: ['input'] },             // uses inputFieldWrap
   { name: 'password',      file: 'password.js',       deps: ['input'] },             // uses inputFieldWrap
-  { name: 'selectors',     file: 'selectors.js',      deps: ['chevron', 'input'] },  // uses chevron + inputFieldWrap
   { name: 'file-uploader', file: 'file-uploader.js',  deps: ['badge', 'header-xs', 'counters', 'toggles'] },// дропзона + Upload Cell + композит; SB_SVG из badge.js, sbMkHeaderXS из header-xs.js
   { name: 'tags',          file: 'tags.js',           deps: [] },
   { name: 'status',        file: 'status.js',         deps: [] },                    // includes ANT + downloadAntennaZip
@@ -39,6 +38,7 @@ window.SB_COMPONENTS = [
   { name: 'list',          file: 'list.js',           deps: ['toggles'] },
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles', 'context-menu'] }, // чекбоксы выбора рядов = sbMkCheckbox (managed); kebab ряда = sbMkContextCard/Cell при регистрации → ПОСЛЕ context-menu
+  { name: 'selectors',     file: 'selectors.js',      deps: ['chevron', 'input', 'popover', 'context-menu'] }, // живая выпадашка: sbMkPopover + sbMkContextCard/Cell в preview на регистрации → ПОСЛЕ context-menu
   { name: 'segment-menu',  file: 'segment-menu.js',   deps: [] },
   { name: 'tabs',          file: 'tabs.js',           deps: ['status'] },            // building block для Tab Bar (Status Mini indicator)
   { name: 'tab-bar',       file: 'tab-bar.js',        deps: ['tabs'] },              // container, юзает sbMkTab из tabs.js

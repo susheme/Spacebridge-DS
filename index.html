@@ -161,7 +161,6 @@
 <script src="js/components/input.js"></script>
 <script src="js/components/textarea.js"></script>
 <script src="js/components/password.js"></script>
-<script src="js/components/selectors.js"></script>
 <script src="js/components/tags.js"></script>
 <script src="js/components/status.js"></script>
 <!-- tooltips — demo-триггер юзает .sb-status-dot из status.css → ПОСЛЕ status.js -->
@@ -170,9 +169,12 @@
 <script src="js/components/info-footer.js"></script>
 <script src="js/components/list.js"></script>
 <script src="js/components/context-menu.js"></script>
-<!-- table — kebab ряда собирается sbMkContextCard + sbMkContextCell прямо
-     на этапе регистрации, поэтому строго ПОСЛЕ context-menu.js. -->
+<!-- Ниже — те, кто собирает выпадающие панели фабриками context-menu
+     (sbMkContextCard + sbMkContextCell) прямо на этапе регистрации:
+     table (kebab ряда) и selectors (живая выпадашка). Оба строго ПОСЛЕ
+     context-menu.js — иначе ReferenceError и Coming Soon. -->
 <script src="js/components/table.js"></script>
+<script src="js/components/selectors.js"></script>
 <!-- section-header — зависит от sbMkContextCell, поэтому ПОСЛЕ context-menu.
      Но должен идти ДО segment-menu / nav-bar, которые юзают sbMkSectionHeader в превью. -->
 <script src="js/components/section-header.js"></script>

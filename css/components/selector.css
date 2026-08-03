@@ -47,4 +47,25 @@
 .sb-sel.open { border-color: var(--primary); }
 .sb-sel.open .sb-sel-right { border-left-color: var(--primary); }
 .sb-sel.open .sb-chevron { transform: rotate(180deg); }
+/* Live dropdown — обёртка Popover'а вокруг поля (wrapCls: sb-sel-pop).
+   Примитив держит на .sb-popover-wrap inline-flex + flex-shrink: 0 (якорь в
+   тесном flex-ряду не должен схлопываться), а поле выбора наоборот тянется на
+   всю ширину. Компаунд-селектор, а не голый .sb-sel-pop — чтобы перебивать
+   примитив по specificity, а не по порядку загрузки файлов. */
+/* Габариты обёртки повторяют габариты поля (те же спековые токены). Иначе в
+   тесном контейнере обёртка схлопывается (width: 100% от нулевого родителя,
+   а min-width: auto в колоночном flex по горизонтали не работает), поле
+   выпирает из неё — и Popover считает позицию и matchWidth по нулевому якорю. */
+.sb-popover-wrap.sb-sel-pop {
+  display: flex;
+  min-width: var(--text-field-min-width);
+  max-width: var(--text-field-max-width);
+}
+.sb-sel-pop > .sb-sel { flex: 1 1 auto; }
+.sb-sel-row > .sb-sel-pop { flex: 1 1 auto; }
+/* Пока панель открыта, обёртка носит .is-open (контракт Popover) — поле
+   держит открытый вид: рамка primary и развёрнутый шеврон. */
+.sb-sel-pop.is-open .sb-sel { border-color: var(--primary); }
+.sb-sel-pop.is-open .sb-sel-right { border-left-color: var(--primary); }
+.sb-sel-pop.is-open .sb-chevron { transform: rotate(180deg); }
 /* --- [/SYNC:selector] --- */

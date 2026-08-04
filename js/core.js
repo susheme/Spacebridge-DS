@@ -76,6 +76,10 @@ const NAV = [
   ]},
 ];
 
+// Пункт, закреплённый в шапке сайдбара (и цель клика по лого в топбаре).
+// Он же — страница по умолчанию, когда хеша нет.
+const PINNED_ID = 'getting-started';
+
 const ICON_PATHS = {
   'code-s-slash-line': 'M24 12L18.3431 17.6569L16.9289 16.2426L21.1716 12L16.9289 7.75736L18.3431 6.34315L24 12ZM2.82843 12L7.07107 16.2426L5.65685 17.6569L0 12L5.65685 6.34315L7.07107 7.75736L2.82843 12ZM9.78845 21H7.66009L14.2116 3H16.3399L9.78845 21Z',
   'file-copy-line': 'M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM5.00242 8L5.00019 20H14.9998V8H5.00242ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z',
@@ -198,44 +202,56 @@ function renderSidebar() {
   const prevInput = document.getElementById('navSearchInput');
   const prevQuery = prevInput ? prevInput.value : '';
 
-  // Sticky search-плашка наверху сайдбара — хост-элемент рейки (свой sticky +
-  // edge-bleed). Дальше — тело сайдбара как НАШ Side Nav в embedded-режиме
-  // (dogfood: section-header + ячейки компонента, скроллит рейка).
-  let html = `<div class="sidebar-search">
+  // Ячейка пункта NAV для Side Nav: dot статуса слева, бейдж прогресса справа.
+  // Одна и та же и в дереве, и в закреплённой шапке — закреплённый Getting
+  // Started обязан выглядеть ровно как свой двойник в списке.
+  const isActive = id => (location.hash === '#' + id) || (!location.hash && id === PINNED_ID);
+  const navCell = item => {
+    const dotCls = item.ready ? '' : item.inProgress ? 'in-progress' : item.incomplete ? 'incomplete' : 'coming';
+    const badge = item.inProgress
+      ? '<span class="sb-badge sb-badge-alert">In Progress</span>'
+      : item.incomplete ? '<span class="sb-badge sb-badge-primary">Incomplete</span>' : '';
+    return {
+      role: 'item',
+      label: item.label,
+      leadSlot: `<span class="dot ${dotCls}"></span>`,
+      rightSlot: badge || undefined,
+      selected: isActive(item.id),
+      onClick: `navigate('${item.id}')`,
+    };
+  };
+
+  // Sticky-шапка сайдбара: поиск + закреплённый Getting Started. Точка входа
+  // для новичка не должна уезжать со скроллом, поэтому пункт вынут из дерева
+  // и живёт в шапке — той же ячейкой Side Nav, чтобы не плодить сущность.
+  // Ниже — тело сайдбара как НАШ Side Nav в embedded-режиме (dogfood:
+  // section-header + ячейки компонента, скроллит рейка).
+  const pinned = NAV.flatMap(g => g.items).find(i => i.id === PINNED_ID);
+  let html = `<div class="sidebar-head">
+    <div class="sidebar-search">
     ${sbMkSearch({
       iconLeft: true,
       placeholder: 'Search components',
       inputId: 'navSearchInput',
       shortcut: true,
     })}
+    </div>
+    ${pinned ? `<div class="sidebar-pinned">${sbMkSideNav({ variant: 'menu', embedded: true, tree: [navCell(pinned)] })}</div>` : ''}
   </div>
   <div class="sidebar-empty"><span class="sb-body-m">Nothing found</span></div>`;
 
   // Дерево Side Nav: на каждую категорию — section-header, затем её items.
-  // leadSlot = dot статуса (стили .sidebar .dot), rightSlot = badge,
-  // onClick = navigate, selected = активная страница.
+  // Закреплённый пункт пропускаем — он уже стоит в шапке.
   const tree = [];
   NAV.forEach(group => {
+    const items = group.items.filter(i => i.id !== PINNED_ID);
+    if (!items.length) return;
     if (group.category) {
       tree.push({ role: 'section-header', slotLeft: `<span class="sb-caption">${group.category}</span>` });
     }
-    group.items.forEach(item => {
-      const active = (location.hash === '#' + item.id) || (!location.hash && item.id === 'getting-started');
-      const dotCls = item.ready ? '' : item.inProgress ? 'in-progress' : item.incomplete ? 'incomplete' : 'coming';
-      const badge = item.inProgress
-        ? '<span class="sb-badge sb-badge-alert">In Progress</span>'
-        : item.incomplete ? '<span class="sb-badge sb-badge-primary">Incomplete</span>' : '';
-      tree.push({
-        role: 'item',
-        label: item.label,
-        leadSlot: `<span class="dot ${dotCls}"></span>`,
-        rightSlot: badge || undefined,
-        selected: active,
-        onClick: `navigate('${item.id}')`,
-      });
-    });
+    items.forEach(item => tree.push(navCell(item)));
   });
-  html += sbMkSideNav({ variant: 'menu', embedded: true, tree });
+  html += `<div class="sidebar-tree">${sbMkSideNav({ variant: 'menu', embedded: true, tree })}</div>`;
   sb.innerHTML = html;
 
   // Восстанавливаем search-state и подключаем live-фильтр.
@@ -252,6 +268,63 @@ function renderSidebar() {
     });
     if (prevQuery) filterNav(prevQuery);
   }
+
+  syncStickyHeaders();
+}
+
+// Залипшие Section Header'ы лежат стопкой в одной координате (flat siblings с
+// общим top), поэтому «уходящий» не выезжает, а просто скрывается под новым.
+// Чтобы смена читалась, гасим предыдущий ПОКА новый ещё подъезжает: прозрачность
+// привязана к расстоянию, а не к таймеру. FADE_FROM — на этой дистанции до линии
+// уходящий ещё цел, FADE_TO — на ней уже полностью растворился (и только потом
+// новый доезжает и накрывает место). Порог в пару пикселей не годился: на нём
+// новая плашка уже стоит поверх старой, и гасить было нечего.
+const SECTION_FADE_FROM = 56;
+const SECTION_FADE_TO   = 8;
+
+function syncStickyHeaders() {
+  const sb = document.getElementById('sidebar');
+  const head = sb && sb.querySelector('.sidebar-head');
+  if (!sb || !head) return;
+  const line = head.getBoundingClientRect().bottom;
+  const hs = Array.from(sb.querySelectorAll('.sidebar-tree .sb-section-header'));
+  const span = SECTION_FADE_FROM - SECTION_FADE_TO;
+  hs.forEach((h, i) => {
+    const next = hs[i + 1];
+    if (!next) { h.style.removeProperty('--sb-hdr-fade'); return; }
+    const gap = next.getBoundingClientRect().top - line;
+    const k = (gap - SECTION_FADE_TO) / span;
+    const fade = k > 1 ? 1 : k < 0 ? 0 : k;
+    // Гасим не элемент целиком, а его содержимое: непрозрачная подложка
+    // (фон + box-shadow) остаётся, иначе сквозь тающий бар полез бы список.
+    // Полностью видимую плашку оставляем без inline-стиля — состояние по
+    // умолчанию живёт в CSS, а не размазывается по атрибутам.
+    if (fade === 1) h.style.removeProperty('--sb-hdr-fade');
+    else h.style.setProperty('--sb-hdr-fade', fade.toFixed(3));
+  });
+}
+
+// Скролл рейки: один пассивный слушатель на страницу, работа отложена в rAF —
+// в кадре пересчёт идёт максимум раз, независимо от частоты событий.
+if (!window.__navStickyFadeBound) {
+  window.__navStickyFadeBound = true;
+  const onScroll = () => {
+    if (window.__navStickyRaf) return;
+    window.__navStickyRaf = requestAnimationFrame(() => {
+      window.__navStickyRaf = null;
+      syncStickyHeaders();
+    });
+  };
+  // Сайдбар — постоянный элемент разметки (renderSidebar меняет только его
+  // innerHTML), поэтому слушатель вешается один раз и переживает перерисовки.
+  const wire = () => {
+    const sb = document.getElementById('sidebar');
+    if (!sb) return;
+    sb.addEventListener('scroll', onScroll, { passive: true });
+    syncStickyHeaders();
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire);
+  else wire();
 }
 
 // Live-фильтр пунктов NAV. Категория без матчей скрывается целиком.
@@ -260,7 +333,10 @@ function filterNav(query) {
   const q = (query || '').trim().toLowerCase();
   const sb = document.getElementById('sidebar');
   if (!sb) return;
-  const body = sb.querySelector('.sb-side-nav-body');
+  // Строго тело ДЕРЕВА: в шапке сайдбара сидит второй Side Nav (закреплённый
+  // Getting Started), и голый querySelector цеплял бы его — фильтр прятал бы
+  // закреплённый пункт вместо списка.
+  const body = sb.querySelector('.sidebar-tree .sb-side-nav-body');
   if (!body) return;
   let anyMatch = false;
 

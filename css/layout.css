@@ -114,20 +114,50 @@
   padding: var(--pad-vert-16) 0;
 }
 
-/* ── NAV search (sticky filter) ──────────────────────────────────── */
-/* Wrapper «выезжает» за padding сайдбара (negative margins),
-   чтобы плашка тянулась edge-to-edge. Sticky цепляется сразу под
-   верхний край сайдбара. */
-.sidebar-search {
+/* ── NAV head (sticky: поиск + закреплённый пункт) ───────────────── */
+/* Шапка «выезжает» за padding сайдбара (negative margins), чтобы тянуться
+   edge-to-edge, и цепляется sticky сразу под верхний край сайдбара.
+   Внутри — поиск и закреплённый Getting Started; отделена от списка
+   тонкой линией, чтобы читалась как отдельный слой, а не первый пункт. */
+/* Воздух вокруг разделителя принадлежит САМОЙ шапке: 16 над линией, линия,
+   16 под ней — всё внутри её padding'а и её фона. Поэтому щели, в которую
+   просвечивал бы едущий список, физически нет, а залипший Section Header
+   упирается в нижнюю грань шапки, то есть ровно в 16 под линией.
+   (Раньше подушка была оверлеем ::after поверх бордера — она же его и
+   закрывала, а список всё равно тёк мимо. Не повторять.) */
+.sidebar-head {
   position: sticky;
   top: calc(-1 * var(--pad-vert-16));
   z-index: 10;
-  margin: calc(-1 * var(--pad-vert-16)) 0 var(--gap-vert-m);
-  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  margin: calc(-1 * var(--pad-vert-16)) 0 0;
+  padding: var(--pad-vert-16) 0 calc(2 * var(--pad-vert-16) + var(--border-width-1));
   background: var(--background);
+}
+/* Разделитель — линия внутри нижнего padding'а, в 16px от края шапки.
+   По бокам те же 16, что и у всего содержимого рейки: линия начинается и
+   кончается там же, где поиск и ячейки, а не режет шапку насквозь. */
+.sidebar-head::after {
+  content: '';
+  position: absolute;
+  left: var(--pad-horiz-16);
+  right: var(--pad-horiz-16);
+  bottom: var(--pad-vert-16);
+  height: var(--border-width-1);
+  background: var(--border-soft);
+  pointer-events: none;
+}
+.sidebar-search {
+  padding: 0 var(--pad-horiz-16);
   display: flex;
   align-items: center;
 }
+/* Закреплённый пункт — тот же Side Nav, что и дерево, поэтому свой
+   горизонтальный inset он приносит сам; здесь только вертикальный зазор. */
+.sidebar-pinned { margin-top: var(--gap-vert-m); }
+/* Одиночной ячейке в шапке вертикальные поля тела Side Nav не нужны: они
+   рассчитаны на список и рыхлили шапку. Зазоры вокруг задаёт сама шапка
+   (тот же приём, что и .sidebar .sb-side-nav-body { gap: 0 } выше). */
+.sidebar-pinned .sb-side-nav-body { padding-top: 0; padding-bottom: 0; }
 /* В NAV отключаем text-field min-width — бар должен честно сжиматься до ширины
    сайдбара, иначе он упирается в min-width и слоты «застревают». */
 .sidebar-search > .sb-search { width: 100%; min-width: 0; }
@@ -155,6 +185,16 @@
    фон (--surface-1): плотный gap, sticky section-header'ы, hover/active под фон
    рейки (компонентный surface-1-selected на surface-1-рейке был бы невидим). ── */
 .sidebar .sb-side-nav-body { gap: 0; }
+/* Горизонталь по всей рейке — ровно 16 с обеих сторон. Родные 10px справа
+   компонент держит под собственный скроллбар, но здесь скроллит рейка,
+   и асимметрия читалась как съехавший правый край (поиск-то 16/16). */
+.sidebar .sb-side-nav-body {
+  padding-left: var(--pad-horiz-16);
+  padding-right: var(--pad-horiz-16);
+}
+/* Верхний отступ дерева обнулён: воздух под разделителем задаёт шапка своим
+   padding'ом — иначе два отступа снова сложились бы в случайное число. */
+.sidebar-tree .sb-side-nav-body { padding-top: 0; }
 
 /* Категория = Section Header. Sticky-стэкинг: каждый header липнет под search;
    когда секция уезжает — следующий header выталкивает предыдущий (flat siblings
@@ -163,9 +203,46 @@
 .sidebar .sb-side-nav-body > .sb-section-header {
   margin: var(--gap-vert-m) 0 var(--gap-vert-s);
   position: sticky;
-  top: calc(var(--text-field-height-l) + var(--pad-vert-16));
+  /* Липнуть надо под ШАПКУ целиком, а не под один search: она выросла на
+     закреплённый пункт. Высота шапки = search + зазор + ячейка + её нижний
+     padding (16 над линией + линия + 16 под ней); верхние 16 не в счёт —
+     шапка на столько же поднята margin'ом. Итого хедер садится на нижнюю
+     грань шапки, то есть в 16px под разделителем. */
+  top: calc(var(--text-field-height-l) + var(--gap-vert-m)
+            + var(--side-nav-item-height) + var(--pad-vert-16)
+            + var(--border-width-1) + var(--pad-vert-16));
   z-index: 5;
+  /* Подложка 8px по кругу — фон рейки, вынесенный за плашку spread'ом тени
+     (не blur, не offset: у плашки скруглённые углы, и сдвинутая копия
+     оставляла бы в них щели). Уезжающий список прячется под неё, а не
+     подъезжает вплотную к краю плашки. Layout не трогает — тень вне потока,
+     и в покое просто красит фон поверх фона. */
+  box-shadow: 0 0 0 var(--gap-vert-s) var(--background);
+  /* Гаснуть должен САМ бар, а подложка обязана остаться непрозрачной — иначе
+     сквозь тающую плашку просвечивал бы уезжающий список. Поэтому фон элемента
+     подменён на цвет рейки (он и есть подложка вместе с box-shadow выше), а
+     серая плитка бара переехала в ::before, которому и крутится прозрачность.
+     Величину ведёт syncStickyHeaders (core.js) переменной --sb-hdr-fade: она
+     привязана к расстоянию до подъезжающей соседки, а не ко времени, поэтому
+     transition тут был бы вреден — тянулся бы за скроллом с задержкой. */
+  background: var(--background);
 }
+.sidebar .sb-side-nav-body > .sb-section-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--surface-2);
+  opacity: var(--sb-hdr-fade, 1);
+}
+/* Контент бара живёт над плиткой и тает вместе с ней. */
+.sidebar .sb-side-nav-body > .sb-section-header > * {
+  position: relative;
+  opacity: var(--sb-hdr-fade, 1);
+}
+/* Первому хедеру margin сверху не нужен: воздух под разделителем уже задан
+   padding'ом тела. Иначе два отступа складывались бы в случайные 32. */
+.sidebar .sb-side-nav-body > .sb-section-header:first-child { margin-top: 0; }
 
 /* Состояния пунктов (hover Shadow-S + синий, active surface-1 + pressed-inset +
    синий) — РОДНЫЕ из компонента Side Navigation, не переопределяем: фон рейки

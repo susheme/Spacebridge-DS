@@ -11,7 +11,7 @@ const NAV = [
     { id: 'getting-started', label: 'Getting Started', inProgress: true },
   ]},
   { category: 'Layout', items: [
-    { id: 'grid-system', label: 'Grid System' },
+    { id: 'grid-system', label: 'Grid System', inProgress: true },
     { id: 'separators', label: 'Separators', ready: true },
     { id: 'tool-bar', label: 'Tool Bar', incomplete: true },
   ]},

@@ -17,6 +17,7 @@ window.SB_COMPONENTS = [
   { name: 'snackbar',      file: 'snackbar.js',       deps: ['badge', 'banners', 'buttons'] },  // success-fill из SB_BADGE_SPECS; sbDocNote в секции → после banners
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
   { name: 'popover',       file: 'popover.js',        deps: ['buttons'] },                    // примитив якорного позиционирования (flip/shift/portal); РАНО в списке — его зовут table/section-header/хедеры/nav-bar/tool-bar; демо за геттером sections, поэтому своих deps на загрузке нет
+  { name: 'grid-system',   file: 'grid-system.js',    deps: [] },                    // Flex / Flex Item / Grid / Page — примитивы раскладки; без @media, адаптивность из токенов
   { name: 'separators',    file: 'separators.js',     deps: ['toggles'] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },                    // sbMkAvatar — nav-bar, table
   { name: 'toggles',       file: 'toggles.js',        deps: [] },                    // sbMkToggle; ЯДРО зовёт из pg.toggle; ВЫШЕ separators (тот зовёт в preview при регистрации)

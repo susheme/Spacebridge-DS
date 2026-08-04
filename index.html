@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="css/animations.css">
 
 <!-- Component styles (порядок не важен для CSS — scope по классам) -->
+<link rel="stylesheet" href="css/components/grid-system.css">
 <link rel="stylesheet" href="css/components/buttons.css">
 <link rel="stylesheet" href="css/components/chips.css">
 <link rel="stylesheet" href="css/components/action-bar.css">
@@ -163,6 +164,9 @@
      тяжёлых зависимостей у него нет: демо-секции спрятаны за геттером
      sections и вычисляются при открытии страницы, а не при регистрации. -->
 <script src="js/components/popover.js"></script>
+<!-- grid-system — примитивы раскладки (Flex / Grid / Page). Ни от чего не
+     зависит: вся адаптивность приходит из токенов, media-запросов внутри нет. -->
+<script src="js/components/grid-system.js"></script>
 <script src="js/components/separators.js"></script>
 <script src="js/components/avatar.js"></script>
 <script src="js/components/radio.js"></script>

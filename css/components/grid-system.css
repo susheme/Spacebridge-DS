@@ -1,0 +1,114 @@
+/* --- [SYNC:grid-system] Grid System ---
+   Раскладка: Flex (ряд/колонка), Flex Item (кто тянется), Grid (карточная
+   сетка) и Page (контейнер экрана).
+
+   ЗДЕСЬ НЕТ НИ ОДНОГО @media — и это принципиально. Отступы (--gap-*), поля
+   (--page-gutter) и пределы ширины уже меняются по режимам в tokens.css,
+   который собирается из Figma. Компоненту остаётся сослаться на токен, а
+   мобильная плотность включается сама. */
+
+/* ── Flex ───────────────────────────────────────────────────────────────── */
+.sb-flex {
+  display: flex;
+  gap: var(--gap-vert-m);
+  min-width: 0;   /* иначе flex-ребёнок не даёт родителю ужиматься и ломает ellipsis */
+}
+.sb-flex.dir-col { flex-direction: column; }
+.sb-flex.is-wrap { flex-wrap: wrap; }
+
+/* Gap — по шкале токенов. Вертикальная и горизонтальная оси в Figma заданы
+   раздельно, поэтому колонка берёт --gap-vert-*, ряд — --gap-horiz-*. */
+.sb-flex.gap-xs  { gap: var(--gap-horiz-xs); }
+.sb-flex.gap-s   { gap: var(--gap-horiz-s); }
+.sb-flex.gap-m   { gap: var(--gap-horiz-m); }
+.sb-flex.gap-lg  { gap: var(--gap-horiz-lg); }
+.sb-flex.gap-xl  { gap: var(--gap-horiz-xl); }
+.sb-flex.gap-xxl { gap: var(--gap-horiz-xxl); }
+.sb-flex.dir-col.gap-xs  { gap: var(--gap-vert-xs); }
+.sb-flex.dir-col.gap-s   { gap: var(--gap-vert-s); }
+.sb-flex.dir-col.gap-m   { gap: var(--gap-vert-m); }
+.sb-flex.dir-col.gap-lg  { gap: var(--gap-vert-lg); }
+.sb-flex.dir-col.gap-xl  { gap: var(--gap-vert-xl); }
+.sb-flex.dir-col.gap-xxl { gap: var(--gap-vert-xxl); }
+.sb-flex.gap-0 { gap: var(--gap-horiz-0); }
+
+.sb-flex.align-start   { align-items: flex-start; }
+.sb-flex.align-center  { align-items: center; }
+.sb-flex.align-end     { align-items: flex-end; }
+.sb-flex.align-stretch { align-items: stretch; }
+
+.sb-flex.justify-start   { justify-content: flex-start; }
+.sb-flex.justify-center  { justify-content: center; }
+.sb-flex.justify-end     { justify-content: flex-end; }
+.sb-flex.justify-between { justify-content: space-between; }
+
+/* Полная ширина — для колонок форм и любых блоков, тянущихся по контейнеру. */
+.sb-flex.is-full { width: 100%; }
+
+/* ── Flex Item ──────────────────────────────────────────────────────────── */
+/* Обёртка нужна только тем детям, у кого своё поведение при сжатии. */
+.sb-flex-item { min-width: 0; }
+/* flex-basis 0 — доли считаются от свободного места, а не от содержимого:
+   иначе длинный текст в одном из детей растащил бы колонки. */
+.sb-flex-item.is-grow    { flex: 1 1 0; }
+.sb-flex-item.no-shrink  { flex-shrink: 0; }
+
+/* ── Grid ───────────────────────────────────────────────────────────────── */
+/* auto-fit + minmax: ряд перестраивается сам по ширине контейнера, без единой
+   контрольной точки. Минимум задаётся токеном — плитка или карточка. */
+.sb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--sb-grid-min), 1fr));
+  gap: var(--gap-vert-m) var(--gap-horiz-m);
+  width: 100%;
+  --sb-grid-min: var(--card-min-width);
+}
+.sb-grid.min-tile { --sb-grid-min: var(--tile-min-width); }
+.sb-grid.gap-xs  { gap: var(--gap-vert-xs) var(--gap-horiz-xs); }
+.sb-grid.gap-s   { gap: var(--gap-vert-s) var(--gap-horiz-s); }
+.sb-grid.gap-m   { gap: var(--gap-vert-m) var(--gap-horiz-m); }
+.sb-grid.gap-lg  { gap: var(--gap-vert-lg) var(--gap-horiz-lg); }
+.sb-grid.gap-xl  { gap: var(--gap-vert-xl) var(--gap-horiz-xl); }
+.sb-grid.gap-xxl { gap: var(--gap-vert-xxl) var(--gap-horiz-xxl); }
+
+/* Узкий контейнер и минимум шире него — minmax() упёрся бы в переполнение,
+   поэтому на этот случай колонка одна. Правило работает и без @media: 1fr
+   никогда не заставит трек вылезти за контейнер. */
+.sb-grid > * { min-width: 0; }
+
+/* ── Page ───────────────────────────────────────────────────────────────── */
+/* Контейнер продуктового экрана: тянется до предела, дальше центрируется.
+   Боковые поля — --page-gutter (32 / 24 / 16 по режимам). */
+.sb-page {
+  width: 100%;
+  max-width: var(--screens-max-screen-width);
+  margin: 0 auto;
+  padding: 0 var(--page-gutter);
+  box-sizing: border-box;
+}
+/* Текстовый предел: на пяти тысячах пикселей строка нечитаема — глаз теряет
+   начало следующей. Для статей, настроек, документации. */
+.sb-page.width-text { max-width: var(--content-max-width-text); }
+/* --- [/SYNC:grid-system] --- */
+
+/* ── Демо (в SYNC-блок НЕ входит: в code panel этим классам делать нечего) ── */
+.sb-gs-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  box-sizing: border-box;
+  border-radius: var(--radius-8);
+  background: var(--surface-1);
+  color: var(--text-secondary);
+}
+.sb-gs-demo.tall { min-height: 96px; }
+.sb-gs-demo.accent { background: var(--primary-hover); color: var(--primary); }
+/* Рамка вокруг демо-контейнера: показывает границы Page/Grid, которых иначе
+   не видно — сам контейнер невидим по определению. */
+.sb-gs-frame {
+  border: var(--border-width-1) dashed var(--border);
+  border-radius: var(--radius-8);
+  padding: var(--pad-vert-16) var(--pad-horiz-0);
+}

@@ -5,7 +5,21 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 100%; max-width: var(--textarea-max-width); min-height: var(--textarea-min-height); max-height: var(--textarea-max-height); border-radius: var(--radius-2); border: var(--border-width-1-5) solid var(--border); background: var(--surface-1); transition: border-color 0.15s, background 0.15s; }
-.sb-ta-input { flex: 1; padding: var(--pad-vert-4) var(--pad-horiz-8) var(--pad-vert-24); border: none; outline: none; background: transparent; font-size: var(--body-font-size-l); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); font-family: inherit; color: var(--text-tertiary); resize: vertical; overflow: auto; min-height: 93px; }
+.sb-ta-input {
+  flex: 1;
+  padding: var(--pad-vert-4) var(--pad-horiz-8) var(--pad-vert-24);
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--body-font-size-l);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--body-line-height);
+  font-family: var(--font-body);
+  color: var(--text-tertiary);
+  resize: vertical;
+  overflow: auto;
+  min-height: 93px;
+}
 .sb-ta-input::placeholder { color: var(--text-secondary); }
 .sb-ta:focus-within { background: var(--background); border-color: var(--primary); }
 .sb-ta.critical { background: var(--background); border-color: var(--error); }

@@ -287,7 +287,12 @@ function syncStickyHeaders() {
   const head = sb && sb.querySelector('.sidebar-head');
   if (!sb || !head) return;
   const line = head.getBoundingClientRect().bottom;
-  const hs = Array.from(sb.querySelectorAll('.sidebar-tree .sb-section-header'));
+  // Только ВИДИМЫЕ хедеры. Скрытый фильтром поиска (display:none) отдаёт
+  // нулевой rect, из-за чего расстояние до него считалось отрицательным и
+  // предыдущая — вполне видимая — плашка гасла в ноль. Внешне это читалось
+  // как пустота в списке: элемент прозрачный, но место в потоке занимает.
+  const hs = Array.from(sb.querySelectorAll('.sidebar-tree .sb-section-header'))
+    .filter(h => h.getClientRects().length > 0);
   const span = SECTION_FADE_FROM - SECTION_FADE_TO;
   hs.forEach((h, i) => {
     const next = hs[i + 1];
@@ -374,6 +379,11 @@ function filterNav(query) {
 
   const empty = sb.querySelector('.sidebar-empty');
   if (empty) empty.classList.toggle('visible', q && !anyMatch);
+
+  // Фильтр переставил элементы — прозрачность sticky-плашек пересчитывать
+  // обязательно. Без этого inline `--sb-hdr-fade`, выставленный до фильтрации,
+  // остаётся на хедере даже после очистки поиска, и тот висит невидимкой.
+  syncStickyHeaders();
 }
 
 // Глобальные хоткеи: «/» и «cmd/ctrl+K» фокусят NAV-поиск.

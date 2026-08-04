@@ -4,9 +4,24 @@
 //  При правке стилей — обновить ОБА места (window.COMP_CSS и CSS-файл).
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.COMP_CSS.radio = `.sb-radio { display: inline-flex; align-items: center; gap: var(--gap-horiz-s); cursor: pointer; user-select: none; vertical-align: middle; }
-.sb-radio-circle { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; border: var(--border-width-1-5) solid var(--text-secondary); background: var(--background); display: flex; align-items: center; justify-content: center; box-sizing: border-box; transition: border-color 0.15s, background 0.15s; }
-.sb-radio-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; transition: background 0.15s; }
+window.COMP_CSS.radio = `.sb-radio {
+  display: inline-flex; align-items: center; gap: var(--gap-horiz-s);
+  cursor: pointer; user-select: none; outline: none;
+  -webkit-tap-highlight-color: transparent; vertical-align: middle;
+}
+.sb-radio-circle {
+  width: 20px; height: 20px; flex-shrink: 0;
+  border-radius: 50%; border: var(--border-width-1-5) solid var(--text-secondary);
+  background: var(--background);
+  display: flex; align-items: center; justify-content: center;
+  box-sizing: border-box; transition: border-color 0.15s, background 0.15s;
+  outline: none;
+}
+.sb-radio-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: transparent; flex-shrink: 0;
+  transition: background 0.15s;
+}
 .sb-radio.selected .sb-radio-circle { background: var(--primary); border-color: var(--primary); }
 .sb-radio.selected .sb-radio-dot { background: var(--background); }
 .sb-radio.disabled { cursor: not-allowed; pointer-events: none; }

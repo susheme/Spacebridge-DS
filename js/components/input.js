@@ -5,22 +5,40 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 window.COMP_CSS["input-field"] = `.sb-tf { display: flex; align-items: center; justify-content: space-between; height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width); border-radius: var(--radius-2); border: var(--border-width-1-5) solid var(--border); background: var(--surface-1); overflow: hidden; padding-left: var(--pad-horiz-8); transition: border-color 0.15s, background 0.15s; }
-.sb-tf-input { flex: 1; min-width: 0; height: 100%; border: none; outline: none; background: transparent; font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); font-family: inherit; color: var(--text-tertiary); }
+.sb-tf-input {
+  flex: 1; min-width: 0; height: 100%;
+  border: none; outline: none; background: transparent;
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
+  font-family: var(--font-body);
+  color: var(--text-tertiary);
+}
 .sb-tf-input::placeholder { color: var(--text-secondary); }
-.sb-tf-right { flex-shrink: 0; height: 100%; padding: 0 var(--pad-horiz-8); display: flex; align-items: center; gap: var(--gap-horiz-s); background: var(--background); border-left: var(--border-width-1-5) solid var(--border); border-radius: 0 2px 2px 0; }
-.sb-tf-title { font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height); color: var(--text-secondary); white-space: nowrap; }
+.sb-tf-right {
+  flex-shrink: 0; height: 100%;
+  padding: 0 var(--pad-horiz-8);
+  display: flex; align-items: center; justify-content: flex-end; gap: var(--gap-horiz-s);
+  background: var(--surface-1);
+  border-left: var(--border-width-1-5) solid var(--border);
+  border-radius: 0 2px 2px 0;
+  transition: border-color 0.15s, background 0.15s;
+}
+.sb-tf-title {
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
+  font-family: var(--font-body);
+  color: var(--text-secondary); white-space: nowrap;
+}
 .sb-tf:focus-within { background: var(--background); border-color: var(--primary); }
-.sb-tf:focus-within .sb-tf-right { border-left-color: var(--primary); }
+.sb-tf:focus-within .sb-tf-right { border-left-color: var(--primary); background: var(--background); }
 .sb-tf.critical { background: var(--background); border-color: var(--error); }
-.sb-tf.critical .sb-tf-right { border-left-color: var(--error); }
+.sb-tf.critical .sb-tf-right { border-left-color: var(--error); background: var(--background); }
 .sb-tf.critical .sb-tf-title { color: var(--error); }
-.sb-tf.disabled { pointer-events: none; }
+.sb-tf.disabled { pointer-events: none; cursor: not-allowed; }
 .sb-tf.disabled .sb-tf-input, .sb-tf.disabled .sb-tf-title { color: var(--border); }
 .sb-tf.disabled .sb-tf-right { background: var(--surface-1); }
 .sb-tf.read-only { border-color: transparent; pointer-events: none; }
 .sb-tf.read-only .sb-tf-right { border-left-color: transparent; }
 .sb-tf.line-view { background: transparent; border: none; border-radius: 0; border-bottom: var(--border-width-1-5) solid var(--border); padding-left: 0; }
-.sb-tf.line-view .sb-tf-right { background: transparent; }
+.sb-tf.line-view .sb-tf-right { background: transparent; border-left-color: var(--border); }
 .sb-tf.line-view:focus-within { background: transparent; border-bottom-color: var(--primary); }
 .sb-tf.line-view.read-only .sb-tf-right { border-left-color: transparent; }`;
 

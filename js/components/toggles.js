@@ -9,11 +9,13 @@ window.COMP_CSS.toggles = `.sb-toggle-wrap {
   align-items: center;
   gap: var(--gap-horiz-m);
   cursor: pointer;
+  user-select: none;
 }
 .sb-toggle {
   position: relative;
   width: 56px;
   height: 20px;
+  flex-shrink: 0;
 }
 .sb-toggle-track {
   position: absolute;
@@ -35,6 +37,8 @@ window.COMP_CSS.toggles = `.sb-toggle-wrap {
   border-radius: var(--radius-4);
   background: var(--surface-1);
   transition: transform 0.2s ease;
+  pointer-events: none;
+  box-shadow: 0 1px 3px var(--shadow-sm);
 }
 .sb-toggle input:checked ~ .sb-toggle-thumb {
   transform: translateX(28px);
@@ -46,6 +50,7 @@ window.COMP_CSS.toggles = `.sb-toggle-wrap {
   font-size: var(--body-font-size-m);
   font-weight: var(--font-weight-bold);
   line-height: 1.4;
+  letter-spacing: var(--letter-spacing);
   color: var(--text-primary);
 }`;
 

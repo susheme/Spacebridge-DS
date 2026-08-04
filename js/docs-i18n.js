@@ -69,9 +69,15 @@ window.addEventListener('DOMContentLoaded', function () {
   const orig = window.sbNavBarLangPick;
   if (typeof orig !== 'function') return;
   window.sbNavBarLangPick = function (cell, code) {
+    // Ячейка живёт в панели, которую Popover уносит порталом в <body>, поэтому
+    // closest('#dsNavRight') от неё уходит в пустоту и топбар не опознаётся.
+    // Идём к якорю по обратной ссылке примитива — ровно так же, как это делает
+    // сам sbNavBarLangPick в nav-bar.js. Считаем ДО orig(): тот закрывает
+    // popover, и после него ссылка может уже не понадобиться никому.
+    const pop = cell && cell.closest ? cell.closest('.sb-popover') : null;
+    const anchor = (pop && pop._sbAnchor) || cell;
+    const inDocsChrome = !!(anchor && anchor.closest && anchor.closest('#dsNavRight'));
     orig(cell, code);
-    if (cell && cell.closest && cell.closest('#dsNavRight')) {
-      sbSetDocLang(code === 'RU' ? 'ru' : 'en');
-    }
+    if (inDocsChrome) sbSetDocLang(code === 'RU' ? 'ru' : 'en');
   };
 });

@@ -229,6 +229,7 @@
   --gap-vert-m: 8px;
   --gap-vert-lg: 16px;
   --gap-vert-xl: 24px;
+  --gap-vert-xxl: 32px;
 
   /* ───────── PADDING ───────── */
   /* Figma Dimensions-DS/Padding (не responsive) */
@@ -345,6 +346,7 @@
   --side-nav-max-height: 2000px;
   --side-nav-item-width: 272px;
   --side-nav-item-height: 40px;
+  --side-nav-grand-parent-item-height: 48px;
 
   /* ───────── TABS ───────── */
   /* Figma Dimensions-DS/Tabs */
@@ -372,6 +374,19 @@
   --map-min-width: 256px;
   --map-min-height: 120px;
 
+  /* ───────── PAGE ───────── */
+  /* Figma Dimensions-DS/Page. Контейнер продуктового экрана: боковые поля и
+     предел ширины текстового блока (на 5000px строка нечитаема). */
+  --page-gutter: 16px;
+  --content-max-width-text: 392px;
+
+  /* ───────── GRID ───────── */
+  /* Figma Dimensions-DS/Grid. Минимумы для auto-fit + minmax: плитка (статус,
+     метрика) и карточка с содержимым. Вверх и то и другое резиновое. */
+  --tile-min-width: 96px;
+  --tile-min-height: 96px;
+  --card-min-width: 128px;
+
   /* ───────── SEPARATORS ───────── */
   --separator-width: 1px;
 
@@ -380,10 +395,8 @@
   --topbar-height: 56px;
   --transition: 0.2s ease;
 
-  /* ───────── НОВОЕ ИЗ FIGMA ─────────
-     Появилось в экспорте и добавлено генератором. Перенеси в подходящую
-     секцию выше — расположение строк он не трогает. */
-  --side-nav-grand-parent-item-height: 48px;
+
+
 }
 
 /* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */
@@ -395,6 +408,7 @@
 
 @media (min-width: 768px) {
   :root {
+    --content-max-width-text: 720px;
     --gap-horiz-lg: 24px;
     --gap-horiz-m: 16px;
     --gap-horiz-s: 8px;
@@ -405,6 +419,7 @@
     --gap-vert-m: 16px;
     --gap-vert-xl: 32px;
     --gap-vert-xs: 4px;
+    --gap-vert-xxl: 64px;
     --header-max-height: 88px;
     --header-max-height-m: 64px;
     --header-max-width: 2048px;
@@ -429,6 +444,7 @@
     --nav-bar-min-width: 744px;
     --nav-menu-max-width: 1440px;
     --nav-menu-min-width: 744px;
+    --page-gutter: 24px;
     --screen-min-width: 768px;
     --screens-max-screen-width: 1440px;
     --segment-menu-max-width-menu: 1024px;
@@ -448,6 +464,7 @@
 @media (min-width: 1280px) {
   :root {
     --body-line-height: 20px;
+    --content-max-width-text: 1024px;
     --header-max-height-responsive: 112px;
     --nav-bar-max-height: 64px;
     --nav-bar-max-width: 5000px;
@@ -455,6 +472,7 @@
     --nav-menu-max-width: 5000px;
     --nav-menu-max-width-right-content: 700px;
     --nav-menu-min-width: 1025px;
+    --page-gutter: 32px;
     --screen-min-width: 1280px;
     --screens-max-screen-width: 5000px;
     --subscription-font-size: 12px;

@@ -82,24 +82,66 @@ function fmt(token, value) {
 }
 
 // ── Чтение Figma ───────────────────────────────────────────────────────────
+// Экспорт бывает в двух видах, и оба живые:
+//   1) W3C Design Tokens — папка `Figma Tokens/<Коллекция>/<Режим>.tokens.json`,
+//      по файлу на режим, значение в $value. Так Figma экспортирует сейчас.
+//   2) Дамп коллекции — один файл `Figma Tokens/<Коллекция>-DS.json` со всеми
+//      режимами внутри (valuesByMode). Так сделаны первые выгрузки.
+// Коллекции переезжают на новый формат по одной, поэтому живут оба.
+
+function flatten(node, prefix, into) {
+  Object.keys(node).forEach(function (key) {
+    if (key.charAt(0) === '$') return;
+    var v = node[key];
+    if (v && typeof v === 'object' && '$value' in v) into[prefix + key] = v['$value'];
+    else if (v && typeof v === 'object') flatten(v, prefix + key + '/', into);
+  });
+  return into;
+}
+
+// Приводит коллекцию к единому виду { имя: { Mobile, Tablet, Desktop } }.
+function readCollection(name) {
+  var byName = {};
+  // Формат объявлен в карте, а не угадывается: jsc на неудачном read() шумит
+  // в stderr, и «пробуем то, потом это» выглядело бы как поломка.
+  var format = (MAP._formats && MAP._formats[name]) || 'single-file';
+
+  if (format === 'modes-dir') {
+    ['Mobile', 'Tablet', 'Desktop'].forEach(function (mode) {
+      var flat = flatten(JSON.parse(read(ROOT + 'Figma Tokens/' + name + '/' + mode + '.tokens.json')), '', {});
+      Object.keys(flat).forEach(function (k) { (byName[k] = byName[k] || {})[mode] = flat[k] });
+    });
+    return byName;
+  }
+
+  var data = JSON.parse(read(ROOT + 'Figma Tokens/' + name + '-DS.json'));
+  var modeName = data.modes;
+  data.variables.forEach(function (v) {
+    var vals = {};
+    Object.keys(v.valuesByMode || {}).forEach(function (id) { vals[modeName[id]] = v.valuesByMode[id] });
+    byName[v.name] = vals;
+  });
+  return byName;
+}
+
 function collect(declared) {
   var out = {};            // token -> { Mobile, Tablet, Desktop }
   var problems = [];
-  ['Dimensions-DS', 'Typography-DS'].forEach(function (file) {
-    var data = JSON.parse(read(ROOT + 'Figma Tokens/' + file + '.json'));
-    var modeName = data.modes;                       // id -> 'Desktop' | …
-    data.variables.forEach(function (v) {
-      if (isSkipped(v.name)) return;
-      var byMode = v.valuesByMode || {};
-      var sample = byMode[Object.keys(byMode)[0]];
+  ['Dimensions', 'Typography'].forEach(function (collection) {
+    var vars = readCollection(collection);
+    var mapKey = collection + '-DS';
+    Object.keys(vars).forEach(function (name) {
+      if (isSkipped(name)) return;
+      var vals = vars[name];
+      var sample = vals[Object.keys(vals)[0]];
       if (typeof sample === 'string') return;        // строки-примеры из макетов
-      var token = cssName(file, v.name, declared);
+      var token = cssName(mapKey, name, declared);
       if (!token) {
-        problems.push(file + ': «' + v.name + '» = ' + sample + ' — нет ни в карте, ни среди объявленных токенов');
+        problems.push(collection + ': «' + name + '» = ' + sample +
+          ' — нет ни в карте, ни среди объявленных токенов' +
+          ' (предлагаю --' + norm(name.split('/').pop()) + ')');
         return;
       }
-      var vals = {};
-      Object.keys(byMode).forEach(function (id) { vals[modeName[id]] = byMode[id] });
       if (out[token]) {
         problems.push('на «' + token + '» претендуют две переменные Figma — уточни tools/token-map.json');
         return;

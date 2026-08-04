@@ -15,6 +15,11 @@
     "skip — переменные Figma, которым в CSS соответствия нет и не должно быть:",
     "строковые примеры для макетов и служебные заглушки."
   ],
+  "_formats": {
+    "_note": "В каком виде лежит экспорт коллекции. 'modes-dir' — папка Figma Tokens/<Коллекция>/<Режим>.tokens.json (текущий экспорт Figma, W3C Design Tokens). 'single-file' — Figma Tokens/<Коллекция>-DS.json со всеми режимами внутри (первые выгрузки). Коллекции переезжают по одной; здесь записано, что где.",
+    "Dimensions": "modes-dir",
+    "Typography": "single-file"
+  },
   "Dimensions-DS": {
     "Screens/min-screen-width": "--screen-min-width",
     "Buttons/Primary & Text/Size/Min Width": "--btn-primary-min-width",
@@ -73,7 +78,13 @@
     "Status-Text/Padding/pad-horiz-4": "--status-text-pad-horiz-4",
     "Status-Text/Padding/pad-vert-16": "--status-text-pad-vert-16",
     "Status-Text/Padding/pad-vert-8": "--status-text-pad-vert-8",
-    "Status-Text/Padding/pad-vert-4": "--status-text-pad-vert-4"
+    "Status-Text/Padding/pad-vert-4": "--status-text-pad-vert-4",
+    "Page/gutter": "--page-gutter",
+    "Page/content-max-width-text": "--content-max-width-text",
+    "Grid/tile-min-width": "--tile-min-width",
+    "Grid/tile-min-height": "--tile-min-height",
+    "Grid/card-min-width": "--card-min-width",
+    "Gap/gap-vert-xxl": "--gap-vert-xxl"
   },
   "Typography-DS": {
     "Title/Line-Hight-L": "--title-line-height-l",

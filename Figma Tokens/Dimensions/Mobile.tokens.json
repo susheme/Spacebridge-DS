@@ -387,7 +387,7 @@
     },
     "card-min-width": {
       "$type": "number",
-      "$value": 128,
+      "$value": 280,
       "$extensions": {
         "com.figma.variableId": "VariableID:1919:6775",
         "com.figma.scopes": [

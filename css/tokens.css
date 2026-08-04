@@ -385,7 +385,7 @@
      метрика) и карточка с содержимым. Вверх и то и другое резиновое. */
   --tile-min-width: 96px;
   --tile-min-height: 96px;
-  --card-min-width: 128px;
+  --card-min-width: 280px;
 
   /* ───────── SEPARATORS ───────── */
   --separator-width: 1px;
@@ -408,6 +408,7 @@
 
 @media (min-width: 768px) {
   :root {
+    --card-min-width: 320px;
     --content-max-width-text: 720px;
     --gap-horiz-lg: 24px;
     --gap-horiz-m: 16px;
@@ -464,7 +465,8 @@
 @media (min-width: 1280px) {
   :root {
     --body-line-height: 20px;
-    --content-max-width-text: 1024px;
+    --card-min-width: 280px;
+    --content-max-width-text: 800px;
     --header-max-height-responsive: 112px;
     --nav-bar-max-height: 64px;
     --nav-bar-max-width: 5000px;

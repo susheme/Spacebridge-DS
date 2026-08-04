@@ -387,7 +387,7 @@
     },
     "card-min-width": {
       "$type": "number",
-      "$value": 128,
+      "$value": 280,
       "$extensions": {
         "com.figma.variableId": "VariableID:1919:6775",
         "com.figma.scopes": [
@@ -821,7 +821,7 @@
     },
     "content-max-width-text": {
       "$type": "number",
-      "$value": 1024,
+      "$value": 800,
       "$extensions": {
         "com.figma.variableId": "VariableID:1919:6770",
         "com.figma.scopes": [

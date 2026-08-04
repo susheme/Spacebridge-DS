@@ -20,6 +20,8 @@
 load('tests/lib/harness.js');
 load('tests/lib/allowlist.js');
 
+var GEN_TOKENS_LIB;   // флаг для tools/gen-tokens.js: подключить как библиотеку
+
 ROOT = './';
 
 load('tests/static.js');

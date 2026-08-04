@@ -1,5 +1,16 @@
 /* ═══════════════════════════════════════════
    ZONE 1: FONTS & TOKENS
+
+   ЗНАЧЕНИЯ ТОКЕНОВ РУКАМИ НЕ ПРАВИТЬ.
+   Источник правды — `Figma Tokens/*.json`. Обновил экспорт из Figma:
+
+     jsc tools/gen-tokens.js
+
+   Генератор перепишет значения и блок адаптивных переопределений внизу
+   файла. Тесты (`jsc tests/run.js`) проверяют, что файл совпадает с Figma.
+
+   Правится руками только то, чего в Figma нет: шрифты, тени, transition —
+   генератор такие строки не трогает.
    ═══════════════════════════════════════════ */
 
 /* --- Custom Fonts --- */
@@ -102,15 +113,16 @@
   --font-mono: 'Roboto Mono', monospace;
 
   /* ───────── TYPOGRAPHY FONT SIZES ───────── */
-  /* Figma Typography-DS/Headline (Desktop) */
-  --headline-font-size-h1: 96px;
-  --headline-font-size-h2: 64px;
-  --headline-font-size-h3: 48px;
-  --headline-font-size-h4: 32px;
-  --headline-font-size-h5: 28px;
-  --headline-font-size-h6: 24px;
-  --headline-font-size-h7: 22px;
-  --headline-font-size-h8: 20px;
+  /* Figma Typography-DS/Headline. Значения здесь — МОБИЛЬНЫЕ (mobile-first);
+     планшет и десктоп добавляет блок автогенерации в конце файла. */
+  --headline-font-size-h1: 64px;
+  --headline-font-size-h2: 48px;
+  --headline-font-size-h3: 40px;
+  --headline-font-size-h4: 28px;
+  --headline-font-size-h5: 24px;
+  --headline-font-size-h6: 22px;
+  --headline-font-size-h7: 20px;
+  --headline-font-size-h8: 18px;
   /* Figma Typography-DS/Title */
   --title-font-size-l: 18px;
   --title-font-size-m: 16px;
@@ -125,7 +137,7 @@
   --link-font-size-m: 16px;
   --link-font-size-s: 14px;
   /* Figma Typography-DS/Subscription, Button, Badge */
-  --subscription-font-size: 12px;
+  --subscription-font-size: 10px;
   --button-font-size: 15px;
   --button-mini-font-size: 12px;  /* Figma Button-Mini (12/500/10) */
   --badge-font-size: 10px;
@@ -137,20 +149,20 @@
   --headline-line-height-20: 20px;
   --headline-line-height-22: 22px;
   --headline-line-height-24: 24px;
-  --headline-line-height-32: 32px;
-  --headline-line-height-48: 48px;
-  --headline-line-height-64: 64px;
-  --headline-line-height-96: 96px;
-  --headline-line-height-h5: 32px;
+  --headline-line-height-32: 28px;
+  --headline-line-height-48: 32px;
+  --headline-line-height-64: 48px;
+  --headline-line-height-96: 64px;
+  --headline-line-height-h5: 28px;
   --headline-line-height-h8: 16px;
   /* Figma Typography-DS/Title */
   --title-line-height-l: 16px;
   --title-line-height-s: 12px;
   --title-line-height-caption: 12px;
   /* Figma Typography-DS/Body/Link/Subscription/Button */
-  --body-line-height: 20px;
+  --body-line-height: 18px;
   --link-line-height: 14px;
-  --subscription-line-height: 14px;
+  --subscription-line-height: 12px;
   --button-line-height: 12px;
   --button-mini-line-height: 10px;  /* Figma Button-Mini (12/500/10) */
 
@@ -169,8 +181,8 @@
   --letter-spacing-l: 2px;
 
   /* ───────── TAB & SEGMENT (typography-related widths) ───────── */
-  --tab-segment-max-width-tab-name: 112px;
-  --tab-segment-max-width-segment-name: 112px;
+  --tab-segment-max-width-tab-name: 80px;
+  --tab-segment-max-width-segment-name: 80px;
 
   /* ───────── RADIUS ───────── */
   /* Figma Dimensions-DS/Radius (имена как в JSON) */
@@ -199,24 +211,24 @@
   --border-width-4: 4px;
 
   /* ───────── GAP ───────── */
-  /* Figma Dimensions-DS/Gap (Desktop values).
-     Responsive: Mobile частично уменьшает (gap-horiz-s→4, gap-*-m→8, gap-*-lg→16, gap-horiz-xxl→32).
-     Responsive пока не внедряем. */
+  /* Figma Dimensions-DS/Gap. База — мобильные значения: на телефоне вся
+     система дышит вдвое плотнее (gap-m 8 против 16 и т.д.). Планшетные и
+     десктопные значения поднимает блок автогенерации в конце файла. */
   --gap-horiz-0: 0;
   --gap-horiz-xxs: 2px;
-  --gap-horiz-xs: 4px;
-  --gap-horiz-s: 8px;
-  --gap-horiz-m: 16px;
-  --gap-horiz-lg: 24px;
-  --gap-horiz-xl: 32px;
-  --gap-horiz-xxl: 64px;
+  --gap-horiz-xs: 2px;
+  --gap-horiz-s: 4px;
+  --gap-horiz-m: 8px;
+  --gap-horiz-lg: 16px;
+  --gap-horiz-xl: 24px;
+  --gap-horiz-xxl: 32px;
   --gap-vert-0: 0;
   --gap-vert-xxs: 2px;
-  --gap-vert-xs: 4px;
+  --gap-vert-xs: 2px;
   --gap-vert-s: 8px;
-  --gap-vert-m: 16px;
-  --gap-vert-lg: 24px;
-  --gap-vert-xl: 32px;
+  --gap-vert-m: 8px;
+  --gap-vert-lg: 16px;
+  --gap-vert-xl: 24px;
 
   /* ───────── PADDING ───────── */
   /* Figma Dimensions-DS/Padding (не responsive) */
@@ -247,7 +259,7 @@
 
   /* ───────── SCREEN BREAKPOINTS ───────── */
   /* Figma Dimensions-DS/Screens */
-  --screen-min-width: 1280px;
+  --screen-min-width: 320px;
   --screen-max-width: 5000px;
 
   /* ───────── BUTTONS ───────── */
@@ -269,12 +281,12 @@
   /* Figma Dimensions-DS/Text Fields */
   --text-field-height-l: 32px;
   --text-field-height-m: 30px;
-  --text-field-min-width: 128px;
-  --text-field-max-width: 808px;
+  --text-field-min-width: 96px;
+  --text-field-max-width: 320px;
   --textarea-min-width: 96px;
   --textarea-min-height: 96px;
-  --textarea-max-width: 1024px;
-  --textarea-max-height: 1024px;
+  --textarea-max-width: 956px;
+  --textarea-max-height: 720px;
 
   /* ───────── STATUS TEXT (Badge-Status) ───────── */
   /* Figma Dimensions-DS/Status-Text */
@@ -293,12 +305,12 @@
   /* ───────── HEADERS ───────── */
   /* Figma Dimensions-DS/Headers */
   --header-min-width: 272px;
-  --header-max-width: 2048px;
-  --header-max-height: 88px;
-  --header-min-height-m: 56px;
-  --header-max-height-m: 64px;
-  --header-s-max-min-height: 40px;
-  --header-max-height-responsive: 112px;
+  --header-max-width: 1024px;
+  --header-max-height: 136px;
+  --header-min-height-m: 40px;
+  --header-max-height-m: 56px;
+  --header-s-max-min-height: 24px;
+  --header-max-height-responsive: 56px;
   /* Header XS */
   --header-xs-max-width: 1024px;
   --header-xs-min-height: 40px;
@@ -317,19 +329,19 @@
   --sub-header-max-width: 2048px;
 
   /* ───────── NAVIGATION BAR ───────── */
-  --nav-bar-min-width: 1025px;
-  --nav-bar-max-width: 5000px;
-  --nav-bar-max-height: 64px;
+  --nav-bar-min-width: 320px;
+  --nav-bar-max-width: 700px;
+  --nav-bar-max-height: 106px;
 
   /* ───────── NAVIGATION MENU ───────── */
-  --nav-menu-min-width: 1025px;
-  --nav-menu-max-width: 5000px;
+  --nav-menu-min-width: 320px;
+  --nav-menu-max-width: 700px;
   --nav-menu-max-height: 64px;
-  --nav-menu-max-width-right-content: 700px;
+  --nav-menu-max-width-right-content: 668px;
 
   /* ───────── SIDE NAVIGATION ───────── */
   --side-nav-min-max-width: 320px;
-  --side-nav-min-height: 720px;
+  --side-nav-min-height: 568px;
   --side-nav-max-height: 2000px;
   --side-nav-item-width: 272px;
   --side-nav-item-height: 40px;
@@ -337,27 +349,27 @@
   /* ───────── TABS ───────── */
   /* Figma Dimensions-DS/Tabs */
   --tabs-min-height: 40px;
-  --tabs-max-height: 64px;
+  --tabs-max-height: 120px;
   --navigation-menu-max-height: 64px;
-  --screens-max-screen-width: 5000px;
+  --screens-max-screen-width: 956px;
   --tab-bar-max-width: 640px;
   --tab-bar-max-height-tab: 28px;
   --tab-bar-min-height-tab: 28px;
   --tab-bar-min-width-tab: 32px;
-  --tab-bar-max-width-tab: 256px;
+  --tab-bar-max-width-tab: 128px;
   --tab-bar-max-width-string: 112px;
   --segment-menu-max-height: 54px;
   --segment-menu-min-width-segment: 56px;
-  --segment-menu-max-width-segment: 240px;
-  --segment-menu-max-width-menu: 1024px;
-  --segment-menu-max-width-string: 208px;
+  --segment-menu-max-width-segment: 184px;
+  --segment-menu-max-width-menu: 640px;
+  --segment-menu-max-width-string: 152px;
 
   /* ───────── LIST ───────── */
   --list-min-height-cell: 40px;
   --list-cell-min-width-standard: 80px;
 
   /* ───────── MAP ───────── */
-  --map-min-width: 320px;
+  --map-min-width: 256px;
   --map-min-height: 120px;
 
   /* ───────── SEPARATORS ───────── */
@@ -370,3 +382,80 @@
 }
 
 /* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */
+
+/* ═══ АВТОГЕНЕРАЦИЯ: адаптивные значения (tools/gen-tokens.js) ═══ */
+/* База в :root — мобильные значения. Планшет и десктоп добавляются здесь.
+   Пороги взяты из Screens/min-screen-width: Tablet 768, Desktop 1280.
+   Правится НЕ здесь, а в Figma: `jsc tools/gen-tokens.js` перепишет блок. */
+
+@media (min-width: 768px) {
+  :root {
+    --gap-horiz-lg: 24px;
+    --gap-horiz-m: 16px;
+    --gap-horiz-s: 8px;
+    --gap-horiz-xl: 32px;
+    --gap-horiz-xs: 4px;
+    --gap-horiz-xxl: 64px;
+    --gap-vert-lg: 24px;
+    --gap-vert-m: 16px;
+    --gap-vert-xl: 32px;
+    --gap-vert-xs: 4px;
+    --header-max-height: 88px;
+    --header-max-height-m: 64px;
+    --header-max-width: 2048px;
+    --header-min-height-m: 56px;
+    --header-s-max-min-height: 40px;
+    --headline-font-size-h1: 96px;
+    --headline-font-size-h2: 64px;
+    --headline-font-size-h3: 48px;
+    --headline-font-size-h4: 32px;
+    --headline-font-size-h5: 28px;
+    --headline-font-size-h6: 24px;
+    --headline-font-size-h7: 22px;
+    --headline-font-size-h8: 20px;
+    --headline-line-height-32: 32px;
+    --headline-line-height-48: 48px;
+    --headline-line-height-64: 64px;
+    --headline-line-height-96: 96px;
+    --headline-line-height-h5: 32px;
+    --map-min-width: 320px;
+    --nav-bar-max-height: 114px;
+    --nav-bar-max-width: 1440px;
+    --nav-bar-min-width: 744px;
+    --nav-menu-max-width: 1440px;
+    --nav-menu-min-width: 744px;
+    --screen-min-width: 768px;
+    --screens-max-screen-width: 1440px;
+    --segment-menu-max-width-menu: 1024px;
+    --segment-menu-max-width-segment: 240px;
+    --segment-menu-max-width-string: 208px;
+    --side-nav-min-height: 720px;
+    --subscription-line-height: 14px;
+    --tab-bar-max-width-tab: 256px;
+    --tab-segment-max-width-segment-name: 112px;
+    --tab-segment-max-width-tab-name: 112px;
+    --text-field-max-width: 400px;
+    --text-field-min-width: 128px;
+    --textarea-max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --body-line-height: 20px;
+    --header-max-height-responsive: 112px;
+    --nav-bar-max-height: 64px;
+    --nav-bar-max-width: 5000px;
+    --nav-bar-min-width: 1025px;
+    --nav-menu-max-width: 5000px;
+    --nav-menu-max-width-right-content: 700px;
+    --nav-menu-min-width: 1025px;
+    --screen-min-width: 1280px;
+    --screens-max-screen-width: 5000px;
+    --subscription-font-size: 12px;
+    --tabs-max-height: 64px;
+    --text-field-max-width: 808px;
+    --textarea-max-height: 1024px;
+  }
+}
+/* ═══ КОНЕЦ АВТОГЕНЕРАЦИИ ═══ */

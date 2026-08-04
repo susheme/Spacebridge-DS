@@ -29,6 +29,28 @@ Spacebridge UI — single-page design system без фреймворка и ба
 - Source of truth для типографики: `Figma Tokens/Typography-DS.json`.
 - **Правило:** токен добавляется в `css/tokens.css` / `js/tokens.js` тогда и только тогда, когда он есть в Figma JSON. Не придумывай токены сам. Не пропускай JSON-токены с формулировкой «не используется».
 
+**Значения в `css/tokens.css` руками НЕ правятся.** Файл собирается из Figma:
+
+```
+jsc tools/gen-tokens.js              # перезаписать
+jsc tools/gen-tokens.js -- --check   # только проверить
+```
+
+У переменных Figma три режима — Desktop / Tablet / Mobile, и 53 из них имеют
+разные значения. Генератор раскладывает их mobile-first: база в `:root` —
+мобильные значения, планшет и десктоп добавляются `@media`-блоком в конце
+файла. **Компоненты при этом не трогаются**: `var(--gap-horiz-m)` сам отдаёт 8
+на телефоне и 16 на десктопе. Отсюда же берутся брейкпоинты — их задаёт
+`Screens/min-screen-width` (Mobile 320 / Tablet 768 / Desktop 1280), а не код.
+
+Имена переменных в Figma и токенов в CSS различаются (`Buttons/Primary &
+Text/Size/Min Width` → `--btn-primary-min-width`). Карта — `tools/token-map.json`.
+Если генератор упал с «НЕ СОПОСТАВЛЕНО» — допиши переменную в карту или в её
+секцию `skip`; угадывать он не станет намеренно.
+
+Руками в `tokens.css` правится только то, чего в Figma нет: шрифты, тени,
+transition. Такие строки генератор не трогает.
+
 ### Шрифты
 - В разметке (HTML) — только `sb-*` классы: `.sb-h1`–`.sb-h8`, `.sb-title-l/m/s`, `.sb-body-l/m/s`, `.sb-sub`, `.sb-caption`, `.sb-mono`, `.sb-brand`.
 - В CSS-компонентов — font-size/weight/line-height через токены (см. ниже).

@@ -177,6 +177,22 @@ suite('SYNC: CSS-файл ↔ копия в JS', function () {
   });
 });
 
+suite('Токены ↔ Figma', function () {
+
+  check('css/tokens.css собран из Figma', function () {
+    // Токены — единственное место, где источник правды лежит ВНЕ репозитория.
+    // Пока перенос был ручным, из трёх режимов Figma в CSS доезжал только
+    // Desktop, и адаптивность, заложенная в макетах, в коде не существовала.
+    // Проверка гоняет генератор в режиме --check: расхождение = кто-то правил
+    // tokens.css руками либо забыл перегенерировать после обновления JSON.
+    GEN_TOKENS_LIB = true;                 // грузим генератор как библиотеку
+    load('tools/gen-tokens.js');
+    var res = sbTokensCheck();
+    if (res.ok) return 'совпадает';
+    throw new Fail('tokens.css разошёлся с Figma — почини `jsc tools/gen-tokens.js`', res.changed);
+  });
+});
+
 suite('Ссылочная целостность', function () {
 
   check('все var(--token) объявлены', function () {

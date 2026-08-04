@@ -379,6 +379,11 @@
   --sidebar-width: 320px;
   --topbar-height: 56px;
   --transition: 0.2s ease;
+
+  /* ───────── НОВОЕ ИЗ FIGMA ─────────
+     Появилось в экспорте и добавлено генератором. Перенеси в подходящую
+     секцию выше — расположение строк он не трогает. */
+  --side-nav-grand-parent-item-height: 48px;
 }
 
 /* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */

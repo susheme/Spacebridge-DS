@@ -135,7 +135,15 @@ function build(src, tokens) {
   if (cutAt !== -1) src = src.slice(0, cutAt).replace(/\s*$/, '\n');
 
   var lines = src.split('\n');
-  var out = [], changed = [];
+  var out = [], changed = [], added = [];
+
+  // Объявлен ли токен среди уже собранных строк.
+  function declaredIn(arr, token) {
+    for (var k = 0; k < arr.length; k++) {
+      if (arr[k].indexOf(token + ':') !== -1) return true;
+    }
+    return false;
+  }
 
   // 1. Переписываем значения в :root на МОБИЛЬНЫЕ (mobile-first база).
   for (var i = 0; i < lines.length; i++) {
@@ -150,7 +158,30 @@ function build(src, tokens) {
     out.push(indent + token + ': ' + base + ';' + tail);
   }
 
-  // 2. Дописываем блок media-запросов для токенов, зависящих от режима.
+  // 2. Токены, которых в CSS ещё нет: появились в Figma после прошлой сборки.
+  //    Дописываем их в конец :root отдельной секцией — иначе дизайнеру пришлось
+  //    бы лезть в CSS руками, а весь смысл в том, чтобы не приходилось.
+  var fresh = Object.keys(tokens).filter(function (t) { return !declaredIn(out, t) }).sort();
+  if (fresh.length) {
+    var rootEnd = -1;
+    for (var j = out.length - 1; j >= 0; j--) {
+      if (out[j].replace(/\s/g, '') === '}') { rootEnd = j; break; }
+    }
+    if (rootEnd !== -1) {
+      var block = ['', '  /* ───────── НОВОЕ ИЗ FIGMA ─────────',
+        '     Появилось в экспорте и добавлено генератором. Перенеси в подходящую',
+        '     секцию выше — расположение строк он не трогает. */'];
+      fresh.forEach(function (t) {
+        var v = tokens[t];
+        var base = v[MODE_ORDER[0]] !== undefined ? v[MODE_ORDER[0]] : v.Desktop;
+        block.push('  ' + t + ': ' + fmt(t, base) + ';');
+        added.push(t + ' = ' + fmt(t, base));
+      });
+      out = out.slice(0, rootEnd).concat(block, out.slice(rootEnd));
+    }
+  }
+
+  // 3. Дописываем блок media-запросов для токенов, зависящих от режима.
   var body = out.join('\n');
 
   var responsive = {};
@@ -188,7 +219,7 @@ function build(src, tokens) {
   block.push(END);
   block.push('');
 
-  return { css: body + block.join('\n'), changed: changed, responsiveCount: Object.keys(responsive).length };
+  return { css: body + block.join('\n'), changed: changed, added: added, responsiveCount: Object.keys(responsive).length };
 }
 
 // ── Точка входа ────────────────────────────────────────────────────────────
@@ -238,6 +269,10 @@ if (CHECK_ONLY) {
   print('css/tokens.css перезаписан.');
   print('  токенов из Figma: ' + Object.keys(collected.tokens).length);
   print('  зависят от режима: ' + built.responsiveCount);
+  if (built.added.length) {
+    print('  ДОБАВЛЕНО новых: ' + built.added.length);
+    built.added.forEach(function (a) { print('    ' + a) });
+  }
   if (built.changed.length) {
     print('  изменено значений: ' + built.changed.length);
     built.changed.slice(0, 15).forEach(function (c) { print('    ' + c) });

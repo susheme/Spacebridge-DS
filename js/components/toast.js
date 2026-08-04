@@ -268,7 +268,7 @@ window.COMP_CSS.toast = `.sb-toast {
   // Правый слот хедера — паттерны из Header XS.
   const RIGHT = {
     none:  () => '',
-    close: () => `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Close">${sbIcon('close-line', 'S')}</button>`,
+    close: () => sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's', attrs: ' aria-label="Close"' }),
     'chevron-down': () => sbMkChevron(),
     'chevron-up':   () => sbMkChevron({ dir: 'up' }),
   };
@@ -366,7 +366,8 @@ window.COMP_CSS.toast = `.sb-toast {
   function mkToastStack(opts) {
     const { toasts = [], expanded = false, demoLoop = false } = opts || {};
     const right = sbMkChevron({ cls: 'sb-toast-stack-peek' })
-      + `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-toast-stack-x" aria-label="Close" onclick="sbToastStackDismiss(this)">${sbIcon('close-line', 'S')}</button>`;
+      + sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's', cls: 'sb-toast-stack-x',
+          attrs: ' aria-label="Close" onclick="sbToastStackDismiss(this)"' });
     const cards = toasts.map(t => mkToast(Object.assign({}, t, { right }))).join('');
     return `<div class="sb-toast-stack${expanded ? ' expanded' : ''}" data-count="${toasts.length}"${demoLoop ? ' data-demo-loop' : ''}>
       <div class="sb-toast-stack-cards" onclick="sbToastStackOpen(this)">${cards}</div>
@@ -376,7 +377,7 @@ window.COMP_CSS.toast = `.sb-toast {
           onClick: 'sbToastStackClear(this)',
           label: `<span class="sb-toast-stack-clear-n">Clear (${toasts.length})</span><span class="sb-toast-stack-clear-all">Clear All</span>`,
         })}
-        <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-toast-stack-fold" aria-label="Collapse" onclick="sbToastStackFold(this)">${sbIcon('arrow-up-s-line', 'S')}</button>
+        ${sbMkButton({ icon: 'arrow-up-s-line', iconSize: 'S', size: 's', cls: 'sb-toast-stack-fold', attrs: ' aria-label="Collapse" onclick="sbToastStackFold(this)"' })}
       </div>
     </div>`;
   }
@@ -524,7 +525,8 @@ window.COMP_CSS.toast = `.sb-toast {
     },
 
     single(item, expandedIds) {
-      const closeBtn = `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Close" onclick="sbToastHide('${item.id}')">${sbIcon('close-line', 'S')}</button>`;
+      const closeBtn = sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's',
+        attrs: ` aria-label="Close" onclick="sbToastHide('${item.id}')"` });
       const opts = Object.assign({}, item.opts, { right: closeBtn });
       if (opts.details && expandedIds && expandedIds.has(item.id)) {
         opts.details = Object.assign({}, opts.details, { expanded: true });
@@ -732,7 +734,7 @@ window.COMP_CSS.toast = `.sb-toast {
       // Несколько кликов подряд — видно политику стекования.
       extraPreview() {
         return `<div style="display:flex;justify-content:center;padding:0 0 var(--pad-vert-16)">
-          <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbToastPgShow()">Show Live</button>
+          ${sbMkButton({ label: 'Show Live', size: 's', attrs: ' onclick="sbToastPgShow()"' })}
         </div>`;
       },
       genCode(s) {

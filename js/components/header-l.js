@@ -100,10 +100,10 @@ window.COMP_CSS.headerL = `.sb-header-l {
   function mkHeaderLActions({ inline = [], more } = {}) {
     const inlineHtml = inline.map(a => {
       if (a.type === 'icon') {
-        return `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon sb-header-l-action">${sbIcon(a.icon, 'L')}</button>`;
+        return sbMkButton({ icon: a.icon, cls: 'sb-header-l-action' });
       }
       // text button
-      return `<button type="button" class="sb-btn sb-btn-secondary sb-header-l-action"><span>${a.label}</span></button>`;
+      return sbMkButton({ label: a.label, cls: 'sb-header-l-action' });
     }).join('');
 
     const hasInline = inline.length > 0;
@@ -130,7 +130,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
 
     const moreBlock = sbMkPopover({
       wrapCls: 'sb-header-l-more',
-      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+      trigger: sbMkButton({ icon: 'more-2-line' }),
       content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',
       onOpen: 'sbHeaderLSyncMenu',
@@ -266,7 +266,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
 
         // ── Left slot ──
         const leftParts = [];
-        if (s.backButton) leftParts.push(`<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>`);
+        if (s.backButton) leftParts.push(sbMkButton({ label: 'Back', icon: 'arrow-left-s-line' }));
         const leftSymHtml = LEFT_SYMBOL_BUILD[leftSym]();
         if (leftSymHtml) leftParts.push(leftSymHtml);
         const slotLeft = leftParts.join('');
@@ -311,8 +311,8 @@ window.COMP_CSS.headerL = `.sb-header-l {
         })();
         const toolBarHtml = s.toolBarEnable && typeof sbMkToolBar === 'function'
           ? sbMkToolBar({
-              left: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('add-line', 'L')}</button><button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
-              right: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('search-line', 'L')}</button>`,
+              left: sbMkButton({ icon: 'add-line' }) + sbMkButton({ icon: 'more-2-line' }),
+              right: sbMkButton({ icon: 'search-line' }),
             })
           : '';
 
@@ -348,7 +348,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
 
         // Left
         const leftLines = [];
-        if (s.backButton) leftLines.push(`<button type="button" class="sb-btn sb-btn-secondary">\n      <!-- arrow-left-s-line L -->\n      <span>Back</span>\n    </button>`);
+        if (s.backButton) leftLines.push(`${sbMkButton({ content: '\\n <!-- arrow-left-s-line L -->\\n <span>Back</span>\\n' })}`);
         const leftSymCode = LEFT_SYMBOL_CODE[leftSym];
         if (leftSymCode) leftLines.push(leftSymCode);
         leftLines.push(`<span class="sb-header-l-title sb-h5">${TITLE_TEXT_L[s.titleText]}</span>`);
@@ -363,9 +363,10 @@ window.COMP_CSS.headerL = `.sb-header-l {
         // Inline actions (visible @ wide, hidden @ narrow via .sb-header-l-action)
         for (let i = 0; i < useIcons; i++) {
           const iconName = i === 0 ? 'add-line' : 'more-2-line';
-          rightLines.push(`<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon sb-header-l-action">\n      <!-- ${iconName} L -->\n    </button>`);
+          rightLines.push(sbMkButton({ iconOnly: true, cls: 'sb-header-l-action',
+            content: `<!-- ${iconName} L -->` }));
         }
-        if (useAction) rightLines.push(`<button type="button" class="sb-btn sb-btn-secondary sb-header-l-action">\n      <span>Action</span>\n    </button>`);
+        if (useAction) rightLines.push(`${sbMkButton({ content: '\\n <span>Action</span>\\n', cls: 'sb-header-l-action' })}`);
 
         // More button + dropdown (always rendered)
         const extraCellsCode = [];
@@ -379,7 +380,7 @@ window.COMP_CSS.headerL = `.sb-header-l {
           `<div class="sb-ctx-cell is-action" onclick="sbActionContextCell(this)">\n        <span class="sb-ctx-cell-icon-left"><!-- ${it.icon} L --></span>\n        <span class="sb-ctx-cell-label sb-title-m sb-fw-semibold">${it.label}</span>\n        <span class="sb-ctx-cell-right"><span class="sb-ctx-cell-icon-check"><!-- check-line S --></span></span>\n      </div>`
         );
         const cardCells = extraCellsCode.concat(nativeCellsCode).join('\n      ');
-        rightLines.push(`<span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">\n      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">\n        <!-- more-2-line L -->\n      </button>\n      <div class="sb-popover" role="dialog" tabindex="-1"\n           data-placement="bottom-end" data-side="bottom">\n        <div class="sb-ctx-card">\n        ${cardCells}\n        </div>\n      </div>\n    </span>`);
+        rightLines.push(`<span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">\n      ${sbMkButton({ iconOnly: true, content: '\\n <!-- more-2-line L -->\\n' })}\n      <div class="sb-popover" role="dialog" tabindex="-1"\n           data-placement="bottom-end" data-side="bottom">\n        <div class="sb-ctx-card">\n        ${cardCells}\n        </div>\n      </div>\n    </span>`);
 
         const rightInner = rightLines.map(l => '    ' + l).join('\n');
         const rightBlock = rightLines.length
@@ -433,9 +434,7 @@ ${leftInner}
   <div class="sb-header-l-right">
     <span class="sb-badge-status bs-grey">Status</span>
     <span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
-        <!-- more-2-line L -->
-      </button>
+      ${sbMkButton({ iconOnly: true, content: '<!-- more-2-line L -->' })}
       <div class="sb-popover" role="dialog" tabindex="-1"
            data-placement="bottom-end" data-side="bottom">
         <div class="sb-ctx-card">
@@ -473,7 +472,7 @@ ${leftInner}
         ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:720px">
           ${mkHeaderL({
-            slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>`,
+            slotLeft: sbMkButton({ label: 'Back', icon: 'arrow-left-s-line' }),
             title: 'Headline',
             slotRight: `<span class="sb-badge-status bs-grey">Status</span>${mkHeaderLActions({
               inline: [{ type: 'text', label: 'Action', icon: 'arrow-right-s-line' }],
@@ -483,21 +482,14 @@ ${leftInner}
         </div>`,
         html: `<div class="sb-header-l">
   <div class="sb-header-l-left">
-    <button type="button" class="sb-btn sb-btn-secondary">
-      <!-- arrow-left-s-line L -->
-      <span>Back</span>
-    </button>
+    ${sbMkButton({ content: '<!-- arrow-left-s-line L --> <span>Back</span>' })}
     <span class="sb-header-l-title sb-h5">Headline</span>
   </div>
   <div class="sb-header-l-right">
     <span class="sb-badge-status bs-grey">Status</span>
-    <button type="button" class="sb-btn sb-btn-secondary sb-header-l-action">
-      <span>Action</span>
-    </button>
+    ${sbMkButton({ content: '<span>Action</span>', cls: 'sb-header-l-action' })}
     <span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
-        <!-- more-2-line L -->
-      </button>
+      ${sbMkButton({ iconOnly: true, content: '<!-- more-2-line L -->' })}
       <div class="sb-popover" role="dialog" tabindex="-1"
            data-placement="bottom-end" data-side="bottom">
         <div class="sb-ctx-card">
@@ -523,7 +515,7 @@ ${leftInner}
         )),
         preview: `<div style="width:100%;overflow-x:auto;padding-bottom:var(--pad-vert-16)"><div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:960px">
           ${mkHeaderL({
-            slotLeft: `<button type="button" class="sb-btn sb-btn-secondary">${sbIcon('arrow-left-s-line', 'L')}<span>Back</span></button>${SB_SVG.infoPop}`,
+            slotLeft: sbMkButton({ label: 'Back', icon: 'arrow-left-s-line' }) + SB_SVG.infoPop,
             title: 'Headline',
             slotRight: `<span class="sb-caption" style="color:var(--text-secondary)">Additional info</span><span class="sb-badge-status bs-grey">Status</span>${mkHeaderLActions({
               inline: [
@@ -536,10 +528,7 @@ ${leftInner}
         </div></div>`,
         html: `<div class="sb-header-l">
   <div class="sb-header-l-left">
-    <button type="button" class="sb-btn sb-btn-secondary">
-      <!-- arrow-left-s-line L -->
-      <span>Back</span>
-    </button>
+    ${sbMkButton({ content: '<!-- arrow-left-s-line L --> <span>Back</span>' })}
     <!-- Symbol Badge: infoPop SVG 24×24 -->
     <span class="sb-header-l-title sb-h5">Headline</span>
   </div>
@@ -547,17 +536,11 @@ ${leftInner}
     <span class="sb-caption">Additional info</span>
     <span class="sb-badge-status bs-grey">Status</span>
     <!-- inline actions: hidden @ narrow -->
-    <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon sb-header-l-action">
-      <!-- add-line L -->
-    </button>
-    <button type="button" class="sb-btn sb-btn-secondary sb-header-l-action">
-      <span>Action</span>
-    </button>
+    ${sbMkButton({ iconOnly: true, content: '<!-- add-line L -->', cls: 'sb-header-l-action' })}
+    ${sbMkButton({ content: '<span>Action</span>', cls: 'sb-header-l-action' })}
     <!-- More button + dropdown card -->
     <span class="sb-popover-wrap sb-header-l-more" onclick="sbPopoverToggle(this, event)">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">
-        <!-- more-2-line L -->
-      </button>
+      ${sbMkButton({ iconOnly: true, content: '<!-- more-2-line L -->' })}
       <div class="sb-popover" role="dialog" tabindex="-1"
            data-placement="bottom-end" data-side="bottom">
         <div class="sb-ctx-card">

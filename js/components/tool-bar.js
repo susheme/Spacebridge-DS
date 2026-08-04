@@ -160,7 +160,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
     if (inline.length === 0 && moreItems.length === 0) return '';
 
     const inlineHtml = inline.map(a =>
-      `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">${sbIcon(a.icon, 'L')}</button>`
+      sbMkButton({ icon: a.icon, cls: 'sb-tool-bar-action' })
     ).join('');
 
     // Все inline items дублируем в overflow card как menu-extra cells —
@@ -177,7 +177,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
     // overflow). Если только inline без more — More-кнопку всё равно рендерим,
     // потому что в compact это единственный способ доступа к actions.
     const moreBtn = sbMkPopover({
-      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon('more-2-line', 'L')}</button>`,
+      trigger: sbMkButton({ icon: 'more-2-line' }),
       content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',
       onOpen: 'sbToolBarSyncMenu',
@@ -239,19 +239,17 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
   // icon-only Secondary с опциональным label через .sb-btn-with-label.
   // labelPos: 'left' | 'right' | undefined.
   function demoIconBtn({ icon = 'add-line', label, labelPos } = {}) {
-    const btn = `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon">${sbIcon(icon, 'L')}</button>`;
-    if (!label) return btn;
-    const lbl = `<span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">${label}</span>`;
-    const parts = labelPos === 'left' ? lbl + btn : btn + lbl;
-    return `<span class="sb-btn-with-label">${parts}</span>`;
+    if (!label) return sbMkButton({ icon });
+    return sbMkButtonWithLabel({ icon, text: label, side: labelPos === 'left' ? 'left' : 'right' });
   }
 
   // icon-only Secondary + chevron справа (демо dropdown trigger,
   // реального dropdown поведения нет — только визуал).
+  // Раньше здесь был инлайн-style `width:auto;padding:0 8px;gap:4px` — ручной
+  // дубль штатного `.sb-btn-icon-2` (68px = 24+4+24 + 8×2 padding, тот же итог).
+  // Через фабрику это просто icon-only с двумя иконками.
   function demoDropdownBtn(icon = 'add-line') {
-    return `<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon" style="width:auto;padding:0 var(--pad-horiz-8);gap:var(--gap-horiz-xs)">
-      ${sbIcon(icon, 'L')}${sbIcon('arrow-drop-down-line', 'L')}
-    </button>`;
+    return sbMkButton({ icon, iconRight: 'arrow-drop-down-line' });
   }
 
   // Tab Bar в center — 2 таба для демо.
@@ -334,23 +332,17 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         </div></div>`,
         html: `<div class="sb-tool-bar">
   <div class="sb-tool-bar-left">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>  <!-- dropdown trigger -->
-    <span class="sb-btn-with-label">
-      <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-      <span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Title</span>
-    </span>
+    ${sbMkButton({ iconOnly: true, content: '…' })}  <!-- dropdown trigger -->
+    ${sbMkButtonWithLabel({ iconOnly: true, content: '…', text: 'Title', side: 'right' })}
   </div>
   <div class="sb-tool-bar-center">
     <!-- Tab Bar (sbMkTabBar) или любой контент -->
   </div>
   <div class="sb-tool-bar-right">
-    <span class="sb-btn-with-label">
-      <span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Title</span>
-      <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-    </span>
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButtonWithLabel({ iconOnly: true, content: '…', text: 'Title', side: 'left' })}
+    ${sbMkButton({ iconOnly: true, content: '…' })}
     <!-- Search Bar (sbMkSearch) -->
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
   </div>
 </div>`,
         css: COMP_CSS["tool-bar"],
@@ -368,7 +360,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         </div></div>`,
         html: `<div class="sb-tool-bar">
   <div class="sb-tool-bar-left">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
   </div>
   <div class="sb-tool-bar-center"></div>
   <div class="sb-tool-bar-right"></div>
@@ -389,16 +381,13 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         </div></div>`,
         html: `<div class="sb-tool-bar">
   <div class="sb-tool-bar-left">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-    <span class="sb-btn-with-label">
-      <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-      <span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Title</span>
-    </span>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
+    ${sbMkButtonWithLabel({ iconOnly: true, content: '…', text: 'Title', side: 'right' })}
   </div>
   <div class="sb-tool-bar-center"></div>
   <div class="sb-tool-bar-right">
     <!-- Search Bar (sbMkSearch) -->
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
   </div>
 </div>`,
         css: COMP_CSS["tool-bar"],
@@ -464,12 +453,12 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         html: `<!-- Используй sbMkToolBarActions для responsive action group: -->
 <div class="sb-tool-bar-right">
   <!-- Visible @wide, hidden @narrow: -->
-  <button class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">…</button>
-  <button class="sb-btn sb-btn-secondary sb-btn-icon sb-tool-bar-action">…</button>
+  ${sbMkButton({ iconOnly: true, cls: 'sb-tool-bar-action', content: '…' })}
+  ${sbMkButton({ iconOnly: true, cls: 'sb-tool-bar-action', content: '…' })}
 
   <!-- Always visible — More button + Popover dropdown: -->
   <span class="sb-popover-wrap" onclick="sbPopoverToggle(this, event)">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
     <div class="sb-popover" role="dialog" tabindex="-1"
          data-placement="bottom-end" data-side="bottom"
          data-on-open="sbToolBarSyncMenu">
@@ -500,13 +489,13 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
         </div>`,
         html: `<div class="sb-tool-bar compact">
   <div class="sb-tool-bar-left">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
+    ${sbMkButton({ iconOnly: true, content: '…' })}
   </div>
   <div class="sb-tool-bar-center"></div>
   <div class="sb-tool-bar-right">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-    <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
+    ${sbMkButton({ iconOnly: true, content: '…' })}
+    ${sbMkButton({ iconOnly: true, content: '…' })}
   </div>
 </div>`,
         css: COMP_CSS["tool-bar"],
@@ -521,20 +510,17 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
           ${mkToolBar({
             bottom: true,
             left: `${demoIconBtn({ icon: 'arrow-go-back-line', label: 'Undo', labelPos: 'right' })}`,
-            right: `<button type="button" class="sb-btn sb-btn-secondary">Cancel</button><button type="button" class="sb-btn sb-btn-primary">Save</button>`,
+            right: sbMkButton({ label: 'Cancel' }) + sbMkButton({ label: 'Save', variant: 'primary' }),
           })}
         </div></div>`,
         html: `<div class="sb-tool-bar bottom">
   <div class="sb-tool-bar-left">
-    <span class="sb-btn-with-label">
-      <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>
-      <span class="sb-btn-with-label-text sb-title-m sb-fw-semibold">Undo</span>
-    </span>
+    ${sbMkButtonWithLabel({ iconOnly: true, content: '…', text: 'Undo', side: 'right' })}
   </div>
   <div class="sb-tool-bar-center"></div>
   <div class="sb-tool-bar-right">
-    <button class="sb-btn sb-btn-secondary">Cancel</button>
-    <button class="sb-btn sb-btn-primary">Save</button>
+    ${sbMkButton({ label: 'Cancel' })}
+    ${sbMkButton({ label: 'Save', variant: 'primary' })}
   </div>
 </div>`,
         css: COMP_CSS["tool-bar"],

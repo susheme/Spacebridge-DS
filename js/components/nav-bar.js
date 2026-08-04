@@ -269,11 +269,12 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     let searchOverlay = '';
     if (search) {
       searchSlot = `<div class="sb-nav-bar-search-wide">${search}</div>` +
-        `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-nav-bar-search-compact-trigger" type="button" onclick="sbNavBarOpenSearch(this)" aria-label="Open search">${sbIcon('search-line', 'L')}</button>`;
+        sbMkButton({ icon: 'search-line', cls: 'sb-nav-bar-search-compact-trigger',
+          attrs: ' onclick="sbNavBarOpenSearch(this)" aria-label="Open search"' });
       searchOverlay = sbMkOverlay({
         cls: 'sb-nav-bar-search-overlay',
         placement: 'top',
-        content: `${search}<button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" onclick="sbNavBarCloseSearch(this)" aria-label="Close search">${sbIcon('close-line', 'S')}</button>`,
+        content: `${search}${sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's', attrs: ' onclick="sbNavBarCloseSearch(this)" aria-label="Close search"' })}`,
       });
     }
 
@@ -546,11 +547,13 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
   // Кнопка слева от лого: в wide режиме показывает side-bar (collapse sidebar),
   // в compact — burger (open side menu). Иконки переключаются через CSS
   // (см. .sb-nav-bar-button-icon-wide/-compact в nav-bar.css).
-  const DEMO_BUTTON = `<button class="sb-btn sb-btn-secondary sb-btn-icon" type="button" aria-label="Toggle side menu">
-    <span class="sb-nav-bar-button-icon-wide">${sbIcon('side-bar-line', 'L')}</span>
-    <span class="sb-nav-bar-button-icon-compact">${BURGER}</span>
-  </button>`;
-  const DEMO_BELL = `<button class="sb-btn sb-btn-secondary sb-btn-icon" type="button" aria-label="Notifications">${sbIcon('notification-3-fill', 'L')}</button>`;
+  const DEMO_BUTTON = sbMkButton({
+    iconOnly: true,
+    attrs: ' aria-label="Toggle side menu"',
+    content: `<span class="sb-nav-bar-button-icon-wide">${sbIcon('side-bar-line', 'L')}</span>`
+           + `<span class="sb-nav-bar-button-icon-compact">${BURGER}</span>`,
+  });
+  const DEMO_BELL = sbMkButton({ icon: 'notification-3-fill', attrs: ' aria-label="Notifications"' });
   // Без фикс-обёртки: ширину wide-слоту даёт .sb-nav-bar-search-wide (240px),
   // а в overlay тот же search-html растягивается панелью (flex:1).
   const DEMO_SEARCH = sbMkSearch({ iconLeft: true, placeholder: 'Search', rightSlot: sbMkKbdGroup(['⌘','K']) });
@@ -566,7 +569,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     placement: 'bottom-end',
     arrow: true,
   });
-  const DEMO_PRIMARY = `<button class="sb-btn sb-btn-primary" type="button">Login</button>`;
+  const DEMO_PRIMARY = sbMkButton({ label: 'Login', variant: 'primary' });
 
   // ── Language Switcher ──────────────────────────────────────────────
   // Secondary кнопка с chevron-down (icon-R). По hover открывается
@@ -591,9 +594,10 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
     return sbMkPopover({
       wrapCls: 'sb-nav-lang-switcher',
       wrapAttrs: 'onmouseenter="sbNavBarLangOpen(this)" onmouseleave="sbNavBarLangClose(this)"',
-      trigger: `<button class="sb-btn sb-btn-secondary sb-nav-lang-btn" type="button">
-        <span class="sb-nav-lang-label">${selected}</span>${sbIcon('arrow-drop-down-line', 'L')}
-      </button>`,
+      trigger: sbMkButton({
+        cls: 'sb-nav-lang-btn',
+        content: `<span class="sb-nav-lang-label">${selected}</span>${sbIcon('arrow-drop-down-line', 'L')}`,
+      }),
       content: sbMkContextCard(cells),
       placement: 'bottom-end',
       closeOnSelect: false,
@@ -996,20 +1000,20 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
         </div>`,
         html: `<!-- bell + avatar -->
 <div class="sb-nav-bar-right">
-  <button class="sb-btn sb-btn-secondary sb-btn-icon">...</button>
+  ${sbMkButton({ iconOnly: true, content: '...' })}
   <div class="sb-avatar sb-avatar-m">...</div>
 </div>
 
 <!-- search + bell + avatar -->
 <div class="sb-nav-bar-right">
   <div class="sb-nav-bar-search-wide"><div class="sb-search icon-left">...</div></div>
-  <button class="sb-btn sb-btn-secondary sb-btn-icon">...</button>
+  ${sbMkButton({ iconOnly: true, content: '...' })}
   <div class="sb-avatar sb-avatar-m">...</div>
 </div>
 
 <!-- minimal: только Login -->
 <div class="sb-nav-bar-right">
-  <button class="sb-btn sb-btn-primary">Login</button>
+  ${sbMkButton({ label: 'Login', variant: 'primary' })}
 </div>`,
         css: COMP_CSS["nav-bar"],
       },
@@ -1019,12 +1023,15 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           'Below the 1024px container threshold the search bar collapses into an icon button; clicking it opens a search panel — a card (radius 12, Shadow-S) in the upper third of the screen, up to 560px wide, with a small close button. Runs on the Overlay primitive (placement top): the scrim, Esc, backdrop click, focus trap and the portal to body all come from there — see the Overlay page. This bar only owns the content row (search plus a close button). Also reachable in the playground: turn on Compact and click the search icon.',
           'Ниже контейнерного порога 1024px серч-бар схлопывается в иконку-кнопку; клик открывает поисковую панель — карточку (radius 12, Shadow-S) в верхней трети экрана, шириной до 560px, с маленькой кнопкой закрытия. Работает на примитиве Overlay (placement top): скрим, Esc, клик в подложку, focus trap и portal в body — оттуда, см. страницу Overlay. За баром — только контентная строка (search и кнопка закрытия). Доступно и в playground: включи Compact и кликни иконку поиска.'
         ),
-        preview: `<button class="sb-btn sb-btn-secondary" type="button" onclick="sbOverlayOpen('#sb-nav-search-overlay-demo')">${sbIcon('search-line', 'S')}<span class="sb-btn-text">Open Search Overlay</span></button>
+        preview: sbMkButton({
+          label: 'Open Search Overlay', icon: 'search-line', iconSize: 'S',
+          attrs: ` onclick="sbOverlayOpen('#sb-nav-search-overlay-demo')"`,
+        }) + `
           ${sbMkOverlay({
             id: 'sb-nav-search-overlay-demo',
             cls: 'sb-nav-bar-search-overlay',
             placement: 'top',
-            content: `${sbMkSearch({ iconLeft: true, placeholder: 'Search' })}<button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" onclick="sbNavBarCloseSearch(this)" aria-label="Close search">${sbIcon('close-line', 'S')}</button>`,
+            content: `${sbMkSearch({ iconLeft: true, placeholder: 'Search' })}${sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's', attrs: ' onclick="sbNavBarCloseSearch(this)" aria-label="Close search"' })}`,
           })}`,
         html: `<!-- Собирается примитивом:
 sbMkOverlay({
@@ -1041,7 +1048,7 @@ sbMkOverlay({
        верхняя треть экрана (margin-top 12vh), width до 560px -->
   <div class="sb-overlay-content">
     <div class="sb-search icon-left"> ... </div>
-    <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Close search"><!-- close-line S --></button>
+    ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->', attrs: ' aria-label="Close search"' })}
   </div>
 </div>`,
         css: COMP_CSS["nav-bar"],

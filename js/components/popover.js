@@ -327,7 +327,7 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
   ];
 
   const kebab = (label = 'Open menu') =>
-    `<button class="sb-btn sb-btn-secondary sb-btn-icon" type="button" aria-label="${label}">${sbIcon('more-2-line', 24)}</button>`;
+    sbMkButton({ icon: 'more-2-line', iconSize: 24, attrs: ` aria-label="${label}"` });
 
   // ── Register ────────────────────────────────────────────────────────
   sbRegister({
@@ -385,7 +385,7 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
       },
       genCode(s) {
         const call = `sbMkPopover({\n`
-          + `  trigger: '<button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>',\n`
+          + `  trigger: '${sbMkButton({ iconOnly: true, content: '…' })}',\n`
           + `  content: '<div class="sb-ctx-card">…</div>',\n`
           + `  placement: '${s.side}-${s.align}',\n`
           + (s.arrow ? `  arrow: true,\n` : '')
@@ -393,7 +393,7 @@ window.COMP_CSS.popover = `.sb-popover-wrap { position: relative; display: inlin
         const html = `<!-- Собирается хелпером: -->\n${call}\n\n`
           + `<!-- Разметка (панель закрыта; координаты ставит JS): -->\n`
           + `<span class="sb-popover-wrap" onclick="sbPopoverToggle(this, event)">\n`
-          + `  <button class="sb-btn sb-btn-secondary sb-btn-icon">…</button>\n`
+          + `  ${sbMkButton({ iconOnly: true, content: '…' })}\n`
           + `  <div class="sb-popover" id="my-menu" role="dialog" tabindex="-1"\n`
           + `       data-placement="${s.side}-${s.align}" data-side="${s.side}"\n`
           + `       data-arrow="${!!s.arrow}" data-close-select="true">\n`
@@ -441,7 +441,7 @@ sbPopoverCloseAll();`,
           'The classic trap: a menu opened inside a modal window lands under the scrim, because the portal drops it at the body level while the Overlay sits at z-index 9999. The primitive checks whether the anchor is inside an .sb-overlay and raises the panel above it. Open the modal, then the menu inside it.',
           'Классическая ловушка: меню, открытое внутри модалки, уезжает под скрим — портал кладёт его на уровень body, а Overlay сидит на z-index 9999. Примитив проверяет, находится ли якорь внутри .sb-overlay, и поднимает панель выше. Открой модалку, а в ней — меню.'
         ),
-        preview: `<button class="sb-btn sb-btn-primary" type="button" onclick="sbOverlayOpen('#sb-popover-modal-demo')">Open Modal</button>
+        preview: sbMkButton({ label: 'Open Modal', variant: 'primary', attrs: ` onclick="sbOverlayOpen('#sb-popover-modal-demo')"` }) + `
           ${typeof sbMkOverlay === 'function' ? sbMkOverlay({
             id: 'sb-popover-modal-demo',
             content: `<div style="width:min(360px, 84vw);padding:var(--pad-vert-24) var(--pad-horiz-24);box-sizing:border-box;background:var(--background);border-radius:var(--radius-16);box-shadow:0 10px 20px 0 var(--shadow-overlay)">

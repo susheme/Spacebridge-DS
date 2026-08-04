@@ -116,7 +116,8 @@ window.COMP_CSS.snackbar = `/* ── Snackbar ── floating bottom feedback a
     const act = typeof c.action === 'string' ? { label: c.action } : c.action;
     // Клик по действию всегда закрывает снэкбар (после пользовательского onClick).
     const action = act
-      ? `<button class="sb-btn sb-btn-primary sb-btn-mini" onclick="${act.onClick ? act.onClick + '; ' : ''}sbSnackbarDismiss(this)">${act.label}</button>`
+      ? sbMkButton({ label: act.label, variant: 'primary', size: 'mini',
+          attrs: ` onclick="${act.onClick ? act.onClick + '; ' : ''}sbSnackbarDismiss(this)"` })
       : '';
     // Прогресс-кольцо (не иконка из ICON_PATHS — компонентная графика, как SB_SVG).
     // Длительность отсчёта — inline animation-duration (перекрывает 5s из CSS).
@@ -211,9 +212,9 @@ window.COMP_CSS.snackbar = `/* ── Snackbar ── floating bottom feedback a
           ${mkSnackbar({ text: 'File was deleted.', lead: sbIcon('delete-bin-line', 'S'), action: { label: 'Undo' }, timer: true, close: true })}
           ${mkSnackbar({ text: 'New changes available.', lead: sbIcon('loop-left-line', 'S'), action: { label: 'Refresh' }, close: true })}
           ${sbPgGroup('Show Live:', `
-              <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar()">Copied</button>
-              <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar({ text: 'File was deleted.', success: false, lead: 'delete-bin-line', action: 'Undo', timer: 5 })">Undo</button>
-              <button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="sbShowSnackbar({ text: 'New changes available.', success: false, lead: 'loop-left-line', action: 'Refresh' })">Refresh</button>
+              ${sbMkButton({ label: 'Copied', size: 's', attrs: ' onclick="sbShowSnackbar()"' })}
+              ${sbMkButton({ label: 'Undo', size: 's', attrs: ` onclick="sbShowSnackbar({ text: 'File was deleted.', success: false, lead: 'delete-bin-line', action: 'Undo', timer: 5 })"` })}
+              ${sbMkButton({ label: 'Refresh', size: 's', attrs: ` onclick="sbShowSnackbar({ text: 'New changes available.', success: false, lead: 'loop-left-line', action: 'Refresh' })"` })}
           `, { attrs: 'style="margin-top:var(--pad-vert-8)"' })}
         </div>`,
         html: `<div class="sb-snackbar">
@@ -222,7 +223,7 @@ window.COMP_CSS.snackbar = `/* ── Snackbar ── floating bottom feedback a
     <span class="sb-snackbar-msg sb-title-s sb-fw-regular">File was deleted.</span>
   </div>
   <span class="sb-snackbar-timer"><!-- countdown ring: critical / undoable only --></span>
-  <button class="sb-btn sb-btn-primary sb-btn-mini">Undo</button>
+  ${sbMkButton({ label: 'Undo', variant: 'primary', size: 'mini' })}
   <button class="sb-snackbar-close"><!-- close icon --></button>
 </div>
 

@@ -362,7 +362,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
   function emptyBranch(node) {
     const ph = node.placeholder || {};
     return `<div class="sb-side-nav-branch-empty">
-      <button type="button" class="sb-btn sb-btn-secondary"><span class="sb-btn-text">${ph.buttonLabel || 'Button'}</span></button>
+      ${sbMkButton({ label: ph.buttonLabel || 'Button' })}
       <span class="sb-sub">${ph.subText || 'Subscription Text'}</span>
     </div>`;
   }
@@ -475,8 +475,8 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     // даёт surface-1+синий через .expanded; selected-визуал — через data. Hover → Shadow-S.
     const gMeta = node.counter != null ? `<span class="sb-side-nav-row-meta">${cnt(node.counter)}</span>` : '';
     const gActions = `<span class="sb-side-nav-row-actions">
-        <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-side-nav-edit" onclick="event.stopPropagation()">${sbIcon('pencil-line', 'S')}</button>
-        <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-side-nav-delete" onclick="event.stopPropagation()">${sbIcon('delete-bin-line', 'S')}</button>
+        ${sbMkButton({ icon: 'pencil-line', iconSize: 'S', size: 's', cls: 'sb-side-nav-edit', attrs: ' onclick="event.stopPropagation()"' })}
+        ${sbMkButton({ icon: 'delete-bin-line', iconSize: 'S', size: 's', cls: 'sb-side-nav-delete', attrs: ' onclick="event.stopPropagation()"' })}
       </span>`;
     const gDis = node.disabled ? ' is-disabled' : '';
     const gOnclick = node.disabled ? '' : ' onclick="sbSideNavRow(this, true, false)"';
@@ -515,7 +515,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
     let bodyInner;
     if (empty) {
       bodyInner = `<div class="sb-side-nav-empty">
-        <button type="button" class="sb-btn sb-btn-secondary"><span class="sb-btn-text">${empty.buttonLabel || 'Button'}</span></button>
+        ${sbMkButton({ label: empty.buttonLabel || 'Button' })}
         <span class="sb-sub">${empty.subText || 'Subscription Text'}</span>
       </div>`;
     } else {
@@ -529,7 +529,7 @@ window.COMP_CSS.sideNav = `.sb-side-nav {
 
   // ── Демо-хелперы ─────────────────────────────────────────────────────
   const BRAND = `<span class="sb-brand">SPACEBRIDGE</span>`;
-  const ADD_BTN = `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>`;
+  const ADD_BTN = sbMkButton({ icon: 'add-line', iconSize: 'S', size: 's' });
 
   function demoHeader(variant, divider = false) {
     if (variant === 'headline') {

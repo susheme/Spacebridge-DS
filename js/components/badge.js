@@ -52,6 +52,7 @@ window.COMP_CSS.badge = {
 .sb-badge-count.blue  { background: var(--primary);        color: var(--background); }
 .sb-badge-count.green { background: var(--success); color: var(--background); }`,
   dot: `.sb-badge-dot {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: var(--gap-horiz-s);
@@ -170,7 +171,8 @@ sbRegister({
       html: `<!-- Use SVG directly as an img (рекомендуется) -->
 <img src="./Symbol-Badges/Type=check-circle.svg" width="24" height="24" alt="Check">`,
       css: COMP_CSS.badge.symbol,
-      footer: `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" onclick="downloadSymbolBadgeZip()" title="Download SVGs">${sbIcon('download-2-line','L')}</button>`,
+      footer: sbMkButton({ icon: 'download-2-line', size: 's',
+        attrs: ' onclick="downloadSymbolBadgeZip()" title="Download SVGs"' }),
     },
     {
       title: 'Pin',

@@ -195,8 +195,8 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
     <div class="sb-dialogue-message sb-body-l">All changes will be lost if you go back.</div>
   </div>
   <nav class="sb-action-bar align-center" aria-label="Actions">
-    <button class="sb-btn sb-btn-primary">Button</button>
-    <button class="sb-btn sb-btn-secondary">Button</button>
+    ${sbMkButton({ label: 'Button', variant: 'primary' })}
+    ${sbMkButton({ label: 'Button' })}
   </nav>
 </div>
 
@@ -246,7 +246,7 @@ dlg.addEventListener('sb-checkbox:change', e => console.log(e.detail.checked));`
           'Modality is composition, not a prop of the window: the Dialogue mounts into the Overlay and gets the scrim, focus trap and the portal to body for free. For alerts both escape hatches are off (closeOnBackdrop / closeOnEsc: false) — an alert demands a decision, so it closes only via its buttons.',
           'Модальность — композиция, а не свойство окна: Dialogue монтируется в Overlay и бесплатно получает скрим, focus trap и portal в body. Для алертов оба «запасных выхода» выключены (closeOnBackdrop / closeOnEsc: false) — алерт требует решения, закрывается только кнопками.'
         ),
-        preview: `<button class="sb-btn sb-btn-primary" type="button" onclick="sbOverlayOpen('#sb-dialogue-modal-demo')">Open Alert</button>
+        preview: sbMkButton({ label: 'Open Alert', variant: 'primary', attrs: ` onclick="sbOverlayOpen('#sb-dialogue-modal-demo')"` }) + `
           ${sbMkOverlay({
             id: 'sb-dialogue-modal-demo',
             closeOnBackdrop: false,

@@ -210,7 +210,7 @@ window.sbSelectInfoCell = function(cell) {
   function buildProfileRight(type) {
     if (type === 'icon')   return sbIcon('arrow-right-s-line', 'L');
     if (type === 'icons2') return sbIcon('mail-line', 'L') + sbIcon('phone-line', 'L');
-    if (type === 'button') return `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm">${sbIcon('add-line', 'S')}</button>`;
+    if (type === 'button') return sbMkButton({ icon: 'add-line', iconSize: 'S', size: 's' });
     return '';
   }
 
@@ -387,7 +387,7 @@ window.sbSelectInfoCell = function(cell) {
         const rightComment =
           s.rightContent === 'icon'   ? '<!-- arrow-right-s-line -->' :
           s.rightContent === 'icons2' ? '<!-- mail-line --> <!-- phone-line -->' :
-          s.rightContent === 'button' ? '<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm"><!-- add-line S --></button>' :
+          s.rightContent === 'button' ? sbMkButton({ size: 's', iconOnly: true, content: '<!-- add-line S -->' }) :
                                         '';
         const rightBlock = rightComment
           ? `\n  <div class="sb-profile-cell-right">\n    ${rightComment}\n  </div>`
@@ -464,9 +464,7 @@ window.sbSelectInfoCell = function(cell) {
 <div class="sb-profile-cell">
   <div class="sb-profile-cell-left"> ... </div>
   <div class="sb-profile-cell-right">
-    <button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm">
-      <!-- add-line S -->
-    </button>
+    ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- add-line S -->' })}
   </div>
 </div>
 

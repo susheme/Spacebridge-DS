@@ -63,7 +63,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
         <span class="sb-uploader-icon">${sbIcon('upload-cloud-2-line', 'L')}</span>
         <div class="sb-uploader-title sb-title-m">${title}</div>
         <div class="sb-uploader-hint sb-body-m">${hint}</div>
-        <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" tabindex="-1" aria-label="Add files">${sbIcon('add-line', 'S')}</button>
+        ${sbMkButton({ icon: 'add-line', iconSize: 'S', size: 's', attrs: ' tabindex="-1" aria-label="Add files"' })}
         <input class="sb-uploader-input" type="file"${multiple ? ' multiple' : ''}${accept ? ` accept="${accept}"` : ''} onchange="sbUploaderPick(this)" onclick="event.stopPropagation()">
       </div>
     </div>`;
@@ -112,7 +112,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           ${info}
         </div>
       </div>
-      <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" aria-label="${btnLabel}" onclick="sbUploaderCellRemove(this)">${btnIcon}</button>
+      ${sbMkButton({ iconOnly: true, size: 's', content: btnIcon, attrs: ` aria-label="${btnLabel}" onclick="sbUploaderCellRemove(this)"` })}
       ${bar}
     </div>`;
   }
@@ -336,7 +336,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
     <span class="sb-uploader-icon"><!-- upload-cloud-2-line L --></span>
     <div class="sb-uploader-title sb-title-m">Drag & Drop your files here or browse</div>
     <div class="sb-uploader-hint sb-body-m">JSON format only, up to 50 Mb</div>
-    <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" aria-label="Add files"><!-- add-line S --></button>
+    ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- add-line S -->', attrs: ' aria-label="Add files"' })}
     <input class="sb-uploader-input" type="file" multiple>
   </div>
 </div>`;
@@ -384,7 +384,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
       <span class="sb-uploader-cell-status">Completed</span>
     </div>
   </div>
-  <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" aria-label="Remove file"><!-- delete-bin-line S --></button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- delete-bin-line S -->', attrs: ' aria-label="Remove file"' })}
 </div>
 
 <!-- Uploading: loaded-of-total, часы --primary, крестик-стоп, progress bar -->
@@ -399,7 +399,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
       <span class="sb-uploader-cell-status">Uploading ...</span>
     </div>
   </div>
-  <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" aria-label="Cancel upload"><!-- close-line S --></button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->', attrs: ' aria-label="Cancel upload"' })}
   <div class="sb-uploader-cell-progress" style="width:36%"></div>
 </div>
 
@@ -415,7 +415,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
       <button class="sb-uploader-cell-retry" type="button">Retry</button>
     </div>
   </div>
-  <button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" type="button" aria-label="Dismiss"><!-- close-line S --></button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->', attrs: ' aria-label="Dismiss"' })}
 </div>`,
         css: COMP_CSS['file-uploader'],
       },

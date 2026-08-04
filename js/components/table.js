@@ -287,7 +287,7 @@ window.COMP_CSS.table = `.sb-table {
   const _drag = () => `<span class="sb-td-drag">${sbIconRaw('draggable', 'S')}</span>`;        // Drawer / drag-handle
   const _cb   = () => sbMkCheckbox({ static: true });  // витрина типа ячейки: выбором не рулит, Tab не забирает
   const _tgl  = () => sbMkToggle({ on: true });
-  const _btn  = () => `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button">${sbIcon('more-2-line', 'M')}</button>`;
+  const _btn  = () => sbMkButton({ icon: 'more-2-line', iconSize: 'M', size: 's' });
   const _inp  = v => `<div class="sb-tf"><input class="sb-tf-input" placeholder="${v || 'Value'}"></div>`;
   const _badge = (c, l) => `<span class="sb-badge-status mini ${c}">${l}</span>`;  // Badge-Status Mini
   const _dot  = c => `<span class="sb-status-dot ${c}"></span>`;
@@ -343,15 +343,20 @@ window.COMP_CSS.table = `.sb-table {
     { icon: 'delete-bin-line', critical: true, ariaLabel: 'Delete' },
   ];
   function _toolBtn(a) {
-    const variant = a.variant === 'primary' ? 'sb-btn-primary'
-                  : a.variant === 'text'    ? 'sb-btn-text'
-                  : 'sb-btn-secondary';
+    // Через фабрику Button. iconSize 'M' — как было до миграции (у тулбара
+    // таблицы иконки 20px, а не 24/16), авто-вывод icon-only совпадает со
+    // старым условием `icon && !label`.
     const iconOnly = a.icon && !a.label;
-    const cls = `sb-btn ${variant} sb-btn-sm${iconOnly ? ' sb-btn-icon' : ''}${a.critical ? ' sb-btn-critical' : ''}`;
-    const aria = iconOnly && a.ariaLabel ? ` aria-label="${a.ariaLabel}"` : '';
-    const click = a.onclick ? ` onclick="${a.onclick}"` : '';
-    const icon = a.icon ? sbIcon(a.icon, 'M') : '';
-    return `<button class="${cls}" type="button"${aria}${click}>${icon}${a.label || ''}</button>`;
+    return sbMkButton({
+      label:    a.label || '',
+      variant:  a.variant === 'primary' ? 'primary' : a.variant === 'text' ? 'text' : 'secondary',
+      size:     's',
+      critical: a.critical,
+      icon:     a.icon,
+      iconSize: 'M',
+      attrs:    (iconOnly && a.ariaLabel ? ` aria-label="${a.ariaLabel}"` : '')
+              + (a.onclick ? ` onclick="${a.onclick}"` : ''),
+    });
   }
   function mkTableToolBar({ actions, visible = false } = {}) {
     const list = Array.isArray(actions) && actions.length ? actions : _TOOLBAR_DEFAULT;
@@ -387,7 +392,7 @@ window.COMP_CSS.table = `.sb-table {
     // Носик динамический (arrow), поэтому .with-tip у карточки не нужен:
     // тот прибит к right:16px и после сдвига переставал смотреть на кнопку.
     const menu = sbMkPopover({
-      trigger: `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" type="button" aria-label="Row actions">${sbIcon('more-2-line', 'M')}</button>`,
+      trigger: sbMkButton({ icon: 'more-2-line', iconSize: 'M', size: 's', attrs: ' aria-label="Row actions"' }),
       content: sbMkContextCard(cells),
       placement: 'bottom-end',
       arrow: true,

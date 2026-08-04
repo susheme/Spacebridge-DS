@@ -91,7 +91,8 @@ sbRegister({
           <div class="typo-sample sb-brand sb-h7">${r.sample}</div>
           <div class="typo-end">
             <div class="typo-meta sb-body-s">OTF Font</div>
-            <a class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" href="${r.download}" download="${r.downloadName}" title="Download font">${sbIcon('download-2-line','L')}</a>
+            ${sbMkButton({ icon: 'download-2-line', size: 's', href: r.download,
+              attrs: ` download="${r.downloadName}" title="Download font"` })}
           </div>
         </div>`;
         return;

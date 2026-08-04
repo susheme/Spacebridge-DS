@@ -73,17 +73,19 @@ window.COMP_CSS.pagination = `.sb-pagination {
     const pagesHtml = pages.map(p => {
       if (p === '...') return `<span class="sb-pagination-ellipsis">…</span>`;
       const isCurrent = p === current;
-      const variant = isCurrent ? 'sb-btn-primary' : 'sb-btn-secondary';
       const aria = isCurrent ? ' aria-current="page"' : '';
       // Номер = тот же Icon-Only Small, что и стрелки (current = Primary). Квадрат
       // 24; .sb-pagination-page разрешает ширине расти для много-значных номеров.
-      return `<button class="sb-btn ${variant} sb-btn-sm sb-btn-icon sb-pagination-page"${aria}${onClick(p)}>${p}</button>`;
+      return sbMkButton({ variant: isCurrent ? 'primary' : 'secondary', size: 's', iconOnly: true,
+        content: String(p), cls: 'sb-pagination-page', attrs: aria + onClick(p) });
     }).join('\n      ');
 
     const prevDisabled = current <= 1 ? ' disabled' : '';
     const nextDisabled = current >= total ? ' disabled' : '';
-    const prevBtn = `<button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Previous page"${prevDisabled}${onClick(current - 1)}>${sbIcon('arrow-drop-left-line', 'S')}</button>`;
-    const nextBtn = `<button class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon" aria-label="Next page"${nextDisabled}${onClick(current + 1)}>${sbIcon('arrow-drop-right-line', 'S')}</button>`;
+    const prevBtn = sbMkButton({ icon: 'arrow-drop-left-line', iconSize: 'S', size: 's',
+      attrs: ' aria-label="Previous page"' + prevDisabled + onClick(current - 1) });
+    const nextBtn = sbMkButton({ icon: 'arrow-drop-right-line', iconSize: 'S', size: 's',
+      attrs: ' aria-label="Next page"' + nextDisabled + onClick(current + 1) });
 
     return `<nav class="sb-pagination" aria-label="Pagination">
       ${prevBtn}

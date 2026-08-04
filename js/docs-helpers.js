@@ -108,7 +108,8 @@ const _exBoxInitial = {};
 function exampleBox(previewHTML, codeStr, cssStr = '', opts = {}) {
   const uid = 'eb-' + (++_exBoxId);
   _exBoxInitial[uid] = previewHTML;
-  const resetBtn = `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" onclick="resetPreview(this)" title="Reset">${sbIcon('loop-left-line','L')}</button>`;
+  const resetBtn = sbMkButton({ icon: 'loop-left-line', size: 's',
+    attrs: ' onclick="resetPreview(this)" title="Reset"' });
   return `<div class="example-box" data-eb-id="${uid}">
     <div class="example-preview${opts.col ? ' col' : ''}">${previewHTML}</div>
     <div class="example-toolbar">
@@ -116,7 +117,8 @@ function exampleBox(previewHTML, codeStr, cssStr = '', opts = {}) {
         ${opts.footer || ''}
         ${resetBtn}
       </div>
-      <button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" onclick="toggleCode(this)" title="Show/Hide Code">${sbIcon('code-s-slash-line','L')}</button>
+      ${sbMkButton({ icon: 'code-s-slash-line', size: 's',
+        attrs: ' onclick="toggleCode(this)" title="Show/Hide Code"' })}
     </div>
     <div class="example-code">${codeGrid(codeStr, cssStr)}</div>
   </div>`;

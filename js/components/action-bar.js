@@ -31,26 +31,19 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
 
 // --- ACTION BAR ---
 (() => {
-  // Кнопка по DS-конвенции (классы .sb-btn-*, лейбл — текст, иконки — sbIcon).
-  // Хелпера sbMkButton в DS нет, поэтому рендерим инлайном (как в side-nav и др.).
+  // Кнопка — через фабрику Button. Локальная сборка разметки снесена
+  // (миграция на sbMkButton): iconR у icon-only игнорируется, как и раньше.
   function actionBtn(b) {
-    const v = b.variant === 'primary' ? 'sb-btn-primary'
-            : b.variant === 'text'    ? 'sb-btn-text'
-            : 'sb-btn-secondary';
-    const cls = 'sb-btn ' + v
-      + (b.critical ? ' sb-btn-critical' : '')
-      + (b.iconOnly ? ' sb-btn-icon' : '');
-    const dis = b.disabled ? ' disabled' : '';
-    const onclick = b.onClick ? ` onclick="${b.onClick}"` : '';
-    let inner;
-    if (b.iconOnly) {
-      inner = b.icon ? sbIcon(b.icon, 'L') : '';
-    } else {
-      inner = (b.icon ? sbIcon(b.icon, 'L') + ' ' : '')
-        + (b.label || 'Button')
-        + (b.iconR ? ' ' + sbIcon(b.iconR, 'L') : '');
-    }
-    return `<button class="${cls}"${dis}${onclick}>${inner}</button>`;
+    return sbMkButton({
+      label:     b.label || 'Button',
+      variant:   b.variant === 'primary' ? 'primary' : b.variant === 'text' ? 'text' : 'secondary',
+      critical:  b.critical,
+      icon:      b.icon,
+      iconRight: b.iconOnly ? '' : b.iconR,
+      iconOnly:  b.iconOnly,
+      disabled:  b.disabled,
+      attrs:     b.onClick ? ` onclick="${b.onClick}"` : '',
+    });
   }
 
   // mkActionBar({ buttons:[{label,variant,icon,iconR,iconOnly,critical,disabled,onClick}],

@@ -84,7 +84,13 @@
        .sb-nav-bar-logo-compact span'ов замени на <svg>...</svg>.
        Компонент принимает любой HTML внутри этих слотов. -->
   <header class="sb-nav-bar" style="flex-shrink:0">
-    <div class="sb-nav-bar-left">
+    <!-- Лого — привычный жест «домой»: клик ведёт на Getting Started (тот же
+         пункт закреплён в шапке сайдбара). Роль и tabindex — чтобы жест был
+         доступен и с клавиатуры, а не только мышью. -->
+    <div class="sb-nav-bar-left" role="link" tabindex="0" title="Getting Started"
+         aria-label="Getting Started" style="cursor:pointer"
+         onclick="navigate('getting-started')"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigate('getting-started')}">
       <span class="sb-nav-bar-logo-full">
         <span class="sb-brand" style="font-size:18px;color:var(--primary)">SPACEBRIDGE</span>
       </span>
@@ -96,8 +102,8 @@
     </div>
     <div class="sb-nav-bar-center"></div>
     <div class="sb-nav-bar-right" id="dsNavRight">
-      <!-- Language switcher injected here on init() через sbMkLangSwitcher. -->
-      <button class="sb-btn sb-btn-secondary sb-btn-icon" onclick="toggleTheme()" title="Toggle theme" id="themeBtn"></button>
+      <!-- Language switcher и Theme-кнопка инжектятся ниже по файлу через
+           sbMkLangSwitcher / sbMkButton — разметку кнопок в DS руками не пишем. -->
     </div>
   </header>
 
@@ -131,8 +137,14 @@
      плашки идут через bootstrap-фолбэк sbDocNote (зеркало mkBanner, см. SYNC;
      фолбэк зовёт sbMkChevron — потому chevron строго первый).
      snackbar — сразу за тройкой: его секция зовёт sbDocNote (→ нужен
-     sbMkBanner из banners), а лид success-fill берётся из SB_BADGE_SPECS. -->
+     sbMkBanner из banners), а лид success-fill берётся из SB_BADGE_SPECS.
+     buttons вклинивается вторым, сразу за chevron: после миграции на фабрику
+     sbMkButton его зовут при РЕГИСТРАЦИИ и badge (футер секции Symbol Badges),
+     и snackbar (кнопки «Show Live»), а sbRegister трогает sections сразу —
+     геттер тут не спасает. Плашки самого buttons идут через тот же
+     bootstrap-фолбэк sbDocNote, что у chevron и badge. -->
 <script src="js/components/chevron.js"></script>
+<script src="js/components/buttons.js"></script>
 <script src="js/components/badge.js"></script>
 <script src="js/components/banners.js"></script>
 <script src="js/components/snackbar.js"></script>
@@ -143,7 +155,6 @@
      который вычисляется при регистрации, а не при рендере. -->
 <script src="js/components/checkbox.js"></script>
 <script src="js/components/toggles.js"></script>
-<script src="js/components/buttons.js"></script>
 <!-- action-bar — кнопки .sb-btn (CSS из buttons), sbIcon из core. -->
 <script src="js/components/action-bar.js"></script>
 <!-- popover — примитив якорного позиционирования. Грузится РАНО и намеренно:
@@ -232,6 +243,23 @@
   tmp.innerHTML = sbMkLangSwitcher({ selected: (localStorage.getItem('sb-lang') || 'en').toUpperCase() });
   var switcher = tmp.firstElementChild;
   right.insertBefore(switcher, right.firstChild);
+})();
+</script>
+
+<!-- Theme-кнопка топбара. Разметка — через sbMkButton (фабрика Button), а не
+     руками в HTML: иначе это единственная в DS рукописная кнопка. Иконку
+     ставит core.js на DOMContentLoaded (и меняет toggleTheme при клике) —
+     этот скрипт выполняется раньше события, так что кнопка уже в DOM. -->
+<script>
+(function(){
+  var right = document.getElementById('dsNavRight');
+  if (!right || typeof sbMkButton !== 'function') return;
+  var tmp = document.createElement('div');
+  tmp.innerHTML = sbMkButton({
+    icon: document.documentElement.getAttribute('data-theme') === 'dark' ? 'moon-fill' : 'sun-line',
+    attrs: ' id="themeBtn" onclick="toggleTheme()" title="Toggle theme"',
+  });
+  right.appendChild(tmp.firstElementChild);
 })();
 </script>
 

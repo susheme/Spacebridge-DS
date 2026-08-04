@@ -160,7 +160,7 @@ window.COMP_CSS.overlay = `.sb-overlay { position: fixed; inset: 0; z-index: 999
           'A live overlay with the Framed Uploader inside — exactly the scenario the Framed variant exists for. Open it and check: Esc and a scrim click close it, Tab cycles inside the window, the page behind does not scroll.',
           'Живой оверлей с Framed Uploader внутри — ровно тот сценарий, ради которого существует Framed-вариант. Открой и проверь: Esc и клик по подложке закрывают, Tab циклится внутри окна, страница под ним не скроллится.'
         ),
-        preview: `<button class="sb-btn sb-btn-primary" type="button" onclick="sbOverlayOpen('#sb-overlay-demo')">Open Overlay</button>
+        preview: sbMkButton({ label: 'Open Overlay', variant: 'primary', attrs: ` onclick="sbOverlayOpen('#sb-overlay-demo')"` }) + `
           ${mkOverlay({ id: 'sb-overlay-demo', content: demoContent() })}`,
         html: `<!-- Разметка (закрытый; открывается хелпером) -->
 <div class="sb-overlay" id="my-overlay" data-close-backdrop="true" data-close-esc="true" role="dialog" aria-modal="true">

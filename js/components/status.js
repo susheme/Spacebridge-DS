@@ -24,9 +24,33 @@ window.COMP_CSS.status = {
   50%      { opacity: 0.35; transform: scale(0.75); }
 }`,
   mini: `.sb-status-dot.mini { width: 6px; height: 6px; border: var(--border-width-2) solid var(--background); box-sizing: content-box; box-shadow: none !important; }
-.sb-icon-badge-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: var(--background); border-radius: var(--radius-6); color: var(--text-tertiary); }
+.sb-icon-badge-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--background);
+  border-radius: var(--radius-6);
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
 .sb-icon-badge-wrap .sb-status-dot.mini { position: absolute; top: 4px; right: 4px; }`,
-  badgeStatus: `.sb-badge-status { display: inline-flex; align-items: center; justify-content: center; height: var(--status-text-max-height); padding: 0 var(--pad-horiz-16); border-radius: var(--radius-8); gap: var(--gap-horiz-s); font-size: var(--body-font-size-m); font-weight: var(--font-weight-semibold); line-height: 1; white-space: nowrap; }
+  badgeStatus: `.sb-badge-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--status-text-max-height);
+  padding: 0 var(--pad-horiz-16);
+  border-radius: var(--radius-8);
+  gap: var(--gap-horiz-s);
+  font-size: var(--body-font-size-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 .sb-badge-status.bs-grey   { background: var(--shadow-overlay);  color: var(--text-secondary); }
 .sb-badge-status.bs-green  { background: var(--success-hover);  color: var(--success); }
 .sb-badge-status.bs-blue   { background: var(--primary-hover);     color: var(--info); }
@@ -285,7 +309,8 @@ sbRegister({
         <span class="sb-status" style="gap: var(--gap-horiz-s)">${ANT.off}<span>No Signal</span></span>`,
       html: `<!-- Full signal -->\n<svg width="22" height="18" viewBox="0 0 22 18" fill="none">\n  <circle cx="11" cy="16" r="2" fill="var(--success)"/>\n  <path d="M7 12.5A5.657 5.657 0 0 1 15 12.5" stroke="var(--success)" stroke-width="2" stroke-linecap="round"/>\n  <path d="M3.5 9A10.607 10.607 0 0 1 18.5 9" stroke="var(--success)" stroke-width="2" stroke-linecap="round"/>\n  <path d="M0 5.5A15.556 15.556 0 0 1 22 5.5" stroke="var(--success)" stroke-width="2" stroke-linecap="round"/>\n</svg>`,
       css: COMP_CSS.status.antenna,
-      footer: `<button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm" onclick="downloadAntennaZip()" title="Download SVGs">${sbIcon('download-2-line','L')}</button>`,
+      footer: sbMkButton({ icon: 'download-2-line', size: 's',
+        attrs: ' onclick="downloadAntennaZip()" title="Download SVGs"' }),
     },
     {
       title: 'Mark — Regular',

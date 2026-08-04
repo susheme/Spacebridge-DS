@@ -105,13 +105,13 @@ window.COMP_CSS.headerXs = `.sb-header-xs {
   };
   const RIGHT_BUILDERS = {
     none:        () => '',
-    close:       () => `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
+    close:       () => sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's' }),
     chevronDown: () => sbMkChevron(),
     chevronUp:   () => sbMkChevron({ dir: 'up' }),
   };
   const RIGHT_CODE = {
     none:        null,
-    close:       `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">\n  <!-- close-line S -->\n</button>`,
+    close:       `${sbMkButton({ size: 's', iconOnly: true, content: '\\n <!-- close-line S -->\\n' })}`,
     chevronDown: `<div class="sb-chevron">\n  <!-- arrow-down-s-line L -->\n</div>`,
     chevronUp:   `<div class="sb-chevron">\n  <!-- arrow-up-s-line L -->\n</div>`,
   };
@@ -207,16 +207,14 @@ ${leftInner}
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Header XS</span>`,
-            slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
+            slotRight: sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's' }),
           })}
         </div>`,
         html: `<div class="sb-header-xs">
   <div class="sb-header-xs-left">
     <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Header XS</span>
   </div>
-  <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-    <!-- close-line S -->
-  </button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->' })}
 </div>`,
         css: COMP_CSS.headerXs,
       },
@@ -229,7 +227,7 @@ ${leftInner}
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>`,
-            slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
+            slotRight: sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's' }),
           })}
         </div>`,
         html: `<div class="sb-header-xs">
@@ -237,9 +235,7 @@ ${leftInner}
     <!-- Symbol Badge: warnLine SVG 24×24 -->
     <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>
   </div>
-  <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-    <!-- close-line S -->
-  </button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->' })}
 </div>`,
         css: COMP_CSS.headerXs,
       },
@@ -252,7 +248,7 @@ ${leftInner}
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;max-width:360px">
           ${mkHeaderXS({
             slotLeft: `<span class="sb-header-xs-loader" aria-label="Loading"></span><span class="sb-header-xs-title sb-title-m sb-fw-semibold">Saving…</span>`,
-            slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
+            slotRight: sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's' }),
           })}
         </div>`,
         html: `<div class="sb-header-xs">
@@ -260,9 +256,7 @@ ${leftInner}
     <span class="sb-header-xs-loader" aria-label="Loading"></span>
     <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Saving…</span>
   </div>
-  <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-    <!-- close-line S -->
-  </button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->' })}
 </div>`,
         css: COMP_CSS.headerXs,
       },
@@ -276,7 +270,7 @@ ${leftInner}
           ${mkHeaderXS({
             flushRight: true,
             slotLeft: `${SB_SVG.warnLine}<span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>`,
-            slotRight: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('close-line', 'S')}</button>`,
+            slotRight: sbMkButton({ icon: 'close-line', iconSize: 'S', size: 's' }),
           })}
         </div>`,
         html: `<div class="sb-header-xs flush-right">
@@ -284,9 +278,7 @@ ${leftInner}
     <!-- Symbol Badge: warnLine SVG 24×24 -->
     <span class="sb-header-xs-title sb-title-m sb-fw-semibold">Warning!</span>
   </div>
-  <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-    <!-- close-line S -->
-  </button>
+  ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- close-line S -->' })}
 </div>`,
         css: COMP_CSS.headerXs,
       },

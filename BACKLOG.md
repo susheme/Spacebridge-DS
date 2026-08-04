@@ -4,41 +4,6 @@
 
 ---
 
-## 🚨 АЛЯАААРМ! MAJOR!!! — Button: фабрики НЕТ, ~95 рукописных мест в 20 файлах
-
-Последний и самый большой долг догмы Клементия (аудит 27.07.2026). У кнопки —
-самого используемого компонента DS — фабрики не существует вообще. Признание
-прямо в коде: `action-bar.js:35` «Хелпера sbMkButton в DS нет, поэтому рендерим
-инлайном». Расхождение УЖЕ идёт: один и тот же вариант пишется в двух порядках
-классов (`sb-btn-secondary sb-btn-sm sb-btn-icon` ×39 против
-`…sb-btn-icon sb-btn-sm` ×8).
-
-### Масштаб (боевой рендер, code-samples в доках не считаны)
-
-~95 мест: tool-bar ×25, header-l ×21, header-m ×19, header-s ×16, nav-bar ×12,
-banners ×6, snackbar ×5, header-xs ×10, file-uploader, section-header, side-navigation,
-toast, dialogues, list, pagination, table и др. Числа аудита — верхняя граница:
-фильтр отличал `html:`-доки, но не `genCode`.
-
-### Почему НЕ механическая замена (и почему отдельная сессия)
-
-1. **Сначала спроектировать API `sbMkBtn`** под все вариации: primary/secondary,
-   sm, icon-only (`sb-btn-icon`), текст+иконки (`sb-btn-text`, iconLeft/iconRight),
-   critical, disabled, mini (24px), with-label обёртка (`sb-btn-with-label` +
-   `-text`), потребительские классы (`sb-header-l-action`, `sb-tool-bar-action`)
-   и attrs (onclick/aria/style). Кривой API → инлайн вернётся.
-2. Канонизировать порядок классов — фабрика закроет расхождение раз и навсегда.
-3. Мигрировать по файлу за раз с побайтовой сверкой (метод отработан на
-   Chevron/Toggle: эталон «до» → фабрика → diff).
-4. `buttons.js` уже грузится вторым среди компонентов — с load order повезло,
-   но после экспорта проставить deps потребителям в `_index.js`.
-
-### Триггер
-
-Отмашка «старт Button». Не мешать с багфиксами и другими компонентами.
-
----
-
 ## Major: Dogfood DS chrome через собственные компоненты
 
 Сейчас «обёртка» DS (заголовки страниц, секций, playground'ов) — самописная разметка в `core.js` + стили в `layout.css`/`playground.css`. Идея — заменить на наши же Header L / Header M / Header XS. Это автоматически решает кучу мелочей (truncation, hover-state'ы, консистентность) и заодно стресс-тестит сами компоненты.

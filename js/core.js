@@ -754,12 +754,11 @@ const SB_PG = {
       </div>
       <div class="sb-sep sep-h sep-s"></div>
       <div class="pg-footer">
-        <button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm"
-                onclick="SB_PG.reset('${name}')" title="Reset">${sbIcon('loop-left-line','L')}</button>
+        ${sbMkButton({ icon: 'loop-left-line', size: 's',
+          attrs: ` onclick="SB_PG.reset('${name}')" title="Reset"` })}
         <div class="pg-footer-right">
-          <button class="sb-btn sb-btn-secondary sb-btn-icon sb-btn-sm"
-                  id="pg-${name}-showcode-btn"
-                  onclick="SB_PG.toggleCode('${name}')" title="Show/Hide Code">${sbIcon('code-s-slash-line','L')}</button>
+          ${sbMkButton({ icon: 'code-s-slash-line', size: 's',
+            attrs: ` id="pg-${name}-showcode-btn" onclick="SB_PG.toggleCode('${name}')" title="Show/Hide Code"` })}
         </div>
       </div>
       <div class="pg-code-panel" id="pg-${name}-code-panel">

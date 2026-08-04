@@ -70,9 +70,9 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
   function mkSectionHeaderActions({ inline = [], more } = {}) {
     const inlineHtml = inline.map(a => {
       if (a.type === 'icon') {
-        return `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon sb-section-header-action">${sbIcon(a.icon, 'S')}</button>`;
+        return sbMkButton({ icon: a.icon, iconSize: 'S', size: 's', cls: 'sb-section-header-action' });
       }
-      return `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-section-header-action"><span>${a.label}</span></button>`;
+      return sbMkButton({ label: a.label, size: 's', cls: 'sb-section-header-action' });
     }).join('');
 
     const hasInline = inline.length > 0;
@@ -91,7 +91,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
 
     return inlineHtml + sbMkPopover({
       wrapCls: 'sb-section-header-more',
-      trigger: `<button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('more-2-line', 'S')}</button>`,
+      trigger: sbMkButton({ icon: 'more-2-line', iconSize: 'S', size: 's' }),
       content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',
       onOpen: 'sbSectionHeaderSyncMenu',
@@ -237,7 +237,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
           slotRight: `
             <span class="sb-sub" style="color:var(--text-secondary)">subscription</span>
             ${sbMkToggle({ on: true })}
-            <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">${sbIcon('add-line', 'S')}</button>
+            ${sbMkButton({ icon: 'add-line', iconSize: 'S', size: 's' })}
             ${sbMkChevron({ dir: 'up' })}
           `,
         }),
@@ -249,7 +249,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
   <div class="sb-section-header-right">
     <span class="sb-sub">subscription</span>
     <label class="sb-toggle-wrap">…</label>
-    <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon"><!-- add-line --></button>
+    ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- add-line -->' })}
     <div class="sb-chevron"><!-- arrow-up-s-line --></div>
   </div>
 </div>`,
@@ -283,9 +283,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
   </div>
   <div class="sb-section-header-right">
     <span class="sb-popover-wrap sb-section-header-more" onclick="sbPopoverToggle(this, event)">
-      <button type="button" class="sb-btn sb-btn-secondary sb-btn-sm sb-btn-icon">
-        <!-- more-2-line S -->
-      </button>
+      ${sbMkButton({ size: 's', iconOnly: true, content: '<!-- more-2-line S -->' })}
       <div class="sb-popover" role="dialog" tabindex="-1"
            data-placement="bottom-end" data-side="bottom">
         <div class="sb-ctx-card">

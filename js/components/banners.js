@@ -439,8 +439,9 @@ a.sb-banner-title {
                    : s.lead === 'icon'  ? sbIcon('notification-3-line', 'L')
                    : '';
         const right = s.right === 'badge'   ? `<span class="sb-badge-status mini ${d.bs}">${d.bsLabel}</span>`
-                    : s.right === 'close'   ? `<button class="sb-btn sb-btn-secondary sb-btn-icon" onclick="dismissBanner(this)" title="Dismiss">${sbIcon('close-line', 'L')}</button>`
-                    : s.right === 'buttons' ? `<button class="sb-btn sb-btn-secondary sb-btn-sm">Details</button><button class="sb-btn sb-btn-secondary sb-btn-sm" onclick="dismissBanner(this)">Dismiss</button>`
+                    : s.right === 'close'   ? sbMkButton({ icon: 'close-line', attrs: ' onclick="dismissBanner(this)" title="Dismiss"' })
+                    : s.right === 'buttons' ? sbMkButton({ label: 'Details', size: 's' })
+                                              + sbMkButton({ label: 'Dismiss', size: 's', attrs: ' onclick="dismissBanner(this)"' })
                     : '';
         const banner = mkBanner({
           type: s.type,
@@ -501,8 +502,8 @@ sbDocNote('${kind}', body)
         if (s.text) lines.push(`    <div class="sb-banner-text sb-body-m">${d.text}</div>`);
         lines.push(`  </div>`);
         if (s.right === 'badge')   lines.push(`  <div class="sb-banner-right"><span class="sb-badge-status mini ${d.bs}">${d.bsLabel}</span></div>`);
-        if (s.right === 'close')   lines.push(`  <div class="sb-banner-right"><button class="sb-btn sb-btn-secondary sb-btn-icon"><!-- close icon --></button></div>`);
-        if (s.right === 'buttons') lines.push(`  <div class="sb-banner-right"><button class="sb-btn sb-btn-secondary sb-btn-sm">Details</button><button class="sb-btn sb-btn-secondary sb-btn-sm">Dismiss</button></div>`);
+        if (s.right === 'close')   lines.push(`  <div class="sb-banner-right">${sbMkButton({ iconOnly: true, content: '<!-- close icon -->' })}</div>`);
+        if (s.right === 'buttons') lines.push(`  <div class="sb-banner-right">${sbMkButton({ label: 'Details', size: 's' })}${sbMkButton({ label: 'Dismiss', size: 's' })}</div>`);
         lines.push(`</div>`);
         lines.push(``, `<!-- sbMkBanner({ type:'info'|'success'|'warning'|'error', lead?, title?, href?, text?, right? }) -->`);
         return { html: lines.join('\n'), css: COMP_CSS.banners };

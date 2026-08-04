@@ -69,22 +69,11 @@
 .sb-sb-item { display: flex; flex-direction: column; align-items: center; gap: var(--gap-horiz-s); width: 100%; }
 .sb-sb-item .sb-body-s { color: var(--text-tertiary); text-align: center; }
 
-/* Section preview layout — утилиты для превью секций в Zone E.
-   Параметры через CSS-vars: --gap (16px), --maxw (none).
-   Варианты через модификаторы: gap-sm/lg, narrow/medium/wide/xl. */
-.sec-col { display: flex; flex-direction: column; gap: var(--gap, var(--gap-horiz-m)); width: 100%; max-width: var(--maxw, none); }
-.sec-row { display: flex; align-items: center; gap: var(--gap, var(--gap-horiz-m)); flex-wrap: var(--wrap, nowrap); }
-.sec-col.gap-xs, .sec-row.gap-xs { --gap: var(--gap-horiz-s); }
-.sec-col.gap-sm, .sec-row.gap-sm { --gap: var(--gap-horiz-s); }
-.sec-col.gap-md, .sec-row.gap-md { --gap: var(--gap-horiz-m); }
-.sec-col.gap-lg, .sec-row.gap-lg { --gap: var(--gap-horiz-lg); }
-.sec-col.narrow { --maxw: 360px; }
-.sec-col.medium { --maxw: 400px; }
-.sec-col.wide   { --maxw: 480px; }
-.sec-col.xl     { --maxw: 520px; }
-.sec-row.wrap   { --wrap: wrap; }
-/* Wrap-ряд: 8px вертикально, 24px горизонтально (для списков вариантов) */
-.sec-row.spread { --wrap: wrap; gap: var(--gap-horiz-s) var(--gap-horiz-lg); }
+/* .sec-col / .sec-row удалены 04.08.2026: это был Grid System, написанный до
+   Grid System. Раскладка превью теперь идёт через sbMkFlex — одна реализация
+   вместо двух, и она доступна продукту, а не только докам.
+   Признак того, что утилита подгнила: .gap-xs и .gap-sm указывали на ОДИН
+   токен, то есть два имени давали одинаковый отступ. */
 /* Простые width-обёртки без flex (когда родитель уже задаёт layout) */
 .sec-w100   { width: 100%; }
 .sec-narrow { width: 100%; max-width: 360px; }

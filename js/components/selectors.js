@@ -252,11 +252,9 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
           + '<ul><li>Пока панель открыта, обёртка носит <code>.is-open</code> — поле держит рамку primary и развёрнутый шеврон.</li></ul>'
         )),
         col: true, interactive: true,
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkSel({ options: DEMO_OPTIONS, value: 'Ku-band' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkSel({ options: DEMO_OPTIONS, value: 'Ku-band' })}
           ${mkSel({ options: DEMO_OPTIONS, placeholder: true })}
-          ${mkSelField({ options: DEMO_OPTIONS, value: 'Ka-band' }, { label: 'Frequency Band', subscription: 'Pick the uplink band' })}
-        </div>`,
+          ${mkSelField({ options: DEMO_OPTIONS, value: 'Ka-band' }, { label: 'Frequency Band', subscription: 'Pick the uplink band' })}` })}`,
         html: `<!-- sbMkSel({ options: ['C-band', 'Ku-band', 'Ka-band'], value: 'Ku-band' }) -->
 <span class="sb-popover-wrap sb-sel-pop sec-narrow" data-sel="1" onclick="sbPopoverToggle(this, event)">
   <div class="sb-sel">
@@ -278,14 +276,12 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
           'Default, Placeholder, Selected (active), Critical, Disabled.',
           'Default, Placeholder, Selected (активный), Critical, Disabled.'
         ),
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkSel({})}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkSel({})}
           ${mkSel({ placeholder: true })}
           ${mkSel({ selected: true })}
           ${mkSel({ open: true })}
           ${mkSel({ critical: true })}
-          ${mkSel({ disabled: true })}
-        </div>`,
+          ${mkSel({ disabled: true })}` })}`,
         html: `<!-- Default -->\n<div class="sb-sel">\n  <span class="sb-sel-val">Selected value</span>\n  <div class="sb-sel-right">\n    <div class="sb-chevron"><!-- arrow-down-s-line --></div>\n  </div>\n</div>\n\n<!-- Open -->\n<div class="sb-sel open">\n  <span class="sb-sel-val">Selected value</span>\n  <div class="sb-sel-right">\n    <div class="sb-chevron"><!-- arrow-down-s-line --></div>\n  </div>\n</div>\n\n<!-- Placeholder -->\n<div class="sb-sel placeholder">\n  <span class="sb-sel-val">Select an option...</span>\n  <div class="sb-sel-right">\n    <div class="sb-chevron"><!-- arrow-down-s-line --></div>\n  </div>\n</div>`,
         css: COMP_CSS.chevron + '\n' + COMP_CSS.selector,
       },
@@ -308,12 +304,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
           'The selector inside sb-field — the label above, the subscription below. In the Critical state the subscription turns error-colored.',
           'Selector внутри sb-field — Label сверху, Subscription снизу. При Critical подпись красится в error.'
         ),
-        preview: `<div class="sec-col narrow gap-lg">
-          ${mkSelField({},               { label: 'Label' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${mkSelField({},               { label: 'Label' })}
           ${mkSelField({},               { label: 'Label', subscription: 'Subscription text' })}
           ${mkSelField({ critical: true }, { label: 'Label', subscription: 'Wrong selection' })}
-          ${mkSelField({ disabled: true }, { label: 'Label', subscription: 'Subscription text' })}
-        </div>`,
+          ${mkSelField({ disabled: true }, { label: 'Label', subscription: 'Subscription text' })}` })}`,
         html: `<div class="sb-field">\n  <span class="sb-field-label">Label</span>\n  <div class="sb-sel">\n    <span class="sb-sel-val">Selected value</span>\n    <div class="sb-sel-right">\n      <div class="sb-chevron"><!-- arrow-down-s-line --></div>\n    </div>\n  </div>\n  <span class="sb-field-sub">Subscription text</span>\n</div>`,
         css: COMP_CSS.chevron + '\n' + COMP_CSS.selector + '\n' + COMP_CSS["input-field-wrap"],
       },

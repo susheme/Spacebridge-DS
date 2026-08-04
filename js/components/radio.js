@@ -122,37 +122,31 @@ window.COMP_CSS.radio = `.sb-radio {
     sections: [
       {
         title: sbT('States — No Label', 'Состояния — без лейбла'),
-        preview: `<div class="sec-row gap-lg">
-          ${mkRb({})}
+        preview: `${sbMkFlex({ gap: 'lg', align: 'center', content: `${mkRb({})}
           ${mkRb({ hover: true })}
           ${mkRb({ selected: true })}
           ${mkRb({ disabled: true })}
-          ${mkRb({ selected: true, disabled: true })}
-        </div>`,
+          ${mkRb({ selected: true, disabled: true })}` })}`,
         html: `<!-- Default -->\n<div class="sb-radio"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div></div>\n\n<!-- Selected -->\n<div class="sb-radio selected"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div></div>\n\n<!-- Disabled -->\n<div class="sb-radio disabled"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div></div>\n\n<!-- Disabled + Selected -->\n<div class="sb-radio disabled selected"><div class="sb-radio-circle"><div class="sb-radio-dot"></div></div></div>`,
         css: COMP_CSS.radio,
       },
       {
         title: sbT('States — With Label', 'Состояния — с лейблом'),
-        preview: `<div class="sec-row spread">
-          ${mkRb({ label: 'Title' })}
+        preview: `${sbMkFlex({ gapX: 'lg', gapY: 's', align: 'center', wrap: true, content: `${mkRb({ label: 'Title' })}
           ${mkRb({ hover: true, label: 'Title' })}
           ${mkRb({ selected: true, label: 'Title' })}
           ${mkRb({ disabled: true, label: 'Title' })}
-          ${mkRb({ selected: true, disabled: true, label: 'Title' })}
-        </div>`,
+          ${mkRb({ selected: true, disabled: true, label: 'Title' })}` })}`,
         html: `<!-- Default -->\n<div class="sb-radio">\n  <div class="sb-radio-circle"><div class="sb-radio-dot"></div></div>\n  <span class="sb-radio-label">Title</span>\n</div>\n\n<!-- Selected -->\n<div class="sb-radio selected">\n  <div class="sb-radio-circle"><div class="sb-radio-dot"></div></div>\n  <span class="sb-radio-label">Title</span>\n</div>`,
         css: COMP_CSS.radio,
       },
       {
         title: sbT('Label Left', 'Лейбл слева'),
-        preview: `<div class="sec-row spread">
-          ${mkRb({ label: 'Title', labelLeft: true })}
+        preview: `${sbMkFlex({ gapX: 'lg', gapY: 's', align: 'center', wrap: true, content: `${mkRb({ label: 'Title', labelLeft: true })}
           ${mkRb({ hover: true, label: 'Title', labelLeft: true })}
           ${mkRb({ selected: true, label: 'Title', labelLeft: true })}
           ${mkRb({ disabled: true, label: 'Title', labelLeft: true })}
-          ${mkRb({ selected: true, disabled: true, label: 'Title', labelLeft: true })}
-        </div>`,
+          ${mkRb({ selected: true, disabled: true, label: 'Title', labelLeft: true })}` })}`,
         html: `<!-- Label Left -->\n<div class="sb-radio label-left">\n  <div class="sb-radio-circle"><div class="sb-radio-dot"></div></div>\n  <span class="sb-radio-label">Title</span>\n</div>`,
         css: COMP_CSS.radio,
       },

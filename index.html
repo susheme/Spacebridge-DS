@@ -145,6 +145,11 @@
      геттер тут не спасает. Плашки самого buttons идут через тот же
      bootstrap-фолбэк sbDocNote, что у chevron и badge. -->
 <script src="js/components/chevron.js"></script>
+<!-- grid-system — примитивы раскладки (Flex / Grid / Page). Третьим, сразу
+     за chevron: демо-секции banners, snackbar и других зовут sbMkFlex прямо
+     при регистрации. Своих зависимостей нет — адаптивность приходит из
+     токенов, media-запросов внутри компонента ноль. -->
+<script src="js/components/grid-system.js"></script>
 <script src="js/components/buttons.js"></script>
 <script src="js/components/badge.js"></script>
 <script src="js/components/banners.js"></script>
@@ -164,9 +169,6 @@
      тяжёлых зависимостей у него нет: демо-секции спрятаны за геттером
      sections и вычисляются при открытии страницы, а не при регистрации. -->
 <script src="js/components/popover.js"></script>
-<!-- grid-system — примитивы раскладки (Flex / Grid / Page). Ни от чего не
-     зависит: вся адаптивность приходит из токенов, media-запросов внутри нет. -->
-<script src="js/components/grid-system.js"></script>
 <script src="js/components/separators.js"></script>
 <script src="js/components/avatar.js"></script>
 <script src="js/components/radio.js"></script>

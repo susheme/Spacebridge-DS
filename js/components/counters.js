@@ -92,15 +92,13 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
           'A single numeric value. Example: unread notifications. Min-width 24px, grows with the content.',
           'Одиночное числовое значение. Пример: непрочитанные уведомления. Минимальная ширина 24px, растёт по контенту.'
         ),
-        preview: `<div class="sec-row wrap">
-          ${mkCnt({ value: 9 })}
+        preview: `${sbMkFlex({ align: 'center', wrap: true, content: `${mkCnt({ value: 9 })}
           ${mkCnt({ value: 999 })}
           ${mkCnt({ value: 9999 })}
           ${mkCnt({ value: 10000 })}
           ${mkCnt({ value: 150000 })}
           ${mkCnt({ value: 1500000 })}
-          ${mkCnt({ empty: true })}
-        </div>`,
+          ${mkCnt({ empty: true })}` })}`,
         html: `<!-- Single -->\n<div class="sb-counter">9</div>\n\n<!-- Empty -->\n<div class="sb-counter empty">--</div>`,
         css: COMP_CSS.counter,
       },
@@ -110,12 +108,10 @@ window.COMP_CSS.counter = `.sb-counter { display: inline-flex; align-items: cent
           'The value/max format — shows capacity. Examples: slots, quotas, list fullness.',
           'Формат value/max — показывает заполненность. Примеры: слоты, квоты, наполнение списков.'
         ),
-        preview: `<div class="sec-row">
-          ${mkCnt({ type: 'range', value: 1,    max: 9 })}
+        preview: `${sbMkFlex({ align: 'center', content: `${mkCnt({ type: 'range', value: 1,    max: 9 })}
           ${mkCnt({ type: 'range', value: 99,   max: 999 })}
           ${mkCnt({ type: 'range', value: 9999, max: 9999 })}
-          ${mkCnt({ type: 'range', empty: true })}
-        </div>`,
+          ${mkCnt({ type: 'range', empty: true })}` })}`,
         html: `<!-- Range: 9 онлайн из 18 -->\n<div class="sb-counter range">\n  <span class="sb-counter-online">9</span>\n  <span class="sb-counter-sep">/</span>\n  <span class="sb-counter-total">18</span>\n</div>\n\n<!-- Empty -->\n<div class="sb-counter range empty">--/--</div>`,
         css: COMP_CSS.counter,
       },

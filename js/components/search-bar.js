@@ -135,12 +135,10 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
           'The standard filled look. Default — a gray background; Selected/Focus — the field switches to --background with a blue border. The magnifier lives in the right action button.',
           'Стандартный вид с заливкой. Default — серый фон; Selected/Focus — поле переходит на --background с синим бордером. Лупа — в правой action-кнопке.'
         ),
-        preview: `<div class="sec-col medium">
-          ${mkSearch({})}
+        preview: `${sbMkFlex({ dir: 'col', full: true, maxWidth: '400px', content: `${mkSearch({})}
           ${mkSearch({ selected: true })}
           ${mkSearch({ disabled: true })}
-          ${mkSearch({ critical: true })}
-        </div>`,
+          ${mkSearch({ critical: true })}` })}`,
         html: `<!-- Default -->\n<div class="sb-search">\n  <input class="sb-search-input" type="text" placeholder="Search">\n  <button class="sb-search-btn" type="button"><!-- search icon --></button>\n</div>\n\n<!-- Selected -->\n<div class="sb-search selected">...</div>\n\n<!-- Disabled -->\n<div class="sb-search disabled">...</div>\n\n<!-- Critical -->\n<div class="sb-search critical">...</div>`,
         css: COMP_CSS["search-bar"],
       },
@@ -150,11 +148,9 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
           'The minimal look — a bottom line only, no background. Used in tables and compact interfaces.',
           'Минималистичный вид — только нижняя линия, без фона. Используется в таблицах и компактных интерфейсах.'
         ),
-        preview: `<div class="sec-col medium">
-          ${mkSearch({ lineView: true })}
+        preview: `${sbMkFlex({ dir: 'col', full: true, maxWidth: '400px', content: `${mkSearch({ lineView: true })}
           ${mkSearch({ lineView: true, selected: true })}
-          ${mkSearch({ lineView: true, disabled: true })}
-        </div>`,
+          ${mkSearch({ lineView: true, disabled: true })}` })}`,
         html: `<!-- Line View Default -->\n<div class="sb-search line-view">\n  <input class="sb-search-input" type="text" placeholder="Search">\n  <button class="sb-search-btn" type="button"><!-- search icon --></button>\n</div>\n\n<!-- Line View Selected -->\n<div class="sb-search line-view selected">...</div>`,
         css: COMP_CSS["search-bar"],
       },
@@ -164,11 +160,9 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
           'The magnifier sits in a left overlay and never eats the input width. The right action button (.sb-search-btn) is not rendered in this variant: the right side holds either nothing or the right slot — a KBS hint or a clear button. The canonical search pattern (Spotlight, GitHub, Linear).',
           'Лупа — в overlay слева и не съедает ширину инпута. Правая action-кнопка (.sb-search-btn) в этом варианте не рендерится: справа либо ничего, либо right-slot — KBS-подсказка или clear-кнопка. Канонический паттерн поиска (Spotlight, GitHub, Linear).'
         ),
-        preview: `<div class="sec-col medium">
-          ${mkSearch({ iconLeft: true })}
+        preview: `${sbMkFlex({ dir: 'col', full: true, maxWidth: '400px', content: `${mkSearch({ iconLeft: true })}
           ${mkSearch({ iconLeft: true, selected: true })}
-          ${mkSearch({ iconLeft: true, lineView: true })}
-        </div>`,
+          ${mkSearch({ iconLeft: true, lineView: true })}` })}`,
         html: `<!-- Icon Left, без правого слота -->\n<div class="sb-search icon-left">\n  <span class="sb-search-icon-left"><!-- search icon --></span>\n  <input class="sb-search-input" type="text" placeholder="Search">\n</div>`,
         css: COMP_CSS["search-bar"],
       },
@@ -178,11 +172,9 @@ window.COMP_CSS["search-bar"] = `.sb-search { display: flex; align-items: center
           'The icon on the left plus a KBS hint in the right slot. Used as a global search with a hotkey — like the ⌘+K search in this design system’s nav. The right slot can be hidden on focus via CSS on the parent.',
           'Иконка слева и KBS-подсказка в right-slot. Используется как глобальный поиск с хоткеем — как поиск ⌘+K в навигации этой дизайн-системы. Right-slot в фокусе можно скрыть через CSS на родителе.'
         ),
-        preview: `<div class="sec-col medium">
-          ${mkSearch({ iconLeft: true, rightSlot: sbMkKbdGroup(['⌘','K']) })}
+        preview: `${sbMkFlex({ dir: 'col', full: true, maxWidth: '400px', content: `${mkSearch({ iconLeft: true, rightSlot: sbMkKbdGroup(['⌘','K']) })}
           ${mkSearch({ iconLeft: true, rightSlot: sbMkKbd('/') })}
-          ${mkSearch({ iconLeft: true, lineView: true, rightSlot: sbMkKbdGroup(['⌘','K']) })}
-        </div>`,
+          ${mkSearch({ iconLeft: true, lineView: true, rightSlot: sbMkKbdGroup(['⌘','K']) })}` })}`,
         html: `<div class="sb-search icon-left">\n  <span class="sb-search-icon-left"><!-- search icon --></span>\n  <input class="sb-search-input" type="text" placeholder="Search">\n  <span class="sb-search-right-slot">\n    <span class="sb-kbd-group">\n      <kbd class="sb-kbd">⌘</kbd>\n      <span class="sb-kbd-sep">+</span>\n      <kbd class="sb-kbd">K</kbd>\n    </span>\n  </span>\n</div>`,
         css: COMP_CSS["search-bar"],
       },

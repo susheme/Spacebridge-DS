@@ -126,13 +126,11 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
           'Default, Placeholder, Selected (ready for input), Critical, Disabled.',
           'Default, Placeholder, Selected (готов к вводу), Critical, Disabled.'
         ),
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkTa({ value: 'Text area filled with the only one sentence, but you can add more.' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkTa({ value: 'Text area filled with the only one sentence, but you can add more.' })}
           ${mkTa({ placeholder: true })}
           ${mkTa({ selected: true, value: 'Ready for typing' })}
           ${mkTa({ critical: true, value: 'Something goes wrong' })}
-          ${mkTa({ disabled: true, value: 'Disable Text Area' })}
-        </div>`,
+          ${mkTa({ disabled: true, value: 'Disable Text Area' })}` })}`,
         html: `<!-- Default -->\n<div class="sb-ta">\n  <textarea class="sb-ta-input">Text here</textarea>\n</div>\n\n<!-- Selected -->\n<div class="sb-ta selected">\n  <textarea class="sb-ta-input">Ready for typing</textarea>\n</div>\n\n<!-- Critical -->\n<div class="sb-ta critical">\n  <textarea class="sb-ta-input">Something goes wrong</textarea>\n</div>\n\n<!-- Disabled -->\n<div class="sb-ta disabled">\n  <textarea class="sb-ta-input" disabled>Disable Text Area</textarea>\n</div>`,
         css: COMP_CSS.textarea,
       },
@@ -142,12 +140,10 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
           'The textarea inside sb-field — the label above, the subscription below. The subscription turns error-colored in the Critical state.',
           'Textarea внутри sb-field — Label сверху, Subscription снизу. При Critical подпись красится в error.'
         ),
-        preview: `<div class="sec-col narrow gap-lg">
-          ${mkTaField({ value: 'Default text' },                   { label: 'Label' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${mkTaField({ value: 'Default text' },                   { label: 'Label' })}
           ${mkTaField({ value: 'Default text' },                   { label: 'Label', subscription: 'Subscription text' })}
           ${mkTaField({ critical: true, value: 'Error state' },    { label: 'Label', subscription: 'Subscription text' })}
-          ${mkTaField({ disabled: true, value: 'Disabled state' }, { label: 'Label', subscription: 'Subscription text' })}
-        </div>`,
+          ${mkTaField({ disabled: true, value: 'Disabled state' }, { label: 'Label', subscription: 'Subscription text' })}` })}`,
         html: `<div class="sb-field">\n  <span class="sb-field-label">Label</span>\n  <div class="sb-ta">\n    <textarea class="sb-ta-input">Text here</textarea>\n  </div>\n  <span class="sb-field-sub">Subscription text</span>\n</div>`,
         css: COMP_CSS.textarea + '\n' + COMP_CSS["input-field-wrap"],
       },

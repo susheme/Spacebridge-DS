@@ -32,6 +32,15 @@
 .sb-flex.dir-col.gap-xxl { gap: var(--gap-vert-xxl); }
 .sb-flex.gap-0 { gap: var(--gap-horiz-0); }
 
+/* Раздельные оси. Нужны переносящимся рядам: между строками зазор должен быть
+   меньше, чем между соседями в строке, иначе список вариантов расползается.
+   Значения приходят инлайновыми переменными — пар «ось × шаг» слишком много,
+   чтобы заводить под них классы. */
+.sb-flex.gap-split {
+  column-gap: var(--sb-gap-x, var(--gap-horiz-m));
+  row-gap: var(--sb-gap-y, var(--gap-vert-m));
+}
+
 .sb-flex.align-start   { align-items: flex-start; }
 .sb-flex.align-center  { align-items: center; }
 .sb-flex.align-end     { align-items: flex-end; }

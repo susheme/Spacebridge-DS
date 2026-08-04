@@ -76,31 +76,27 @@ window.COMP_CSS.chevron = `.sb-chevron { display: inline-flex; align-items: cent
     sections: [
       {
         title: sbT('Normal — All Directions', 'Normal — все направления'),
-        preview: `<div class="sec-row gap-sm">
-          ${mkChv({ dir: 'down' })}
+        preview: `<div style="display:flex;align-items:center;gap:var(--gap-horiz-s)">${mkChv({ dir: 'down' })}
           ${mkChv({ dir: 'up' })}
           ${mkChv({ dir: 'left' })}
           ${mkChv({ dir: 'right' })}
           ${mkChv({ dir: 'down', disabled: true })}
           ${mkChv({ dir: 'up',   disabled: true })}
           ${mkChv({ dir: 'left', disabled: true })}
-          ${mkChv({ dir: 'right',disabled: true })}
-        </div>`,
+          ${mkChv({ dir: 'right',disabled: true })}</div>`,
         html: `<!-- Down -->\n<div class="sb-chevron"><!-- arrow-down-s-line L --></div>\n\n<!-- Up -->\n<div class="sb-chevron"><!-- arrow-up-s-line L --></div>\n\n<!-- Disabled -->\n<div class="sb-chevron disabled"><!-- arrow-down-s-line L --></div>`,
         css: COMP_CSS.chevron,
       },
       {
         title: sbT('Mini — All Directions', 'Mini — все направления'),
-        preview: `<div class="sec-row gap-sm">
-          ${mkChv({ dir: 'down',  mini: true })}
+        preview: `<div style="display:flex;align-items:center;gap:var(--gap-horiz-s)">${mkChv({ dir: 'down',  mini: true })}
           ${mkChv({ dir: 'up',    mini: true })}
           ${mkChv({ dir: 'left',  mini: true })}
           ${mkChv({ dir: 'right', mini: true })}
           ${mkChv({ dir: 'down',  mini: true, disabled: true })}
           ${mkChv({ dir: 'up',    mini: true, disabled: true })}
           ${mkChv({ dir: 'left',  mini: true, disabled: true })}
-          ${mkChv({ dir: 'right', mini: true, disabled: true })}
-        </div>`,
+          ${mkChv({ dir: 'right', mini: true, disabled: true })}</div>`,
         html: `<!-- Mini Down -->\n<div class="sb-chevron mini"><!-- arrow-down-s-line S --></div>\n\n<!-- Mini Disabled -->\n<div class="sb-chevron mini disabled"><!-- arrow-down-s-line S --></div>`,
         css: COMP_CSS.chevron,
       },

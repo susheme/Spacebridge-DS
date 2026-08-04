@@ -42,6 +42,15 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
 .sb-flex.dir-col.gap-xxl { gap: var(--gap-vert-xxl); }
 .sb-flex.gap-0 { gap: var(--gap-horiz-0); }
 
+/* Раздельные оси. Нужны переносящимся рядам: между строками зазор должен быть
+   меньше, чем между соседями в строке, иначе список вариантов расползается.
+   Значения приходят инлайновыми переменными — пар «ось × шаг» слишком много,
+   чтобы заводить под них классы. */
+.sb-flex.gap-split {
+  column-gap: var(--sb-gap-x, var(--gap-horiz-m));
+  row-gap: var(--sb-gap-y, var(--gap-vert-m));
+}
+
 .sb-flex.align-start   { align-items: flex-start; }
 .sb-flex.align-center  { align-items: center; }
 .sb-flex.align-end     { align-items: flex-end; }
@@ -105,11 +114,21 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
 
   var GAPS = { 0: 'gap-0', xs: 'gap-xs', s: 'gap-s', m: 'gap-m', lg: 'gap-lg', xl: 'gap-xl', xxl: 'gap-xxl' };
 
+  // Шаг шкалы + ось → токен. Шкала одна, но горизонталь и вертикаль в Figma
+  // заданы раздельно и на мобильном расходятся.
+  function gapToken(step, axis) {
+    if (step === undefined || step === null) step = 'm';
+    return 'var(--gap-' + axis + '-' + step + ')';
+  }
+
   /**
    * sbMkFlex({ dir, gap, align, justify, wrap, full, items, content, cls, attrs })
    *
    *   dir     — 'row' (default) | 'col'
    *   gap     — 0 | 'xs' | 's' | 'm' (default) | 'lg' | 'xl' | 'xxl'
+   *   gapX    — отступ ПО ГОРИЗОНТАЛИ, если он должен отличаться от gapY
+   *   gapY    — отступ ПО ВЕРТИКАЛИ. Пара нужна переносящимся рядам: между
+   *             строками зазор обычно меньше, чем между соседями в строке
    *   align   — 'start' | 'center' | 'end' | 'stretch'
    *   justify — 'start' | 'center' | 'end' | 'between'
    *   wrap    — переносить ли детей на новую строку
@@ -127,8 +146,13 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
     if (s.dir === 'col')  cls += ' dir-col';
     if (s.wrap)           cls += ' is-wrap';
     if (s.full)           cls += ' is-full';
-    var gapKey = (s.gap === undefined || s.gap === null) ? 'm' : s.gap;
-    if (GAPS[gapKey])     cls += ' ' + GAPS[gapKey];
+    var split = (s.gapX !== undefined || s.gapY !== undefined);
+    if (split) {
+      cls += ' gap-split';
+    } else {
+      var gapKey = (s.gap === undefined || s.gap === null) ? 'm' : s.gap;
+      if (GAPS[gapKey]) cls += ' ' + GAPS[gapKey];
+    }
     if (s.align)          cls += ' align-' + s.align;
     if (s.justify)        cls += ' justify-' + s.justify;
     if (s.cls)            cls += ' ' + s.cls;
@@ -137,6 +161,10 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
     // много, поэтому не классы, а стиль. Оформление (фон, паддинги, рамки)
     // фабрика не принимает намеренно: это не её забота.
     var style = '';
+    if (split) {
+      style += '--sb-gap-x:' + gapToken(s.gapX, 'horiz') + ';';
+      style += '--sb-gap-y:' + gapToken(s.gapY, 'vert') + ';';
+    }
     if (s.width)    style += 'width:' + s.width + ';';
     if (s.maxWidth) style += 'max-width:' + s.maxWidth + ';';
     style = style ? ' style="' + style.replace(/;$/, '') + '"' : '';

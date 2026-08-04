@@ -170,14 +170,12 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
           'All states with right content (a title): Default, Placeholder, Selected (with a clear button), Critical, Disabled, Read Only.',
           'Все состояния с правым контентом (Title): Default, Placeholder, Selected (с кнопкой очистки), Critical, Disabled, Read Only.'
         ),
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkTf({ value: 'Default' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkTf({ value: 'Default' })}
           ${mkTf({ placeholder: true })}
           ${mkTf({ selected: true, value: 'Selected' })}
           ${mkTf({ critical: true, value: 'Error' })}
           ${mkTf({ disabled: true, value: 'Disabled' })}
-          ${mkTf({ readOnly: true, value: 'Read only' })}
-        </div>`,
+          ${mkTf({ readOnly: true, value: 'Read only' })}` })}`,
         html: `<!-- Default -->\n<div class="sb-tf">\n  <input class="sb-tf-input" type="text" value="Input">\n  <div class="sb-tf-right"><span class="sb-tf-title">Title</span></div>\n</div>\n\n<!-- Placeholder -->\n<div class="sb-tf">\n  <input class="sb-tf-input" type="text" placeholder="Placeholder">\n  <div class="sb-tf-right"><span class="sb-tf-title">Title</span></div>\n</div>\n\n<!-- Selected -->\n<div class="sb-tf selected">...</div>\n\n<!-- Critical -->\n<div class="sb-tf critical">...</div>\n\n<!-- Disabled -->\n<div class="sb-tf disabled">...</div>`,
         css: COMP_CSS["input-field"],
       },
@@ -187,14 +185,12 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
           'The same states without the right content.',
           'Те же состояния без правого контента.'
         ),
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkTf({ value: 'Default', showTitle: false })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkTf({ value: 'Default', showTitle: false })}
           ${mkTf({ placeholder: true, showTitle: false })}
           ${mkTf({ selected: true, value: 'Selected', showTitle: false })}
           ${mkTf({ critical: true, value: 'Error', showTitle: false })}
           ${mkTf({ disabled: true, value: 'Disabled', showTitle: false })}
-          ${mkTf({ readOnly: true, value: 'Read only', showTitle: false })}
-        </div>`,
+          ${mkTf({ readOnly: true, value: 'Read only', showTitle: false })}` })}`,
         html: `<div class="sb-tf">\n  <input class="sb-tf-input" type="text" value="Input">\n</div>`,
         css: COMP_CSS["input-field"],
       },
@@ -204,14 +200,12 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
           'The minimal look — a bottom line only. Used in tables and compact forms.',
           'Минималистичный вид — только нижняя линия. Используется в таблицах и компактных формах.'
         ),
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkTf({ lineView: true, value: 'Default' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkTf({ lineView: true, value: 'Default' })}
           ${mkTf({ lineView: true, placeholder: true })}
           ${mkTf({ lineView: true, selected: true, value: 'Selected' })}
           ${mkTf({ lineView: true, critical: true, value: 'Error' })}
           ${mkTf({ lineView: true, disabled: true, value: 'Disabled' })}
-          ${mkTf({ lineView: true, readOnly: true, value: 'Read only' })}
-        </div>`,
+          ${mkTf({ lineView: true, readOnly: true, value: 'Read only' })}` })}`,
         html: `<div class="sb-tf line-view">\n  <input class="sb-tf-input" type="text" value="Input">\n  <div class="sb-tf-right"><span class="sb-tf-title">Title</span></div>\n</div>`,
         css: COMP_CSS["input-field"],
       },
@@ -221,12 +215,10 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
           'The label sits above the field, the subscription below it. Both are optional and combine independently.',
           'Label располагается над полем, Subscription — под ним. Оба опциональны и комбинируются независимо.'
         ),
-        preview: `<div class="sec-col narrow gap-lg">
-          ${mkField({ value: 'Default' }, { label: 'Label' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${mkField({ value: 'Default' }, { label: 'Label' })}
           ${mkField({ value: 'Default' }, { subscription: 'Subscription text' })}
           ${mkField({ value: 'Default' }, { label: 'Label', subscription: 'Subscription text' })}
-          ${mkField({ critical: true, value: 'Error' }, { label: 'Label', subscription: 'Subscription text' })}
-        </div>`,
+          ${mkField({ critical: true, value: 'Error' }, { label: 'Label', subscription: 'Subscription text' })}` })}`,
         html: `<div class="sb-field">\n  <span class="sb-field-label">Label</span>\n  <div class="sb-tf">...</div>\n  <span class="sb-field-sub">Subscription text</span>\n</div>`,
         css: COMP_CSS["input-field"] + '\n' + COMP_CSS["input-field-wrap"],
       },

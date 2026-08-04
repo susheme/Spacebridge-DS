@@ -103,15 +103,11 @@ window.COMP_CSS.tags = `.sb-tag {
       render(s) {
         if (s.colorful) {
           const group = (title, tags, variant) => `
-            <div class="sec-col gap-xs">
-              <span class="sb-caption" style="color:var(--text-muted)">${title}</span>
-              ${mkTagInputWrap(tags, variant)}
-            </div>`;
-          return `<div class="sec-col wide">
-            ${group('Online', ['Ka-Band', 'Active'], 'success')}
+            ${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `<span class="sb-caption" style="color:var(--text-muted)">${title}</span>
+              ${mkTagInputWrap(tags, variant)}` })}`;
+          return `${sbMkFlex({ dir: 'col', full: true, maxWidth: '480px', content: `${group('Online', ['Ka-Band', 'Active'], 'success')}
             ${group('Offline / Error', ['Region-3', 'Offline'], 'error')}
-            ${group('Maintenance', ['Scheduled'], 'warning')}
-          </div>`;
+            ${group('Maintenance', ['Scheduled'], 'warning')}` })}`;
         }
         return mkTagInputWrap(['Ka-Band', 'Active', 'Region-3']);
       },
@@ -129,11 +125,9 @@ window.COMP_CSS.tags = `.sb-tag {
           'Tag creation steps: Placeholder (the cursor on the left), Typing (text with the cursor on the right), Critical (an invalid name).',
           'Шаги создания тега: Placeholder (курсор слева), Typing (текст и курсор справа), Critical (ошибка в имени).'
         ),
-        preview: `<div class="sec-row spread">
-          ${mkTag({ mode: 'placeholder' })}
+        preview: `${sbMkFlex({ gapX: 'lg', gapY: 's', align: 'center', wrap: true, content: `${mkTag({ mode: 'placeholder' })}
           ${mkTag({ mode: 'typing', text: 'Name' })}
-          ${mkTag({ mode: 'typing', text: 'Wrong name', critical: true })}
-        </div>`,
+          ${mkTag({ mode: 'typing', text: 'Wrong name', critical: true })}` })}`,
         html: `<!-- Placeholder -->\n<div class="sb-tag input-mode">\n  <span class="sb-tag-caret"></span>\n  <span class="sb-tag-placeholder">Tag</span>\n</div>\n\n<!-- Typing -->\n<div class="sb-tag input-mode">\n  <span class="sb-tag-label">Name</span>\n  <span class="sb-tag-caret"></span>\n</div>\n\n<!-- Critical -->\n<div class="sb-tag input-mode critical">\n  <span class="sb-tag-label">Wrong name</span>\n  <span class="sb-tag-caret"></span>\n</div>`,
         css: COMP_CSS.tags,
       },
@@ -143,13 +137,11 @@ window.COMP_CSS.tags = `.sb-tag {
           'Default (non-removable) and Removable (with an × button). Pressing × removes the tag.',
           'Default (без удаления) и Removable (с кнопкой ×). Нажатие × удаляет тег.'
         ),
-        preview: `<div class="sec-row spread">
-          ${mkTag({ mode: 'filled', text: 'Ka-Band' })}
+        preview: `${sbMkFlex({ gapX: 'lg', gapY: 's', align: 'center', wrap: true, content: `${mkTag({ mode: 'filled', text: 'Ka-Band' })}
           ${mkTag({ mode: 'filled', text: 'Active' })}
           ${mkTag({ mode: 'filled', text: 'Region-3' })}
           ${mkTag({ mode: 'filled', text: 'Ka-Band', removable: true })}
-          ${mkTag({ mode: 'filled', text: 'Active', removable: true })}
-        </div>`,
+          ${mkTag({ mode: 'filled', text: 'Active', removable: true })}` })}`,
         html: `<!-- Default -->\n<div class="sb-tag filled">\n  <span class="sb-tag-label">Ka-Band</span>\n</div>\n\n<!-- Removable -->\n<div class="sb-tag filled removable">\n  <span class="sb-tag-label">Ka-Band</span>\n  <button class="sb-tag-remove" title="Remove"><!-- close icon --></button>\n</div>`,
         css: COMP_CSS.tags,
       },
@@ -159,11 +151,9 @@ window.COMP_CSS.tags = `.sb-tag {
           'Appears when the tags do not fit the line. The number equals the count of hidden tags.',
           'Появляется, когда теги не помещаются в строку. Число равно количеству скрытых тегов.'
         ),
-        preview: `<div class="sec-row gap-sm">
-          ${mkTag({ mode: 'filled', text: 'Ka-Band', removable: true })}
+        preview: `${sbMkFlex({ gap: 's', align: 'center', content: `${mkTag({ mode: 'filled', text: 'Ka-Band', removable: true })}
           ${mkTag({ mode: 'filled', text: 'Active', removable: true })}
-          ${mkTag({ mode: 'more', text: '+3' })}
-        </div>`,
+          ${mkTag({ mode: 'more', text: '+3' })}` })}`,
         html: `<div class="sb-tag more">+3</div>`,
         css: COMP_CSS.tags,
       },
@@ -173,22 +163,14 @@ window.COMP_CSS.tags = `.sb-tag {
           'Tags with color semantics. The tc-success / tc-error / tc-warning / tc-alert / tc-neutral classes apply to .sb-tag.filled.',
           'Теги с цветовой семантикой. Классы tc-success / tc-error / tc-warning / tc-alert / tc-neutral применяются к .sb-tag.filled.'
         ),
-        preview: `${sbMkFlex({ dir: 'col', gap: 's', content: `<div class="sec-row wrap gap-xs">
-            ${mkTag({ mode: 'filled', text: 'Online', color: 'success' })}
-            ${mkTag({ mode: 'filled', text: 'Active', color: 'success', removable: true })}
-          </div>
-          <div class="sec-row wrap gap-xs">
-            ${mkTag({ mode: 'filled', text: 'Offline', color: 'error' })}
-            ${mkTag({ mode: 'filled', text: 'Region-3', color: 'error', removable: true })}
-          </div>
-          <div class="sec-row wrap gap-xs">
-            ${mkTag({ mode: 'filled', text: 'Warning', color: 'warning' })}
-            ${mkTag({ mode: 'filled', text: 'Degraded', color: 'warning', removable: true })}
-          </div>
-          <div class="sec-row wrap gap-xs">
-            ${mkTag({ mode: 'filled', text: 'Alert', color: 'alert' })}
-            ${mkTag({ mode: 'filled', text: 'Ka-Band', color: 'alert', removable: true })}
-          </div>` })}`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', content: `${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${mkTag({ mode: 'filled', text: 'Online', color: 'success' })}
+            ${mkTag({ mode: 'filled', text: 'Active', color: 'success', removable: true })}` })}
+          ${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${mkTag({ mode: 'filled', text: 'Offline', color: 'error' })}
+            ${mkTag({ mode: 'filled', text: 'Region-3', color: 'error', removable: true })}` })}
+          ${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${mkTag({ mode: 'filled', text: 'Warning', color: 'warning' })}
+            ${mkTag({ mode: 'filled', text: 'Degraded', color: 'warning', removable: true })}` })}
+          ${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${mkTag({ mode: 'filled', text: 'Alert', color: 'alert' })}
+            ${mkTag({ mode: 'filled', text: 'Ka-Band', color: 'alert', removable: true })}` })}` })}`,
         html: `<div class="sb-tag filled tc-success"><span class="sb-tag-label">Online</span></div>\n<div class="sb-tag filled tc-error"><span class="sb-tag-label">Offline</span></div>\n<div class="sb-tag filled tc-warning"><span class="sb-tag-label">Warning</span></div>\n<div class="sb-tag filled tc-alert"><span class="sb-tag-label">Alert</span></div>`,
         css: COMP_CSS.tags,
       },

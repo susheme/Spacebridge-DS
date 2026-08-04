@@ -87,13 +87,11 @@ window.COMP_CSS.kbd = `.sb-kbd {
           + '<b>Типографика:</b>'
           + '<ul><li>Monospace-шрифт subscription-размера.</li></ul>'
         )),
-        preview: `<div class="sec-row" style="gap:var(--gap-vert-s);align-items:center">
-          ${mkKbd('⌘K')}
+        preview: `${sbMkFlex({ gap: 's', align: 'center', content: `${mkKbd('⌘K')}
           ${mkKbd('Esc')}
           ${mkKbd('/')}
           ${mkKbd('Enter')}
-          ${mkKbd('?')}
-        </div>`,
+          ${mkKbd('?')}` })}`,
         html: `<kbd class="sb-kbd">⌘K</kbd>
 <kbd class="sb-kbd">Esc</kbd>
 <kbd class="sb-kbd">/</kbd>`,
@@ -105,12 +103,10 @@ window.COMP_CSS.kbd = `.sb-kbd {
           'Several keys with a separator (+ by default). The sb-kbd-group wrapper builds chord combinations. The separator is plain text outside the key plates.',
           'Несколько клавиш с разделителем (по умолчанию +). Chord-комбинации собирает обёртка sb-kbd-group. Разделитель — обычный текст вне клавишных плашек.'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-s);align-items:flex-start">
-          ${mkKbdGroup(['⌘', 'K'])}
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', align: 'start', full: true, content: `${mkKbdGroup(['⌘', 'K'])}
           ${mkKbdGroup(['⌘', 'Shift', 'P'])}
           ${mkKbdGroup(['Ctrl', 'Alt', 'Del'])}
-          ${mkKbdGroup(['⌘', 'C'], '+')}
-        </div>`,
+          ${mkKbdGroup(['⌘', 'C'], '+')}` })}`,
         html: `<span class="sb-kbd-group">
   <kbd class="sb-kbd">⌘</kbd>
   <span class="sb-kbd-sep">+</span>
@@ -124,8 +120,7 @@ window.COMP_CSS.kbd = `.sb-kbd {
           'Typical placements: inside a Search Bar, a tooltip, helper text, or the footer of a command palette.',
           'Типичные размещения: внутри Search Bar, тултипа, helper-текста или футера command-палитры.'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);align-items:flex-start">
-          <span class="sb-body-m" style="color:var(--text-secondary);display:inline-flex;align-items:center;gap:var(--gap-vert-s)">
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', align: 'start', full: true, content: `<span class="sb-body-m" style="color:var(--text-secondary);display:inline-flex;align-items:center;gap:var(--gap-vert-s)">
             Press ${mkKbdGroup(['⌘', 'K'])} to search
           </span>
           <span class="sb-body-m" style="color:var(--text-secondary);display:inline-flex;align-items:center;gap:var(--gap-vert-s)">
@@ -133,8 +128,7 @@ window.COMP_CSS.kbd = `.sb-kbd {
           </span>
           <span class="sb-body-m" style="color:var(--text-secondary);display:inline-flex;align-items:center;gap:var(--gap-vert-s)">
             ${mkKbdGroup(['↑', '↓'])} to navigate &nbsp;·&nbsp; ${mkKbd('Enter')} to select
-          </span>
-        </div>`,
+          </span>` })}`,
         html: `<span>Press <span class="sb-kbd-group"><kbd class="sb-kbd">⌘</kbd><span class="sb-kbd-sep">+</span><kbd class="sb-kbd">K</kbd></span> to search</span>`,
         css: COMP_CSS.kbd,
       },

@@ -152,14 +152,12 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
           'Default, Placeholder, Selected (ready for input), Critical, Disabled, Read Only. The eye button toggles password visibility.',
           'Default, Placeholder, Selected (готов к вводу), Critical, Disabled, Read Only. Кнопка-глаз переключает видимость пароля.'
         ),
-        preview: `<div class="sec-col narrow gap-md">
-          ${mkPw({})}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '360px', content: `${mkPw({})}
           ${mkPw({ placeholder: true })}
           ${mkPw({ selected: true, value: 'Password-123' })}
           ${mkPw({ critical: true })}
           ${mkPw({ disabled: true })}
-          ${mkPw({ readOnly: true })}
-        </div>`,
+          ${mkPw({ readOnly: true })}` })}`,
         html: `<!-- Default -->\n<div class="sb-pw">\n  <div class="sb-pw-left">\n    <span class="sb-pw-lock"><!-- lock icon --></span>\n    <input class="sb-pw-input" type="password" value="mypassword123">\n  </div>\n  <div class="sb-pw-right">\n    <button class="sb-pw-toggle" onclick="sbPwToggle(this)"><!-- eye-close icon --></button>\n  </div>\n</div>`,
         css: COMP_CSS.password,
       },
@@ -169,12 +167,10 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
           'The password field inside sb-field — the label above, the subscription below.',
           'Password внутри sb-field — Label сверху, Subscription снизу.'
         ),
-        preview: `<div class="sec-col narrow gap-lg">
-          ${mkPwField({},                              { label: 'Password' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${mkPwField({},                              { label: 'Password' })}
           ${mkPwField({},                              { label: 'Password', subscription: 'Subscription text' })}
           ${mkPwField({ critical: true },              { label: 'Password', subscription: 'Wrong password' })}
-          ${mkPwField({ disabled: true },              { label: 'Password', subscription: 'Subscription text' })}
-        </div>`,
+          ${mkPwField({ disabled: true },              { label: 'Password', subscription: 'Subscription text' })}` })}`,
         html: `<div class="sb-field">\n  <span class="sb-field-label">Password</span>\n  <div class="sb-pw">...</div>\n  <span class="sb-field-sub">Subscription text</span>\n</div>`,
         css: COMP_CSS.password + '\n' + COMP_CSS["input-field-wrap"],
       },

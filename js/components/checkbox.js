@@ -218,13 +218,11 @@ window.COMP_CSS.checkbox = `.sb-checkbox {
     sections: [
       {
         title: sbT('States — No Label', 'Состояния — без лейбла'),
-        preview: `<div class="sec-row gap-lg">
-          ${mkCb({ static: true })}
+        preview: `${sbMkFlex({ gap: 'lg', align: 'center', content: `${mkCb({ static: true })}
           ${mkCb({ hover: true, static: true })}
           ${mkCb({ checked: true, static: true })}
           ${mkCb({ checked: true, disabled: true, static: true })}
-          ${mkCb({ indeterminate: true, static: true })}
-        </div>`,
+          ${mkCb({ indeterminate: true, static: true })}` })}`,
         html: sample([
           ['Default', {}],
           ['Checked', { checked: true }],

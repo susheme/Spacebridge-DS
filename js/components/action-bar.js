@@ -149,12 +149,10 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
           'Left (default, per Figma), Right (the convention in Western dialogs), Between (buttons pushed to opposite edges) and Center (buttons stretch across the bar: a single button takes the full width, two share it equally).',
           'Left (по умолчанию, по Figma), Right (канон западных диалогов), Between (кнопки по разным краям) и Center (кнопки растягиваются на всю плашку: одна занимает всю ширину, две делят её поровну).'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
-          ${stage(mkActionBar({ buttons: TWO, align: 'left' }))}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `${stage(mkActionBar({ buttons: TWO, align: 'left' }))}
           ${stage(mkActionBar({ buttons: TWO, align: 'right' }))}
           ${stage(mkActionBar({ buttons: TWO, align: 'between' }))}
-          ${stage(mkActionBar({ buttons: TWO, align: 'center' }))}
-        </div>`,
+          ${stage(mkActionBar({ buttons: TWO, align: 'center' }))}` })}`,
         html: `<!-- align: 'left' | 'right' | 'center' | 'between' -->`,
         css: COMP_CSS["action-bar"],
       },
@@ -164,10 +162,8 @@ window.COMP_CSS["action-bar"] = `.sb-action-bar {
           'A single Primary button — a confirmation window with no cancel option (acknowledge / continue). Default keeps the natural width; Center stretches the button across the bar.',
           'Одна Primary-кнопка — подтверждающее окно без отмены (acknowledge / continue). Default сохраняет натуральную ширину; Center растягивает кнопку на всю плашку.'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
-          ${stage(mkActionBar({ buttons: ONE }))}
-          ${stage(mkActionBar({ buttons: ONE, align: 'center' }))}
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `${stage(mkActionBar({ buttons: ONE }))}
+          ${stage(mkActionBar({ buttons: ONE, align: 'center' }))}` })}`,
         html: `<!-- sbMkActionBar({ buttons:[{label:'Save',variant:'primary'}], align:'center' }) -->`,
         css: COMP_CSS["action-bar"],
       },

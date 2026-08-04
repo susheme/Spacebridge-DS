@@ -350,10 +350,8 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           'The default zone rests on --surface-1 with a dashed --border. Hovering or dragging a file over it switches the border to --primary and fills the zone with --primary-hover. Try dropping a real file — the hint briefly shows what was picked.',
           'Спокойная зона лежит на --surface-1 с dashed --border. Hover или файл над зоной переключают бордер на --primary и заливают зону --primary-hover. Попробуй бросить настоящий файл — подсказка на пару секунд покажет, что выбрано.'
         ),
-        preview: `<div class="sec-row wrap gap-md">
-          ${mkUploaderArea({})}
-          ${mkUploaderArea({ dragover: true })}
-        </div>`,
+        preview: `${sbMkFlex({ gap: 'm', align: 'center', wrap: true, content: `${mkUploaderArea({})}
+          ${mkUploaderArea({ dragover: true })}` })}`,
         html: `<!-- Default -->
 <div class="sb-uploader-area"> ... </div>
 
@@ -367,12 +365,10 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           'A row in the uploads list: a File Icon square with the file type, the file name (Title S, truncates with an ellipsis), an info line with a Symbol Badge S and the status name, and an action button in the right slot. Completed shows the size, a green check and a trash can (removes the row — try it). Uploading shows the loaded-of-total size, a --primary clock, a stop cross and a 2px progress bar across the full cell width. Failed shows an --error warning badge and name plus a Retry text button — clicking it restarts the upload.',
           'Строка списка загрузок: квадрат File Icon с типом файла, имя файла (Title S, обрезается многоточием), инфострока с Symbol Badge S и именем статуса, справа — кнопка действия. Completed показывает размер, зелёный check и корзину (удаляет строку — попробуй). Uploading — сколько из скольки скачано, часы --primary, крестик-стоп и progress bar 2px на всю ширину ячейки. Failed — warning-бейдж и имя статуса в --error и текст-кнопку Retry: клик перезапускает загрузку.'
         ),
-        preview: `<div class="sec-col" style="gap:0">
-          ${mkUploadCell({ name: 'backup-file-name-1.json', size: '110 Mb' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: '0', full: true, content: `${mkUploadCell({ name: 'backup-file-name-1.json', size: '110 Mb' })}
           ${mkUploadCell({ name: 'backup-file-name-2.json', size: '110 Mb', status: 'uploading', loaded: '10 Mb', progress: 36 })}
           ${mkUploadCell({ name: 'backup-file-name-4.json', size: '110 Mb', status: 'failed' })}
-          ${mkUploadCell({ name: 'a-very-long-blender-project-file-name-that-truncates.zip', size: '150 Mb' })}
-        </div>`,
+          ${mkUploadCell({ name: 'a-very-long-blender-project-file-name-that-truncates.zip', size: '150 Mb' })}` })}`,
         html: `<div class="sb-uploader-cell completed">
   <div class="sb-uploader-cell-file">json</div>
   <div class="sb-uploader-cell-center">
@@ -425,8 +421,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           'The full component for real UI: a card (radius 18, Shadow-S) with the drop area, an Uploads header (Header XS with a Counter — completed of total) and the list split into two processes: Completed on top, active uploads (Uploading / Failed) below, with a 16px gap between the groups. A finished file moves up to the Completed group. The consumer sets the card width; everything inside stretches.',
           'Полный компонент для боевого UI: карточка (radius 18, Shadow-S) с дропзоной, хедером Uploads (Header XS со счётчиком — completed из total) и списком, разделённым на два процесса: сверху Completed, ниже активные загрузки (Uploading / Failed), между группами gap 16. Докачавшийся файл переезжает наверх, к загруженным. Ширину карточки задаёт consumer, внутренности тянутся.'
         ),
-        preview: `<div class="sec-row wrap" style="gap:var(--gap-horiz-xl);align-items:flex-start" data-uploader-style-demo>
-          <div style="width:min(420px, 100%)">${mkUploader({
+        preview: `${sbMkFlex({ gap: 'xl', align: 'start', wrap: true, attrs: ' data-uploader-style-demo', content: `<div style="width:min(420px, 100%)">${mkUploader({
             files: [
               { name: 'backup-file-name-1.json', size: '110 Mb' },
               { name: 'backup-file-name-2.json', size: '110 Mb' },
@@ -441,8 +436,7 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
               'The example is alive and shows the real process: drop or pick real files — an Uploading cell with a progress bar appears in the lower group, runs to Completed and jumps up to the finished ones. The trash and crosses remove rows, and the counter keeps up by itself.',
               'Пример живой и показывает реальный процесс: брось или выбери настоящие файлы — в нижней группе появится Uploading-ячейка с прогрессом, доедет до Completed и перепрыгнет наверх, к загруженным. Корзина и крестики удаляют строки, счётчик обновляется сам.'
             )}</div>
-          </div>
-        </div>`,
+          </div>` })}`,
         html: `<!-- Стили карточки: Card (Shadow-S, default) — class="sb-uploader",
      Framed (1px --border вместо тени) — class="sb-uploader framed" -->
 <div class="sb-uploader">

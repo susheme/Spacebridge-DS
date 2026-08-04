@@ -899,22 +899,14 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           + '<b>Правый слот (взаимоисключающий):</b>'
           + '<ul><li>Chevron — иконка arrow-down-s-line, Size L (триггер dropdown);</li><li>Counter — компонент Counters;</li><li>Indicator Mini — компонент Status.</li></ul>'
         )),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);padding:24px;background:var(--surface-1);border-radius:var(--radius-8)">
-          <div class="sec-row wrap gap-sm">
-            ${mkNavBtn({ label: 'Default' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, attrs: ' style="padding:24px; background:var(--surface-1); border-radius:var(--radius-8)"', content: `${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${mkNavBtn({ label: 'Default' })}
             ${mkNavBtn({ label: 'Selected', selected: true })}
-            ${mkNavBtn({ label: 'Disabled', disabled: true })}
-          </div>
-          <div class="sec-row wrap gap-sm">
-            ${mkNavBtn({ label: 'Chevron', hasChevron: true })}
+            ${mkNavBtn({ label: 'Disabled', disabled: true })}` })}
+          ${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${mkNavBtn({ label: 'Chevron', hasChevron: true })}
             ${mkNavBtn({ label: 'Selected', selected: true, hasChevron: true })}
             ${mkNavBtn({ label: 'Counter', counter: 5 })}
-            ${mkNavBtn({ label: 'Indicator', indicator: true })}
-          </div>
-          <div class="sec-row wrap gap-sm">
-            ${sbMkFlex({ width: '220px', content: `${mkNavBtn({ label: 'A very long section name that will truncate' })}` })}
-          </div>
-        </div>`,
+            ${mkNavBtn({ label: 'Indicator', indicator: true })}` })}
+          ${sbMkFlex({ gap: 's', align: 'center', wrap: true, content: `${sbMkFlex({ width: '220px', content: `${mkNavBtn({ label: 'A very long section name that will truncate' })}` })}` })}` })}`,
         html: `<!-- Default -->
 <button class="sb-nav-btn"><span class="sb-nav-btn-label">Default</span></button>
 
@@ -949,8 +941,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           'By default the tabs are centered in the free zone between the left and right slots. The .align-right modifier pushes them toward the right slot with a 24px gap. The choice is made by the designer, per application.',
           'По умолчанию табы центрируются в свободной зоне между левым и правым слотами. Модификатор .align-right прижимает их к правому слоту с зазором 24px. Выбор — за дизайнером, отдельно для каждого приложения.'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `<div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [
               { label: 'Item' }, { label: 'Item', selected: true }, { label: 'Item' },
@@ -965,8 +956,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
             ],
             rightSlot: [DEMO_BELL, DEMO_AVATAR],
             align: 'right',
-          })}</div>
-        </div>`,
+          })}</div>` })}`,
         html: `<!-- Center align (default) -->
 <header class="sb-nav-bar"> ... </header>
 
@@ -980,8 +970,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
           'Up to 4 elements: an icon-only Secondary button, a Primary button (Login), an Avatar and a Search Bar. Anything beyond 4 is dropped with a console warning; for overflow, a More button with a Context Menu (or a Bottom Sheet on mobile) is the intended pattern.',
           'До 4 элементов: icon-only Secondary-кнопка, Primary-кнопка (Login), Avatar и Search Bar. Всё сверх 4 обрезается с console.warn; для переполнения предусмотрен паттерн More-кнопки с Context Menu (на мобильных — Bottom Sheet).'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-s)">
-          <div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `<div style="width:100%;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [{ label: 'Item', selected: true }, { label: 'Item' }],
             rightSlot: [DEMO_BELL, DEMO_AVATAR],
@@ -996,8 +985,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
             logo: DEMO_LOGO, logoCompact: DEMO_LOGO_COMPACT,
             tabs: [],
             rightSlot: [DEMO_PRIMARY],
-          })}</div>
-        </div>`,
+          })}</div>` })}`,
         html: `<!-- bell + avatar -->
 <div class="sb-nav-bar-right">
   ${sbMkButton({ iconOnly: true, content: '...' })}
@@ -1153,8 +1141,7 @@ sbMkOverlay({
           'A structural API: <code>button</code>, <code>logo</code>, <code>logoCompact</code>, <code>logoTitle</code> and <code>badge</code> are separate props. A CSS container query (breakpoint 1024px) switches between wide and compact: the tabs hide, and the full logo, title and badge give way to the compact logo. The button itself is always visible, but its icon swaps — side-bar-line in wide, menu-line in compact. Below — two examples at the same width.',
           'Структурный API: <code>button</code>, <code>logo</code>, <code>logoCompact</code>, <code>logoTitle</code> и <code>badge</code> — отдельные пропсы. CSS container query (breakpoint 1024px) переключает между wide и compact: табы прячутся, full-logo, тайтл и бейдж уступают место compact-logo. Сама кнопка видна всегда, но иконка внутри меняется — side-bar-line в wide, menu-line в compact. Ниже — два примера на одной ширине.'
         ),
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m)">
-          ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Wide (container > 1024px)</span>` })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Wide (container > 1024px)</span>` })}
           <span class="sb-body-m" style="color:var(--text-tertiary);padding:0 var(--pad-horiz-16)">Горизонтальный скролл для full-view</span>
           <div style="width:100%;overflow-x:auto">
             <div style="width:1200px;padding:var(--pad-vert-16);border-radius:var(--radius-12);border:var(--border-width-1) solid var(--border);background:var(--surface-1)">${mkNavBar({
@@ -1185,8 +1172,7 @@ sbMkOverlay({
               { label: 'Item' },
             ],
             rightSlot: [DEMO_BELL, DEMO_AVATAR],
-          })}</div>
-        </div>`,
+          })}</div>` })}`,
         html: `<!-- Структурный API с responsive переключением -->
 sbMkNavBar({
   button:      '<button>...</button>',     // всегда видна, иконка swap'ается

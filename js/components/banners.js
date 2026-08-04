@@ -538,9 +538,7 @@ sbDocNote('${kind}', body)
           + '<ul><li>Баннер со статусом в правом слоте несёт не более 5 строк body — клампится молча;</li><li>Без правого слота текст длиннее 5 строк закрепляет Chevron Button в правом верхнем углу (16/16) — раскрытие и сборка баннера;</li><li>Шеврон появляется только при реальном переполнении (<code>sbBannerSyncOverflow</code> замеряет автоматически).</li></ul>'
         )),
         col: true,
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
-          ${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.', right: badge('bs-blue', 'Info') })}
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '800px', content: `${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.', right: badge('bs-blue', 'Info') })}` })}`,
         html: `<div class="sb-banner info">
   <div class="sb-banner-content">
     <div class="sb-banner-titlerow">
@@ -562,12 +560,10 @@ sbDocNote('${kind}', body)
           'Четыре типа. Info и Success спокойны — нейтральный фон и цветной маркер. Warning и Critical требуют внимания — тонированный фон и цветной текст. Critical-баннер ниже использует тайтл-ссылку (со стрелкой), ведущую к источнику, и Badge-Status Mini справа.'
         ),
         col: true,
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
-          ${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.', right: badge('bs-blue', 'Info') })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '800px', content: `${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.', right: badge('bs-blue', 'Info') })}
           ${mkBanner({ type: 'success', lead: dot('online'), title: 'Deployment Complete', text: 'All 48 terminals have been updated to v3.2.0.', right: badge('bs-green', 'Done') })}
           ${mkBanner({ type: 'warning', lead: dot('maintenance'), title: 'High Latency Detected', text: 'Terminal SB-003 latency exceeds the 500 ms threshold.', right: badge('bs-orange', 'Warning') })}
-          ${mkBanner({ type: 'error', lead: dot('error'), title: 'PHS 1: Process is DOWN', href: '#', text: 'A service-affecting condition has occurred and immediate corrective action is required.', right: badge('bs-red', 'Critical') })}
-        </div>`,
+          ${mkBanner({ type: 'error', lead: dot('error'), title: 'PHS 1: Process is DOWN', href: '#', text: 'A service-affecting condition has occurred and immediate corrective action is required.', right: badge('bs-red', 'Critical') })}` })}`,
         html: `<!-- Types: info, success, warning, error (Critical) -->
 <div class="sb-banner error">
   <div class="sb-banner-content">
@@ -588,10 +584,8 @@ sbDocNote('${kind}', body)
           'Баннер без правого слота клампит body пятью строками; если текст длиннее, закреплённый в правом верхнем углу Chevron Button (отступы 16/16) раскрывает и сворачивает его. У баннеров со статусом в правом слоте шеврона нет — их контент-правило: максимум 5 строк, кламп молча. Шеврон появляется только при реальном переполнении: <code>sbBannerSyncOverflow</code> замеряет текст автоматически. Ниже: раскрывающийся Warning и для контраста Info со статусом справа — тот же длинный текст, молчаливый кламп.'
         ),
         col: true,
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
-          ${mkBanner({ type: 'warning', lead: dot('maintenance'), title: 'High Latency Detected', text: 'Terminal SB-003 latency exceeds the 500 ms threshold.' + LONG_BODY_TAIL })}
-          ${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.' + LONG_BODY_TAIL, right: badge('bs-blue', 'Info') })}
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '800px', content: `${mkBanner({ type: 'warning', lead: dot('maintenance'), title: 'High Latency Detected', text: 'Terminal SB-003 latency exceeds the 500 ms threshold.' + LONG_BODY_TAIL })}
+          ${mkBanner({ type: 'info', lead: dot('info'), title: 'Firmware Update Available', text: 'Version 3.2.1 is ready for deployment across 12 terminals.' + LONG_BODY_TAIL, right: badge('bs-blue', 'Info') })}` })}`,
         html: `<div class="sb-banner warning collapsible">
   <div class="sb-banner-content">
     <div class="sb-banner-titlerow">...</div>
@@ -612,16 +606,14 @@ sbDocNote('${kind}', body)
           'Раскрывающийся баннер, на котором ездят сами доки DS: плашка Tech Info / Important под описанием каждого компонента — включая ту, что выше на этой самой странице — это ровно он. Собирается <code>sbDocNote(title, body)</code> — тонкой обёрткой над <code>sbMkBanner</code>: лид information-fill, «Important» в тайтле переключает тип на warning, всё остальное — info; правый слот не передаётся, поэтому по контракту баннера плашка сворачиваема из коробки — кламп 5 строк, шеврон при реальном переполнении, плавное раскрытие и сборка. Внутри ничего рукописного: баннер, шеврон и тогл — из своих компонентов.'
         ),
         col: true,
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:800px;width:100%">
-          ${sbDocNote('Tech Info', sbT(
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '800px', content: `${sbDocNote('Tech Info', sbT(
             '<b>Width: 100%</b><ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4; left stroke 4px in the type colour;</li><li>title — Title M, lead — Symbol 24px;</li><li>body — Body M --text-secondary.</li></ul>',
             '<b>Width: 100%</b><ul><li>min-width: 288px;</li><li>max-width: 800px;</li><li>min-height: 60px;</li><li>padding: 16/16;</li><li>radius: 4; левый строук 4px цвета типа;</li><li>тайтл — Title M, лид — Symbol 24px;</li><li>body — Body M --text-secondary.</li></ul>'
           ))}
           ${sbDocNote('Important', sbT(
             'Warning-toned note for things a developer must not miss: breaking contracts, load-order traps, deprecations.',
             'Warning-плашка для того, что разработчику нельзя пропустить: ломающие контракты, ловушки порядка загрузки, депрекейшены.'
-          ))}
-        </div>`,
+          ))}` })}`,
         html: `<!-- Собирается хелпером (docs-i18n.js): -->
 sbDocNote('Tech Info', body)   // → sbMkBanner({ type:'info',    lead, title, text })
 sbDocNote('Important', body)   // → sbMkBanner({ type:'warning', lead, title, text })
@@ -663,13 +655,11 @@ sbDocNote('Important', body)   // → sbMkBanner({ type:'warning', lead, title, 
           + '<ul><li><code>sbMkNotifBar({ type, text, lead, align })</code>.</li></ul>'
         )),
         col: true,
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);width:100%">
-          ${mkNotifBar({ type: 'info',    text: 'Firmware 3.2.1 rollout starts at 02:00 UTC for all terminals.' })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `${mkNotifBar({ type: 'info',    text: 'Firmware 3.2.1 rollout starts at 02:00 UTC for all terminals.' })}
           ${mkNotifBar({ type: 'success', text: 'All 48 terminals have been updated to v3.2.0.' })}
           ${mkNotifBar({ type: 'warning', text: 'You have <b>2</b> unsaved changes. <a href="#">Click here</a> to apply.' })}
           ${mkNotifBar({ type: 'error',   text: 'Terminal SB-002 lost uplink connection. <a href="#">Open incident</a>.' })}
-          ${mkNotifBar({ type: 'info', align: 'left', text: 'Scheduled maintenance window: 02:00–04:00 UTC.' })}
-        </div>`,
+          ${mkNotifBar({ type: 'info', align: 'left', text: 'Scheduled maintenance window: 02:00–04:00 UTC.' })}` })}`,
         html: `<div class="sb-notif-bar warning">
   <span class="sb-notif-bar-lead"><!-- warning-fill icon --></span>
   <span class="sb-notif-bar-text sb-body-m">You have <b>2</b> unsaved changes. <a href="#">Click here</a> to apply.</span>

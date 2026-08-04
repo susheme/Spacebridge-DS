@@ -11,13 +11,13 @@
 window.SB_COMPONENTS = [
   // name                 file                       deps             notes
   { name: 'chevron',       file: 'chevron.js',        deps: [] },                    // sbMkChevron — селекторы, хедеры, тосты, баннеры, таблица, side-nav; ЯДРО зовёт из pg.select
+  { name: 'grid-system',   file: 'grid-system.js',    deps: [] },                    // Flex / Flex Item / Grid / Page. Третьим в списке: демо banners/snackbar зовут sbMkFlex при регистрации
   { name: 'buttons',       file: 'buttons.js',        deps: [] },                    // sbMkButton — ЕДИНСТВЕННЫЙ способ отрисовать кнопку в DS; вторым после chevron, потому что badge/snackbar зовут его при регистрации. deps на checkbox нет: sbMkCheckbox в extraPreview, вызывается лениво
   { name: 'badge',         file: 'badge.js',          deps: ['chevron', 'buttons'] },           // в ТРОЙКЕ первых: SB_BADGE_SPECS нужен banners при регистрации; doc-note через фолбэк (зовёт sbMkChevron)
   { name: 'banners',       file: 'banners.js',        deps: ['chevron', 'badge', 'buttons'] },  // замыкает ТРОЙКУ первых: sbDocNote → sbMkBanner при регистрации ВСЕХ ниже; сам зовёт sbMkChevron + fill-иконки из SB_BADGE_SPECS
   { name: 'snackbar',      file: 'snackbar.js',       deps: ['badge', 'banners', 'buttons'] },  // success-fill из SB_BADGE_SPECS; sbDocNote в секции → после banners
   { name: 'action-bar',    file: 'action-bar.js',     deps: ['buttons'] },           // 1–2 кнопки внизу карточки/модалки; .sb-btn + sbIcon
   { name: 'popover',       file: 'popover.js',        deps: ['buttons'] },                    // примитив якорного позиционирования (flip/shift/portal); РАНО в списке — его зовут table/section-header/хедеры/nav-bar/tool-bar; демо за геттером sections, поэтому своих deps на загрузке нет
-  { name: 'grid-system',   file: 'grid-system.js',    deps: [] },                    // Flex / Flex Item / Grid / Page — примитивы раскладки; без @media, адаптивность из токенов
   { name: 'separators',    file: 'separators.js',     deps: ['toggles'] },
   { name: 'avatar',        file: 'avatar.js',         deps: [] },                    // sbMkAvatar — nav-bar, table
   { name: 'toggles',       file: 'toggles.js',        deps: [] },                    // sbMkToggle; ЯДРО зовёт из pg.toggle; ВЫШЕ separators (тот зовёт в preview при регистрации)

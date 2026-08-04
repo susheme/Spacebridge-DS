@@ -61,6 +61,7 @@ suite('Догма Клементия', function () {
     };
     var bad = [];
     componentJs().forEach(function (f) {
+      if (inlineLayoutAllowed(f)) return;
       eachLine(f, function (line, n) {
         var m = line.match(/style="([^"]*display:\s*flex[^"]*)"/);
         if (!m) return;

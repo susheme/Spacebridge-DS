@@ -170,8 +170,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
           'The specced Alert: a warning symbol, a headline, a message and two actions. Next to it — a critical flavour (critLine symbol plus a critical primary) and a symbol-less one with a single full-width button.',
           'Alert по спеке: warning-символ, headline, message и два экшена. Рядом — критический вариант (символ critLine и critical primary) и вариант без символа с одной full-width кнопкой.'
         ),
-        preview: `<div class="sec-row wrap gap-lg" style="align-items:flex-start;padding:var(--pad-vert-24);background:var(--surface-1);border-radius:var(--radius-12)">
-          ${mkDialogue({})}
+        preview: `${sbMkFlex({ gap: 'lg', align: 'start', wrap: true, attrs: ' style="padding:var(--pad-vert-24); background:var(--surface-1); border-radius:var(--radius-12)"', content: `${mkDialogue({})}
           ${mkDialogue({
             symbol: 'critLine',
             title: 'Delete the file?',
@@ -186,8 +185,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
             title: 'Session expired',
             message: 'Please log in again to continue.',
             buttons: [{ label: 'Log In', variant: 'primary' }],
-          })}
-        </div>`,
+          })}` })}`,
         html: `<div class="sb-dialogue" role="alertdialog" aria-label="Changes are not saved">
   <div class="sb-dialogue-center">
     <span class="sb-dialogue-symbol"><!-- Symbol Badge: warnLine 24×24 --></span>
@@ -209,8 +207,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
           'An optional Checkbox with a label for confirmations and agreements («don’t ask again», terms consent). It always sits below the Action Bar, flush to it (0px), at the left edge — the buttons stay the last thing before the card ends. This is the DS Checkbox itself, not a copy of its markup, so it comes with Tab and Space out of the box — important here, because a modal alert traps focus and has Esc switched off. Read the answer with sbCheckboxChecked(el), or listen for the sb-checkbox:change event — it bubbles up to the dialogue. Click it or tab to it.',
           'Опциональный Checkbox с лейблом для подтверждений и согласий («не спрашивать снова», принятие условий). Всегда под Action Bar, вплотную к нему (0px), у левого края — кнопки остаются последним, что видно перед краем карточки. Это сам DS-Checkbox, а не копия его разметки, поэтому Tab и Space работают из коробки — здесь это важно: модальный алерт держит фокус внутри и Esc у него выключен. Ответ читается через sbCheckboxChecked(el) или по событию sb-checkbox:change — оно всплывает до диалога. Кликни или дойди табом.'
         ),
-        preview: `<div class="sec-row wrap gap-lg" style="align-items:flex-start;padding:var(--pad-vert-24);background:var(--surface-1);border-radius:var(--radius-12)">
-          ${mkDialogue({
+        preview: `${sbMkFlex({ gap: 'lg', align: 'start', wrap: true, attrs: ' style="padding:var(--pad-vert-24); background:var(--surface-1); border-radius:var(--radius-12)"', content: `${mkDialogue({
             check: { label: 'Don’t ask again' },
           })}
           ${mkDialogue({
@@ -219,8 +216,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
             message: 'Please review the terms of service before continuing.',
             buttons: [{ label: 'Continue', variant: 'primary' }],
             check: { label: 'I agree to the terms of service' },
-          })}
-        </div>`,
+          })}` })}`,
         html: `<!-- Чекбокс всегда под Action Bar -->
 sbMkDialogue({ ..., check: { label: 'Don’t ask again' } })
 

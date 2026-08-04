@@ -34,6 +34,13 @@ var INLINE_TYPO_KNOWN = [
     why: 'DEMO_LOGO/DEMO_LOGO_COMPACT в превью — размер лого продукта, класса под него в типографике нет' },
 ];
 
+// Компоненты, которым нельзя пользоваться Grid System: они грузятся раньше
+// него и обязаны обходиться своими силами.
+var INLINE_LAYOUT_OK = {
+  'js/components/chevron.js': 'грузится ПЕРВЫМ: bootstrap-фолбэк sbDocNote зовёт sbMkChevron, поэтому chevron не может зависеть ни от одной фабрики, включая sbMkFlex',
+};
+function inlineLayoutAllowed(file) { return Object.prototype.hasOwnProperty.call(INLINE_LAYOUT_OK, file) }
+
 // Правила, живущие только в COMP_CSS: это сниппеты «для вас», а не стили
 // самой DS. В css/components их нет намеренно.
 var DOC_ONLY_RULES = {

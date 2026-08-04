@@ -207,16 +207,14 @@ window.COMP_CSS.snackbar = `/* ── Snackbar ── floating bottom feedback a
           + 'Плашка появится с указанным текстом и настройками.'
         )),
         col: true, interactive: true,
-        preview: `<div class="sec-col" style="gap:var(--gap-vert-m);max-width:480px;width:100%">
-          ${mkSnackbar({ success: true, text: 'Message sent.', close: true })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, maxWidth: '480px', content: `${mkSnackbar({ success: true, text: 'Message sent.', close: true })}
           ${mkSnackbar({ text: 'File was deleted.', lead: sbIcon('delete-bin-line', 'S'), action: { label: 'Undo' }, timer: true, close: true })}
           ${mkSnackbar({ text: 'New changes available.', lead: sbIcon('loop-left-line', 'S'), action: { label: 'Refresh' }, close: true })}
           ${sbPgGroup('Show Live:', `
               ${sbMkButton({ label: 'Copied', size: 's', attrs: ' onclick="sbShowSnackbar()"' })}
               ${sbMkButton({ label: 'Undo', size: 's', attrs: ` onclick="sbShowSnackbar({ text: 'File was deleted.', success: false, lead: 'delete-bin-line', action: 'Undo', timer: 5 })"` })}
               ${sbMkButton({ label: 'Refresh', size: 's', attrs: ` onclick="sbShowSnackbar({ text: 'New changes available.', success: false, lead: 'loop-left-line', action: 'Refresh' })"` })}
-          `, { attrs: 'style="margin-top:var(--pad-vert-8)"' })}
-        </div>`,
+          `, { attrs: 'style="margin-top:var(--pad-vert-8)"' })}` })}`,
         html: `<div class="sb-snackbar">
   <div class="sb-snackbar-content">
     <span class="sb-snackbar-lead"><!-- icon --></span>

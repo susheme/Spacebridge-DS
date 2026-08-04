@@ -114,6 +114,8 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
    *   justify — 'start' | 'center' | 'end' | 'between'
    *   wrap    — переносить ли детей на новую строку
    *   full    — растянуть контейнер на всю ширину родителя
+   *   width   — конкретная ширина ('360px'), если full не подходит
+   *   maxWidth— предел ширины ('360px'); частый спутник колонок форм
    *   items   — массив детей. Строка = как есть; объект = props для
    *             sbMkFlexItem, то есть { content, grow, shrink }. Удобно, когда
    *             тянуться должен один ребёнок из трёх — оборачивать вручную не надо.
@@ -131,6 +133,14 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
     if (s.justify)        cls += ' justify-' + s.justify;
     if (s.cls)            cls += ' ' + s.cls;
 
+    // width / maxWidth — раскладочные свойства, но значений у них бесконечно
+    // много, поэтому не классы, а стиль. Оформление (фон, паддинги, рамки)
+    // фабрика не принимает намеренно: это не её забота.
+    var style = '';
+    if (s.width)    style += 'width:' + s.width + ';';
+    if (s.maxWidth) style += 'max-width:' + s.maxWidth + ';';
+    style = style ? ' style="' + style.replace(/;$/, '') + '"' : '';
+
     var inner = '';
     if (Array.isArray(s.items)) {
       inner = s.items.map(function (it) {
@@ -139,7 +149,7 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
     } else {
       inner = s.content || '';
     }
-    return '<div class="' + cls + '"' + (s.attrs || '') + '>' + inner + '</div>';
+    return '<div class="' + cls + '"' + style + (s.attrs || '') + '>' + inner + '</div>';
   }
 
   /**
@@ -220,7 +230,7 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
       'Четыре примитива раскладки: Flex (ряд или колонка), Flex Item (ребёнок со своим поведением при нехватке места), Grid (карточная сетка, перестраивается сама) и Page (контейнер экрана). Колоночной сетки на двенадцать долей здесь нет намеренно — в приложении «шесть из двенадцати» ничего не значит, а «этот блок ужался до 400px» значит всё.'
     ) + sbDocNote('Tech Info', sbT(
       '<b>API:</b>'
-      + '<ul><li><code>sbMkFlex({ dir, gap, align, justify, wrap, full, items | content })</code>;</li>'
+      + '<ul><li><code>sbMkFlex({ dir, gap, align, justify, wrap, full, width, maxWidth, items | content })</code>;</li>'
       + '<li><code>sbMkFlexItem({ content, grow, shrink, basis })</code>;</li>'
       + '<li><code>sbMkGrid({ min, gap, items | content })</code> — min: <code>card</code> (280) / <code>tile</code> (96) / своё значение;</li>'
       + '<li><code>sbMkPage({ content, width })</code> — width: <code>default</code> / <code>text</code>.</li></ul>'
@@ -229,7 +239,7 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
       + '<li>Spacing and gutters come from tokens, which tokens.css lays out per Figma mode;</li>'
       + '<li>The grid reflows by CONTAINER width, so it behaves the same on a phone and in a narrow column on a large monitor.</li></ul>',
       '<b>API:</b>'
-      + '<ul><li><code>sbMkFlex({ dir, gap, align, justify, wrap, full, items | content })</code>;</li>'
+      + '<ul><li><code>sbMkFlex({ dir, gap, align, justify, wrap, full, width, maxWidth, items | content })</code>;</li>'
       + '<li><code>sbMkFlexItem({ content, grow, shrink, basis })</code>;</li>'
       + '<li><code>sbMkGrid({ min, gap, items | content })</code> — min: <code>card</code> (280) / <code>tile</code> (96) / своё значение;</li>'
       + '<li><code>sbMkPage({ content, width })</code> — width: <code>default</code> / <code>text</code>.</li></ul>'

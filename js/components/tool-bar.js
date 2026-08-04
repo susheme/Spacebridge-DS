@@ -407,8 +407,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
           + '<b>API:</b>'
           + '<ul><li>Собирается билдером <code>mkToolBarActions({ inline, more })</code>.</li></ul>'
         )),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-horiz-lg);width:100%">
-          <div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;overflow-x:auto">
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, content: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:100%;overflow-x:auto">
             <div style="min-width:900px">
               ${mkToolBar({
                 left: `${demoIconBtn({ icon: 'add-line' })}`,
@@ -448,8 +447,7 @@ window.COMP_CSS["tool-bar"] = `.sb-tool-bar {
               }),
             })}
             <p class="sb-body-s" style="color:var(--text-secondary);margin:var(--pad-vert-8) 0 0">↑ Narrow (≤600px): inline скрыты, More содержит Add/Search/View + Copy/Mail.</p>
-          </div>
-        </div>`,
+          </div>` })}`,
         html: `<!-- Используй sbMkToolBarActions для responsive action group: -->
 <div class="sb-tool-bar-right">
   <!-- Visible @wide, hidden @narrow: -->

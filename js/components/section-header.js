@@ -140,12 +140,10 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
           + '<b>Поведение:</b>'
           + '<ul><li>Breakpoint 320px: inline-кнопки сворачиваются под More (⋯).</li></ul>'
         )),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%">
-          ${mkSectionHeader({
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, content: `${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Section title</span>`,
             slotRight: sbMkChevron(),
-          })}
-        </div>`,
+          })}` })}`,
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="true">
   <div class="sb-section-header-left">
     <span class="sb-caption">Section title</span>
@@ -179,16 +177,14 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
           'A Symbol Badge (24×24) precedes the title in the left slot. Most often an Info Pop-up; Warning, Critical or Check can reflect the section’s status.',
           'Перед заголовком в левом слоте — Symbol Badge (24×24). Чаще всего Info Pop-up; Warning, Critical или Check могут отражать статус секции.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
-          ${mkSectionHeader({
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `${mkSectionHeader({
             slotLeft: `${SB_SVG.infoPop}<span class="sb-caption">Section title</span>`,
             slotRight: false,
           })}
           ${mkSectionHeader({
             slotLeft: `${SB_SVG.warnLine}<span class="sb-caption">Warning section</span>`,
             slotRight: false,
-          })}
-        </div>`,
+          })}` })}`,
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="false">
   <div class="sb-section-header-left">
     <!-- Symbol Badge: infoPop SVG 24×24 -->
@@ -203,16 +199,14 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
           'The collapsible variant places a chevron at the far right. The expanded state is stored on the parent; the chevron only reflects it.',
           'Сворачиваемый вариант — шеврон крайним справа. Состояние раскрытия хранится на родителе; шеврон лишь отражает его.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
-          ${mkSectionHeader({
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Expanded section</span>`,
             slotRight: sbMkChevron({ dir: 'up' }),
           })}
           ${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Collapsed section</span>`,
             slotRight: sbMkChevron(),
-          })}
-        </div>`,
+          })}` })}`,
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="true">
   <div class="sb-section-header-left">
     <span class="sb-caption">Expanded section</span>
@@ -261,8 +255,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
           'The More (⋯) button with an attached dropdown menu — for sections with a set of secondary actions that do not fit inline. On narrow widths (below 320px), inline buttons collapse into this menu automatically.',
           'More-кнопка (⋯) с прикреплённым выпадающим меню — для секций с набором второстепенных действий, которые не помещаются инлайн. На узкой ширине (меньше 320px) inline-кнопки сворачиваются в это меню автоматически.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%">
-          ${mkSectionHeader({
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `${mkSectionHeader({
             slotLeft: `<span class="sb-caption">Section title</span>`,
             slotRight: mkSectionHeaderActions({ more: { items: DEMO_MORE_ITEMS } }),
           })}
@@ -275,8 +268,7 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
               ],
               more: { items: DEMO_MORE_ITEMS },
             }),
-          })}
-        </div>`,
+          })}` })}`,
         html: `<div class="sb-section-header" data-slot-left="true" data-slot-right="true">
   <div class="sb-section-header-left">
     <span class="sb-caption">Section title</span>

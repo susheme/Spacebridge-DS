@@ -147,13 +147,11 @@ window.SB_DEMO_MORE_ITEMS = [
   // Static demo matrix: 4 states × { with iconLeft, without iconLeft }
   function mkStateRow(label, withIconLeft) {
     const iconLeft = withIconLeft ? 'gemini-fill' : undefined;
-    return `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
-      <span class="sb-caption" style="color:var(--text-tertiary)">${label}</span>
+    return `${sbMkFlex({ dir: 'col', gap: 'xs', content: `<span class="sb-caption" style="color:var(--text-tertiary)">${label}</span>
       ${mkContextCell({ iconLeft, iconRightHover: 'file-copy-line', label: 'Name' })}
       ${mkContextCell({ iconLeft, iconRightHover: 'file-copy-line', label: 'Name', state: 'hover' })}
       ${mkContextCell({ iconLeft, iconRightHover: 'file-copy-line', label: 'Name', state: 'selected' })}
-      ${mkContextCell({ iconLeft, iconRightHover: 'file-copy-line', label: 'Name', state: 'disabled' })}
-    </div>`;
+      ${mkContextCell({ iconLeft, iconRightHover: 'file-copy-line', label: 'Name', state: 'disabled' })}` })}`;
   }
 
   sbRegister({
@@ -247,10 +245,8 @@ window.SB_DEMO_MORE_ITEMS = [
           'Default / Hover / Selected / Disabled. The top row — with a left icon (24px), the bottom one — without. A click selects a cell; the selection is single within the parent.',
           'Default / Hover / Selected / Disabled. Верхний ряд — с иконкой слева (24px), нижний — без. Клик выбирает ячейку; выбор одиночный в рамках родителя.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:212px">
-          ${mkStateRow('With Icon Left', true)}
-          ${mkStateRow('Without Icon Left', false)}
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '212px', content: `${mkStateRow('With Icon Left', true)}
+          ${mkStateRow('Without Icon Left', false)}` })}`,
         html: `<!-- Default -->
 <div class="sb-ctx-cell" onclick="sbSelectContextCell(this)">
   <span class="sb-ctx-cell-icon-left"><!-- gemini-fill L --></span>
@@ -273,10 +269,8 @@ window.SB_DEMO_MORE_ITEMS = [
           'When a cell is not pressed against the container edges, the .has-radius modifier rounds its corners to 4px.',
           'Если ячейка не прижата к границам контейнера, модификатор .has-radius скругляет углы до 4px.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-s);width:100%;max-width:212px">
-          ${mkContextCell({ iconLeft: 'gemini-fill', label: 'Standalone', iconRightHover: 'file-copy-line', standalone: true })}
-          ${mkContextCell({ label: 'Standalone (no icon)', iconRightHover: 'file-copy-line', standalone: true })}
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', full: true, maxWidth: '212px', content: `${mkContextCell({ iconLeft: 'gemini-fill', label: 'Standalone', iconRightHover: 'file-copy-line', standalone: true })}
+          ${mkContextCell({ label: 'Standalone (no icon)', iconRightHover: 'file-copy-line', standalone: true })}` })}`,
         html: `<div class="sb-ctx-cell has-radius" onclick="sbSelectContextCell(this)">
   ... ячейка тут ...
 </div>`,

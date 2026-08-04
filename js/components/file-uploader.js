@@ -434,10 +434,8 @@ window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-dire
           }).replace('class="sb-uploader"', 'class="sb-uploader" style="width:100%"')}</div>
           <div style="flex:1 1 220px;min-width:200px;max-width:320px;display:flex;flex-direction:column;gap:var(--gap-vert-m)">
             ${sbPgGroup('Style', `
-              <div style="display:flex;flex-direction:column;gap:var(--gap-vert-s)">
-                ${sbMkToggle({ on: true, label: 'Card', attrs: 'data-style-card', inputAttrs: 'onchange="sbUploaderDemoStyle(this, false)"' })}
-                ${sbMkToggle({ label: 'Framed', attrs: 'data-style-framed', inputAttrs: 'onchange="sbUploaderDemoStyle(this, true)"' })}
-              </div>
+              ${sbMkFlex({ dir: 'col', gap: 's', content: `${sbMkToggle({ on: true, label: 'Card', attrs: 'data-style-card', inputAttrs: 'onchange="sbUploaderDemoStyle(this, false)"' })}
+                ${sbMkToggle({ label: 'Framed', attrs: 'data-style-framed', inputAttrs: 'onchange="sbUploaderDemoStyle(this, true)"' })}` })}
             `)}
             <div class="sb-body-m" style="color:var(--text-secondary)">${sbT(
               'The example is alive and shows the real process: drop or pick real files — an Uploading cell with a progress bar appears in the lower group, runs to Completed and jumps up to the finished ones. The trash and crosses remove rows, and the counter keeps up by itself.',

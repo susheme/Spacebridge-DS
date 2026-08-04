@@ -295,15 +295,11 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
         const icon = iconPosition !== 'none' ? 'gemini-fill' : undefined;
         const mk = (label, extra, opts) =>
           mkSegmentMenu([{ label, icon, ...extra }], { iconPosition, ...opts });
-        return `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m);width:100%">
-          ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">${groupTitle}</span>` })}
-          <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start">
-            ${mk('Default',  {},                  { selectedIndex: -1 })}
+        return `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">${groupTitle}</span>` })}
+          ${sbMkFlex({ gap: 'lg', align: 'start', wrap: true, content: `${mk('Default',  {},                  { selectedIndex: -1 })}
             ${mk('Hover',    { hover: true },     { selectedIndex: -1 })}
             ${mk('Selected', {},                  { selectedIndex: 0  })}
-            ${mk('Disabled', { disabled: true },  { selectedIndex: -1 })}
-          </div>
-        </div>`;
+            ${mk('Disabled', { disabled: true },  { selectedIndex: -1 })}` })}` })}`;
       }
       return [
         {
@@ -317,11 +313,9 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
             '<b>Состояния:</b>'
             + '<ul><li>Default — text-secondary;</li><li>Hover — text-primary;</li><li>Selected — primary-текст и анимированный индикатор под элементом (GPU-slide: transform/width 0.25s, cubic-bezier);</li><li>Disabled — текст --border, без интеракции.</li></ul>'
           )),
-          preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xl);width:100%">
-            ${stateGroup('Text only', 'none')}
+          preview: `${sbMkFlex({ dir: 'col', gap: 'xl', full: true, content: `${stateGroup('Text only', 'none')}
             ${stateGroup('Icon left', 'left')}
-            ${stateGroup('Icon top',  'top')}
-          </div>`,
+            ${stateGroup('Icon top',  'top')}` })}`,
           html: `<!-- Default -->
 <div class="sb-segment-menu">
   <button type="button" class="sb-segment-menu-item" onclick="sbSelectSegmentItem(this)">

@@ -173,8 +173,7 @@ window.COMP_CSS.tags = `.sb-tag {
           'Tags with color semantics. The tc-success / tc-error / tc-warning / tc-alert / tc-neutral classes apply to .sb-tag.filled.',
           'Теги с цветовой семантикой. Классы tc-success / tc-error / tc-warning / tc-alert / tc-neutral применяются к .sb-tag.filled.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap: var(--gap-horiz-s)">
-          <div class="sec-row wrap gap-xs">
+        preview: `${sbMkFlex({ dir: 'col', gap: 's', content: `<div class="sec-row wrap gap-xs">
             ${mkTag({ mode: 'filled', text: 'Online', color: 'success' })}
             ${mkTag({ mode: 'filled', text: 'Active', color: 'success', removable: true })}
           </div>
@@ -189,8 +188,7 @@ window.COMP_CSS.tags = `.sb-tag {
           <div class="sec-row wrap gap-xs">
             ${mkTag({ mode: 'filled', text: 'Alert', color: 'alert' })}
             ${mkTag({ mode: 'filled', text: 'Ka-Band', color: 'alert', removable: true })}
-          </div>
-        </div>`,
+          </div>` })}`,
         html: `<div class="sb-tag filled tc-success"><span class="sb-tag-label">Online</span></div>\n<div class="sb-tag filled tc-error"><span class="sb-tag-label">Offline</span></div>\n<div class="sb-tag filled tc-warning"><span class="sb-tag-label">Warning</span></div>\n<div class="sb-tag filled tc-alert"><span class="sb-tag-label">Alert</span></div>`,
         css: COMP_CSS.tags,
       },

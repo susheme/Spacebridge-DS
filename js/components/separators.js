@@ -41,21 +41,13 @@ sbRegister({
       ),
       col: true,
       preview: `
-        <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-lg);width:100%">
-          ${sbMkToggle({ label: 'Soft color', inputAttrs: `onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))"` })}
-          <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-s);width:100%">
-            <span class="sb-body-s" style="color:var(--text-tertiary)">L — 2px</span>
-            <div class="sb-sep sep-h sep-l"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-s);width:100%">
-            <span class="sb-body-s" style="color:var(--text-tertiary)">M — 1.5px</span>
-            <div class="sb-sep sep-h sep-m"></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-s);width:100%">
-            <span class="sb-body-s" style="color:var(--text-tertiary)">S — 1px</span>
-            <div class="sb-sep sep-h sep-s"></div>
-          </div>
-        </div>`,
+        ${sbMkFlex({ dir: 'col', gap: 'lg', full: true, content: `${sbMkToggle({ label: 'Soft color', inputAttrs: `onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))"` })}
+          ${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `<span class="sb-body-s" style="color:var(--text-tertiary)">L — 2px</span>
+            <div class="sb-sep sep-h sep-l"></div>` })}
+          ${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `<span class="sb-body-s" style="color:var(--text-tertiary)">M — 1.5px</span>
+            <div class="sb-sep sep-h sep-m"></div>` })}
+          ${sbMkFlex({ dir: 'col', gap: 's', full: true, content: `<span class="sb-body-s" style="color:var(--text-tertiary)">S — 1px</span>
+            <div class="sb-sep sep-h sep-s"></div>` })}` })}`,
       html: `<div class="sb-sep sep-h sep-l"></div>\n<div class="sb-sep sep-h sep-m"></div>\n<div class="sb-sep sep-h sep-s"></div>\n\n<!-- Soft color variant — добавь .soft модификатор -->\n<div class="sb-sep sep-h sep-l soft"></div>`,
       css: COMP_CSS.separator,
     },
@@ -66,23 +58,13 @@ sbRegister({
         'Вертикальный разделитель — разграничивает инлайн-элементы. Вертикальные разделители используют --border-soft из коробки, поэтому переключатель Soft color лишь явно ставит класс .soft, ничего не меняя визуально.'
       ),
       preview: `
-        <div style="display:flex;flex-direction:column;gap: var(--gap-horiz-lg);width:100%">
-          ${sbMkToggle({ label: 'Soft color', inputAttrs: `onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))"` })}
-          <div style="display:flex;align-items:flex-end;gap: var(--gap-horiz-xl)">
-            <div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">
-              <div class="sb-sep sep-v sep-l"></div>
-              <span class="sb-body-s" style="color:var(--text-tertiary)">L</span>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">
-              <div class="sb-sep sep-v sep-m"></div>
-              <span class="sb-body-s" style="color:var(--text-tertiary)">M</span>
-            </div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">
-              <div class="sb-sep sep-v sep-s"></div>
-              <span class="sb-body-s" style="color:var(--text-tertiary)">S</span>
-            </div>
-          </div>
-        </div>`,
+        ${sbMkFlex({ dir: 'col', gap: 'lg', full: true, content: `${sbMkToggle({ label: 'Soft color', inputAttrs: `onchange="this.closest('.example-box').querySelectorAll('.sb-sep').forEach(s => s.classList.toggle('soft', this.checked))"` })}
+          ${sbMkFlex({ gap: 'xl', align: 'end', content: `${sbMkFlex({ dir: 'col', gap: 's', align: 'center', content: `<div class="sb-sep sep-v sep-l"></div>
+              <span class="sb-body-s" style="color:var(--text-tertiary)">L</span>` })}
+            ${sbMkFlex({ dir: 'col', gap: 's', align: 'center', content: `<div class="sb-sep sep-v sep-m"></div>
+              <span class="sb-body-s" style="color:var(--text-tertiary)">M</span>` })}
+            ${sbMkFlex({ dir: 'col', gap: 's', align: 'center', content: `<div class="sb-sep sep-v sep-s"></div>
+              <span class="sb-body-s" style="color:var(--text-tertiary)">S</span>` })}` })}` })}`,
       html: `<div class="sb-sep sep-v sep-l"></div>\n<div class="sb-sep sep-v sep-m"></div>\n<div class="sb-sep sep-v sep-s"></div>`,
       css: COMP_CSS.separator,
     },

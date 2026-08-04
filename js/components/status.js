@@ -222,13 +222,11 @@ sbRegister({
     render(s) {
       const cls = dotClass(s);
       if (s.mini) {
-        return `<div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-m);">
-          <span class="${cls}"></span>
+        return `${sbMkFlex({ dir: 'col', gap: 'm', align: 'center', content: `<span class="${cls}"></span>
           <div class="sb-icon-badge-wrap">
             ${bellIcon}
             <span class="${cls}"></span>
-          </div>
-        </div>`;
+          </div>` })}`;
       }
       return `<span class="${cls}"></span>`;
     },

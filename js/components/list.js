@@ -201,10 +201,8 @@ window.sbSelectInfoCell = function(cell) {
   }
 
   function mkCellWithTypeTag(pos, typeLabel, cellLabel, toggleOpts) {
-    return `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs);width:100%;max-width:360px">
-      <span class="sb-caption" style="color:var(--text-tertiary)">${typeLabel}</span>
-      ${mkControlCell(pos, cellLabel, toggleOpts)}
-    </div>`;
+    return `${sbMkFlex({ dir: 'col', gap: 'xs', full: true, maxWidth: '360px', content: `<span class="sb-caption" style="color:var(--text-tertiary)">${typeLabel}</span>
+      ${mkControlCell(pos, cellLabel, toggleOpts)}` })}`;
   }
 
   function buildProfileRight(type) {
@@ -424,20 +422,12 @@ window.sbSelectInfoCell = function(cell) {
           + '<b>Состояния:</b>'
           + '<ul><li>Hover — фон --surface-1;</li><li>Disabled — контент с opacity 0.5.</li></ul>'
         )),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-xl);width:100%;max-width:360px">
-          <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
-            <span class="sb-caption" style="color:var(--text-tertiary)">1 Icon</span>
-            <div>${mkProfileList('icon')}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
-            <span class="sb-caption" style="color:var(--text-tertiary)">2 Icons</span>
-            <div>${mkProfileList('icons2')}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
-            <span class="sb-caption" style="color:var(--text-tertiary)">Icon Button</span>
-            <div>${mkProfileList('button')}</div>
-          </div>
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 'xl', full: true, maxWidth: '360px', content: `${sbMkFlex({ dir: 'col', gap: 'xs', content: `<span class="sb-caption" style="color:var(--text-tertiary)">1 Icon</span>
+            <div>${mkProfileList('icon')}</div>` })}
+          ${sbMkFlex({ dir: 'col', gap: 'xs', content: `<span class="sb-caption" style="color:var(--text-tertiary)">2 Icons</span>
+            <div>${mkProfileList('icons2')}</div>` })}
+          ${sbMkFlex({ dir: 'col', gap: 'xs', content: `<span class="sb-caption" style="color:var(--text-tertiary)">Icon Button</span>
+            <div>${mkProfileList('button')}</div>` })}` })}`,
         html: `<!-- Profile cell: image avatar + title + subtitle + icon -->
 <div class="sb-profile-cell">
   <div class="sb-profile-cell-left">
@@ -486,14 +476,10 @@ window.sbSelectInfoCell = function(cell) {
           'A cell for notification, event and alarm lists. A title, with a caption (date or time) under it. No dividers. States: Default, Hover, Selected (--primary-hover), Disabled (opacity 0.5).',
           'Ячейка для списков уведомлений, событий и алармов. Заголовок, под ним caption (дата или время). Без разделителей. Состояния: Default, Hover, Selected (--primary-hover), Disabled (opacity 0.5).'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:360px">
-          ${['default', 'hover', 'selected', 'disabled'].map(st => `
-            <div style="display:flex;flex-direction:column;gap:var(--gap-vert-xs)">
-              <span class="sb-caption" style="color:var(--text-tertiary)">${st[0].toUpperCase() + st.slice(1)}</span>
-              ${mkInfoCell({ state: st === 'default' ? undefined : st })}
-            </div>
-          `).join('')}
-        </div>`,
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${['default', 'hover', 'selected', 'disabled'].map(st => `
+            ${sbMkFlex({ dir: 'col', gap: 'xs', content: `<span class="sb-caption" style="color:var(--text-tertiary)">${st[0].toUpperCase() + st.slice(1)}</span>
+              ${mkInfoCell({ state: st === 'default' ? undefined : st })}` })}
+          `).join('')}` })}`,
         html: `<!-- Default -->
 <div class="sb-info-cell">
   <div class="sb-info-cell-text">
@@ -599,8 +585,7 @@ window.sbSelectInfoCell = function(cell) {
           'Up to 5 cells per list. With more controls, split them into separate blocks. Example: a Single cell on top for the key control, the rest in a list below.',
           'До 5 ячеек в списке. Если контролов больше — в отдельные блоки. Пример: Single-ячейка сверху для главного контрола, остальные списком ниже.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:360px">
-          ${mkControlList([
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${mkControlList([
             { label: 'DC Power', on: false },
           ])}
           ${mkControlList([
@@ -609,8 +594,7 @@ window.sbSelectInfoCell = function(cell) {
             { label: 'RL RF Spectral Inversion', on: true },
             { label: 'ODU Present Flag',         on: true },
             { label: 'BUC 10 MHz Reference',     on: true },
-          ])}
-        </div>`,
+          ])}` })}`,
         html: `<!-- Standalone single cell -->
 <div class="sb-list">
   <div class="sb-list-cell single">
@@ -635,12 +619,10 @@ window.sbSelectInfoCell = function(cell) {
           'Single — a standalone cell. Top and Bottom close the list at its ends. Inside — a middle cell; it cannot be first or last.',
           'Single — самостоятельная ячейка. Top и Bottom замыкают список по краям. Inside — серединная ячейка; не может быть первой или последней.'
         ),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-lg);width:100%;max-width:360px">
-          ${mkCellWithTypeTag('single', 'Single', 'DC Power', { on: false })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'lg', full: true, maxWidth: '360px', content: `${mkCellWithTypeTag('single', 'Single', 'DC Power', { on: false })}
           ${mkCellWithTypeTag('top',    'Top',    'Low Power Mode', { on: true })}
           ${mkCellWithTypeTag('inside', 'Inside List', 'RL RF Spectral Inversion', { on: true })}
-          ${mkCellWithTypeTag('bottom', 'Bottom', 'ODU Present Flag', { on: true })}
-        </div>`,
+          ${mkCellWithTypeTag('bottom', 'Bottom', 'ODU Present Flag', { on: true })}` })}`,
         html: `<!-- Single -->
 <div class="sb-list-cell single">
   <span class="sb-list-cell-label sb-title-m">DC Power</span>

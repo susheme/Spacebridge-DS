@@ -50,6 +50,33 @@ suite('Догма Клементия', function () {
     return expectNone(bad, 'svg инлайнится в обход sbIcon');
   });
 
+  check('раскладка только через Grid System', function () {
+    // Инлайновый flex, состоящий ТОЛЬКО из раскладочных свойств, — это
+    // sbMkFlex, написанный руками. Стиль, который вдобавок несёт оформление
+    // (фон, паддинги, рамку), не в счёт: фабрика раскладки такого не принимает
+    // и принимать не должна.
+    var LAYOUT = {
+      'display': 1, 'flex-direction': 1, 'gap': 1, 'align-items': 1,
+      'justify-content': 1, 'flex-wrap': 1, 'width': 1, 'max-width': 1,
+    };
+    var bad = [];
+    componentJs().forEach(function (f) {
+      eachLine(f, function (line, n) {
+        var m = line.match(/style="([^"]*display:\s*flex[^"]*)"/);
+        if (!m) return;
+        var decls = m[1].split(';');
+        var onlyLayout = true;
+        for (var i = 0; i < decls.length; i++) {
+          var d = decls[i].trim();
+          if (!d) continue;
+          if (!LAYOUT[d.split(':')[0].trim()]) { onlyLayout = false; break; }
+        }
+        if (onlyLayout) bad.push(place(f, n, 'инлайновая раскладка — нужен sbMkFlex(): ' + m[1].slice(0, 50)));
+      });
+    });
+    return expectNone(bad, 'flex верстается инлайном в обход Grid System');
+  });
+
   check('типографика только через sb-* классы', function () {
     var bad = [];
     componentJs().forEach(function (f) {

@@ -912,7 +912,7 @@ window.COMP_CSS["nav-bar"] = `.sb-nav-bar { display: flex; align-items: center; 
             ${mkNavBtn({ label: 'Indicator', indicator: true })}
           </div>
           <div class="sec-row wrap gap-sm">
-            <div style="display:flex;width:220px">${mkNavBtn({ label: 'A very long section name that will truncate' })}</div>
+            ${sbMkFlex({ width: '220px', content: `${mkNavBtn({ label: 'A very long section name that will truncate' })}` })}
           </div>
         </div>`,
         html: `<!-- Default -->

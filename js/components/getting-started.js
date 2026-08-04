@@ -205,10 +205,10 @@ sbRegister({
             return `
           <div class="typo-row">
             <div class="typo-label sb-body-s">${e.name}</div>
-            <div class="typo-sample" style="display:flex;align-items:center;gap: var(--gap-horiz-m)">
+            ${sbMkFlex({ align: 'center', gap: 'm', cls: 'typo-sample', content: `
               <div style="width:40px;height:40px;border-radius:var(--radius-8);background:${bg};${e.shadow};flex-shrink:0"></div>
               <span class="sb-body-s" style="color:var(--text-tertiary)">${e.desc}</span>
-            </div>
+            ` })}
             <div class="typo-end">
               <div class="typo-meta sb-sub" style="max-width:260px;word-break:break-all">${cssSnippet}</div>
               <button class="pg-code-copy-btn" onclick="navigator.clipboard.writeText('${cssSnippet}').then(function(){ if (typeof sbShowSnackbar === 'function') sbShowSnackbar(); })" title="Copy">${sbIcon('file-copy-line','L')}</button>

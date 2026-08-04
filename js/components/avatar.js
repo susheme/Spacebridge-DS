@@ -70,10 +70,10 @@ function avStateRow(type, initials) {
   ];
   return `<div style="display:flex;gap: var(--gap-horiz-lg);padding-bottom: var(--pad-vert-24);flex-wrap:wrap">`
     + states.map(st =>
-        `<div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">`
+        `${sbMkFlex({ dir: 'col', gap: 's', align: 'center', content: ``
         + mkAv(type, st.opts, initials)
         + `<span class="sb-sub" style="color:var(--text-muted);white-space:nowrap">${st.label}</span>`
-        + `</div>`
+        + `` })}`
       ).join('')
     + `</div>`;
 }
@@ -122,14 +122,12 @@ sbRegister({
         'Four avatar types: User (a user icon), Initials, Company (an organization icon), Image (a photo).',
         'Четыре типа аватаров: User (иконка пользователя), Initials (инициалы), Company (иконка организации), Image (фото).'
       ),
-      preview: `<div style="display:flex;gap: var(--gap-horiz-xl);align-items:flex-end">
-        ${['user','initials','company','image'].map(t =>
-          `<div style="display:flex;flex-direction:column;align-items:center;gap: var(--gap-horiz-s)">`
+      preview: `${sbMkFlex({ gap: 'xl', align: 'end', content: `${['user','initials','company','image'].map(t =>
+          `${sbMkFlex({ dir: 'col', gap: 's', align: 'center', content: ``
           + mkAv(t, {}, 'NS')
           + `<span class="sb-body-s" style="color:var(--text-tertiary)">${t.charAt(0).toUpperCase()+t.slice(1)}</span>`
-          + `</div>`
-        ).join('')}
-      </div>`,
+          + `` })}`
+        ).join('')}` })}`,
       html: `<!-- User -->
 <div class="sb-avatar">
   <div class="sb-avatar-circle">

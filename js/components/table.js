@@ -652,13 +652,13 @@ window.COMP_CSS.table = `.sb-table {
         ['avatar-link', 'Avatar → Link'], ['avatar-link-icon', 'Avatar → Link → Icon'],
         ['status-circle-text', 'Status Circle → Text'], ['mark-text', 'Mark Horiz → Text'],
       ];
-      const cellTypes = `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m)">`
+      const cellTypes = `${sbMkFlex({ dir: 'col', gap: 'm', content: ``
         + CELL_TYPES.map(([t, label]) =>
-            `<div style="display:flex;align-items:center;gap:var(--gap-horiz-m)">`
+            `${sbMkFlex({ gap: 'm', align: 'center', content: ``
             + `<span class="sb-caption" style="width:172px;flex-shrink:0;color:var(--text-secondary)">${label}</span>`
             + mkCell({ type: t })
-            + `</div>`).join('')
-        + `</div>`;
+            + `` })}`).join('')
+        + `` })}`;
       const codeTypesHTML = `<!-- sbMkTableCell({ type, value }) — type:\n     text | link | date | status-text | checkbox | chevron | icon-button | drawer |\n     toggle | icon | input | icon-text | link-icon | text-icon | avatar-text |\n     avatar-text-icon | avatar-link | avatar-link-icon | status-circle-text | mark-text\n     Узкие: checkbox=40; chevron (Chevron Button)/icon-button/drawer=32. -->`;
 
       // Cell — States: Default / Hover / Selected.

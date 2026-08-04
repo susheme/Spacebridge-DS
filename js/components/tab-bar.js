@@ -126,13 +126,11 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
           '<b>Контейнер:</b>'
           + '<ul><li>Высота: 32px;</li><li>Padding: 2/2;</li><li>Radius: 6;</li><li>Фон: --surface-1 с Pressed-inset тенью (вдавленный вид);</li><li>Block-level flex.</li></ul>'
         )),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m);width:360px;max-width:100%">
-          ${mkTabBar(['Day', 'Night'],                                       { selectedIndex: 0 })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', width: '360px', maxWidth: '100%', content: `${mkTabBar(['Day', 'Night'],                                       { selectedIndex: 0 })}
           ${mkTabBar(['List', 'Grid', 'Map'],                                { selectedIndex: 0 })}
           ${mkTabBar(['Day', 'Night', 'List', 'Grid'],                       { selectedIndex: 0 })}
           ${mkTabBar(['Day', 'Night', 'List', 'Grid', 'Map'],                { selectedIndex: 0 })}
-          ${mkTabBar(['Day', 'Night', 'List', 'Grid', 'Map', 'Chart'],       { selectedIndex: 0 })}
-        </div>`,
+          ${mkTabBar(['Day', 'Night', 'List', 'Grid', 'Map', 'Chart'],       { selectedIndex: 0 })}` })}`,
         html: `<!-- 2 tabs (each ~50% width minus gap/padding) -->
 <div class="sb-tab-bar">
   <button type="button" class="sb-tab selected" onclick="sbSelectTab(this)">
@@ -166,26 +164,20 @@ window.COMP_CSS["tab-bar"] = `.sb-tab-bar {
           + '<b>Индикатор:</b>'
           + '<ul><li>.sb-status-dot.mini.</li></ul>'
         )),
-        preview: `<div style="display:flex;flex-direction:column;gap:var(--gap-vert-m);width:100%">
-          <div style="display:flex;flex-direction:column;gap:var(--gap-vert-m)">
-            ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Without indicator</span>` })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', full: true, content: `${sbMkFlex({ dir: 'col', gap: 'm', content: `${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">Without indicator</span>` })}
             <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start;pointer-events:none">
               ${sbMkTab({ label: 'Default' })}
               ${sbMkTab({ label: 'Hover',    hover: true })}
               ${sbMkTab({ label: 'Selected', selected: true })}
               ${sbMkTab({ label: 'Disabled', disabled: true })}
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:var(--gap-vert-m)">
-            ${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">With indicator (online)</span>` })}
+            </div>` })}
+          ${sbMkFlex({ dir: 'col', gap: 'm', content: `${sbMkSectionHeader({ slotLeft: `<span class="sb-caption">With indicator (online)</span>` })}
             <div style="display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:flex-start;pointer-events:none">
               ${sbMkTab({ label: 'Default',  indicator: 'online' })}
               ${sbMkTab({ label: 'Hover',    indicator: 'online', hover: true })}
               ${sbMkTab({ label: 'Selected', indicator: 'online', selected: true })}
               ${sbMkTab({ label: 'Disabled', indicator: 'online', disabled: true })}
-            </div>
-          </div>
-        </div>`,
+            </div>` })}` })}`,
         html: `<!-- Default — без indicator -->
 <button type="button" class="sb-tab" onclick="sbSelectTab(this)">
   <span class="sb-tab-label">Default</span>

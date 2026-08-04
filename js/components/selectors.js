@@ -295,12 +295,10 @@ window.COMP_CSS.selector = `.sb-sel { display: flex; align-items: center; height
           'A left icon (an AI assistant and the like) and an add button on the right. The .sb-sel-row wrapper lays it out.',
           'Иконка слева (AI-ассистент и подобное), кнопка добавления справа. Раскладку даёт обёртка .sb-sel-row.'
         ),
-        preview: `<div style="width:400px;display:flex;flex-direction:column;gap: var(--gap-horiz-m)">
-          ${mkSelRow({}, { showIcon: true })}
+        preview: `${sbMkFlex({ dir: 'col', gap: 'm', width: '400px', content: `${mkSelRow({}, { showIcon: true })}
           ${mkSelRow({}, { showAddBtn: true })}
           ${mkSelRow({}, { showIcon: true, showAddBtn: true })}
-          ${mkSelRow({ disabled: true }, { showIcon: true, showAddBtn: true })}
-        </div>`,
+          ${mkSelRow({ disabled: true }, { showIcon: true, showAddBtn: true })}` })}`,
         html: `<!-- Icon + Selector + Add button -->\n<div class="sb-sel-row">\n  <span class="sb-sel-icon-left"><!-- icon --></span>\n  <div class="sb-sel">\n    <span class="sb-sel-val">Selected value</span>\n    <div class="sb-sel-right">\n      <div class="sb-chevron"><!-- arrow-down-s-line --></div>\n    </div>\n  </div>\n  <button class="sb-sel-btn-add"><!-- add-line --></button>\n</div>`,
         css: COMP_CSS.chevron + '\n' + COMP_CSS.selector,
       },

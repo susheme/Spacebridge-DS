@@ -249,6 +249,13 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
     return '<div class="sb-gs-demo' + (mod ? ' ' + mod : '') + '"><span class="sb-body-m">' + label + '</span></div>';
   };
   var frame = function (content) { return '<div class="sb-gs-frame">' + content + '</div>'; };
+  // Карточка-заглушка: сетку нагляднее показывать на чём-то с содержимым.
+  var card = function (title, text) {
+    return '<div class="sb-gs-card">'
+      + '<span class="sb-title-m sb-fw-semibold">' + title + '</span>'
+      + '<span class="sb-body-s">' + text + '</span>'
+      + '</div>';
+  };
 
   sbRegister({
     name: 'grid-system',
@@ -314,12 +321,23 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
           </div>`;
       },
       render(s) {
-        // Третья ячейка с grow показывает, как один ребёнок забирает остаток.
-        var items = [
-          cell('One'),
-          cell('Two'),
-          s.grow ? { content: cell('Grow'), grow: true } : cell('Three'),
-        ];
+        // Настоящий тулбар вместо абстрактных прямоугольников: слева действия,
+        // посередине поиск, справа overflow. Сразу видно, зачем нужен grow и
+        // почему кнопка не должна сжиматься.
+        //
+        // Чужие фабрики зовём ЗДЕСЬ, а не в секциях: grid-system грузится
+        // третьим, и на момент регистрации ни Button, ни Search ещё нет.
+        // render вызывается при открытии страницы, когда загружено всё.
+        var left = sbMkButton({ icon: 'add-line' }) + sbMkButton({ label: 'Action' });
+        var search = (typeof sbMkSearch === 'function')
+          ? sbMkSearch({ iconLeft: true, placeholder: 'Search' })
+          : cell('Search');
+        var more = sbMkButton({ icon: 'more-2-line' });
+
+        var items = s.grow
+          ? [{ content: left, shrink: false }, { content: search, grow: true }, { content: more, shrink: false }]
+          : [left, search, more];
+
         return `<div style="width:100%">${mkFlex({
           dir: s.dir, gap: s.gap, align: s.align, justify: s.justify,
           wrap: s.wrap, full: true, items: items,
@@ -327,8 +345,8 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
       },
       genCode(s) {
         var items = s.grow
-          ? "[cellOne, cellTwo, { content: cellThree, grow: true }]"
-          : "[cellOne, cellTwo, cellThree]";
+          ? "[\n    { content: actions, shrink: false },\n    { content: search, grow: true },\n    { content: more, shrink: false },\n  ]"
+          : "[actions, search, more]";
         return {
           html: `<!-- sbMkFlex({\n`
             + `  dir: '${s.dir}',\n`
@@ -353,10 +371,15 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
         preview: mkFlex({
           dir: 'col', gap: 'lg', full: true,
           items: [
-            mkGrid({ items: [cell('Card'), cell('Card'), cell('Card'), cell('Card')] }),
+            mkGrid({ items: [
+              card('Ground Station', sbT('Kourou · online', 'Куру · на связи')),
+              card('Ground Station', sbT('Baikonur · maintenance', 'Байконур · обслуживание')),
+              card('Ground Station', sbT('Plesetsk · online', 'Плесецк · на связи')),
+              card('Ground Station', sbT('Vostochny · offline', 'Восточный · не отвечает')),
+            ] }),
             mkGrid({ min: 'tile', gap: 's', items: [
-              cell('96', 'accent'), cell('96'), cell('96'), cell('96'),
-              cell('96'), cell('96'), cell('96'), cell('96'),
+              cell('12 V', 'accent'), cell('4.1 A'), cell('−18 °C'), cell('92 %'),
+              cell('61 dBm'), cell('3.2 Mbps'), cell('14 ms'), cell('8 sat'),
             ] }),
           ],
         }),
@@ -374,13 +397,13 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
           dir: 'col', gap: 'lg', full: true,
           items: [
             mkFlex({ full: true, items: [
-              cell('fixed'),
-              { content: cell('grow', 'accent'), grow: true },
-              cell('fixed'),
+              cell(sbT('menu', 'меню')),
+              { content: cell(sbT('content — takes the rest', 'контент — забирает остаток'), 'accent'), grow: true },
+              cell(sbT('status', 'статус')),
             ] }),
             mkFlex({ full: true, items: [
-              { content: cell('grow', 'accent'), grow: true },
-              { content: cell('no-shrink'), shrink: false },
+              { content: cell(sbT('title — shrinks first', 'заголовок — сжимается первым'), 'accent'), grow: true },
+              { content: cell(sbT('buttons — never shrink', 'кнопки — не сжимаются никогда'), 'accent'), shrink: false },
             ] }),
           ],
         }),
@@ -397,13 +420,20 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
           'Content stretches to the limit and is centred beyond it; side gutters follow --page-gutter (32 / 24 / 16 by mode). The text width is separate: on five thousand pixels a line becomes unreadable — the eye loses the start of the next one — so articles, settings and documentation take the narrower limit.',
           'Контент тянется до предела, дальше центрируется; боковые поля берутся из --page-gutter (32 / 24 / 16 по режимам). Текстовая ширина — отдельно: на пяти тысячах пикселей строка нечитаема, глаз теряет начало следующей, поэтому статьи, настройки и документация берут более узкий предел.'
         ),
-        preview: mkFlex({
-          dir: 'col', gap: 'lg', full: true,
-          items: [
-            frame(mkPage({ content: cell('sb-page — default') })),
-            frame(mkPage({ width: 'text', content: cell('sb-page — width: text') })),
-          ],
-        }),
+        preview: (function () {
+          var para = sbT(
+            'A line this wide is hard to read: having finished it, the eye has to travel back across the whole screen and often lands on the wrong line. That is why articles, settings and documentation take the narrower limit — compare this paragraph with the one below.',
+            'Строку такой ширины читать тяжело: дочитав до конца, глаз возвращается через весь экран и нередко попадает не на ту строку. Поэтому статьи, настройки и документация берут более узкий предел — сравни этот абзац со следующим.'
+          );
+          var text = '<p class="sb-body-m sb-gs-text">' + para + '</p>';
+          return mkFlex({
+            dir: 'col', gap: 'lg', full: true,
+            items: [
+              frame(mkPage({ content: text })),
+              frame(mkPage({ width: 'text', content: text })),
+            ],
+          });
+        })(),
         html: `<!-- sbMkPage({ content })                 — до 5000, дальше по центру\n`
           + `     sbMkPage({ width: 'text', content })   — читаемая ширина текста -->`,
         css: COMP_CSS['grid-system'],

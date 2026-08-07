@@ -121,3 +121,21 @@
   border-radius: var(--radius-8);
   padding: var(--pad-vert-16) var(--pad-horiz-0);
 }
+
+/* Демо-карточка: показать сетку на чём-то похожем на настоящий контент, а не
+   на пустых прямоугольниках. Cards в DS ещё нет — как появятся, демо Grid
+   переедет на них. */
+.sb-gs-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-vert-xs);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  box-sizing: border-box;
+  border-radius: var(--radius-8);
+  border: var(--border-width-1) solid var(--border);
+  background: var(--background);
+}
+.sb-gs-card .sb-title-m { color: var(--text-primary); }
+.sb-gs-card .sb-body-s  { color: var(--text-secondary); }
+/* Абзац для демонстрации предельной ширины текста. */
+.sb-gs-text { color: var(--text-secondary); }

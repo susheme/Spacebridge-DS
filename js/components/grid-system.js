@@ -285,7 +285,7 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
     )),
     playground: {
       title: 'Flex',
-      state: { dir: 'row', gap: 'm', align: 'stretch', justify: 'start', wrap: false, grow: false },
+      state: { dir: 'row', gap: 'm', align: 'center', justify: 'start', wrap: false, grow: false },
       controls(pg) {
         return `${sbPgGroup('Direction & Gap', `
             ${pg.select('dir', [
@@ -328,7 +328,12 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
         // Чужие фабрики зовём ЗДЕСЬ, а не в секциях: grid-system грузится
         // третьим, и на момент регистрации ни Button, ни Search ещё нет.
         // render вызывается при открытии страницы, когда загружено всё.
-        var left = sbMkButton({ icon: 'add-line' }) + sbMkButton({ label: 'Action' });
+        // Группа кнопок — вложенный Flex, а не склейка строк: иначе между ними
+        // нет отступа и они слипаются в одну плашку.
+        var left = mkFlex({ gap: 's', align: 'center', items: [
+          sbMkButton({ icon: 'add-line' }),
+          sbMkButton({ label: 'Action' }),
+        ] });
         var search = (typeof sbMkSearch === 'function')
           ? sbMkSearch({ iconLeft: true, placeholder: 'Search' })
           : cell('Search');

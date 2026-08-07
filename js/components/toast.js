@@ -445,9 +445,10 @@ window.COMP_CSS.toast = `.sb-toast {
   //   - группа = вариант (default/redirector/collapsable) + severity;
   //   - Default: 2+ в группе → сразу собираются в стек;
   //   - Redirector/Collapsable (action-тосты): стек только как защита от
-  //     потопа — при 3+; свежий action-тост держится ОТДЕЛЬНОЙ карточкой
-  //     сверху группы GRACE_MS (8с), чтобы призыв к действию был виден,
-  //     и только потом уезжает в стек;
+  //     потопа — при 3+; САМЫЙ СВЕЖИЙ action-тост группы держится ОТДЕЛЬНОЙ
+  //     карточкой сверху GRACE_MS (8с), чтобы призыв к действию был виден;
+  //     приход следующего тоста той же группы снимает свежесть с предыдущего
+  //     сразу — свежая карточка всегда ровно одна;
   //   - клики по крестикам/Clear в стеке синкают модель менеджера
   //     (delegated-слушатель на host), DOM-анимации делают хендлеры стека.
   const GRACE_MS = 8000;
@@ -480,11 +481,22 @@ window.COMP_CSS.toast = `.sb-toast {
       return Math.round(navH + (this.padded ? 32 : 16));
     },
 
+    // Снять свежесть немедленно (таймер больше не нужен).
+    demote(it) {
+      if (it.timer) clearTimeout(it.timer);
+      it.timer = null;
+      it.fresh = false;
+    },
     show(opts) {
       const id = 't' + (++this.seq);
       const kind = this.kindOf(opts || {});
       const item = { id, opts: opts || {}, kind, fresh: !kind.startsWith('default'), timer: null };
       if (item.fresh) {
+        // Отдельной карточкой держится ТОЛЬКО самый свежий тост группы.
+        // Без этого у каждого свой независимый grace, и N тостов за 8с
+        // висят N отдельными карточками — ровно тот потоп, от которого
+        // стек и защищает (собираются они только когда таймеры отстреляют).
+        this.items.forEach(i => { if (i.kind === kind && i.fresh) this.demote(i); });
         item.timer = setTimeout(() => { item.fresh = false; item.timer = null; this.render(); }, GRACE_MS);
       }
       this.items.push(item);
@@ -594,8 +606,8 @@ window.COMP_CSS.toast = `.sb-toast {
     const d = DEMO[s.severity];
     sbToastShow({
       severity: s.severity,
-      title: d.title,
-      text: d.text,
+      title: s.longText ? d.title + ' — a very long title to demonstrate the ellipsis' : d.title,
+      text: s.longText ? d.text + ' ' + d.text + ' ' + d.text : d.text,
       action: s.withAction ? { label: 'Check' } : undefined,
       details: s.collapsable ? { items: DEMO_STEPS.slice(0, 4) } : undefined,
     });
@@ -641,7 +653,7 @@ window.COMP_CSS.toast = `.sb-toast {
       + '<b>Stack:</b>'
       + '<ul><li>Only one toast type collects into a stack — Default, Redirector and Collapsable all stack;</li><li>While the stack is collapsed, the inner Check / Details buttons are inert — any click expands the stack; folding the stack also folds expanded details;</li><li>Collapsed: the top toast with a chevron + two pseudo-underlays (<code>::before/::after</code>, no fake DOM); hover slides the underlays 2px down and reveals the Clear (N) chip;</li><li>Expanded (click the pile or the chevron): a column of toasts with individual close buttons, the chip turns into Clear All with a round fold chevron next to it.</li></ul>'
       + '<b>Manager (SB_TOAST):</b>'
-      + '<ul><li>Host: fixed at the top-right, below the Navigation Bar — nav height + 16px (or + 32px in the padded mode, <code>SB_TOAST.configure({ padded: true })</code>);</li><li>API: <code>sbToastShow(opts) → id</code>, <code>sbToastHide(id)</code>, <code>sbToastClearAll()</code>;</li><li>Grouping: variant + severity; Default — 2+ collapse into a stack immediately;</li><li>Redirector / Collapsable: stacking is flood-protection only (3+); a fresh action toast stays a separate card above its group for 8s, then joins the stack;</li><li>Close / Clear clicks inside a stack sync the manager model automatically.</li></ul>'
+      + '<ul><li>Host: fixed at the top-right, below the Navigation Bar — nav height + 16px (or + 32px in the padded mode, <code>SB_TOAST.configure({ padded: true })</code>);</li><li>API: <code>sbToastShow(opts) → id</code>, <code>sbToastHide(id)</code>, <code>sbToastClearAll()</code>;</li><li>Grouping: variant + severity; Default — 2+ collapse into a stack immediately;</li><li>Redirector / Collapsable: stacking is flood-protection only (3+); only the freshest action toast of a group stays a separate card above it for 8s (a newer toast of the same group demotes the previous one immediately), then joins the stack;</li><li>Close / Clear clicks inside a stack sync the manager model automatically.</li></ul>'
       + '<b>API:</b>'
       + '<ul><li><code>sbMkToast({ severity, title, text, lead, right, action, details })</code>;</li><li><code>sbMkToastStack({ toasts, expanded })</code>;</li><li><code>sbToastShow / sbToastHide / sbToastClearAll</code>.</li></ul>',
       '<b>Геометрия:</b>'
@@ -657,7 +669,7 @@ window.COMP_CSS.toast = `.sb-toast {
       + '<b>Stack:</b>'
       + '<ul><li>В стек собирается только один тип тостов — стекуются и Default, и Redirector, и Collapsable;</li><li>Пока стек собран, внутренние кнопки Check / Details не кликаются — любой клик раскрывает стек; сборка стека схлопывает и раскрытые details;</li><li>Collapsed: верхний тост с шевроном + две псевдо-подложки (<code>::before/::after</code>, без фейкового DOM); hover выдвигает подложки на 2px и показывает чипсу Clear (N);</li><li>Expanded (клик по стопке или шеврону): столбец тостов с крестиками, чипса становится Clear All, рядом круглая кнопка-шеврон сборки.</li></ul>'
       + '<b>Менеджер (SB_TOAST):</b>'
-      + '<ul><li>Host: fixed справа сверху, под Navigation Bar — высота нав-бара + 16px (или + 32px в padded-режиме, <code>SB_TOAST.configure({ padded: true })</code>);</li><li>API: <code>sbToastShow(opts) → id</code>, <code>sbToastHide(id)</code>, <code>sbToastClearAll()</code>;</li><li>Группировка: вариант + severity; Default — 2+ собираются в стек сразу;</li><li>Redirector / Collapsable: стек — только защита от потопа (3+); свежий action-тост держится отдельной карточкой над группой 8с, затем уезжает в стек;</li><li>Клики Close / Clear внутри стека синкают модель менеджера автоматически.</li></ul>'
+      + '<ul><li>Host: fixed справа сверху, под Navigation Bar — высота нав-бара + 16px (или + 32px в padded-режиме, <code>SB_TOAST.configure({ padded: true })</code>);</li><li>API: <code>sbToastShow(opts) → id</code>, <code>sbToastHide(id)</code>, <code>sbToastClearAll()</code>;</li><li>Группировка: вариант + severity; Default — 2+ собираются в стек сразу;</li><li>Redirector / Collapsable: стек — только защита от потопа (3+); отдельной карточкой над группой держится только самый свежий action-тост, 8с (приход следующего тоста группы снимает свежесть с предыдущего сразу), затем уезжает в стек;</li><li>Клики Close / Clear внутри стека синкают модель менеджера автоматически.</li></ul>'
       + '<b>API:</b>'
       + '<ul><li><code>sbMkToast({ severity, title, text, lead, right, action, details })</code>;</li><li><code>sbMkToastStack({ toasts, expanded })</code>;</li><li><code>sbToastShow / sbToastHide / sbToastClearAll</code>.</li></ul>'
     )),

@@ -38,6 +38,7 @@ window.SB_COMPONENTS = [
   { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list', 'chips', 'chevron'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell, чипса = sbMkChip
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
   { name: 'list',          file: 'list.js',           deps: ['toggles', 'buttons'] },
+  { name: 'property-list', file: 'property-list.js',  deps: ['buttons', 'status'] },  // ячейка «подпись → значение» для карточек; демо зовёт sbMkButton, sbMkBadgeStatus и sbMkStatusDot → ПОСЛЕ buttons и status
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles', 'context-menu', 'buttons'] }, // чекбоксы выбора рядов = sbMkCheckbox (managed); kebab ряда = sbMkContextCard/Cell при регистрации → ПОСЛЕ context-menu
   { name: 'section-header', file: 'section-header.js', deps: ['buttons', 'popover', 'context-menu'] }, // заголовок секции со слотами; действия = sbMkButton, overflow = sbMkPopover

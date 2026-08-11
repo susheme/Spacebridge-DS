@@ -54,6 +54,7 @@
 <link rel="stylesheet" href="css/components/snackbar.css">
 <link rel="stylesheet" href="css/components/table.css">
 <link rel="stylesheet" href="css/components/list.css">
+<link rel="stylesheet" href="css/components/property-list.css">
 <link rel="stylesheet" href="css/components/context-menu.css">
 <link rel="stylesheet" href="css/components/segment-menu.css">
 <link rel="stylesheet" href="css/components/tabs.css">
@@ -99,7 +100,10 @@
         <span class="sb-brand" style="font-size:18px;color:var(--primary)">SB</span>
       </span>
       <span class="sb-nav-bar-logo-title sb-caption" style="color:var(--text-secondary)">| Design System</span>
-      <span class="sb-nav-bar-badge"><span class="sb-badge-status mini bs-blue">v1.14.0</span></span>
+      <!-- Бейдж версии наполняется скриптом ниже через sbMkBadgeStatus: разметку
+           Status руками не пишем. Версия живёт в data-version — единственный
+           источник, из него же её читает Info Footer в подвале. -->
+      <span class="sb-nav-bar-badge" id="dsVersionBadge" data-version="v1.14.0"></span>
     </div>
     <div class="sb-nav-bar-center"></div>
     <div class="sb-nav-bar-right" id="dsNavRight">
@@ -216,6 +220,8 @@
 <script src="js/components/chips.js"></script>
 <!-- toast — demo реюзает sbMkHeaderXS + SB_SVG (badge.js) → ПОСЛЕ header-xs и badge -->
 <script src="js/components/toast.js"></script>
+<!-- property-list — слоты демо собираются sbMkButton / sbMkBadgeStatus / sbMkStatusDot → ПОСЛЕ buttons и status -->
+<script src="js/components/property-list.js"></script>
 <!-- led-panel / sub-nav / tool-bar — ВЫШЕ хедеров. Секции «Composition»
      у Header S и Header M собирают композицию из этих фабрик прямо при
      регистрации; когда они грузились ниже, guard `typeof sbMkToolBar ===
@@ -270,14 +276,26 @@
 })();
 </script>
 
+<!-- Бейдж версии в топбаре (dogfood: Badge Status из Status). Как и Theme-кнопка,
+     собирается фабрикой, а не руками в HTML — иначе это рукописная разметка
+     чужого компонента в потребителе. -->
+<script>
+(function(){
+  var el = document.getElementById('dsVersionBadge');
+  if (!el || typeof sbMkBadgeStatus !== 'function') return;
+  el.innerHTML = sbMkBadgeStatus({ label: el.getAttribute('data-version'), color: 'blue', mini: true });
+})();
+</script>
+
 <!-- App Info Footer (dogfood: наш Info Footer в подвале DS). Версия берётся из
-     бейджа Nav Bar (single source). IIFE — без top-level переменных. -->
+     бейджа Nav Bar (single source) — из его data-version, а не из текста:
+     атрибут не зависит от того, успел ли отрисоваться сам бейдж. -->
 <script>
 (function(){
   var el = document.getElementById('app-info-footer');
   if (!el || typeof sbMkInfoFooter !== 'function') return;
-  var badge = document.querySelector('.sb-nav-bar-badge .sb-badge-status');
-  var ver = badge ? badge.textContent.trim() : 'v1.14.0';
+  var badge = document.getElementById('dsVersionBadge');
+  var ver = badge ? badge.getAttribute('data-version') : 'v1.14.0';
   el.innerHTML = sbMkInfoFooter({
     variant: 'long',
     align: 'center',

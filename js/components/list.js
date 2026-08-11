@@ -8,18 +8,18 @@ window.COMP_CSS.list = `.sb-list {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: var(--text-field-min-width);
-  max-width: var(--text-field-max-width);
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
 }
 .sb-list-cell {
   display: flex;
   align-items: center;
   gap: var(--gap-vert-s);
   width: 100%;
-  min-width: var(--text-field-min-width);
-  max-width: var(--text-field-max-width);
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
   height: var(--list-min-height-cell);
-  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
   background: var(--surface-1);
 }
 .sb-list-cell.single { border-radius: var(--radius-8); }
@@ -40,8 +40,9 @@ window.COMP_CSS.list = `.sb-list {
   gap: var(--gap-vert-m);
   width: 100%;
   min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
   height: var(--list-min-height-cell);
-  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
   background: var(--background);
   border-bottom: var(--border-width-1) solid var(--border-soft);
 }
@@ -74,8 +75,9 @@ window.COMP_CSS.list = `.sb-list {
   position: relative;
   display: flex; align-items: center; gap: var(--gap-vert-m);
   width: 100%; min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
   height: var(--list-min-height-cell);
-  padding: var(--pad-horiz-4) var(--pad-vert-8);
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
   background: var(--background);
   cursor: pointer; user-select: none;
 }
@@ -212,6 +214,12 @@ window.sbSelectInfoCell = function(cell) {
     return '';
   }
 
+  // Лейблы Control-ячеек: те же настройки терминала, что и в секции ниже.
+  const CONTROL_ITEMS = [
+    'DC Power', 'Low Power Mode', 'RL RF Spectral Inversion',
+    'ODU Present Flag', 'BUC 10 MHz Reference',
+  ];
+
   const PROFILE_PEOPLE = [
     { avatarType: 'image',    title: 'Jean Dubois',    subtitle: 'Administrator' },
     { avatarType: 'initials', initials: 'AM', title: 'Anna Müller', subtitle: 'Network Engineer' },
@@ -246,6 +254,10 @@ window.sbSelectInfoCell = function(cell) {
         indicatorStatus: 'online',
         indicatorPulse: false,
         markStatus: 'error',
+        // Control-specific
+        controlPos: 'single',            // 'single' | 'top' | 'inside' | 'bottom'
+        controlOn: true,
+        controlList: false,              // показать всю стопку вместо одной ячейки
         // Shared state
         cellState: 'default',
       },
@@ -254,6 +266,7 @@ window.sbSelectInfoCell = function(cell) {
             ${pg.select('cellType', [
               { value: 'profile', label: 'Profile' },
               { value: 'info',    label: 'Info' },
+              { value: 'control', label: 'Control' },
             ], { label: 'Type' })}
             ${pg.select('cellState', [
               { value: 'default',  label: 'Default' },
@@ -293,8 +306,13 @@ window.sbSelectInfoCell = function(cell) {
                 { value: 'connecting',  label: 'Connecting (primary)' },
                 { value: 'offline',     label: 'Offline (gray)' },
               ], { label: 'Indicator' })}
-              <div class="pg-toggles">${pg.toggle('indicatorPulse', 'Pulse')}</div>
             </div>
+            <!-- .pg-toggles — СОСЕД селекта, а не его сосед по обёртке: ряд на
+                 всю ширину даёт правило .pg-group-body > .pg-toggles, и оно
+                 ловит только ПРЯМЫХ детей грида. Внутри общей обёртки тогл
+                 слипался с селектом в одну ячейку без гэпа. Оба элемента несут
+                 один data-pg-info-subtype — syncControls гасит их вместе. -->
+            <div class="pg-toggles" data-pg-info-subtype="indicator">${pg.toggle('indicatorPulse', 'Pulse')}</div>
             <div data-pg-info-subtype="mark">
               ${pg.select('markStatus', [
                 { value: 'success', label: 'Success (green)' },
@@ -305,7 +323,21 @@ window.sbSelectInfoCell = function(cell) {
                 { value: 'neutral', label: 'Neutral (gray)' },
               ], { label: 'Mark' })}
             </div>
-          `, { fullRow: true, attrs: 'data-pg-cell-type="info"' })}`;
+          `, { fullRow: true, attrs: 'data-pg-cell-type="info"' })}
+        ${sbPgGroup('Control Cell', `
+            <div data-pg-control-pos>
+              ${pg.select('controlPos', [
+                { value: 'single', label: 'Single' },
+                { value: 'top',    label: 'Top' },
+                { value: 'inside', label: 'Inside' },
+                { value: 'bottom', label: 'Bottom' },
+              ], { label: 'Position' })}
+            </div>
+            <div class="pg-toggles">
+              ${pg.toggle('controlOn', 'On')}
+              ${pg.toggle('controlList', 'List')}
+            </div>
+          `, { fullRow: true, attrs: 'data-pg-cell-type="control"' })}`;
       },
       syncControls(s, container) {
         // Обёртки теперь pg-group'ы с рамкой — показываем обычным display
@@ -316,8 +348,22 @@ window.sbSelectInfoCell = function(cell) {
         container.querySelectorAll('[data-pg-info-subtype]').forEach(wrap => {
           wrap.style.display = wrap.getAttribute('data-pg-info-subtype') === s.infoSubtype ? '' : 'none';
         });
+        // В режиме List позицию считает mkControlList (single/top/inside/bottom
+        // по индексу) — ручной селектор там ни на что не влияет, прячем.
+        container.querySelectorAll('[data-pg-control-pos]').forEach(wrap => {
+          wrap.style.display = s.controlList ? 'none' : '';
+        });
       },
       render(s) {
+        if (s.cellType === 'control') {
+          // У Control-ячейки нет hover/selected: единственное состояние —
+          // выключенный toggle, его и берём из общего селектора состояний.
+          const off = s.cellState === 'disabled';
+          const body = s.controlList
+            ? mkControlList(CONTROL_ITEMS.map(c => ({ label: c, on: s.controlOn, disabled: off })))
+            : mkControlCell(s.controlPos, CONTROL_ITEMS[0], { on: s.controlOn, disabled: off });
+          return `<div style="width:100%;max-width:360px">${body}</div>`;
+        }
         if (s.cellType === 'info') {
           const indicator = s.infoSubtype === 'indicator'
             ? { status: s.indicatorStatus, pulse: s.indicatorPulse }
@@ -345,6 +391,15 @@ window.sbSelectInfoCell = function(cell) {
         })}</div>`;
       },
       genCode(s) {
+        if (s.cellType === 'control') {
+          const off = s.cellState === 'disabled';
+          return {
+            html: s.controlList
+              ? mkControlList(CONTROL_ITEMS.map(c => ({ label: c, on: s.controlOn, disabled: off })))
+              : mkControlCell(s.controlPos, CONTROL_ITEMS[0], { on: s.controlOn, disabled: off }),
+            css: COMP_CSS.list + '\n' + COMP_CSS.toggles,
+          };
+        }
         if (s.cellType === 'info') {
           const stateCls =
             s.cellState === 'hover'    ? ' is-hover'    :

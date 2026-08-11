@@ -468,6 +468,26 @@
           "ALL_SCOPES"
         ]
       }
+    },
+    "Max Width Cell": {
+      "$type": "number",
+      "$value": 980,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:1956:11634",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "Min Width Cell": {
+      "$type": "number",
+      "$value": 80,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:1956:11635",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
     }
   },
   "Map": {

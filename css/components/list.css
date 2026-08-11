@@ -1,22 +1,37 @@
 /* --- [SYNC:list] List ---
    Figma: cell 40px height, surface-1 background, padding 8px, gap 8px.
-   Cell variants by position in list: single/top/inside/bottom — only border-radius differs. */
+   Cell variants by position in list: single/top/inside/bottom — only border-radius differs.
+
+   Размеры — из группы List в Figma: --list-min-height-cell (40),
+   --list-cell-min-width-standard (80), --list-max-width-cell (980 / 1024 с
+   планшета). Раньше ширину задавали текстфилдовые токены — чужая шкала,
+   от которой список ездил вслед за полями ввода.
+
+   Высота — ФИКСИРОВАННАЯ height, хотя токен и называется min-height-cell.
+   Пробовали min-height — Profile Cell вырастал до 49 (аватар 32 + паддинги
+   16 + бордер 1) и ряды профильных списков разъезжались. Замер показал, что
+   в жёстких 40 аватар лежит спокойно: 3.5px сверху, 4.5px снизу, ничего не
+   клипается — он переполняет только content-box, а тот невидим. Нужен ряд,
+   растущий под контент, — это Property List с его min-height, не этот файл.
+
+   Gap 8 берётся из --gap-vert-s: это единственный gap-токен с плоской
+   восьмёркой, у --gap-horiz-s на мобиле 4. Имя оси врёт, значение верное. */
 .sb-list {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: var(--text-field-min-width);
-  max-width: var(--text-field-max-width);
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
 }
 .sb-list-cell {
   display: flex;
   align-items: center;
   gap: var(--gap-vert-s);
   width: 100%;
-  min-width: var(--text-field-min-width);
-  max-width: var(--text-field-max-width);
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
   height: var(--list-min-height-cell);
-  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
   background: var(--surface-1);
 }
 .sb-list-cell.single { border-radius: var(--radius-8); }
@@ -39,8 +54,9 @@
   gap: var(--gap-vert-m);
   width: 100%;
   min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
   height: var(--list-min-height-cell);
-  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
   background: var(--background);
   border-bottom: var(--border-width-1) solid var(--border-soft);
 }
@@ -90,8 +106,9 @@
   gap: var(--gap-vert-m);
   width: 100%;
   min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
   height: var(--list-min-height-cell);
-  padding: var(--pad-horiz-4) var(--pad-vert-8);
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
   background: var(--background);
   cursor: pointer;
   user-select: none;

@@ -40,6 +40,7 @@ const NAV = [
     { id: 'info-footer', label: 'Info Footer', incomplete: true },
     { id: 'led-panel', label: 'LED Panel', ready: true, done: true },
     { id: 'list', label: 'List', ready: true },
+    { id: 'property-list', label: 'Property List', inProgress: true },
     { id: 'status', label: 'Status', ready: true },
     { id: 'table', label: 'Table', inProgress: true },
     { id: 'table-footer', label: 'Table Footer', inProgress: true },

@@ -67,6 +67,8 @@
     "Tabs/Segment Menu/Max Height (Segment)": "--segment-menu-max-height",
     "Tabs/Segment Menu/Max Width (Segment Menu)": "--segment-menu-max-width-menu",
     "Tabs/Tab Bar/Max Width (Tab Bar)": "--tab-bar-max-width",
+    "List/Min Width Cell": "--list-cell-min-width-standard",
+    "List/Max Width Cell": "--list-max-width-cell",
     "Status-Text/Size/Min Width": "--status-text-min-width",
     "Status-Text/Size/Max Width": "--status-text-max-width",
     "Status-Text/Size/Max Height": "--status-text-max-height",

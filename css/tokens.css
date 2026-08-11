@@ -369,6 +369,7 @@
   /* ───────── LIST ───────── */
   --list-min-height-cell: 40px;
   --list-cell-min-width-standard: 80px;
+  --list-max-width-cell: 980px;
 
   /* ───────── MAP ───────── */
   --map-min-width: 256px;
@@ -394,7 +395,6 @@
   --sidebar-width: 320px;
   --topbar-height: 56px;
   --transition: 0.2s ease;
-
 
 
 }
@@ -439,6 +439,7 @@
     --headline-line-height-64: 64px;
     --headline-line-height-96: 96px;
     --headline-line-height-h5: 32px;
+    --list-max-width-cell: 1024px;
     --map-min-width: 320px;
     --nav-bar-max-height: 114px;
     --nav-bar-max-width: 1440px;

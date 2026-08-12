@@ -58,18 +58,26 @@ const NAV = [
   ]},
   { category: 'Forms', items: [
     { id: 'buttons', label: 'Buttons', ready: true },
-    { id: 'checkbox', label: 'Checkbox', ready: true },
     { id: 'chevron', label: 'Chevron Button', ready: true },
     { id: 'chips', label: 'Chips', ready: true },
     { id: 'file-uploader', label: 'File Uploader', ready: true, done: true },
-    { id: 'input', label: 'Input', ready: true },
-    { id: 'password', label: 'Password Input', ready: true },
-    { id: 'radio', label: 'Radio', ready: true, done: true },
     { id: 'search-bar', label: 'Search Bar', ready: true, done: true },
+    // Классическая тройка полей выбора: одна роль, одно место в форме.
+    { label: 'Selection Controls', children: [
+      { id: 'checkbox', label: 'Checkbox', ready: true },
+      { id: 'radio', label: 'Radio', ready: true, done: true },
+      { id: 'toggles', label: 'Toggles', ready: true },
+    ]},
     { id: 'selectors', label: 'Selectors / Dropdowns', ready: true },
     { id: 'sliders', label: 'Sliders' },
-    { id: 'textarea', label: 'Textarea', ready: true },
-    { id: 'toggles', label: 'Toggles', ready: true },
+    // Семейство держится на коде, а не на ощущении: все трое собраны из
+    // общего примитива inputFieldWrap (input.js). Search Bar и Selectors
+    // используют его же, но самостоятельны по назначению и лежат отдельно.
+    { label: 'Text Fields', children: [
+      { id: 'input', label: 'Input', ready: true },
+      { id: 'password', label: 'Password Input', ready: true },
+      { id: 'textarea', label: 'Textarea', ready: true },
+    ]},
   ]},
   { category: 'Feedback', items: [
     { id: 'banners', label: 'Banners', incomplete: true },

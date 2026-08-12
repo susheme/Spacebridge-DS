@@ -163,33 +163,37 @@ window.COMP_CSS.propertyList = `.sb-prop-cell {
     name: 'property-list',
     title: 'Property List',
     description: sbT(
-      'A key-value row for cards: the left slot carries an optional icon and the label, the right slot carries the value. It is deliberately not a table — there are no column headers, no sorting and no selection, and each row is its own field with its own value type: plain text, a status badge, an icon button. The left slot also takes a status dot. The label shrinks with an ellipsis, the value never does, and the row height stays fixed at 40 whatever the slots carry. Head is a standalone cell that lives outside a list and only differs by a more contrasting bottom line.',
-      'Строка «подпись → значение» для карточек: в левом слоте необязательная иконка и подпись, в правом — значение. Это сознательно не таблица: нет шапки колонок, сортировки и выбора, а каждая строка — самостоятельное поле со своим типом значения: текст, бейдж статуса, иконка-кнопка. В левый слот дополнительно ставится точка-индикатор. Подпись жмётся с многоточием, значение — никогда, а высота строки остаётся фиксированной — 40, чем бы ни набили слоты. Head — одиночная ячейка, живущая вне списка; отличается только более контрастной нижней линией.'
+      'List cells use a label → value format: an icon and the label on the left, the value on the right. The format is not a table — there is no header, no sorting and no selection. Rows are independent, and values are text, badges or buttons. The left slot takes a status dot. The label truncates with an ellipsis, the value carries no marking. Row height is 40 pixels. Head is a standalone cell with a contrasting bottom border.',
+      'Ячейки списка используют формат «подпись → значение»: слева — иконка и подпись, справа — значение. Формат не в виде таблицы, нет шапки, сортировки и выбора. Строки независимы, значения — текст, бейджи или кнопки. В левом слоте точка-индикатор. Подпись с многоточием, значение без маркировки. Высота строки 40 пикселей. Элемент Head — отдельная ячейка с контрастной нижней границей.'
     ) + sbDocNote('Tech Info', sbT(
-      '<b>Geometry:</b>'
-      + '<ul><li>Height: 40px, fixed (<code>--list-min-height-cell</code>) — a 28px badge or a 24px icon overflows the invisible content box but stays inside the cell, so rows never jump;</li><li>Width: min 80 (<code>--list-cell-min-width-standard</code>) / max 980 on mobile and 1024 from tablet up (<code>--list-max-width-cell</code>);</li><li>Padding: 8 vertical / 0 horizontal — the row is flush with the card edge;</li><li>Gap: 8 in the left slot, 4 in the right one (both responsive, halved on mobile).</li></ul>'
-      + '<b>Slots:</b>'
-      + '<ul><li>Left: <code>flex: 1 1 auto</code> with <code>min-width: 0</code> — takes the free space and truncates with an ellipsis;</li><li>Right: <code>flex: 0 1 auto</code>, right-aligned, never wraps or truncates — the value is what the reader came for, the label yields space to it;</li><li>The right slot takes any markup: a string, a status badge, a button, an icon;</li><li>The left slot takes an optional status dot (<code>sbMkStatusDot</code> from Status) — always leftmost, so the column of dots reads vertically whether or not there is an icon.</li></ul>'
-      + '<b>Typography:</b>'
-      + '<ul><li>Both slots: Title M 16/600, tabular numerals so the value column stays aligned;</li><li>Line-height comes from Body, not from <code>--title-line-height-s</code>: Title M has no line-height of its own in Figma, and S gives 12px under a 16px font — on a truncating label that clips the descenders.</li></ul>'
-      + '<b>Colors:</b>'
-      + '<ul><li>Label: <code>--text-tertiary</code>;</li><li>Value: <code>--text-secondary</code> by default, overridden by a modifier — <code>primary</code> / <code>success</code> / <code>error</code> / <code>alert</code> / <code>info</code> / <code>text</code>;</li><li>Separator: <code>--border-soft</code>, and <code>--border</code> for Head.</li></ul>'
-      + '<b>List:</b>'
-      + '<ul><li>A plain column of cells; the last one loses its separator — the card edge does that job;</li><li>The border is turned transparent rather than removed, so the last row keeps the same height as the others;</li><li>Two columns side by side are two lists inside the Grid System — the component has no column layout of its own on purpose.</li></ul>'
-      + '<b>API:</b>'
-      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code>;</li><li><code>sbMkPropertyList({ items, cls })</code>.</li></ul>',
-      '<b>Геометрия:</b>'
-      + '<ul><li>Высота: 40px, фиксированная (<code>--list-min-height-cell</code>) — бейдж 28 и иконка 24 переполняют невидимый content-box, но лежат внутри ячейки, поэтому строки не скачут;</li><li>Ширина: min 80 (<code>--list-cell-min-width-standard</code>) / max 980 на мобиле и 1024 с планшета (<code>--list-max-width-cell</code>);</li><li>Паддинги: 8 по вертикали / 0 по горизонтали — строка идёт вровень с краем карточки;</li><li>Gap: 8 в левом слоте, 4 в правом (оба адаптивные, на мобиле вдвое меньше).</li></ul>'
-      + '<b>Слоты:</b>'
-      + '<ul><li>Левый: <code>flex: 1 1 auto</code> и <code>min-width: 0</code> — забирает свободное место и жмётся с многоточием;</li><li>Правый: <code>flex: 0 1 auto</code>, прижат вправо, не переносится и не режется — за значением человек и пришёл, место ему уступает подпись;</li><li>В правый слот кладётся любая разметка: строка, бейдж статуса, кнопка, иконка;</li><li>В левый слот опционально ставится точка-индикатор (<code>sbMkStatusDot</code> из Status) — всегда самая левая, чтобы колонка точек читалась вертикально независимо от наличия иконки.</li></ul>'
-      + '<b>Типографика:</b>'
-      + '<ul><li>Оба слота: Title M 16/600, моноширинные цифры — ради них колонка значений и стоит ровно;</li><li>Line-height берётся из Body, а не из <code>--title-line-height-s</code>: своего line-height у Title M в Figma нет, а S даёт 12px при шрифте 16 — на жмущейся подписи это срезает хвосты букв.</li></ul>'
-      + '<b>Цвета:</b>'
-      + '<ul><li>Подпись: <code>--text-tertiary</code>;</li><li>Значение: по умолчанию <code>--text-secondary</code>, переопределяется модификатором — <code>primary</code> / <code>success</code> / <code>error</code> / <code>alert</code> / <code>info</code> / <code>text</code>;</li><li>Разделитель: <code>--border-soft</code>, у Head — <code>--border</code>.</li></ul>'
-      + '<b>Список:</b>'
-      + '<ul><li>Обычная колонка ячеек; у последней разделитель снимается — его роль играет край карточки;</li><li>Border не убирается, а красится в прозрачный, чтобы последняя строка не стала ниже остальных;</li><li>Две колонки рядом — это два списка внутри Grid System; собственной колоночной раскладки у компонента намеренно нет.</li></ul>'
-      + '<b>API:</b>'
-      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code>;</li><li><code>sbMkPropertyList({ items, cls })</code>.</li></ul>'
+      '<b>Geometry</b>'
+      + '<ul><li>Height: 40px, fixed (<code>--list-min-height-cell</code>).</li><li>Width: from 80px (<code>--list-cell-min-width-standard</code>) to 980px, and to 1024px from tablet up (<code>--list-max-width-cell</code>).</li><li>Padding: 8px vertical, 0 horizontal.</li><li>Gap: 8px in the left slot, 4px in the right one.</li></ul>'
+      + '<b>Left slot</b>'
+      + '<ul><li>Content: status dot, icon, label.</li><li>Order: the dot always comes first.</li><li>Behaviour: takes the free width, truncates the label with an ellipsis.</li><li>Status dot: <code>sbMkStatusDot</code> from Status, optional.</li></ul>'
+      + '<b>Right slot</b>'
+      + '<ul><li>Content: any markup — text, badge, button, icon.</li><li>Alignment: to the right edge.</li><li>Behaviour: never wraps and never truncates.</li></ul>'
+      + '<b>Typography</b>'
+      + '<ul><li>Style: Title M, 16px, weight 600.</li><li>Line-height: <code>--body-line-height</code>.</li><li>Numerals: tabular.</li></ul>'
+      + '<b>Colours</b>'
+      + '<ul><li>Label: <code>--text-tertiary</code>.</li><li>Value: <code>--text-secondary</code>; a modifier overrides it — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Separator: <code>--border-soft</code>; <code>--border</code> in the Head variant.</li></ul>'
+      + '<b>List</b>'
+      + '<ul><li>Structure: a column of cells.</li><li>Last cell: transparent separator.</li><li>Two columns: two lists inside the Grid System.</li></ul>'
+      + '<b>API</b>'
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>',
+      '<b>Геометрия</b>'
+      + '<ul><li>Высота: 40px, фиксированная (<code>--list-min-height-cell</code>).</li><li>Ширина: от 80px (<code>--list-cell-min-width-standard</code>) до 980px, с планшета — до 1024px (<code>--list-max-width-cell</code>).</li><li>Отступы: 8px по вертикали, 0 по горизонтали.</li><li>Интервалы: 8px в левом слоте, 4px в правом.</li></ul>'
+      + '<b>Левый слот</b>'
+      + '<ul><li>Состав: точка-индикатор, иконка, подпись.</li><li>Порядок: индикатор всегда первый.</li><li>Поведение: занимает свободную ширину, сокращает подпись многоточием.</li><li>Индикатор: <code>sbMkStatusDot</code> из компонента Status, необязателен.</li></ul>'
+      + '<b>Правый слот</b>'
+      + '<ul><li>Состав: произвольная разметка — текст, бейдж, кнопка, иконка.</li><li>Выравнивание: по правому краю.</li><li>Поведение: не переносится и не сокращается.</li></ul>'
+      + '<b>Типографика</b>'
+      + '<ul><li>Начертание: Title M, 16px, насыщенность 600.</li><li>Межстрочный интервал: <code>--body-line-height</code>.</li><li>Цифры: моноширинные.</li></ul>'
+      + '<b>Цвета</b>'
+      + '<ul><li>Подпись: <code>--text-tertiary</code>.</li><li>Значение: <code>--text-secondary</code>; переопределяется модификатором — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Разделитель: <code>--border-soft</code>; в варианте Head — <code>--border</code>.</li></ul>'
+      + '<b>Список</b>'
+      + '<ul><li>Структура: колонка ячеек.</li><li>Последняя ячейка: разделитель прозрачный.</li><li>Две колонки: два списка внутри Grid System.</li></ul>'
+      + '<b>API</b>'
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>'
     )),
     playground: {
       title: 'Property List Playground',

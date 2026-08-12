@@ -45,11 +45,13 @@ const NAV = [
     { id: 'counters', label: 'Counters', ready: true },
     { id: 'info-footer', label: 'Info Footer', incomplete: true },
     { id: 'led-panel', label: 'LED Panel', ready: true, done: true },
-    // Одна страница, два семейства ячеек. Дети — подмаршруты: у каждого
-    // своя ссылка, и onSubRoute у компонента открывает нужную вкладку.
+    // Два семейства ячеек — две отдельные страницы. Код общий (один файл,
+    // один CSS, токены группы List), но у каждого свой плейграунд и свои
+    // секции: делить одну страницу значило бы показывать в обоих пунктах
+    // одно и то же.
     { label: 'List', children: [
-      { id: 'list', sub: 'standard-list', label: 'Standard List', ready: true },
-      { id: 'list', sub: 'property-list', label: 'Property List', inProgress: true },
+      { id: 'list', label: 'Standard List', ready: true },
+      { id: 'property-list', label: 'Property List', inProgress: true },
     ]},
     { id: 'status', label: 'Status', ready: true },
     { id: 'table', label: 'Table', inProgress: true },
@@ -233,10 +235,8 @@ function renderSidebar() {
   // Ячейка пункта NAV для Side Nav: dot статуса слева, бейдж прогресса справа.
   // Одна и та же и в дереве, и в закреплённой шапке — закреплённый Getting
   // Started обязан выглядеть ровно как свой двойник в списке.
-  const isActive = item => {
-    const route = sbRouteOf(item);
-    return (location.hash === '#' + route) || (!location.hash && route === PINNED_ID);
-  };
+  const isActive = item =>
+    (location.hash === '#' + item.id) || (!location.hash && item.id === PINNED_ID);
   const navCell = item => {
     const dotCls = item.ready ? '' : item.inProgress ? 'in-progress' : item.incomplete ? 'incomplete' : 'coming';
     const badge = item.inProgress
@@ -248,7 +248,7 @@ function renderSidebar() {
       leadSlot: `<span class="dot ${dotCls}"></span>`,
       rightSlot: badge || undefined,
       selected: isActive(item),
-      onClick: `navigate('${sbRouteOf(item)}')`,
+      onClick: `navigate('${item.id}')`,
     };
   };
 
@@ -521,54 +521,18 @@ function toggleTheme() {
 }
 
 // ── Маршруты ─────────────────────────────────────────────────────────────
-// Хеш — это либо `#component`, либо `#component/sub`. Подмаршрут нужен там,
-// где одна страница документирует несколько семейств: пункт сайдбара обязан
-// иметь собственную ссылку, переживать перезагрузку и подсвечиваться.
-// Слеш выбран разделителем, потому что в slug'ах его нет — они kebab-case.
+// Хеш — это id компонента. Пункт NAV с children сам страницей не является,
+// навигируют только его дети, каждый по своему id.
 
-// Маршрут пункта NAV. Ребёнок объявляет `sub`, остальные — только `id`.
-function sbRouteOf(item) {
-  return item.sub ? `${item.id}/${item.sub}` : item.id;
-}
-
-function sbParseRoute(hash) {
-  const raw = String(hash || '').replace(/^#/, '');
-  const i = raw.indexOf('/');
-  if (i === -1) return { id: raw || 'getting-started', sub: '' };
-  return { id: raw.slice(0, i) || 'getting-started', sub: raw.slice(i + 1) };
-}
-
-// Применение подмаршрута после рендера страницы. Компонент может объявить
-// `onSubRoute(sub)` и сам решить, что показать (например выбрать вкладку
-// плейграунда). Если хука нет, работает общий контракт: `sub` — это slug
-// секции, прокручиваем к её якорю `sec-<sub>`.
-function sbApplySubRoute(id, sub) {
-  if (!sub) return;
-  const comp = SB_REGISTRY[id];
-  if (comp && typeof comp.onSubRoute === 'function') comp.onSubRoute(sub);
-  // Скроллит .content, а не окно: страница живёт в своём скролл-контейнере,
-  // отступ сверху тот же, что у клика по TOC.
-  const target = document.getElementById('sec-' + sub) || document.getElementById('sec-playground');
-  const content = document.getElementById('content');
-  if (!target || !content) return;
-  const top = target.getBoundingClientRect().top
-    - content.getBoundingClientRect().top + content.scrollTop - 24;
-  content.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-}
-
-function navigate(route) {
-  location.hash = route;
+function navigate(id) {
+  location.hash = id;
   renderSidebar();
-  const { id, sub } = sbParseRoute(route);
   renderPage(id);
-  sbApplySubRoute(id, sub);
 }
 
 window.addEventListener('hashchange', () => {
-  const { id, sub } = sbParseRoute(location.hash);
   renderSidebar();
-  renderPage(id);
-  sbApplySubRoute(id, sub);
+  renderPage(location.hash.slice(1) || 'getting-started');
 });
 
 

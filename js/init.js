@@ -125,12 +125,7 @@ function setupToc() {
 
 function init() {
   renderSidebar();
-  // Хеш разбирает core.js: он может нести подмаршрут `#component/sub`.
-  // Без разбора прямая ссылка на ребёнка отдавала бы Coming Soon, потому что
-  // `component/sub` не является ключом реестра.
-  const { id, sub } = sbParseRoute(location.hash);
-  renderPage(id);
-  sbApplySubRoute(id, sub);
+  renderPage(location.hash.slice(1) || 'getting-started');
 }
 
 init();

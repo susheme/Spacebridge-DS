@@ -108,9 +108,9 @@
 
 ## Оставшиеся группировки NAV
 
-Механика родитель-дети готова и описана в `CLAUDE.md`, раздел «NAV: родители и подмаршруты».
+Механика родитель-дети готова и описана в `CLAUDE.md`, раздел «NAV: родители и дети».
 
-Сделаны: Headers, Selection Controls, Text Fields (группировка) и List (подмаршрут).
+Сделаны: Headers, Selection Controls, Text Fields и List.
 
 Открытый вопрос по Text Fields: Search Bar и Selectors собраны из того же примитива `inputFieldWrap`, но самостоятельны по назначению и пока лежат отдельно. Заводить их внутрь — решение дизайнера.
 
@@ -118,7 +118,7 @@
 |---|---|---|---|
 | Buttons | Button, Chevron, Chips | группировка | Спорно: Chips по роли ближе к действию поверх контента |
 | Status | Status, LED Panel | группировка | Спорно |
-| Table | Table, Footer | подмаршрут | Рано — оба компонента inProgress |
+| Table | Table, Footer | группировка | Рано — оба компонента inProgress |
 
 Не группировать: категорию Feedback целиком (Overlay, Popover, Dialogues, Toast, Snackbar, Banners) — это уже делает сама категория. И Segment Menu / Tab Bar / Sub Nav: они не сиблинги, Sub Nav вмещает первые два.
 

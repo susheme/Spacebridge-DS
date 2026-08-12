@@ -37,7 +37,8 @@ window.SB_COMPONENTS = [
   { name: 'chips',         file: 'chips.js',          deps: [] },                    // кнопка-пилюля; реюзается Clear-чипсой стека тостов
   { name: 'toast',         file: 'toast.js',          deps: ['header-xs', 'badge', 'buttons', 'action-bar', 'list', 'chips', 'chevron'] }, // хедер = sbMkHeaderXS, глифы SB_SVG, close = sb-btn, футер = sbMkActionBar, details = sbMkInfoCell, чипса = sbMkChip
   { name: 'info-footer',   file: 'info-footer.js',    deps: ['status', 'separators'] }, // системная инфа по слотам; .sb-status-dot + .sb-sep
-  { name: 'list',          file: 'list.js',           deps: ['toggles', 'buttons', 'status'] },      // два семейства ячеек: Standard List + Property List. Секция Property List зовёт sbMkStatusDot ПРИ РЕГИСТРАЦИИ → строго после status.js. sbMkSegmentMenu (вкладки плейграунда) в deps НЕ значится: вызов ленивый, а поднять segment-menu.js выше нельзя — он сам при регистрации зовёт sbMkSectionHeader
+  { name: 'list',          file: 'list.js',           deps: ['toggles', 'buttons'] },                // Standard List: Profile / Info / Control
+  { name: 'property-list', file: 'list.js',           deps: ['toggles', 'buttons', 'status'] },  // Property List живёт в том же файле: общие фабрики, CSS и токены группы List. Секция зовёт sbMkStatusDot ПРИ РЕГИСТРАЦИИ → строго после status.js
   { name: 'context-menu',  file: 'context-menu.js',   deps: [] },
   { name: 'table',         file: 'table.js',          deps: ['checkbox', 'chevron', 'avatar', 'toggles', 'context-menu', 'buttons'] }, // чекбоксы выбора рядов = sbMkCheckbox (managed); kebab ряда = sbMkContextCard/Cell при регистрации → ПОСЛЕ context-menu
   { name: 'section-header', file: 'section-header.js', deps: ['buttons', 'popover', 'context-menu'] }, // заголовок секции со слотами; действия = sbMkButton, overflow = sbMkPopover

@@ -135,15 +135,18 @@ window.COMP_CSS.propertyList = `.sb-prop-cell {
   window.sbMkPropertyList = mkPropertyList;
 
   // ── Demo-контент ──────────────────────────────────────────────────────
+  // Иконка во всех строках одна: слот демонстрирует САМ СЕБЯ, а разнобой
+  // читался как значащий — будто иконка кодирует тип параметра.
+  const DEMO_ICON = 'radar-line';
   const DEMO = [
-    { icon: 'radar-line',        label: 'RL Status',          value: 'Not Acquired' },
-    { icon: 'arrow-up-s-line',   label: 'UT Power Level',     value: '-99.99 dBm' },
-    { icon: 'loop-left-line',    label: 'Symbol Rate',        value: '0 ksymb/s' },
+    { label: 'RL Status',          value: 'Not Acquired' },
+    { label: 'UT Power Level',     value: '-99.99 dBm' },
+    { label: 'Symbol Rate',        value: '0 ksymb/s' },
     // Title Case не только по правилу DS: строчное «undefined» тест
     // целостности разметки принимает за протёкший в вывод мусор.
-    { icon: 'code-s-slash-line', label: 'MODCOD',             value: 'Undefined Waveform' },
-    { icon: 'arrow-up-s-line',   label: 'Max Tx Power Level', value: '-14.5 dBm' },
-    { icon: 'radar-line',        label: 'Required Es/No',     value: '-99.99 dB' },
+    { label: 'MODCOD',             value: 'Undefined Waveform' },
+    { label: 'Max Tx Power Level', value: '-14.5 dBm' },
+    { label: 'Required Es/No',     value: '-99.99 dB' },
   ];
   const LONG_LABEL = 'Required Es/No At The Receiver Input Under Clear Sky Conditions';
 
@@ -257,7 +260,7 @@ window.COMP_CSS.propertyList = `.sb-prop-cell {
       },
       render(s) {
         const items = DEMO.map((d, i) => ({
-          icon: s.icon ? d.icon : undefined,
+          icon: s.icon ? DEMO_ICON : undefined,
           indicator: s.indicator ? { status: s.indicator, pulse: s.pulse } : undefined,
           label: s.long && i === DEMO.length - 1 ? LONG_LABEL : d.label,
           value: demoValue(s.valueType, d.value),
@@ -272,7 +275,7 @@ window.COMP_CSS.propertyList = `.sb-prop-cell {
       },
       genCode(s) {
         const items = DEMO.slice(0, 3).map(d => ({
-          icon: s.icon ? d.icon : undefined,
+          icon: s.icon ? DEMO_ICON : undefined,
           indicator: s.indicator ? { status: s.indicator, pulse: s.pulse } : undefined,
           label: d.label,
           value: demoValue(s.valueType, d.value),

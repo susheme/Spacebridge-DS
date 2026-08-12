@@ -106,6 +106,22 @@
 
 ---
 
+## Оставшиеся группировки NAV
+
+Механика родитель-дети готова и описана в `CLAUDE.md`, раздел «NAV: родители и подмаршруты». Сделаны Headers (группировка) и List (подмаршрут). Остальные семейства — по мере того, как трогаем компоненты.
+
+| Родитель | Дети | Тип | Оценка |
+|---|---|---|---|
+| Selection Controls | Checkbox, Radio, Toggles | группировка | Уверенно |
+| Text Fields | Input, Password, Textarea | группировка | Уверенно, держится на общем `inputFieldWrap` из `input.js`. Включать ли Search Bar и Selectors — решает дизайнер: примитив общий, назначение разное |
+| Buttons | Button, Chevron, Chips | группировка | Спорно: Chips по роли ближе к действию поверх контента |
+| Status | Status, LED Panel | группировка | Спорно |
+| Table | Table, Footer | подмаршрут | Рано — оба компонента inProgress |
+
+Не группировать: категорию Feedback целиком (Overlay, Popover, Dialogues, Toast, Snackbar, Banners) — это уже делает сама категория. И Segment Menu / Tab Bar / Sub Nav: они не сиблинги, Sub Nav вмещает первые два.
+
+---
+
 ## Pending: мелкие вопросы
 
 - **Context Menu — danger/critical вариант ячейки** — у `sbMkContextCell` нет красного (danger) варианта для деструктивных действий (Delete). Сейчас в row-меню таблицы Delete красится скоуп-стилем `.sb-td .sb-ctx-card > .sb-ctx-cell:last-child { color: --error }` (завязано на «последний = Delete»). Правильнее — добавить `mode:'danger'` или `.is-danger` в сам Context Menu (правка компонента, с ОК юзера), тогда красный Delete переиспользуется везде.

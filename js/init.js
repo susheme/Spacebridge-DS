@@ -18,7 +18,7 @@ function renderPage(id) {
       if (SB_REGISTRY[id].onMount) SB_REGISTRY[id].onMount();
     } else {
       let label = id;
-      NAV.forEach(g => g.items.forEach(i => { if (i.id === id) label = i.label; }));
+      NAV.forEach(g => sbNavItems(g).forEach(i => { if (i.id === id) label = i.label; }));
       content.innerHTML = comingSoonPage(label);
     }
   } catch(e) {
@@ -125,8 +125,12 @@ function setupToc() {
 
 function init() {
   renderSidebar();
-  const id = location.hash.slice(1) || 'getting-started';
+  // Хеш разбирает core.js: он может нести подмаршрут `#component/sub`.
+  // Без разбора прямая ссылка на ребёнка отдавала бы Coming Soon, потому что
+  // `component/sub` не является ключом реестра.
+  const { id, sub } = sbParseRoute(location.hash);
   renderPage(id);
+  sbApplySubRoute(id, sub);
 }
 
 init();

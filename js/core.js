@@ -18,11 +18,17 @@ const NAV = [
   { category: 'Navigation', items: [
     { id: 'action-bar', label: 'Action Bar', ready: true, done: true },
     { id: 'breadcrumbs', label: 'Breadcrumbs', ready: true },
-    { id: 'header-l', label: 'Header L', ready: true, done: true },
-    { id: 'header-m', label: 'Header M', ready: true, done: true },
-    { id: 'header-s', label: 'Header S', incomplete: true },
-    { id: 'section-header', label: 'Header Section', ready: true },
-    { id: 'header-xs', label: 'Header XS', ready: true },
+    // Семейство хедеров под одним родителем: пять пунктов подряд, и алфавит
+    // рвал группу — «Header Section» стоял между Header S и Header XS.
+    // Лейблы детей полные («Header L», не «L»): поиск ищет по лейблу, и
+    // запрос «header xs» должен находить компонент, а не только родителя.
+    { label: 'Headers', children: [
+      { id: 'header-l', label: 'Header L', ready: true, done: true },
+      { id: 'header-m', label: 'Header M', ready: true, done: true },
+      { id: 'header-s', label: 'Header S', incomplete: true },
+      { id: 'header-xs', label: 'Header XS', ready: true },
+      { id: 'section-header', label: 'Header Section', ready: true },
+    ]},
     { id: 'nav-bar', label: 'Navigation Bar', ready: true },
     { id: 'pagination', label: 'Pagination', incomplete: true },
     { id: 'segment-menu', label: 'Segment Menu', ready: true, done: true },
@@ -39,8 +45,12 @@ const NAV = [
     { id: 'counters', label: 'Counters', ready: true },
     { id: 'info-footer', label: 'Info Footer', incomplete: true },
     { id: 'led-panel', label: 'LED Panel', ready: true, done: true },
-    { id: 'list', label: 'List', ready: true },
-    { id: 'property-list', label: 'Property List', inProgress: true },
+    // Одна страница, два семейства ячеек. Дети — подмаршруты: у каждого
+    // своя ссылка, и onSubRoute у компонента открывает нужную вкладку.
+    { label: 'List', children: [
+      { id: 'list', sub: 'standard-list', label: 'Standard List', ready: true },
+      { id: 'list', sub: 'property-list', label: 'Property List', inProgress: true },
+    ]},
     { id: 'status', label: 'Status', ready: true },
     { id: 'table', label: 'Table', inProgress: true },
     { id: 'table-footer', label: 'Table Footer', inProgress: true },
@@ -76,6 +86,15 @@ const NAV = [
     { id: 'tooltips', label: 'Tooltips', ready: true },
   ]},
 ];
+
+// Пункты категории плоским списком, вместе с детьми вложенных родителей.
+// Родитель — контейнер группировки, собственной страницы у него нет, поэтому
+// в выдачу он не попадает. Через этот хелпер идут ВСЕ поиски пункта по id:
+// без него вложенные компоненты теряли бы крошки и человеческое имя на
+// странице Coming Soon.
+function sbNavItems(section) {
+  return (section.items || []).flatMap(it => it.children ? it.children : [it]);
+}
 
 // Пункт, закреплённый в шапке сайдбара (и цель клика по лого в топбаре).
 // Он же — страница по умолчанию, когда хеша нет.
@@ -206,7 +225,10 @@ function renderSidebar() {
   // Ячейка пункта NAV для Side Nav: dot статуса слева, бейдж прогресса справа.
   // Одна и та же и в дереве, и в закреплённой шапке — закреплённый Getting
   // Started обязан выглядеть ровно как свой двойник в списке.
-  const isActive = id => (location.hash === '#' + id) || (!location.hash && id === PINNED_ID);
+  const isActive = item => {
+    const route = sbRouteOf(item);
+    return (location.hash === '#' + route) || (!location.hash && route === PINNED_ID);
+  };
   const navCell = item => {
     const dotCls = item.ready ? '' : item.inProgress ? 'in-progress' : item.incomplete ? 'incomplete' : 'coming';
     const badge = item.inProgress
@@ -217,17 +239,30 @@ function renderSidebar() {
       label: item.label,
       leadSlot: `<span class="dot ${dotCls}"></span>`,
       rightSlot: badge || undefined,
-      selected: isActive(item.id),
-      onClick: `navigate('${item.id}')`,
+      selected: isActive(item),
+      onClick: `navigate('${sbRouteOf(item)}')`,
     };
   };
+
+  // Пункт с children — раскрывающийся родитель Side Nav. Сам не навигирует:
+  // родитель и первый ребёнок вели бы почти в одно место. Раскрыт, пока
+  // активен любой из детей, поэтому после перезагрузки по прямой ссылке
+  // ветка открыта и подсветка видна без ручного клика.
+  const navNode = item => item.children
+    ? {
+        role: 'parent',
+        label: item.label,
+        expanded: item.children.some(isActive),
+        children: item.children.map(navCell),
+      }
+    : navCell(item);
 
   // Sticky-шапка сайдбара: поиск + закреплённый Getting Started. Точка входа
   // для новичка не должна уезжать со скроллом, поэтому пункт вынут из дерева
   // и живёт в шапке — той же ячейкой Side Nav, чтобы не плодить сущность.
   // Ниже — тело сайдбара как НАШ Side Nav в embedded-режиме (dogfood:
   // section-header + ячейки компонента, скроллит рейка).
-  const pinned = NAV.flatMap(g => g.items).find(i => i.id === PINNED_ID);
+  const pinned = NAV.flatMap(sbNavItems).find(i => i.id === PINNED_ID);
   let html = `<div class="sidebar-head">
     <div class="sidebar-search">
     ${sbMkSearch({
@@ -250,7 +285,7 @@ function renderSidebar() {
     if (group.category) {
       tree.push({ role: 'section-header', slotLeft: `<span class="sb-caption">${group.category}</span>` });
     }
-    items.forEach(item => tree.push(navCell(item)));
+    items.forEach(item => tree.push(navNode(item)));
   });
   html += `<div class="sidebar-tree">${sbMkSideNav({ variant: 'menu', embedded: true, tree })}</div>`;
   sb.innerHTML = html;
@@ -346,8 +381,57 @@ function filterNav(query) {
   if (!body) return;
   let anyMatch = false;
 
-  // Плоское body: section-header'ы и строки-айтемы — сиблинги. Идём по порядку,
-  // запоминаем текущий header и прячем его, если ни один его item не совпал.
+  // Подсветка совпавшей подстроки в лейбле строки. Возвращает признак
+  // совпадения. textContent — стабильный источник: подсветка прошлого запроса
+  // затирается новой, разметка не накапливается.
+  const matchRow = (row) => {
+    const labelEl = row.querySelector(':scope > .sb-side-nav-row-label')
+      || row.querySelector('.sb-side-nav-row-label');
+    if (!labelEl) return false;
+    const orig = labelEl.textContent || '';
+    const hit = !q || orig.toLowerCase().includes(q);
+    if (q && hit) {
+      const i = orig.toLowerCase().indexOf(q);
+      labelEl.innerHTML = esc(orig.slice(0, i))
+        + '<mark class="nav-hl">' + esc(orig.slice(i, i + q.length)) + '</mark>'
+        + esc(orig.slice(i + q.length));
+    } else {
+      labelEl.textContent = orig;
+    }
+    return hit;
+  };
+
+  // Узел-родитель: фильтруем его детей. Родитель виден, если совпал сам или
+  // совпал хотя бы один ребёнок; при совпадении внутри — раскрываем ветку,
+  // иначе результат остался бы скрытым в свёрнутом родителе. Пустой запрос
+  // возвращает ветку в исходное свёрнутое состояние.
+  const filterParent = (node) => {
+    const row = node.querySelector(':scope > .sb-side-nav-row');
+    const selfHit = row ? matchRow(row) : false;
+    const kids = node.querySelectorAll(':scope > .sb-side-nav-children .sb-side-nav-row.is-item');
+    let kidHit = false;
+    kids.forEach(kid => {
+      // Совпал сам родитель — показываем всех детей, чтобы ветка не выглядела
+      // обрезанной; иначе показываем только совпавших.
+      const hit = selfHit || matchRow(kid);
+      kid.style.display = hit ? '' : 'none';
+      if (hit && !selfHit) kidHit = true;
+    });
+    const visible = selfHit || kidHit;
+    node.style.display = visible ? '' : 'none';
+    // С запросом — раскрываем ветку под совпавшего ребёнка, иначе результат
+    // остался бы спрятан. Без запроса — возвращаем состояние по факту данных:
+    // ветка открыта, если внутри активная страница. Безусловное схлопывание
+    // после сброса поиска уводило пользователя с текущего места.
+    node.classList.toggle('expanded', q
+      ? kidHit
+      : !!node.querySelector('.sb-side-nav-children .sb-side-nav-row.is-selected'));
+    return visible;
+  };
+
+  // Плоское body: section-header'ы, строки-айтемы и узлы-родители — сиблинги.
+  // Идём по порядку, запоминаем текущий header и прячем его, если ни один его
+  // потомок не совпал.
   let curHeader = null;
   let headerHit = false;
   const flushHeader = () => { if (curHeader) curHeader.style.display = headerHit ? '' : 'none'; };
@@ -359,22 +443,14 @@ function filterNav(query) {
       headerHit = false;
       return;
     }
-    const labelEl = el.querySelector('.sb-side-nav-row-label');
-    if (!labelEl) return;
-    const orig = labelEl.textContent || '';
-    const match = !q || orig.toLowerCase().includes(q);
-    el.style.display = match ? '' : 'none';
-    if (match) { anyMatch = true; headerHit = true; }
-
-    // Highlight matched substring в лейбле (textContent — стабильный источник).
-    if (q && match) {
-      const i = orig.toLowerCase().indexOf(q);
-      labelEl.innerHTML = esc(orig.slice(0, i))
-        + '<mark class="nav-hl">' + esc(orig.slice(i, i + q.length)) + '</mark>'
-        + esc(orig.slice(i + q.length));
+    let match;
+    if (el.classList.contains('sb-side-nav-node')) {
+      match = filterParent(el);
     } else {
-      labelEl.textContent = orig;
+      match = matchRow(el);
+      el.style.display = match ? '' : 'none';
     }
+    if (match) { anyMatch = true; headerHit = true; }
   });
   flushHeader();
 
@@ -436,16 +512,55 @@ function toggleTheme() {
   }, 200);
 }
 
-function navigate(id) {
-  location.hash = id;
+// ── Маршруты ─────────────────────────────────────────────────────────────
+// Хеш — это либо `#component`, либо `#component/sub`. Подмаршрут нужен там,
+// где одна страница документирует несколько семейств: пункт сайдбара обязан
+// иметь собственную ссылку, переживать перезагрузку и подсвечиваться.
+// Слеш выбран разделителем, потому что в slug'ах его нет — они kebab-case.
+
+// Маршрут пункта NAV. Ребёнок объявляет `sub`, остальные — только `id`.
+function sbRouteOf(item) {
+  return item.sub ? `${item.id}/${item.sub}` : item.id;
+}
+
+function sbParseRoute(hash) {
+  const raw = String(hash || '').replace(/^#/, '');
+  const i = raw.indexOf('/');
+  if (i === -1) return { id: raw || 'getting-started', sub: '' };
+  return { id: raw.slice(0, i) || 'getting-started', sub: raw.slice(i + 1) };
+}
+
+// Применение подмаршрута после рендера страницы. Компонент может объявить
+// `onSubRoute(sub)` и сам решить, что показать (например выбрать вкладку
+// плейграунда). Если хука нет, работает общий контракт: `sub` — это slug
+// секции, прокручиваем к её якорю `sec-<sub>`.
+function sbApplySubRoute(id, sub) {
+  if (!sub) return;
+  const comp = SB_REGISTRY[id];
+  if (comp && typeof comp.onSubRoute === 'function') comp.onSubRoute(sub);
+  // Скроллит .content, а не окно: страница живёт в своём скролл-контейнере,
+  // отступ сверху тот же, что у клика по TOC.
+  const target = document.getElementById('sec-' + sub) || document.getElementById('sec-playground');
+  const content = document.getElementById('content');
+  if (!target || !content) return;
+  const top = target.getBoundingClientRect().top
+    - content.getBoundingClientRect().top + content.scrollTop - 24;
+  content.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function navigate(route) {
+  location.hash = route;
   renderSidebar();
+  const { id, sub } = sbParseRoute(route);
   renderPage(id);
+  sbApplySubRoute(id, sub);
 }
 
 window.addEventListener('hashchange', () => {
-  const id = location.hash.slice(1) || 'getting-started';
+  const { id, sub } = sbParseRoute(location.hash);
   renderSidebar();
   renderPage(id);
+  sbApplySubRoute(id, sub);
 });
 
 
@@ -559,7 +674,7 @@ function comingSoonPage(id) {
   // Ищем NAV-label чтобы вывести человеческое имя вместо raw "side-navigation".
   let label = id;
   for (const sec of NAV) {
-    const found = (sec.items || []).find(it => it.id === id);
+    const found = sbNavItems(sec).find(it => it.id === id);
     if (found) { label = found.label; break; }
   }
   const bcHtml = (typeof sbBuildPageBreadcrumbs === 'function') ? sbBuildPageBreadcrumbs(id) : '';

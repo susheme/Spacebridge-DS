@@ -124,6 +124,13 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
    *   opts: {
    *     selectedIndex     — индекс выбранного таба, default 0
    *     iconPosition      — 'none' (default) | 'left' | 'top'
+   *     onSelect          — строка-обработчик, дописывается после штатного
+   *                         sbSelectSegmentItem. Escape-hatch для внешнего
+   *                         состояния: подсветку сегмента компонент делает
+   *                         сам, потребитель дополнительно узнаёт о выборе.
+   *                         Индекс читается как this.dataset.index.
+   *                         Хендлер пиши с одинарными кавычками.
+   *                         Прецедент — onClick у ячеек Side Nav.
    *   }
    *
    *   Когда iconPosition='left' — добавляется класс .icon-left на контейнер,
@@ -131,7 +138,7 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
    *   column-flex (icon над label). 'none' — text only.
    */
   function mkSegmentMenu(items, opts = {}) {
-    const { selectedIndex = 0, iconPosition = 'none' } = opts;
+    const { selectedIndex = 0, iconPosition = 'none', onSelect } = opts;
     const inner = items.map((it, i) => {
       const data = typeof it === 'string' ? { label: it } : it;
       const { label, icon, disabled, hover } = data;
@@ -142,7 +149,8 @@ window.COMP_CSS["segment-menu"] = `.sb-segment-menu {
       // юзается :hover. С selected/disabled не совмещается.
       if (hover && !disabled && i !== selectedIndex) cls += ' is-hover';
       const iconHTML = (icon && iconPosition !== 'none') ? sbIcon(icon, 'L') : '';
-      return `<button type="button" class="${cls}" onclick="sbSelectSegmentItem(this)">${iconHTML}<span class="sb-segment-menu-item-label">${label}</span></button>`;
+      const onclick = 'sbSelectSegmentItem(this)' + (onSelect ? '; ' + onSelect : '');
+      return `<button type="button" class="${cls}" data-index="${i}" onclick="${onclick}">${iconHTML}<span class="sb-segment-menu-item-label">${label}</span></button>`;
     }).join('');
     let containerCls = 'sb-segment-menu';
     if (iconPosition === 'left') containerCls += ' icon-left';

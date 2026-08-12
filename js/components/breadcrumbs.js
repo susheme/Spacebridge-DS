@@ -136,7 +136,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
     let label = id;
     let found = false;
     for (const sec of NAV) {
-      const item = (sec.items || []).find(it => it.id === id);
+      const item = sbNavItems(sec).find(it => it.id === id);
       if (item) { category = sec.category; label = item.label; found = true; break; }
     }
     if (!found) return ''; // id неизвестен — крошки не рисуем

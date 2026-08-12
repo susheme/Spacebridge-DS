@@ -107,6 +107,91 @@ window.COMP_CSS.list = `.sb-list {
   width: var(--border-width-2); height: auto;
 }`;
 
+window.COMP_CSS.propertyList = `.sb-prop-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+  /* Высота ФИКСИРОВАННАЯ — ряд всегда 40, чем бы ни набили слоты. Бейдж 28
+     и иконка 24 переполняют content-box (40 − 16 паддингов − 1 бордер = 23),
+     но лежат внутри ячейки и не клипаются: content-box невидим. Тот же
+     случай, что аватар 32 в ячейке Profile из List. */
+  height: var(--list-min-height-cell);
+  /* Оси Figma-экспорта развёрнуты в наши токены: 8 по вертикали, 0 по
+     горизонтали (в Figma эта переменная названа pad-horiz-8, но стоит она
+     в вертикальном поле — см. спеку). */
+  padding: var(--pad-vert-8) var(--pad-horiz-0);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+  background: var(--background);
+  box-sizing: border-box;
+}
+/* Head — одиночная ячейка вне списка: тот же контракт слотов, но линия
+   контрастнее, чтобы самостоятельный элемент не читался обрывком списка. */
+.sb-prop-cell.head { border-bottom-color: var(--border); }
+
+/* Левый слот: лейбл забирает всё свободное место и жмётся с многоточием —
+   значение важнее, режется всегда подпись. min-width:0 обязателен, без него
+   ellipsis во вложенном флексе не срабатывает вообще. */
+.sb-prop-cell-label {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-tertiary);
+}
+.sb-prop-cell-label .sb-icon-wrap { flex-shrink: 0; }
+.sb-prop-cell-label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Правый слот: значение не режется и не переносится — за ним человек и
+   пришёл. flex-shrink: 0 — иначе слот ужимается, а при nowrap текст без
+   многоточия просто вылезает за край. Место уступает лейбл, он и жмётся. */
+.sb-prop-cell-value {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+/* Цвет значения переопределяется модификатором — инлайн-стили запрещены. */
+.sb-prop-cell-value.pv-primary { color: var(--primary); }
+.sb-prop-cell-value.pv-success { color: var(--success); }
+.sb-prop-cell-value.pv-error   { color: var(--error); }
+.sb-prop-cell-value.pv-alert   { color: var(--alert); }
+.sb-prop-cell-value.pv-info    { color: var(--info); }
+.sb-prop-cell-value.pv-text    { color: var(--text-tertiary); }
+
+/* Типографика обоих слотов — Title M 16/600 по спеке. Line-height берём
+   body, а НЕ --title-line-height-s: у Title M в Figma своего line-height нет,
+   а S даёт 12px при шрифте 16 — на лейбле с overflow:hidden это срезает
+   хвосты у/g/p/q. Одинаковый line-height держит слоты на общей базовой линии. */
+.sb-prop-cell-label-text,
+.sb-prop-cell-value {
+  font-size: var(--title-font-size-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--letter-spacing);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* Список — колонка ячеек. Последней разделитель не нужен: его роль играет
+   край карточки. Красим в transparent, а не снимаем border — иначе
+   последняя ячейка стала бы на 1px ниже остальных. */
+.sb-prop-list {
+  display: flex;
+  flex-direction: column;
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+}
+.sb-prop-list > .sb-prop-cell:last-child { border-bottom-color: transparent; }`;
+
 // Single-select click handler for Info cells — removes is-selected from sibling
 // cells in the same parent, sets it on the clicked cell.
 window.sbSelectInfoCell = function(cell) {
@@ -233,17 +318,107 @@ window.sbSelectInfoCell = function(cell) {
     })).join('');
   }
 
+  // ═══ PROPERTY LIST ═══════════════════════════════════════════════════
+  // Второе семейство ячеек того же компонента: «подпись → значение».
+  // Делит с Standard List токены группы List и страницу документации.
+
+  /**
+   * sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })
+   *   label      — подпись левого слота (жмётся с многоточием)
+   *   icon       — имя из ICON_PATHS перед подписью (опционально)
+   *   indicator  — точка статуса перед иконкой: { status, pulse? }; статусы —
+   *                online / offline / error / warning / maintenance /
+   *                connecting / info (фабрика sbMkStatusDot из Status)
+   *   value      — правый слот: строка ИЛИ готовая разметка любого
+   *                DS-компонента (sbMkBadgeStatus, sbMkButton, sbIcon…)
+   *   valueColor — 'primary' | 'success' | 'error' | 'alert' | 'info' |
+   *                'text'; по умолчанию --text-secondary
+   *   head       — одиночная ячейка вне списка: контрастная линия снизу
+   *   cls        — доп. классы на корне
+   */
+  function mkPropertyCell(opts) {
+    const { label = '', icon, indicator, value = '', valueColor, head = false, cls = '' } = opts || {};
+    // Индикатор идёт САМЫМ левым — как в Info Cell из List, чтобы колонка
+    // точек читалась вертикально и не прыгала от наличия иконки.
+    const dotHtml = indicator
+      ? sbMkStatusDot({ status: indicator.status, pulse: indicator.pulse })
+      : '';
+    const iconHtml = icon ? sbIcon(icon, 'L') : '';
+    const valueCls = 'sb-prop-cell-value' + (valueColor ? ' pv-' + valueColor : '');
+    return `<div class="sb-prop-cell${head ? ' head' : ''}${cls ? ' ' + cls : ''}">
+      <span class="sb-prop-cell-label">${dotHtml}${iconHtml}<span class="sb-prop-cell-label-text">${label}</span></span>
+      <span class="${valueCls}">${value}</span>
+    </div>`;
+  }
+  window.sbMkPropertyCell = mkPropertyCell;
+
+  /**
+   * sbMkPropertyList({ items, cls }) — колонка ячеек.
+   *   items — массив opts для sbMkPropertyCell
+   * Две колонки рядом — это два списка внутри Grid System (sbMkFlex),
+   * собственной колоночной раскладки у компонента нет намеренно.
+   */
+  function mkPropertyList(opts) {
+    const { items = [], cls = '' } = opts || {};
+    return `<div class="sb-prop-list${cls ? ' ' + cls : ''}">${items.map(it => mkPropertyCell(it)).join('')}</div>`;
+  }
+  window.sbMkPropertyList = mkPropertyList;
+
+  // ── Demo-контент ──────────────────────────────────────────────────────
+  // Иконка во всех строках одна: слот демонстрирует САМ СЕБЯ, а разнобой
+  // читался как значащий — будто иконка кодирует тип параметра.
+  const PROP_ICON = 'radar-line';
+  const PROP_DEMO = [
+    { label: 'RL Status',          value: 'Not Acquired' },
+    { label: 'UT Power Level',     value: '-99.99 dBm' },
+    { label: 'Symbol Rate',        value: '0 ksymb/s' },
+    // Title Case не только по правилу DS: строчное «undefined» тест
+    // целостности разметки принимает за протёкший в вывод мусор.
+    { label: 'MODCOD',             value: 'Undefined Waveform' },
+    { label: 'Max Tx Power Level', value: '-14.5 dBm' },
+    { label: 'Required Es/No',     value: '-99.99 dB' },
+  ];
+  const PROP_LONG_LABEL = 'Required Es/No At The Receiver Input Under Clear Sky Conditions';
+
+  // Значение правого слота по типу. Только фабрики DS — своей разметки
+  // чужих компонентов здесь нет.
+  // Ячейки Property List под состояние плейграунда. Общая для превью и
+  // панели кода: копируемый пример обязан совпадать с картинкой.
+  function propItems(s, rows) {
+    return rows.map((d, i) => ({
+      icon: s.propIcon ? PROP_ICON : undefined,
+      indicator: s.propIndicator ? { status: s.propIndicator, pulse: s.propPulse } : undefined,
+      label: s.propLong && i === rows.length - 1 ? PROP_LONG_LABEL : d.label,
+      value: propDemoValue(s.propValueType, d.value),
+      valueColor: s.propValueColor || undefined,
+    }));
+  }
+
+  function propDemoValue(type, text) {
+    if (type === 'badge')  return sbMkBadgeStatus({ label: 'Not Acquired', color: 'grey', mini: true });
+    if (type === 'button') return sbMkButton({ icon: 'more-2-line', iconSize: 'S', size: 's', attrs: ' aria-label="Actions"' });
+    if (type === 'icon')   return text + sbIcon('lock-2-line', 'L');
+    return text;
+  }
+
   sbRegister({
     name: 'list',
     title: 'List',
     description: sbT(
-      'Lists built from 40px cells. Three cell families. Profile Cell — people and organizations, with an avatar. Info Cell — notifications, events and alarms. Control List — cells with a title and a toggle. Example: a device event feed on Info Cells.',
-      'Списки из ячеек высотой 40px. Три семейства ячеек. Profile Cell — люди и организации, с аватаром. Info Cell — уведомления, события и алармы. Control List — ячейки с заголовком и toggle. Пример: лента событий устройства на Info Cell.'
+      'Lists built from 40px cells. Two families. Standard List holds three cell types: Profile for people and organizations, Info for notifications and events, Control for a title with a toggle. Property List holds label → value rows for cards. Both families share the List size tokens and this page.',
+      'Списки из ячеек высотой 40px. Два семейства. Standard List содержит три типа ячеек: Profile — люди и организации, Info — уведомления и события, Control — заголовок с переключателем. Property List содержит строки «подпись → значение» для карточек. Оба семейства используют размерные токены группы List и эту страницу.'
     ),
+    // Подмаршрут сайдбара: #list/standard-list и #list/property-list. Ребёнок
+    // NAV обязан открывать своё семейство, а не просто вести на страницу.
+    onSubRoute(sub) {
+      const family = sub === 'property-list' ? 'property' : 'standard';
+      if (SB_PG._states && SB_PG._states.list) SB_PG.set('list', 'family', family);
+    },
     playground: {
-      title: 'Standard List Cell Playground',
+      title: 'List Cell Playground',
       minPreview: 360,  // list cell с аватаром + субтитлом — нужно ~360 для нормального layout'а
       state: {
+        family: 'standard',              // 'standard' | 'property' — вкладка Segment Menu
         cellType: 'profile',
         // Profile-specific
         avatarType: 'image',
@@ -258,11 +433,33 @@ window.sbSelectInfoCell = function(cell) {
         controlPos: 'single',            // 'single' | 'top' | 'inside' | 'bottom'
         controlOn: true,
         controlList: false,              // показать всю стопку вместо одной ячейки
+        // Property List. Префикс prop* — ключи двух семейств лежат в одном
+        // состоянии, и без него propIndicator читался бы как indicatorStatus
+        // из Info Cell.
+        propIndicator: '',               // '' | статус точки
+        propPulse: false,
+        propIcon: true,
+        propValueType: 'text',
+        propValueColor: '',
+        propLong: false,
+        propList: true,
+        propHead: false,
         // Shared state
         cellState: 'default',
       },
       controls(pg) {
-        return `${sbPgGroup('Cell', `
+        // Segment Menu переключает семейство. Контролы обоих семейств живут в
+        // одном состоянии, а syncControls показывает группы активного: держать
+        // их в одном селекте с типами ячеек значило бы уравнять семейство и
+        // тип ячейки, а это разные уровни.
+        // SB_PG.render перерисовывает только превью, поэтому подсветка
+        // сегмента, которую ставит сам компонент, переживает переключение.
+        const tabs = sbMkSegmentMenu(['Standard List', 'Property List'], {
+          selectedIndex: SB_PG._states.list.family === 'property' ? 1 : 0,
+          onSelect: "SB_PG.set('list', 'family', this.dataset.index === '1' ? 'property' : 'standard')",
+        });
+        return `<div class="pg-list-family" style="grid-column:1/-1">${tabs}</div>
+        ${sbPgGroup('Cell', `
             ${pg.select('cellType', [
               { value: 'profile', label: 'Profile' },
               { value: 'info',    label: 'Info' },
@@ -274,7 +471,7 @@ window.sbSelectInfoCell = function(cell) {
               { value: 'selected', label: 'Selected (Info only)' },
               { value: 'disabled', label: 'Disabled' },
             ], { label: 'State' })}
-          `, { fullRow: true })}
+          `, { fullRow: true, attrs: 'data-pg-family="standard"' })}
         ${sbPgGroup('Profile Cell', `
             ${pg.select('avatarType', [
               { value: 'user',     label: 'User' },
@@ -289,7 +486,7 @@ window.sbSelectInfoCell = function(cell) {
               { value: 'button', label: 'Icon Button' },
             ], { label: 'Right' })}
             <div class="pg-toggles">${pg.toggle('showSubtitle', 'Subtitle')}</div>
-          `, { fullRow: true, attrs: 'data-pg-cell-type="profile"' })}
+          `, { fullRow: true, attrs: 'data-pg-family="standard" data-pg-cell-type="profile"' })}
         ${sbPgGroup('Info Cell', `
             ${pg.select('infoSubtype', [
               { value: 'default',   label: 'Default' },
@@ -323,7 +520,7 @@ window.sbSelectInfoCell = function(cell) {
                 { value: 'neutral', label: 'Neutral (gray)' },
               ], { label: 'Mark' })}
             </div>
-          `, { fullRow: true, attrs: 'data-pg-cell-type="info"' })}
+          `, { fullRow: true, attrs: 'data-pg-family="standard" data-pg-cell-type="info"' })}
         ${sbPgGroup('Control Cell', `
             <div data-pg-control-pos>
               ${pg.select('controlPos', [
@@ -337,24 +534,102 @@ window.sbSelectInfoCell = function(cell) {
               ${pg.toggle('controlOn', 'On')}
               ${pg.toggle('controlList', 'List')}
             </div>
-          `, { fullRow: true, attrs: 'data-pg-cell-type="control"' })}`;
+          `, { fullRow: true, attrs: 'data-pg-family="standard" data-pg-cell-type="control"' })}
+        ${sbPgGroup('Left Slot', `
+            ${pg.select('propIndicator', [
+              { value: '',            label: 'None' },
+              { value: 'online',      label: 'Online (green)' },
+              { value: 'error',       label: 'Error (red)' },
+              { value: 'warning',     label: 'Warning (yellow)' },
+              { value: 'maintenance', label: 'Maintenance (orange)' },
+              { value: 'info',        label: 'Info (blue)' },
+              { value: 'connecting',  label: 'Connecting (primary)' },
+              { value: 'offline',     label: 'Offline (gray)' },
+            ], { label: 'Indicator' })}
+            <div class="pg-toggles">
+              ${pg.toggle('propIcon', 'Icon')}
+              <span data-pg-needs-indicator>${pg.toggle('propPulse', 'Pulse')}</span>
+            </div>
+          `, { fullRow: true, attrs: 'data-pg-family="property"' })}
+        ${sbPgGroup('Right Slot', `
+            ${pg.select('propValueType', [
+              { value: 'text',   label: 'Text' },
+              { value: 'badge',  label: 'Badge-Status — Mini' },
+              { value: 'button', label: 'Icon Button' },
+              { value: 'icon',   label: 'Text + Icon' },
+            ], { label: 'Value' })}
+            ${pg.select('propValueColor', [
+              { value: '',        label: 'Default' },
+              { value: 'text',    label: 'Text' },
+              { value: 'primary', label: 'Primary' },
+              { value: 'success', label: 'Success' },
+              { value: 'error',   label: 'Error' },
+              { value: 'alert',   label: 'Alert' },
+            ], { label: 'Color' })}
+          `, { fullRow: true, attrs: 'data-pg-family="property"' })}
+        ${sbPgGroup('Options', `
+            <div class="pg-toggles">
+              ${pg.toggle('propLong', 'Long')}
+              ${pg.toggle('propList', 'List')}
+              ${pg.toggle('propHead', 'Head')}
+            </div>
+          `, { fullRow: true, attrs: 'data-pg-family="property"' })}`;
       },
       syncControls(s, container) {
-        // Обёртки теперь pg-group'ы с рамкой — показываем обычным display
-        // (НЕ 'contents': он растворяет группу, тайтл и body рассыпаются по гриду).
-        container.querySelectorAll('[data-pg-cell-type]').forEach(wrap => {
-          wrap.style.display = wrap.getAttribute('data-pg-cell-type') === s.cellType ? '' : 'none';
+        // Семейство первично: сначала гасим группы неактивной вкладки, потом
+        // внутри Standard List уточняем по типу ячейки. Порядок важен —
+        // группы типов несут оба атрибута сразу.
+        const std = s.family !== 'property';
+        // Подсветку сегмента тоже держим здесь. Разметка контролов собирается
+        // один раз, а семейство может смениться позже — из onSubRoute при
+        // заходе по прямой ссылке #list/property-list. Красим через фабричный
+        // sbSelectSegmentItem: он же двигает индикатор.
+        const tabs = container.querySelectorAll('.pg-list-family .sb-segment-menu-item');
+        const want = tabs[std ? 0 : 1];
+        if (want && !want.classList.contains('selected')) sbSelectSegmentItem(want);
+        container.querySelectorAll('[data-pg-family]').forEach(wrap => {
+          const mine = wrap.getAttribute('data-pg-family') === (std ? 'standard' : 'property');
+          wrap.style.display = mine ? '' : 'none';
         });
-        container.querySelectorAll('[data-pg-info-subtype]').forEach(wrap => {
-          wrap.style.display = wrap.getAttribute('data-pg-info-subtype') === s.infoSubtype ? '' : 'none';
-        });
-        // В режиме List позицию считает mkControlList (single/top/inside/bottom
-        // по индексу) — ручной селектор там ни на что не влияет, прячем.
-        container.querySelectorAll('[data-pg-control-pos]').forEach(wrap => {
-          wrap.style.display = s.controlList ? 'none' : '';
-        });
+        if (std) {
+          // Обёртки — pg-group'ы с рамкой, показываем обычным display
+          // (НЕ 'contents': он растворяет группу, тайтл и body рассыпаются по гриду).
+          container.querySelectorAll('[data-pg-cell-type]').forEach(wrap => {
+            wrap.style.display = wrap.getAttribute('data-pg-cell-type') === s.cellType ? '' : 'none';
+          });
+          container.querySelectorAll('[data-pg-info-subtype]').forEach(wrap => {
+            wrap.style.display = wrap.getAttribute('data-pg-info-subtype') === s.infoSubtype ? '' : 'none';
+          });
+          // В режиме List позицию считает mkControlList (single/top/inside/bottom
+          // по индексу) — ручной селектор там ни на что не влияет, прячем.
+          container.querySelectorAll('[data-pg-control-pos]').forEach(wrap => {
+            wrap.style.display = s.controlList ? 'none' : '';
+          });
+        } else {
+          // Pulse без индикатора ни на что не влияет — прячем, чтобы тогл не
+          // выглядел сломанным.
+          container.querySelectorAll('[data-pg-needs-indicator]').forEach(el => {
+            el.style.display = s.propIndicator ? '' : 'none';
+          });
+        }
       },
+      // Head — одиночная ячейка вне списка, поэтому со списком не сочетается.
+      onControlChange(key, value, s) {
+        if (key === 'propHead' && value) s.propList = false;
+        if (key === 'propList' && value) s.propHead = false;
+      },
+      // Набор ячеек Property List под текущее состояние — общий для превью
+      // и для панели кода, чтобы копируемый пример не расходился с картинкой.
       render(s) {
+        if (s.family === 'property') {
+          const items = propItems(s, PROP_DEMO);
+          const content = s.propList
+            ? mkPropertyList({ items })
+            : mkPropertyCell(Object.assign({}, items[0], { head: s.propHead }));
+          // Обёртка под max-width токена: без неё ячейка растянулась бы на всё
+          // превью и трункейт подписи не показать.
+          return `<div style="width:100%;max-width:352px;margin:0 auto">${content}</div>`;
+        }
         if (s.cellType === 'control') {
           // У Control-ячейки нет hover/selected: единственное состояние —
           // выключенный toggle, его и берём из общего селектора состояний.
@@ -391,6 +666,22 @@ window.sbSelectInfoCell = function(cell) {
         })}</div>`;
       },
       genCode(s) {
+        if (s.family === 'property') {
+          const items = propItems(s, PROP_DEMO.slice(0, 3));
+          return {
+            html: s.propList
+              ? mkPropertyList({ items })
+              : mkPropertyCell(Object.assign({}, items[0], { head: s.propHead })),
+            // Точка и mini-бейдж живут в Status — без его стилей скопированный
+            // пример отрисуется голым. COMP_CSS.status разбит по подключам.
+            css: COMP_CSS.propertyList
+              + (s.propIndicator ? '\n' + COMP_CSS.status.indicator
+                                   + (s.propPulse ? '\n' + COMP_CSS.status.pulse : '') : '')
+              + (s.propValueType === 'badge'
+                  ? '\n' + COMP_CSS.status.badgeStatus + '\n' + COMP_CSS.status.badgeStatusMini
+                  : ''),
+          };
+        }
         if (s.cellType === 'control') {
           const off = s.cellState === 'disabled';
           return {
@@ -699,6 +990,51 @@ window.sbSelectInfoCell = function(cell) {
 <!-- Bottom -->
 <div class="sb-list-cell bottom"> ... </div>`,
         css: COMP_CSS.list + '\n' + COMP_CSS.toggles,
+      },
+      {
+        title: sbT('Property List — Cell', 'Property List — ячейка'),
+        desc: sbT(
+      'List cells use a label → value format: an icon and the label on the left, the value on the right. The format is not a table — there is no header, no sorting and no selection. Rows are independent, and values are text, badges or buttons. The left slot takes a status dot. The label truncates with an ellipsis, the value carries no marking. Row height is 40 pixels. Head is a standalone cell with a contrasting bottom border.',
+      'Ячейки списка используют формат «подпись → значение»: слева — иконка и подпись, справа — значение. Формат не в виде таблицы, нет шапки, сортировки и выбора. Строки независимы, значения — текст, бейджи или кнопки. В левом слоте точка-индикатор. Подпись с многоточием, значение без маркировки. Высота строки 40 пикселей. Элемент Head — отдельная ячейка с контрастной нижней границей.'
+        ) + sbDocNote('Tech Info', sbT(
+      '<b>Geometry</b>'
+      + '<ul><li>Height: 40px, fixed (<code>--list-min-height-cell</code>).</li><li>Width: from 80px (<code>--list-cell-min-width-standard</code>) to 980px, and to 1024px from tablet up (<code>--list-max-width-cell</code>).</li><li>Padding: 8px vertical, 0 horizontal.</li><li>Gap: 8px in the left slot, 4px in the right one.</li></ul>'
+      + '<b>Left slot</b>'
+      + '<ul><li>Content: status dot, icon, label.</li><li>Order: the dot always comes first.</li><li>Behaviour: takes the free width, truncates the label with an ellipsis.</li><li>Status dot: <code>sbMkStatusDot</code> from Status, optional.</li></ul>'
+      + '<b>Right slot</b>'
+      + '<ul><li>Content: any markup — text, badge, button, icon.</li><li>Alignment: to the right edge.</li><li>Behaviour: never wraps and never truncates.</li></ul>'
+      + '<b>Typography</b>'
+      + '<ul><li>Style: Title M, 16px, weight 600.</li><li>Line-height: <code>--body-line-height</code>.</li><li>Numerals: tabular.</li></ul>'
+      + '<b>Colours</b>'
+      + '<ul><li>Label: <code>--text-tertiary</code>.</li><li>Value: <code>--text-secondary</code>; a modifier overrides it — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Separator: <code>--border-soft</code>; <code>--border</code> in the Head variant.</li></ul>'
+      + '<b>List</b>'
+      + '<ul><li>Structure: a column of cells.</li><li>Last cell: transparent separator.</li><li>Two columns: two lists inside the Grid System.</li></ul>'
+      + '<b>API</b>'
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>',
+      '<b>Геометрия</b>'
+      + '<ul><li>Высота: 40px, фиксированная (<code>--list-min-height-cell</code>).</li><li>Ширина: от 80px (<code>--list-cell-min-width-standard</code>) до 980px, с планшета — до 1024px (<code>--list-max-width-cell</code>).</li><li>Отступы: 8px по вертикали, 0 по горизонтали.</li><li>Интервалы: 8px в левом слоте, 4px в правом.</li></ul>'
+      + '<b>Левый слот</b>'
+      + '<ul><li>Состав: точка-индикатор, иконка, подпись.</li><li>Порядок: индикатор всегда первый.</li><li>Поведение: занимает свободную ширину, сокращает подпись многоточием.</li><li>Индикатор: <code>sbMkStatusDot</code> из компонента Status, необязателен.</li></ul>'
+      + '<b>Правый слот</b>'
+      + '<ul><li>Состав: произвольная разметка — текст, бейдж, кнопка, иконка.</li><li>Выравнивание: по правому краю.</li><li>Поведение: не переносится и не сокращается.</li></ul>'
+      + '<b>Типографика</b>'
+      + '<ul><li>Начертание: Title M, 16px, насыщенность 600.</li><li>Межстрочный интервал: <code>--body-line-height</code>.</li><li>Цифры: моноширинные.</li></ul>'
+      + '<b>Цвета</b>'
+      + '<ul><li>Подпись: <code>--text-tertiary</code>.</li><li>Значение: <code>--text-secondary</code>; переопределяется модификатором — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Разделитель: <code>--border-soft</code>; в варианте Head — <code>--border</code>.</li></ul>'
+      + '<b>Список</b>'
+      + '<ul><li>Структура: колонка ячеек.</li><li>Последняя ячейка: разделитель прозрачный.</li><li>Две колонки: два списка внутри Grid System.</li></ul>'
+      + '<b>API</b>'
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>'
+        )),
+        preview: `<div style="width:100%;max-width:352px">${mkPropertyList({ items: propItems({
+          propIcon: true, propIndicator: 'online', propPulse: false,
+          propValueType: 'text', propValueColor: '', propLong: false,
+        }, PROP_DEMO.slice(0, 4)) })}</div>`,
+        html: mkPropertyList({ items: propItems({
+          propIcon: true, propIndicator: 'online', propPulse: false,
+          propValueType: 'text', propValueColor: '', propLong: false,
+        }, PROP_DEMO.slice(0, 3)) }),
+        css: COMP_CSS.propertyList + '\n' + COMP_CSS.status.indicator,
       },
     ],
   });

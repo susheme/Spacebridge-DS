@@ -19,6 +19,7 @@ var INLINE_SVG_OK = {
   'js/components/snackbar.js': 'кольцо-таймер: <circle> с анимацией stroke-dashoffset, иконкой не выражается',
   'js/components/tooltips.js': 'хвостик подсказки 44×14 — не иконка 24×24, свой viewBox',
   'js/components/nav-bar.js':  'плейсхолдеры <svg>FULL_LOGO</svg> в code-sample документации',
+  'js/components/placeholder.js': 'источник собственной графики: заглушки изображений из Placeholders/*.svg (Figma), цвета переведены в токены',
 };
 
 // Хардкод цвета в JS. Разрешён только как фолбэк вычисления, не как стиль UI.
@@ -70,3 +71,13 @@ function typoKnown(file, line) {
 }
 function runtimeVar(name) { return Object.prototype.hasOwnProperty.call(RUNTIME_CSS_VARS, name) }
 function docOnlyRule(sel) { return Object.prototype.hasOwnProperty.call(DOC_ONLY_RULES, sel) }
+
+// Секции-заглушки: пункт зарезервирован тайтлом на странице компонента,
+// спека ещё не пришла — html/css у секции законно отсутствуют.
+// Ключ — '<component>/<EN-тайтл секции>'.
+var PLACEHOLDER_SECTION_OK = {
+  // Пусто. Формат записи: '<component>/<EN-тайтл секции>': 'причина'.
+};
+function placeholderSection(comp, plainTitle) {
+  return Object.prototype.hasOwnProperty.call(PLACEHOLDER_SECTION_OK, comp + '/' + plainTitle);
+}

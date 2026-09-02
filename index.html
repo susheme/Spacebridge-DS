@@ -73,6 +73,8 @@
 <link rel="stylesheet" href="css/components/header-m.css">
 <link rel="stylesheet" href="css/components/header-l.css">
 <link rel="stylesheet" href="css/components/side-navigation.css">
+<link rel="stylesheet" href="css/components/placeholder.css">
+<link rel="stylesheet" href="css/components/cards.css">
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
@@ -235,6 +237,13 @@
 <!-- side-navigation — композит: демо/render юзают sbMkHeaderM, sbMkSearch,
      sbMkSubNav, sbMkTabBar → должен грузиться ПОСЛЕ всех них. -->
 <script src="js/components/side-navigation.js"></script>
+<!-- placeholder — заглушки изображений, без зависимостей -->
+<script src="js/components/placeholder.js"></script>
+<!-- cards — контейнер-композит: примеры юзают sbMkButton, sbMkAvatar,
+     sbMkCheckbox, sbMkCounter, sbMkTag, sbMkStatusDot, sbMkBadgeStatus,
+     sbMkPropertyList, sbMkPopover, sbMkContextCard/Cell, sbMkActionBar,
+     sbMkGrid, sbMkPlaceholder → должен грузиться ПОСЛЕ всех них. -->
+<script src="js/components/cards.js"></script>
 <!-- dialogues — архитектурный стаб (окно поверх Overlay; спека ожидается) -->
 <script src="js/components/dialogues.js"></script>
 <script src="js/components/getting-started.js"></script>

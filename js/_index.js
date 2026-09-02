@@ -59,6 +59,8 @@ window.SB_COMPONENTS = [
   { name: 'sub-nav',       file: 'sub-nav.js',        deps: ['segment-menu', 'led-panel'] }, // sub-bar под Nav Bar; demo юзает sbMkSegmentMenu + sbMkLedPanel
   { name: 'overlay',       file: 'overlay.js',        deps: ['file-uploader', 'buttons'] },     // примитив модальности; live-демо юзает sbMkUploader (framed в модалке)
   { name: 'side-navigation', file: 'side-navigation.js', deps: ['buttons', 'chevron', 'counters', 'context-menu', 'section-header'] }, // дерево навигации; edit/delete = sbMkButton
+  { name: 'placeholders',  file: 'placeholder.js',    deps: [] },                    // заглушки изображений; собственная графика (allowlist INLINE_SVG_OK), зависимостей нет
+  { name: 'cards',         file: 'cards.js',          deps: ['buttons', 'badge', 'status', 'counters', 'avatar', 'checkbox', 'tags', 'list', 'popover', 'context-menu', 'action-bar', 'grid-system', 'placeholders'] }, // контейнер-слоты; типы карточек = композиции, все примеры собраны фабриками DS; media-демо = sbMkPlaceholder
   { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay', 'checkbox', 'buttons'] }, // Alert: SB_SVG символ + sbMkActionBar футер; consent = sbMkCheckbox; modal-демо = sbMkOverlay
   { name: 'getting-started', file: 'getting-started.js', deps: ['buttons'] },                 // docs page, не playground
 ];

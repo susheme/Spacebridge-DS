@@ -117,6 +117,11 @@ suite('Загрузка', function () {
       if (!Array.isArray(secs) && !hasPg && !cfg.renderPage) { bad.push(name + ': ни sections, ни playground'); return }
       if (!Array.isArray(secs)) return;
       secs.forEach(function (s, i) {
+        // Тайтл может быть sbT(en, ru) — сверяем с allowlist по EN-части.
+        var plain = String(s.title || '')
+          .replace(/<span class="i18n-ru">[\s\S]*?<\/span>/g, '')
+          .replace(/<[^>]+>/g, '');
+        if (placeholderSection(name, plain)) return;
         if (!s.html) bad.push(name + '[' + i + '] «' + (s.title || '?') + '»: нет html');
         if (!s.css)  bad.push(name + '[' + i + '] «' + (s.title || '?') + '»: нет css');
       });

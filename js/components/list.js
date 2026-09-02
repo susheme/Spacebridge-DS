@@ -190,7 +190,16 @@ window.COMP_CSS.propertyList = `.sb-prop-cell {
   min-width: var(--list-cell-min-width-standard);
   max-width: var(--list-max-width-cell);
 }
-.sb-prop-list > .sb-prop-cell:last-child { border-bottom-color: transparent; }`;
+.sb-prop-list > .sb-prop-cell:last-child { border-bottom-color: transparent; }
+
+.sb-prop-list.is-framed {
+  box-sizing: border-box;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-8);
+  border: var(--border-width-1) solid var(--border);
+  background: var(--surface-1);
+}
+.sb-prop-list.is-framed > .sb-prop-cell { background: var(--surface-1); }`;
 
 // Single-select click handler for Info cells — removes is-selected from sibling
 // cells in the same parent, sets it on the clicked cell.
@@ -353,14 +362,18 @@ window.sbSelectInfoCell = function(cell) {
   window.sbMkPropertyCell = mkPropertyCell;
 
   /**
-   * sbMkPropertyList({ items, cls }) — колонка ячеек.
-   *   items — массив opts для sbMkPropertyCell
+   * sbMkPropertyList({ items, framed, cls }) — колонка ячеек.
+   *   items  — массив opts для sbMkPropertyCell
+   *   framed — рама: поле 16, radius 8, рамка border, фон surface-1
    * Две колонки рядом — это два списка внутри Grid System (sbMkFlex),
    * собственной колоночной раскладки у компонента нет намеренно.
    */
   function mkPropertyList(opts) {
-    const { items = [], cls = '' } = opts || {};
-    return `<div class="sb-prop-list${cls ? ' ' + cls : ''}">${items.map(it => mkPropertyCell(it)).join('')}</div>`;
+    const { items = [], framed = false, cls = '' } = opts || {};
+    let c = 'sb-prop-list';
+    if (framed) c += ' is-framed';
+    if (cls)    c += ' ' + cls;
+    return `<div class="${c}">${items.map(it => mkPropertyCell(it)).join('')}</div>`;
   }
   window.sbMkPropertyList = mkPropertyList;
 
@@ -892,9 +905,9 @@ window.sbSelectInfoCell = function(cell) {
       + '<b>Colours</b>'
       + '<ul><li>Label: <code>--text-tertiary</code>.</li><li>Value: <code>--text-secondary</code>; a modifier overrides it — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Separator: <code>--border-soft</code>; <code>--border</code> in the Head variant.</li></ul>'
       + '<b>List</b>'
-      + '<ul><li>Structure: a column of cells.</li><li>Last cell: transparent separator.</li><li>Two columns: two lists inside the Grid System.</li></ul>'
+      + '<ul><li>Structure: a column of cells.</li><li>Last cell: transparent separator.</li><li>Framed: padding 16, radius 8, border in <code>--border</code>, background <code>--surface-1</code>.</li><li>Two columns: two lists inside the Grid System.</li></ul>'
       + '<b>API</b>'
-      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>',
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, framed, cls })</code></li></ul>',
       '<b>Геометрия</b>'
       + '<ul><li>Высота: 40px, фиксированная (<code>--list-min-height-cell</code>).</li><li>Ширина: от 80px (<code>--list-cell-min-width-standard</code>) до 980px, с планшета — до 1024px (<code>--list-max-width-cell</code>).</li><li>Отступы: 8px по вертикали, 0 по горизонтали.</li><li>Интервалы: 8px в левом слоте, 4px в правом.</li></ul>'
       + '<b>Левый слот</b>'
@@ -906,9 +919,9 @@ window.sbSelectInfoCell = function(cell) {
       + '<b>Цвета</b>'
       + '<ul><li>Подпись: <code>--text-tertiary</code>.</li><li>Значение: <code>--text-secondary</code>; переопределяется модификатором — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Разделитель: <code>--border-soft</code>; в варианте Head — <code>--border</code>.</li></ul>'
       + '<b>Список</b>'
-      + '<ul><li>Структура: колонка ячеек.</li><li>Последняя ячейка: разделитель прозрачный.</li><li>Две колонки: два списка внутри Grid System.</li></ul>'
+      + '<ul><li>Структура: колонка ячеек.</li><li>Последняя ячейка: разделитель прозрачный.</li><li>Framed: поле 16, radius 8, рамка <code>--border</code>, фон <code>--surface-1</code>.</li><li>Две колонки: два списка внутри Grid System.</li></ul>'
       + '<b>API</b>'
-      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>'
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, framed, cls })</code></li></ul>'
     )),
     playground: {
       title: 'Property List Cell Playground',
@@ -921,6 +934,7 @@ window.sbSelectInfoCell = function(cell) {
         propLong: false,
         propList: true,
         propHead: false,
+        propFramed: false,
       },
       controls(pg) {
         return `${sbPgGroup('Left Slot', `
@@ -962,14 +976,18 @@ window.sbSelectInfoCell = function(cell) {
               ${pg.toggle('propLong', 'Long')}
               ${pg.toggle('propList', 'List')}
               ${pg.toggle('propHead', 'Head')}
+              <span data-pg-needs-list>${pg.toggle('propFramed', 'Framed')}</span>
             </div>
           `)}`;
       },
-      // Pulse без индикатора ни на что не влияет — прячем, чтобы тогл не
-      // выглядел сломанным.
+      // Pulse без индикатора и Framed без списка ни на что не влияют —
+      // прячем, чтобы тоглы не выглядели сломанными.
       syncControls(s, container) {
         container.querySelectorAll('[data-pg-needs-indicator]').forEach(el => {
           el.style.display = s.propIndicator ? '' : 'none';
+        });
+        container.querySelectorAll('[data-pg-needs-list]').forEach(el => {
+          el.style.display = s.propList ? '' : 'none';
         });
       },
       // Head — одиночная ячейка вне списка, поэтому со списком не сочетается.
@@ -980,7 +998,7 @@ window.sbSelectInfoCell = function(cell) {
       render(s) {
         const items = propItems(s, PROP_DEMO);
         const content = s.propList
-          ? mkPropertyList({ items })
+          ? mkPropertyList({ items, framed: s.propFramed })
           : mkPropertyCell(Object.assign({}, items[0], { head: s.propHead }));
         // Обёртка под max-width токена: без неё ячейка растянулась бы на всё
         // превью и трункейт подписи не показать.
@@ -990,7 +1008,7 @@ window.sbSelectInfoCell = function(cell) {
         const items = propItems(s, PROP_DEMO.slice(0, 3));
         return {
           html: s.propList
-            ? mkPropertyList({ items })
+            ? mkPropertyList({ items, framed: s.propFramed })
             : mkPropertyCell(Object.assign({}, items[0], { head: s.propHead })),
           // Точка и mini-бейдж живут в Status — без его стилей скопированный
           // пример отрисуется голым. COMP_CSS.status разбит по подключам.
@@ -1021,9 +1039,9 @@ window.sbSelectInfoCell = function(cell) {
       + '<b>Colours</b>'
       + '<ul><li>Label: <code>--text-tertiary</code>.</li><li>Value: <code>--text-secondary</code>; a modifier overrides it — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Separator: <code>--border-soft</code>; <code>--border</code> in the Head variant.</li></ul>'
       + '<b>List</b>'
-      + '<ul><li>Structure: a column of cells.</li><li>Last cell: transparent separator.</li><li>Two columns: two lists inside the Grid System.</li></ul>'
+      + '<ul><li>Structure: a column of cells.</li><li>Last cell: transparent separator.</li><li>Framed: padding 16, radius 8, border in <code>--border</code>, background <code>--surface-1</code>.</li><li>Two columns: two lists inside the Grid System.</li></ul>'
       + '<b>API</b>'
-      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>',
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, framed, cls })</code></li></ul>',
       '<b>Геометрия</b>'
       + '<ul><li>Высота: 40px, фиксированная (<code>--list-min-height-cell</code>).</li><li>Ширина: от 80px (<code>--list-cell-min-width-standard</code>) до 980px, с планшета — до 1024px (<code>--list-max-width-cell</code>).</li><li>Отступы: 8px по вертикали, 0 по горизонтали.</li><li>Интервалы: 8px в левом слоте, 4px в правом.</li></ul>'
       + '<b>Левый слот</b>'
@@ -1035,9 +1053,9 @@ window.sbSelectInfoCell = function(cell) {
       + '<b>Цвета</b>'
       + '<ul><li>Подпись: <code>--text-tertiary</code>.</li><li>Значение: <code>--text-secondary</code>; переопределяется модификатором — <code>primary</code>, <code>success</code>, <code>error</code>, <code>alert</code>, <code>info</code>, <code>text</code>.</li><li>Разделитель: <code>--border-soft</code>; в варианте Head — <code>--border</code>.</li></ul>'
       + '<b>Список</b>'
-      + '<ul><li>Структура: колонка ячеек.</li><li>Последняя ячейка: разделитель прозрачный.</li><li>Две колонки: два списка внутри Grid System.</li></ul>'
+      + '<ul><li>Структура: колонка ячеек.</li><li>Последняя ячейка: разделитель прозрачный.</li><li>Framed: поле 16, radius 8, рамка <code>--border</code>, фон <code>--surface-1</code>.</li><li>Две колонки: два списка внутри Grid System.</li></ul>'
       + '<b>API</b>'
-      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, cls })</code></li></ul>'
+      + '<ul><li><code>sbMkPropertyCell({ label, icon, indicator, value, valueColor, head, cls })</code></li><li><code>sbMkPropertyList({ items, framed, cls })</code></li></ul>'
         )),
         preview: `<div style="width:100%;max-width:352px">${mkPropertyList({ items: propItems({
           propIcon: true, propIndicator: 'online', propPulse: false,

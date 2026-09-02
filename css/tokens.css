@@ -383,10 +383,20 @@
 
   /* ───────── GRID ───────── */
   /* Figma Dimensions-DS/Grid. Минимумы для auto-fit + minmax: плитка (статус,
-     метрика) и карточка с содержимым. Вверх и то и другое резиновое. */
+     метрика). Вверх — резиновая. */
   --tile-min-width: 96px;
   --tile-min-height: 96px;
+
+  /* ───────── CARDS ───────── */
+  /* Figma Dimensions-DS/Cards: габариты карточки и её шапки. */
   --card-min-width: 280px;
+  --card-max-width: 768px;
+  --card-min-height: 120px;
+  --card-max-height: 800px;
+  --card-header-min-width: 280px;
+  --card-header-max-width: 768px;
+  --card-header-min-height: 56px;
+  --card-header-max-height: 72px;
 
   /* ───────── SEPARATORS ───────── */
   --separator-width: 1px;
@@ -395,7 +405,6 @@
   --sidebar-width: 320px;
   --topbar-height: 56px;
   --transition: 0.2s ease;
-
 
 }
 
@@ -408,6 +417,7 @@
 
 @media (min-width: 768px) {
   :root {
+    --card-header-min-width: 320px;
     --card-min-width: 320px;
     --content-max-width-text: 720px;
     --gap-horiz-lg: 24px;
@@ -466,6 +476,9 @@
 @media (min-width: 1280px) {
   :root {
     --body-line-height: 20px;
+    --card-header-min-width: 280px;
+    --card-max-height: 768px;
+    --card-min-height: 104px;
     --card-min-width: 280px;
     --content-max-width-text: 800px;
     --header-max-height-responsive: 112px;

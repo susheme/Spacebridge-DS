@@ -75,6 +75,10 @@ window.COMP_CSS.tags = `.sb-tag {
     </div>`;
   }
 
+  // Экспорт для консьюмеров: Cards кладёт теги в тело карточки. Копировать
+  // разметку .sb-tag на стороне потребителя нельзя — только фабрика.
+  window.sbMkTag = mkTag;
+
   function mkTagInputWrap(tags = [], color = '') {
     const tagHtml = tags.map(t => mkTag({ mode: 'filled', text: t, removable: true, color })).join('');
     const colorArg = color ? `'${color}'` : "''";

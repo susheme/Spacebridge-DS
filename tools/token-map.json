@@ -85,7 +85,14 @@
     "Page/content-max-width-text": "--content-max-width-text",
     "Grid/tile-min-width": "--tile-min-width",
     "Grid/tile-min-height": "--tile-min-height",
-    "Grid/card-min-width": "--card-min-width",
+    "Cards/Dimensions/card-min-width": "--card-min-width",
+    "Cards/Dimensions/card-max-width": "--card-max-width",
+    "Cards/Dimensions/card-max-height": "--card-max-height",
+    "Cards/Dimensions/card-min-height": "--card-min-height",
+    "Cards/Header/header-min-width": "--card-header-min-width",
+    "Cards/Header/header-max-width": "--card-header-max-width",
+    "Cards/Header/header-max-height": "--card-header-max-height",
+    "Cards/Header/header-min-height": "--card-header-min-height",
     "Gap/gap-vert-xxl": "--gap-vert-xxl"
   },
   "Typography-DS": {

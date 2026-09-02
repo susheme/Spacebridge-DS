@@ -244,4 +244,17 @@
   max-width: var(--list-max-width-cell);
 }
 .sb-prop-list > .sb-prop-cell:last-child { border-bottom-color: transparent; }
+
+/* Framed — список в раме (спека Property List Framed): поле 16, radius 8,
+   рамка border, фон surface-1. Ширину по-прежнему задаёт контейнер.
+   Ячейки в раме перекрашиваются под её фон каскадом — свой тип ячейки под
+   контекст размещения не заводится. */
+.sb-prop-list.is-framed {
+  box-sizing: border-box;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-8);
+  border: var(--border-width-1) solid var(--border);
+  background: var(--surface-1);
+}
+.sb-prop-list.is-framed > .sb-prop-cell { background: var(--surface-1); }
 /* --- [/SYNC:propertyList] --- */

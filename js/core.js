@@ -40,7 +40,7 @@ const NAV = [
   { category: 'Data Display', items: [
     { id: 'avatar', label: 'Avatar', ready: true },
     { id: 'badge', label: 'Badge', ready: true },
-    { id: 'cards', label: 'Cards' },
+    { id: 'cards', label: 'Cards', incomplete: true },
     { id: 'context-menu', label: 'Context Menu', incomplete: true },
     { id: 'counters', label: 'Counters', ready: true },
     { id: 'info-footer', label: 'Info Footer', incomplete: true },
@@ -53,6 +53,7 @@ const NAV = [
       { id: 'list', label: 'Standard List', ready: true },
       { id: 'property-list', label: 'Property List', inProgress: true },
     ]},
+    { id: 'placeholders', label: 'Placeholders', ready: true },
     { id: 'status', label: 'Status', ready: true },
     { id: 'table', label: 'Table', inProgress: true },
     { id: 'table-footer', label: 'Table Footer', inProgress: true },
@@ -123,6 +124,7 @@ const ICON_PATHS = {
   'loop-left-line': 'M12 4C9.25144 4 6.82508 5.38626 5.38443 7.5H8V9.5H2V3.5H4V5.99936C5.82381 3.57166 8.72764 2 12 2C17.5228 2 22 6.47715 22 12H20C20 7.58172 16.4183 4 12 4ZM4 12C4 16.4183 7.58172 20 12 20C14.7486 20 17.1749 18.6137 18.6156 16.5H16V14.5H22V20.5H20V18.0006C18.1762 20.4283 15.2724 22 12 22C6.47715 22 2 17.5228 2 12H4Z',
   'radar-line': 'M12.5065 3.6232L11.4835 5.39495C8.57378 4.51623 5.96968 4.94525 5.07207 6.49995C3.89477 8.53909 5.86239 12.1523 9.75027 14.397C13.6382 16.6417 17.7512 16.5391 18.9285 14.4999C19.8261 12.9452 18.8956 10.4755 16.6797 8.39495L17.7026 6.6232C20.7847 9.33189 22.1654 12.8933 20.6605 15.4999C18.8003 18.722 13.4717 18.855 8.75027 16.1291C4.0289 13.4032 1.47976 8.72202 3.34002 5.49995C4.84492 2.89338 8.61964 2.30843 12.5065 3.6232ZM15.8842 1.77271L17.6163 2.7727L12.6163 11.4329L10.8842 10.4329L15.8842 1.77271ZM6.73233 19.9999H17.0003V21.9999H5.01761C4.94008 22.0013 4.86194 21.9937 4.78481 21.9767C4.77025 21.9734 4.7558 21.9699 4.74147 21.9661C4.6589 21.9439 4.57784 21.9107 4.50028 21.8659C4.47106 21.8491 4.44301 21.8309 4.41616 21.8117C4.30161 21.7291 4.20524 21.6229 4.1342 21.5002C4.06328 21.3771 4.01939 21.2403 4.00518 21.0996C4.00446 21.0923 4.00381 21.0849 4.00325 21.0776C3.98786 20.8829 4.02924 20.6818 4.13425 20.4999L6.38425 16.6028L8.1163 17.6028L6.73233 19.9999Z',
   'arrow-drop-down-line': 'M12 15.0006L7.75732 10.758L9.17154 9.34375L12 12.1722L14.8284 9.34375L16.2426 10.758L12 15.0006Z',
+  'time-line': 'M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM13 12H17V14H11V7H13V12Z',
   'add-line': 'M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z',
   'sun-line': 'M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM23 11V13H20V11H23ZM4 11V13H1V11H4Z',
   'moon-fill': 'M11.3807 2.01904C9.91573 3.38786 9 5.33708 9 7.50017C9 11.6423 12.3579 15.0002 16.5 15.0002C18.6631 15.0002 20.6123 14.0845 21.9811 12.6195C21.6613 17.8539 17.3149 22.0002 12 22.0002C6.47715 22.0002 2 17.523 2 12.0002C2 6.68532 6.14629 2.33887 11.3807 2.01904Z',
@@ -239,9 +241,11 @@ function renderSidebar() {
     (location.hash === '#' + item.id) || (!location.hash && item.id === PINNED_ID);
   const navCell = item => {
     const dotCls = item.ready ? '' : item.inProgress ? 'in-progress' : item.incomplete ? 'incomplete' : 'coming';
+    // sbMkBadgeText из badge.js: к моменту рендера сайдбара он загружен,
+    // навешивать guard не нужно.
     const badge = item.inProgress
-      ? '<span class="sb-badge sb-badge-alert">In Progress</span>'
-      : item.incomplete ? '<span class="sb-badge sb-badge-primary">Incomplete</span>' : '';
+      ? sbMkBadgeText({ label: 'In Progress', variant: 'alert' })
+      : item.incomplete ? sbMkBadgeText({ label: 'Incomplete' }) : '';
     return {
       role: 'item',
       label: item.label,

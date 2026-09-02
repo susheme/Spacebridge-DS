@@ -112,6 +112,17 @@ window.downloadSymbolBadgeZip = async function() {
   URL.revokeObjectURL(url);
 };
 
+/**
+ * sbMkBadgeText(opts) — текстовый бейдж.
+ *   label   — текст
+ *   variant — 'primary' (Default) | 'success' | 'error' | 'pending' | 'alert'
+ *   attrs   — сырые атрибуты потребителя
+ */
+window.sbMkBadgeText = function (opts = {}) {
+  const { label = '', variant = 'primary', attrs = '' } = opts;
+  return `<span class="sb-badge sb-badge-${variant}"${attrs ? ' ' + attrs : ''}>${label}</span>`;
+};
+
 // --- BADGE ---
 sbRegister({
   name: 'badge',
@@ -137,11 +148,11 @@ sbRegister({
         'Пять вариантов: Default, Active, Failed, Pending, Warning. Цвета — из alpha-токенов темы.'
       ),
       preview: `
-        <span class="sb-badge sb-badge-primary">Default</span>
-        <span class="sb-badge sb-badge-success">Active</span>
-        <span class="sb-badge sb-badge-error">Failed</span>
-        <span class="sb-badge sb-badge-pending">Pending</span>
-        <span class="sb-badge sb-badge-alert">Warning</span>`,
+        ${sbMkBadgeText({ label: 'Default' })}
+        ${sbMkBadgeText({ label: 'Active',  variant: 'success' })}
+        ${sbMkBadgeText({ label: 'Failed',  variant: 'error' })}
+        ${sbMkBadgeText({ label: 'Pending', variant: 'pending' })}
+        ${sbMkBadgeText({ label: 'Warning', variant: 'alert' })}`,
       html: `<span class="sb-badge sb-badge-primary">Default</span>
 <span class="sb-badge sb-badge-success">Active</span>
 <span class="sb-badge sb-badge-error">Failed</span>

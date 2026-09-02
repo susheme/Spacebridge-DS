@@ -364,6 +364,92 @@
       }
     }
   },
+  "Cards": {
+    "Dimensions": {
+      "card-min-width": {
+        "$type": "number",
+        "$value": 320,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:1919:6775",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      },
+      "card-max-width": {
+        "$type": "number",
+        "$value": 768,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13375",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      },
+      "card-max-height": {
+        "$type": "number",
+        "$value": 800,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13376",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      },
+      "card-min-height": {
+        "$type": "number",
+        "$value": 120,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13377",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      }
+    },
+    "Header": {
+      "header-min-width": {
+        "$type": "number",
+        "$value": 320,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13378",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      },
+      "header-max-width": {
+        "$type": "number",
+        "$value": 768,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13379",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      },
+      "header-max-height": {
+        "$type": "number",
+        "$value": 72,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13380",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      },
+      "header-min-height": {
+        "$type": "number",
+        "$value": 56,
+        "$extensions": {
+          "com.figma.variableId": "VariableID:2010:13381",
+          "com.figma.scopes": [
+            "ALL_SCOPES"
+          ]
+        }
+      }
+    }
+  },
   "Grid": {
     "tile-min-width": {
       "$type": "number",
@@ -380,16 +466,6 @@
       "$value": 96,
       "$extensions": {
         "com.figma.variableId": "VariableID:1919:6774",
-        "com.figma.scopes": [
-          "ALL_SCOPES"
-        ]
-      }
-    },
-    "card-min-width": {
-      "$type": "number",
-      "$value": 320,
-      "$extensions": {
-        "com.figma.variableId": "VariableID:1919:6775",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]

@@ -31,6 +31,18 @@
   gap: var(--gap-vert-s);
 }
 
+/* Head row: top-right С суб-слотом — «left + title» и правый слот в одном
+   ряду, корень остаётся колонкой (класс top-right переключил бы его в row
+   и вытеснил суб-слот). Топ-блок отдаёт ширину ряду, а не тянет 100%. */
+.sb-header-s-head {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+.sb-header-s-head > .sb-header-s-top { width: auto; flex: 1 1 auto; min-width: 0; }
+
 /* Top row: Left slot + Headline */
 .sb-header-s-top {
   display: flex;

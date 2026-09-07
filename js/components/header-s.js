@@ -28,6 +28,15 @@ window.COMP_CSS.headerS = `.sb-header-s {
   gap: var(--gap-vert-s);
 }
 
+.sb-header-s-head {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+.sb-header-s-head > .sb-header-s-top { width: auto; flex: 1 1 auto; min-width: 0; }
+
 .sb-header-s-top {
   display: flex;
   width: 100%;
@@ -135,7 +144,9 @@ window.COMP_CSS.headerS = `.sb-header-s {
     const hasMetaActs   = metaActions != null && metaActions !== false && metaActions !== '';
     const hasTabs       = tabs        != null && tabs        !== false && tabs        !== '';
     const hasMeta       = (hasMetaInfo || hasMetaActs) && !topRight;
-    const showTabs      = hasTabs && !topRight;
+    // top-right суб-слот больше не гасит: с tabs строка «left + title +
+    // right» уходит в свой ряд (head), корень остаётся колонкой.
+    const showTabs      = hasTabs;
 
     const left = hasLeft ? `<div class="sb-header-s-left">${slotLeft}</div>` : '';
     const titleEl = title ? `<span class="sb-header-s-title sb-h7">${title}</span>` : '';
@@ -150,6 +161,14 @@ window.COMP_CSS.headerS = `.sb-header-s {
     }
 
     const tabsBlock = showTabs ? `<div class="sb-header-s-tabs">${tabs}</div>` : '';
+
+    // top-right С суб-слотом: класс top-right не вешается (он переключил бы
+    // корень в row и вытеснил суб-слот) — вместо него head-ряд.
+    if (topRight && showTabs) {
+      return `<div class="sb-header-s">
+      <div class="sb-header-s-head">${topBlock}${rightBlock}</div>${tabsBlock}
+    </div>`;
+    }
 
     return `<div class="${cls}">
       ${topBlock}${rightBlock}${metaBlock}${tabsBlock}
@@ -368,8 +387,8 @@ window.COMP_CSS.headerS = `.sb-header-s {
       {
         title: sbT('Top right slot — inline (.top-right)', 'Правый верхний слот — inline (.top-right)'),
         desc: sbT(
-          'The .top-right modifier keeps the right slot on the same line as the headline: the root becomes a row, with the left block (the left slot and the headline) and the right slot pushed to opposite edges.',
-          'Модификатор .top-right оставляет правый слот в одной строке с заголовком: корень становится строкой, левый блок (левый слот и заголовок) и правый слот разводятся по краям.'
+          'The .top-right modifier keeps the right slot on the same line as the headline: the root becomes a row, with the left block (the left slot and the headline) and the right slot pushed to opposite edges. With the sub-nav slot the row moves into its own head block and the root stays a column (the Side Panel header).',
+          'Модификатор .top-right оставляет правый слот в одной строке с заголовком: корень становится строкой, левый блок (левый слот и заголовок) и правый слот разводятся по краям. С sub-nav слотом строка уходит в свой head-блок, корень остаётся колонкой (хедер Side Panel).'
         ),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);flex-shrink:0;width:368px">
           ${mkHeaderS({

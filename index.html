@@ -75,6 +75,7 @@
 <link rel="stylesheet" href="css/components/side-navigation.css">
 <link rel="stylesheet" href="css/components/placeholder.css">
 <link rel="stylesheet" href="css/components/cards.css">
+<link rel="stylesheet" href="css/components/side-panel.css">
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 </head>
@@ -131,6 +132,9 @@
 <!-- docs-i18n — sbT/sbDocNote для двуязычных описаний. ДО components/*:
      хелперы вызываются в конфигах sbRegister на этапе загрузки. -->
 <script src="js/docs-i18n.js"></script>
+<!-- updates — лента обновлений для колокольчика: данные + localStorage-хелперы,
+     без рендереров. Соседний докс-слой, зависимостей на компоненты нет. -->
+<script src="js/updates.js"></script>
 
 <!-- Components (порядок: сначала те, чей COMP_CSS-ключ используют другие —
      chevron и input перед selector/textarea/password) -->
@@ -244,11 +248,18 @@
      sbMkPropertyList, sbMkPopover, sbMkContextCard/Cell, sbMkActionBar,
      sbMkGrid, sbMkPlaceholder → должен грузиться ПОСЛЕ всех них. -->
 <script src="js/components/cards.js"></script>
+<!-- side-panel — панель ленты обновлений: демо собирает Header S, Search
+     Bar, Cards и Mark из status → ПОСЛЕ всех них. -->
+<script src="js/components/side-panel.js"></script>
 <!-- dialogues — архитектурный стаб (окно поверх Overlay; спека ожидается) -->
 <script src="js/components/dialogues.js"></script>
 <script src="js/components/getting-started.js"></script>
 
 <script src="js/init.js"></script>
+
+<!-- updates-ui — рендер ленты обновлений (панель + колокольчик). Пара к
+     js/updates.js; фабрики зовёт в рантайме, при загрузке ничего не рендерит. -->
+<script src="js/updates-ui.js"></script>
 
 <!-- Inject lang switcher в DS chrome right slot. После init.js потому что
      sbMkLangSwitcher экспортится из nav-bar.js (загружается выше). Switcher
@@ -262,6 +273,26 @@
   tmp.innerHTML = sbMkLangSwitcher({ selected: (localStorage.getItem('sb-lang') || 'en').toUpperCase() });
   var switcher = tmp.firstElementChild;
   right.insertBefore(switcher, right.firstChild);
+})();
+</script>
+
+<!-- Колокольчик обновлений. Первым в right slot — перед language switcher
+     (тот уже вставлен скриптом выше, поэтому insertBefore(firstChild) даёт
+     нужный порядок). Открытие side-панели подключится, когда появится сам
+     компонент панели (ждёт макет Figma); данные — js/updates.js. -->
+<script>
+(function(){
+  var right = document.getElementById('dsNavRight');
+  if (!right || typeof sbMkButton !== 'function') return;
+  var tmp = document.createElement('div');
+  // Есть непросмотренные обновления — колокольчик залит; MarkSeen при
+  // открытии панели вернёт line-версию (js/updates.js).
+  var unseen = typeof sbUpdatesHasUnseen === 'function' && sbUpdatesHasUnseen();
+  tmp.innerHTML = sbMkButton({
+    icon: unseen ? 'notification-3-fill' : 'notification-3-line',
+    attrs: ' id="updatesBellBtn" title="Updates" onclick="sbUpdatesOpen()"',
+  });
+  right.insertBefore(tmp.firstElementChild, right.firstChild);
 })();
 </script>
 

@@ -35,6 +35,16 @@
 .sb-tag.filled.tc-error { background: var(--error); }
 .sb-tag.filled.tc-warning { background: var(--warning); color: var(--background); }
 .sb-tag.filled.tc-alert { background: var(--alert); }
+/* Clickable: тег-кнопка (точечные переходы — теги компонентов в ленте
+   обновлений). Тень Hover-blue по ховеру, фокус-кольцо с клавиатуры.
+   border: none — сброс UA-стилей: кликабельный тег рендерится <button>. */
+.sb-tag.clickable { cursor: pointer; border: none; transition: var(--transition); }
+.sb-tag.clickable:hover {
+  box-shadow: 0 6px 10px -6px var(--primary-hover),
+              0 2px 8px 0 var(--primary-hover),
+              0 10px 20px 0 var(--primary-hover);
+}
+.sb-tag.clickable:focus-visible { outline: var(--border-width-2) solid var(--primary); outline-offset: 2px; }
 /* Show More */
 .sb-tag.more {
   padding: var(--pad-vert-2) var(--pad-horiz-8); gap: var(--gap-horiz-xs);

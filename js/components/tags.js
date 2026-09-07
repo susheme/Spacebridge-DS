@@ -22,6 +22,9 @@ window.COMP_CSS.tags = `.sb-tag {
 .sb-tag.filled.tc-error { background: var(--error); }
 .sb-tag.filled.tc-warning { background: var(--warning); color: var(--background); }
 .sb-tag.filled.tc-alert { background: var(--alert); }
+.sb-tag.clickable { cursor: pointer; border: none; transition: var(--transition); }
+.sb-tag.clickable:hover { box-shadow: 0 6px 10px -6px var(--primary-hover), 0 2px 8px 0 var(--primary-hover), 0 10px 20px 0 var(--primary-hover); }
+.sb-tag.clickable:focus-visible { outline: var(--border-width-2) solid var(--primary); outline-offset: 2px; }
 .sb-tag.more { padding: var(--pad-vert-2) var(--pad-horiz-8); gap: var(--gap-horiz-xs); border-radius: var(--radius-100); background: var(--primary-hover); color: var(--primary); }
 .sb-tag-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-horiz-xs); }
 .sb-tag-input-wrap { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-horiz-xs); padding: var(--pad-vert-8) 0; min-height: var(--status-text-max-height); cursor: text; border-bottom: var(--border-width-1-5) solid var(--border); background: transparent; transition: border-color 0.15s; }
@@ -52,7 +55,7 @@ window.COMP_CSS.tags = `.sb-tag {
   };
 
   function mkTag(opts = {}) {
-    const { mode = 'filled', text = 'Name', critical = false, removable = false, color = '' } = opts;
+    const { mode = 'filled', text = 'Name', critical = false, removable = false, color = '', onClick = '' } = opts;
     if (mode === 'placeholder') {
       return `<div class="sb-tag input-mode">
         <span class="sb-tag-caret"></span>
@@ -69,6 +72,14 @@ window.COMP_CSS.tags = `.sb-tag {
       return `<div class="sb-tag more">${text}</div>`;
     }
     const colorCls = color ? ` tc-${color}` : '';
+    // Clickable: тег-кнопка. С removable не сочетается — кнопка в кнопке
+    // невалидна; stopPropagation зашит: тег живёт внутри кликабельных
+    // контейнеров (карточка ленты), клик не должен всплывать к ним.
+    if (onClick) {
+      return `<button type="button" class="sb-tag filled clickable${colorCls}" onclick="event.stopPropagation();${onClick}">
+        <span class="sb-tag-label">${text}</span>
+      </button>`;
+    }
     return `<div class="sb-tag filled${removable ? ' removable' : ''}${colorCls}">
       <span class="sb-tag-label">${text}</span>
       ${removable ? `<button class="sb-tag-remove" title="Remove" onclick="sbTagRemove(this)">${CLOSE_ICON}</button>` : ''}
@@ -159,6 +170,18 @@ window.COMP_CSS.tags = `.sb-tag {
           ${mkTag({ mode: 'filled', text: 'Active', removable: true })}
           ${mkTag({ mode: 'more', text: '+3' })}` })}`,
         html: `<div class="sb-tag more">+3</div>`,
+        css: COMP_CSS.tags,
+      },
+      {
+        title: sbT('Clickable', 'Кликабельный'),
+        desc: sbT(
+          'A tag as a button — a point transition to an entity: the tags below lead to component pages. Hover adds the Hover-blue shadow, the keyboard focus draws a ring. The click does not bubble up to the container: the tag lives inside clickable cards. Does not combine with Removable.',
+          'Тег-кнопка — точечный переход к сущности: теги ниже ведут на страницы компонентов. Ховер добавляет тень Hover-blue, фокус с клавиатуры рисует кольцо. Клик не всплывает к контейнеру: тег живёт внутри кликабельных карточек. С Removable не сочетается.'
+        ),
+        preview: `${sbMkFlex({ gapX: 's', gapY: 's', align: 'center', wrap: true, content: `${mkTag({ text: 'Buttons', onClick: "location.hash='buttons'" })}
+          ${mkTag({ text: 'Badge', onClick: "location.hash='badge'" })}
+          ${mkTag({ text: 'Popover', onClick: "location.hash='popover'" })}` })}`,
+        html: `<!-- sbMkTag({ text: 'Buttons', onClick: "location.hash='buttons'" }) -->\n<button type="button" class="sb-tag filled clickable"\n  onclick="event.stopPropagation();location.hash='buttons'">\n  <span class="sb-tag-label">Buttons</span>\n</button>`,
         css: COMP_CSS.tags,
       },
       {

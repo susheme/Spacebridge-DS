@@ -185,6 +185,18 @@ window.sbMkBadgeStatus = function(opts) {
   return `<span class="sb-badge-status${mini ? ' mini' : ''} bs-${color}${cls ? ' ' + cls : ''}">${label}</span>`;
 };
 
+/**
+ * sbMkMark({ variant, sm, cls }) — вертикальная полоска-маркер.
+ *   variant — 'success' | 'error' | 'warning' | 'alert' | 'info' | 'neutral'
+ *   sm      — горизонтальный компакт 10×3 (Regular без sm — 3×40)
+ * Экспортируется для реюза консьюмерами — lead-слот Notification Card,
+ * строки Table.
+ */
+window.sbMkMark = function(opts) {
+  const { variant = 'neutral', sm = false, cls = '' } = opts || {};
+  return `<span class="sb-mark${sm ? ' sm' : ''} ${variant}${cls ? ' ' + cls : ''}"></span>`;
+};
+
 window.downloadAntennaZip = async function() {
   if (typeof JSZip === 'undefined') { alert('JSZip not loaded'); return; }
   const P_OUTER = `M6 6C7.57569 6 9.13602 6.31016 10.5918 6.91309C12.0477 7.51614 13.371 8.40035 14.4854 9.51465C15.5997 10.629 16.4839 11.9523 17.0869 13.4082C17.6898 14.864 18 16.4243 18 18H16C16 16.6868 15.7418 15.3861 15.2393 14.1729C14.7367 12.9596 13.9998 11.8573 13.0713 10.9287C12.1427 10.0002 11.0404 9.26329 9.82715 8.76074C8.61389 8.2582 7.31322 8 6 8V6Z`;

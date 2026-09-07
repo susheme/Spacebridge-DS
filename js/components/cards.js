@@ -24,7 +24,7 @@ window.COMP_CSS.cards = `.sb-card {
   gap: var(--gap-vert-0);
   background: var(--background);
   border: var(--border-width-1) solid transparent;
-  border-radius: var(--radius-16);
+  border-radius: var(--radius-8);
   box-shadow: 0 2px 8px 0 var(--shadow-overlay);
   transition: var(--transition);
 }
@@ -32,10 +32,11 @@ window.COMP_CSS.cards = `.sb-card {
 .sb-card.is-interactive { cursor: pointer; }
 .sb-card.is-interactive:hover, .sb-card.is-selected { border-color: var(--primary); box-shadow: 0 6px 10px -6px var(--primary-hover), 0 2px 8px 0 var(--primary-hover), 0 10px 20px 0 var(--primary-hover); }
 .sb-card.is-interactive:focus-visible { outline: var(--border-width-2) solid var(--primary); outline-offset: 2px; }
+.sb-card.bordered { border-color: var(--border-soft); box-shadow: none; }
 .sb-card.is-disabled { pointer-events: none; }
 .sb-card.is-disabled .sb-card-title, .sb-card.is-disabled .sb-card-subtitle, .sb-card.is-disabled .sb-card-text-title, .sb-card.is-disabled .sb-card-body { color: var(--border); }
 
-.sb-card-header { display: flex; justify-content: space-between; align-items: flex-start; align-self: stretch; box-sizing: border-box; min-height: var(--card-header-min-height); max-height: var(--card-header-max-height); padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8); border-radius: var(--radius-16) var(--radius-16) var(--radius-0) var(--radius-0); background: var(--background); min-width: 0; }
+.sb-card-header { display: flex; justify-content: space-between; align-items: flex-start; align-self: stretch; box-sizing: border-box; min-height: var(--card-header-min-height); max-height: var(--card-header-max-height); padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8); border-radius: var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0); background: var(--background); min-width: 0; }
 .sb-card-header-left { display: flex; align-items: center; gap: var(--gap-vert-s); min-height: 24px; max-height: 40px; max-width: var(--nav-menu-max-width-right-content); min-width: 0; }
 .sb-card-header-lead { display: inline-flex; align-items: center; flex-shrink: 0; }
 .sb-card-header-stack { display: inline-flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: var(--gap-horiz-xs); min-width: 0; }
@@ -47,13 +48,14 @@ window.COMP_CSS.cards = `.sb-card {
 .sb-card-body { display: flex; flex-direction: column; gap: var(--gap-vert-s); padding: var(--pad-vert-8) var(--pad-horiz-16) var(--pad-vert-0); min-width: 0; color: var(--text-tertiary); }
 .sb-card > .sb-card-body:first-child { padding-top: var(--pad-vert-16); }
 .sb-card-body.has-media { gap: var(--gap-vert-m); }
+.sb-card-body.is-alert { padding: var(--pad-vert-0) var(--pad-horiz-16); align-items: flex-start; }
 .sb-card:has(> .sb-action-bar) > .sb-card-body { padding-bottom: var(--pad-vert-8); }
 .sb-card:has(> .sb-action-bar) > .sb-card-body.is-list { padding-bottom: var(--pad-vert-16); }
 .sb-card-text { display: flex; flex-direction: column; gap: var(--gap-vert-s); align-self: stretch; min-width: 0; }
 .sb-card-text-stack { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: var(--gap-horiz-s); align-self: stretch; min-width: 0; }
 .sb-card-text-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; color: var(--text-tertiary); padding-block: 4px; margin-block: -4px; }
 
-.sb-card > .sb-action-bar:last-child { border-radius: var(--radius-0) var(--radius-0) var(--radius-16) var(--radius-16); }
+.sb-card > .sb-action-bar:last-child { border-radius: var(--radius-0) var(--radius-0) var(--radius-8) var(--radius-8); }
 
 .sb-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--gap-horiz-m); padding: var(--pad-vert-8) var(--pad-horiz-16); min-width: 0; border-top: var(--border-width-1) solid var(--border); }
 
@@ -74,6 +76,7 @@ window.COMP_CSS.cards = `.sb-card {
    *   actionBar — готовый sbMkActionBar; встаёт прямым ребёнком карточки,
    *               бордер и поля несёт сам
    *   interactive — вся плашка кликабельна (hover + focus-visible)
+   *   border — рамка --border-soft вместо тени (плотные стопки карточек)
    *   selected / disabled — состояния
    *   width / maxWidth — раскладочные свойства для витрин
    *   bodyCls — доп. класс слота контента (is-stat у метрики)
@@ -82,11 +85,12 @@ window.COMP_CSS.cards = `.sb-card {
   function mkCard(opts = {}) {
     const { header = '', media = '', title = '', subtitle = '', body = '',
             footer = '', actionBar = '',
-            interactive = false, selected = false, disabled = false,
+            interactive = false, border = false, selected = false, disabled = false,
             width = '', maxWidth = '', bodyCls = '', cls = '', attrs = '' } = opts;
 
     let c = 'sb-card';
     if (media)       c += ' has-media';
+    if (border)      c += ' bordered';
     if (interactive) c += ' is-interactive';
     if (selected)    c += ' is-selected';
     if (disabled)    c += ' is-disabled';
@@ -129,6 +133,8 @@ window.COMP_CSS.cards = `.sb-card {
    * Отдельным компонентом в NAV не выносится: вне карточки смысла не имеет.
    *   lead     — лид в левом слоте: иконка, аватар, статус-точка, чекбокс
    *   title    — заголовок, Headline H8 (Title Case ставит типографика DS)
+   *   titleCls — класс типографики заголовка вместо sb-h8
+   *              (Title M у Notification Card)
    *   subtitle — подпись под заголовком, Subscription
    *   content  — полная замена стека title/subtitle: слот наполняется как
    *              угодно (кэпшен метрики и т.п.)
@@ -139,7 +145,7 @@ window.COMP_CSS.cards = `.sb-card {
    */
   function mkCardHeader(opts = {}) {
     const { lead = '', title = '', subtitle = '', content = '', right = '',
-            cls = '', attrs = '' } = opts;
+            titleCls = 'sb-h8', cls = '', attrs = '' } = opts;
 
     let c = 'sb-card-header';
     if (cls) c += ' ' + cls;
@@ -148,7 +154,7 @@ window.COMP_CSS.cards = `.sb-card {
       ? content
       : (title || subtitle)
         ? `<span class="sb-card-header-stack">`
-          + (title ? `<span class="sb-card-title sb-h8">${title}</span>` : '')
+          + (title ? `<span class="sb-card-title ${titleCls}">${title}</span>` : '')
           + (subtitle ? `<span class="sb-card-subtitle sb-sub">${subtitle}</span>` : '')
           + `</span>`
         : '';
@@ -320,6 +326,7 @@ window.COMP_CSS.cards = `.sb-card {
         right: sbMkBadgeText({ label: 'Alert', variant: 'error' })
           + sbIcon('notification-3-line', 'M'),
       }),
+      bodyCls: 'is-alert',
       body: `<span class="sb-body-l" style="color:var(--text-secondary)">Please add your content here. Keep it short and simple <span style="color:var(--text-tertiary)">Jun 1, 2026</span></span>`,
     }),
   ]);
@@ -346,6 +353,54 @@ window.COMP_CSS.cards = `.sb-card {
     selectCard(false, false, 'Default', 'primary'),
     selectCard(true,  false, 'Default', 'primary'),
     selectCard(false, true,  'Unknown', 'pending'),
+  ]);
+
+  // ── Bordered Card ─────────────────────────────────────────────────────
+  // Рамка вместо тени. Вторая карточка — interactive: ховер красит рамку
+  // в primary, тень не включается.
+  const BORDERED = stage([
+    mkCard({
+      border: true,
+      header: mkCardHeader({
+        title: 'Headline',
+        subtitle: 'Subscription',
+        right: sbMkBadgeText({ label: 'Default' }),
+      }),
+      body: `<span class="sb-body-l">Please add your content here. Keep it short and simple.</span>`,
+    }),
+    mkCard({
+      border: true,
+      interactive: true,
+      header: mkCardHeader({
+        title: 'Headline',
+        subtitle: 'Subscription',
+        right: sbMkBadgeText({ label: 'Default' }),
+      }),
+      body: `<span class="sb-body-l">Please add your content here. Keep it short and simple.</span>`,
+    }),
+  ]);
+
+  // ── Notification Card ─────────────────────────────────────────────────
+  // Карточка ленты обновлений (спека 04.09): bordered-контейнер, шапка с
+  // Title M + датой + бейджем «New», слот is-alert, ряд ссылок на компоненты.
+  const NOTIFICATION = stage([
+    mkCard({
+      border: true,
+      interactive: true,
+      header: mkCardHeader({
+        lead: sbMkMark({ variant: 'success' }),
+        titleCls: 'sb-title-m',
+        title: 'New 1.14.0 Version Updates',
+        subtitle: 'September 3, 2026',
+        right: sbMkBadgeText({ label: 'New', variant: 'success' }),
+      }),
+      bodyCls: 'is-alert',
+      body: `<span class="sb-body-l">Discover the latest updates in our design system, featuring enhanced components and improved accessibility.</span>`
+        + sbMkFlex({ gapX: 's', gapY: 's', wrap: true, content:
+          sbMkButton({ label: 'Cards', variant: 'link', href: '#cards' })
+          + sbMkButton({ label: 'Table', variant: 'link', href: '#table' })
+          + sbMkButton({ label: 'Context Menu', variant: 'link', href: '#context-menu' }) }),
+    }),
   ]);
 
   // ── 5. List Card ──────────────────────────────────────────────────────
@@ -378,25 +433,25 @@ window.COMP_CSS.cards = `.sb-card {
       'Контейнер из трёх зон: шапка, слот контента и Action Bar. Шапка и Action Bar необязательны. Собственного контента у карточки нет — в слоты кладут компоненты DS. Пять типов — Default Content, Stat and Metrics, Alert, Selectable и List — композиции слотов, а не отдельные классы.'
     ) + sbDocNote('Tech Info', sbT(
       '<b>Container:</b>'
-      + '<ul><li>Background: background;</li><li>Radius: 16;</li><li>Shadow: Shadow-S (0 2 8 shadow-overlay);</li><li>Gap between slots: 0 — the rhythm comes from the slot paddings;</li><li>Bottom padding 16 when the footer and Action Bar are absent;</li><li>min-width: 0 — the card is a grid child.</li></ul>'
+      + '<ul><li>Background: background;</li><li>Radius: 8;</li><li>Shadow: Shadow-S (0 2 8 shadow-overlay);</li><li>Gap between slots: 0 — the rhythm comes from the slot paddings;</li><li>Bottom padding 16 when the footer and Action Bar are absent;</li><li>min-width: 0 — the card is a grid child.</li></ul>'
       + '<b>Header:</b>'
-      + '<ul><li>Height: card-header-min-height to card-header-max-height;</li><li>Padding: 16/16/8;</li><li>Radius: 16 16 0 0;</li><li>Slots: left and right, split by space-between;</li><li>Slot height: 24 to 40;</li><li>Slot gap: 8;</li><li>Left slot: lead + Headline H8 with Subscription; content replaces the stack;</li><li>Right slot: actions, aligned to the end;</li><li>Title color: text-tertiary; subtitle color: text-secondary;</li><li>The title and subtitle truncate with an ellipsis.</li></ul>'
+      + '<ul><li>Height: card-header-min-height to card-header-max-height;</li><li>Padding: 16/16/8;</li><li>Radius: 8 8 0 0;</li><li>Slots: left and right, split by space-between;</li><li>Slot height: 24 to 40;</li><li>Slot gap: 8;</li><li>Left slot: lead + Headline H8 with Subscription; content replaces the stack;</li><li>Right slot: actions, aligned to the end;</li><li>Title color: text-tertiary; subtitle color: text-secondary;</li><li>The title and subtitle truncate with an ellipsis.</li></ul>'
       + '<b>Slots:</b>'
-      + '<ul><li>Content slot: padding 8/16/0, gap 8, Body L in text-tertiary; the card adds 16 below, with Action Bar the slot adds 8;</li><li>Content slot as the first child: top padding 16;</li><li>Media: inside the content slot, 16px gap to the text block;</li><li>Content stack: Title L in text-tertiary + Subscription, gap 8, one-line truncation;</li><li>Stat slot: is-stat, padding 0/16/16, the card adds no bottom field, the value is H4 in text-primary;</li><li>List slot: is-list, with Action Bar the bottom padding is 16;</li><li>Action Bar: a direct child of the card, carries its own padding and border;</li><li>Footer: padding 8/16, top border.</li></ul>'
+      + '<ul><li>Content slot: padding 8/16/0, gap 8, Body L in text-tertiary; the card adds 16 below, with Action Bar the slot adds 8;</li><li>Content slot as the first child: top padding 16;</li><li>Media: inside the content slot, 16px gap to the text block;</li><li>Content stack: Title L in text-tertiary + Subscription, gap 8, one-line truncation;</li><li>Alert slot: is-alert, padding 0/16, the items pin to the start;</li><li>Stat slot: is-stat, padding 0/16/16, the card adds no bottom field, the value is H4 in text-primary;</li><li>List slot: is-list, with Action Bar the bottom padding is 16;</li><li>Action Bar: a direct child of the card, carries its own padding and border;</li><li>Footer: padding 8/16, top border.</li></ul>'
       + '<b>States:</b>'
-      + '<ul><li>is-interactive: the Selectable style on hover, focus ring on keyboard;</li><li>is-selected: primary border, Hover-blue shadow (three layers of primary-hover);</li><li>is-disabled: the header and content texts in the border color, no pointer events.</li></ul>'
+      + '<ul><li>is-interactive: the Selectable style on hover, focus ring on keyboard;</li><li>is-selected: primary border, Hover-blue shadow (three layers of primary-hover);</li><li>bordered: a border in the border-soft color, no shadow at rest; hover and selection use the Selectable style;</li><li>is-disabled: the header and content texts in the border color, no pointer events.</li></ul>'
       + '<b>Layout:</b>'
       + '<ul><li>Cards go into Grid System. The column minimum is card-min-width: 320 on wide screens, 280 on narrow.</li></ul>'
       + '<b>Reuse:</b>'
       + '<ul><li>The kebab menu is Popover + Context Menu;</li><li>Action Bar goes in through the actionBar slot.</li></ul>',
       '<b>Контейнер:</b>'
-      + '<ul><li>Фон: background;</li><li>Radius: 16;</li><li>Тень: Shadow-S (0 2 8 shadow-overlay);</li><li>Gap между слотами: 0 — ритм несут поля слотов;</li><li>Нижнее поле 16 при отсутствии футера и Action Bar;</li><li>min-width: 0 — карточка живёт ребёнком грида.</li></ul>'
+      + '<ul><li>Фон: background;</li><li>Radius: 8;</li><li>Тень: Shadow-S (0 2 8 shadow-overlay);</li><li>Gap между слотами: 0 — ритм несут поля слотов;</li><li>Нижнее поле 16 при отсутствии футера и Action Bar;</li><li>min-width: 0 — карточка живёт ребёнком грида.</li></ul>'
       + '<b>Шапка:</b>'
-      + '<ul><li>Высота: от card-header-min-height до card-header-max-height;</li><li>Padding: 16/16/8;</li><li>Radius: 16 16 0 0;</li><li>Слоты: левый и правый, разведены space-between;</li><li>Высота слота: от 24 до 40;</li><li>Gap слота: 8;</li><li>Левый слот: лид + Headline H8 с Subscription; content заменяет стек;</li><li>Правый слот: действия, прижаты к концу;</li><li>Цвет заголовка: text-tertiary; цвет подписи: text-secondary;</li><li>Заголовок и подпись сокращаются многоточием.</li></ul>'
+      + '<ul><li>Высота: от card-header-min-height до card-header-max-height;</li><li>Padding: 16/16/8;</li><li>Radius: 8 8 0 0;</li><li>Слоты: левый и правый, разведены space-between;</li><li>Высота слота: от 24 до 40;</li><li>Gap слота: 8;</li><li>Левый слот: лид + Headline H8 с Subscription; content заменяет стек;</li><li>Правый слот: действия, прижаты к концу;</li><li>Цвет заголовка: text-tertiary; цвет подписи: text-secondary;</li><li>Заголовок и подпись сокращаются многоточием.</li></ul>'
       + '<b>Слоты:</b>'
-      + '<ul><li>Слот контента: padding 8/16/0, gap 8, Body L цветом text-tertiary; снизу 16 несёт карточка, при Action Bar слот добирает 8;</li><li>Слот контента первым ребёнком: верхнее поле 16;</li><li>Медиа: внутри слота контента, gap 16 до текстового блока;</li><li>Стек контента: Title L цветом text-tertiary + Subscription, gap 8, трункейт в одну строку;</li><li>Слот метрики: is-stat, padding 0/16/16, карточка нижнего поля не добавляет, значение — H4 цветом text-primary;</li><li>Слот списков: is-list, при Action Bar нижнее поле 16;</li><li>Action Bar: прямой ребёнок карточки, поля и бордер несёт сам;</li><li>Footer: padding 8/16, верхняя граница.</li></ul>'
+      + '<ul><li>Слот контента: padding 8/16/0, gap 8, Body L цветом text-tertiary; снизу 16 несёт карточка, при Action Bar слот добирает 8;</li><li>Слот контента первым ребёнком: верхнее поле 16;</li><li>Медиа: внутри слота контента, gap 16 до текстового блока;</li><li>Стек контента: Title L цветом text-tertiary + Subscription, gap 8, трункейт в одну строку;</li><li>Слот уведомления: is-alert, padding 0/16, элементы прижаты к началу;</li><li>Слот метрики: is-stat, padding 0/16/16, карточка нижнего поля не добавляет, значение — H4 цветом text-primary;</li><li>Слот списков: is-list, при Action Bar нижнее поле 16;</li><li>Action Bar: прямой ребёнок карточки, поля и бордер несёт сам;</li><li>Footer: padding 8/16, верхняя граница.</li></ul>'
       + '<b>Состояния:</b>'
-      + '<ul><li>is-interactive: стиль Selectable на ховере, фокус-кольцо с клавиатуры;</li><li>is-selected: рамка primary, тень Hover-blue (три слоя primary-hover);</li><li>is-disabled: тексты шапки и контента цветом border, без pointer events.</li></ul>'
+      + '<ul><li>is-interactive: стиль Selectable на ховере, фокус-кольцо с клавиатуры;</li><li>is-selected: рамка primary, тень Hover-blue (три слоя primary-hover);</li><li>bordered: рамка цветом border-soft, в покое без тени; ховер и выбор — стиль Selectable;</li><li>is-disabled: тексты шапки и контента цветом border, без pointer events.</li></ul>'
       + '<b>Раскладка:</b>'
       + '<ul><li>Карточки кладут в Grid System. Минимум колонки — card-min-width: 320 на широких экранах, 280 на узких.</li></ul>'
       + '<b>Переиспользование:</b>'
@@ -487,7 +542,7 @@ window.COMP_CSS.cards = `.sb-card {
           'Имя, статус, данные и действия — подходит для железа. Шапка несёт Headline и справа Text Badge с уровнем и иконку уведомления. Контент — Body L цветом text-secondary; дата — вставка цветом text-tertiary.'
         ),
         preview: ALERTS,
-        html: `<!-- sbMkCard({ header: sbMkCardHeader({ title, right }), body }) -->
+        html: `<!-- sbMkCard({ header: sbMkCardHeader({ title, right }), bodyCls: 'is-alert', body }) -->
 <div class="sb-card">
   <div class="sb-card-header">
     <span class="sb-card-header-left">
@@ -499,7 +554,7 @@ window.COMP_CSS.cards = `.sb-card {
       <!-- sbMkBadgeText({ label: 'Alert', variant: 'error' }) + sbIcon('notification-3-line', 'M') -->
     </span>
   </div>
-  <div class="sb-card-body">
+  <div class="sb-card-body is-alert">
     <span class="sb-body-l" style="color:var(--text-secondary)">Please add your content here. Keep it short and simple <span style="color:var(--text-tertiary)">Jun 1, 2026</span></span>
   </div>
 </div>`,
@@ -524,6 +579,55 @@ window.COMP_CSS.cards = `.sb-card {
     <span class="sb-card-header-right"><!-- sbMkBadgeText({ label: 'Default' }) --></span>
   </div>
   <div class="sb-card-body"><span class="sb-body-l">Please add your content here.</span></div>
+</div>`,
+        css: COMP_CSS.cards,
+      },
+      {
+        title: sbT('Bordered Card', 'Карточка с рамкой'),
+        desc: sbT(
+          'A border instead of a shadow — for dense card stacks, where shadows blur together. The base border takes the border-soft color, the resting state carries no shadow. On an interactive card hover and selection use the Selectable style: a primary border and the Hover-blue shadow.',
+          'Рамка вместо тени — для плотных стопок карточек, где тени сливаются. Базовая рамка — цветом border-soft, в покое тени нет. У кликабельной карточки ховер и выбор — стиль Selectable: рамка primary и тень Hover-blue.'
+        ),
+        preview: BORDERED,
+        html: `<!-- sbMkCard({ border: true, header, body }) -->
+<div class="sb-card bordered">
+  <div class="sb-card-header"><!-- sbMkCardHeader({ title, subtitle, right }) --></div>
+  <div class="sb-card-body"><span class="sb-body-l">Please add your content here.</span></div>
+</div>
+
+<!-- sbMkCard({ border: true, interactive: true, header, body }) -->
+<div class="sb-card bordered is-interactive" role="button" tabindex="0">
+  <div class="sb-card-header"><!-- sbMkCardHeader({ title, subtitle, right }) --></div>
+  <div class="sb-card-body"><span class="sb-body-l">Please add your content here.</span></div>
+</div>`,
+        css: COMP_CSS.cards,
+      },
+      {
+        title: sbT('Notification Card', 'Карточка уведомления об обновлении'),
+        desc: sbT(
+          'A release announcement: a name, a date, a status badge and component links. Use to describe updates shortly. The container is the Bordered card; the header carries a Mark in the lead slot (an unread signal), a Title M headline, a Subscription date and a Text Badge; the content slot (is-alert) holds Body L text and a row of Link buttons. The buttons lead to component pages.',
+          'Анонс релиза: имя, дата, статус-бейдж и ссылки на компоненты. Служит короткому описанию обновлений. Контейнер — Bordered-карточка; шапка несёт Mark в лид-слоте (сигнал непрочитанного), заголовок Title M, дату Subscription и Text Badge; слот контента (is-alert) — текст Body L и ряд Link-кнопок. Кнопки ведут на страницы компонентов.'
+        ),
+        preview: NOTIFICATION,
+        html: `<!-- sbMkCard({ border: true, interactive: true,
+     header: sbMkCardHeader({ lead: sbMkMark({ variant: 'success' }), titleCls: 'sb-title-m', title, subtitle, right: sbMkBadgeText({ label: 'New', variant: 'success' }) }),
+     bodyCls: 'is-alert', body }) -->
+<div class="sb-card bordered is-interactive" role="button" tabindex="0">
+  <div class="sb-card-header">
+    <span class="sb-card-header-left">
+      <span class="sb-card-header-lead"><span class="sb-mark success"></span></span>
+      <span class="sb-card-header-stack">
+        <span class="sb-card-title sb-title-m">New 1.14.0 Version Updates</span>
+        <span class="sb-card-subtitle sb-sub">September 3, 2026</span>
+      </span>
+    </span>
+    <span class="sb-card-header-right"><span class="sb-badge sb-badge-success">New</span></span>
+  </div>
+  <div class="sb-card-body is-alert">
+    <span class="sb-body-l">Discover the latest updates in our design system.</span>
+    <!-- sbMkFlex({ gapX: 's', wrap: true, content: sbMkButton({ label, variant: 'link', href }) + ... }) -->
+    <div>${sbMkButton({ label: 'Cards', variant: 'link', href: '#cards' })} ${sbMkButton({ label: 'Table', variant: 'link', href: '#table' })}</div>
+  </div>
 </div>`,
         css: COMP_CSS.cards,
       },

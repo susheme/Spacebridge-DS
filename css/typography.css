@@ -53,7 +53,9 @@
 .sb-h1                                                       { font-weight: var(--font-weight-light); }
 .sb-h2, .sb-h3, .sb-h4, .sb-h5, .sb-h6, .sb-h7              { font-weight: var(--font-weight-black); }
 .sb-h8                                                       { font-weight: var(--font-weight-bold); }
-.sb-title-l, .sb-title-m                                     { font-weight: var(--font-weight-medium); }
+.sb-title-l                                                  { font-weight: var(--font-weight-medium); }
+/* Title M — SemiBold по Figma (Weight/600); Medium был ошибкой переноса. */
+.sb-title-m                                                  { font-weight: var(--font-weight-semibold); }
 .sb-title-s                                                  { font-weight: var(--font-weight-bold); }
 .sb-body-l, .sb-body-m, .sb-body-s, .sb-sub                  { font-weight: var(--font-weight-regular); }
 .sb-caption, .sb-link-l, .sb-link-m, .sb-link-s              { font-weight: var(--font-weight-medium); }

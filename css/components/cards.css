@@ -31,7 +31,7 @@
   /* Рамки у карточки нет — резерв под состояния, красящие border-color:
      без прозрачной базы габарит прыгает при появлении рамки. */
   border: var(--border-width-1) solid transparent;
-  border-radius: var(--radius-16);
+  border-radius: var(--radius-8);
   /* Shadow-S по спеке. */
   box-shadow: 0 2px 8px 0 var(--shadow-overlay);
   transition: var(--transition);
@@ -58,6 +58,11 @@
   outline: var(--border-width-2) solid var(--primary);
   outline-offset: 2px;
 }
+/* Bordered: рамка --border-soft вместо тени — для плотных стопок карточек,
+   где тени сливаются (лента обновлений). В покое тени нет; ховер и выбор —
+   штатный стиль is-interactive: рамка primary + тень Hover-blue (спека
+   ховера Notification Card 04.09). */
+.sb-card.bordered { border-color: var(--border-soft); box-shadow: none; }
 /* Disable: тексты шапки и контента цветом border (спека), без opacity.
    Серый бейдж и погашенный чекбокс ставит потребитель. */
 .sb-card.is-disabled { pointer-events: none; }
@@ -85,7 +90,7 @@
   min-height: var(--card-header-min-height);
   max-height: var(--card-header-max-height);
   padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8);
-  border-radius: var(--radius-16) var(--radius-16) var(--radius-0) var(--radius-0);
+  border-radius: var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);
   background: var(--background);
   min-width: 0;
 }
@@ -160,6 +165,11 @@
 /* Медиа внутри контент-слота: между медиа и текстом gap 16 (8 на телефоне),
    текстовый блок держит свой внутренний ритм 8. */
 .sb-card-body.has-media { gap: var(--gap-vert-m); }
+/* Alert: слот 0/16 — верхний ритм даёт нижнее поле шапки; элементы прижаты
+   к началу (спека Alert Card 04.09; фикс-ширина фрейма 342 не переносится —
+   карточка живёт в гриде). В Figma-экспорте имена pad-horiz/pad-vert
+   перепутаны местами, здесь — по конвенции DS. */
+.sb-card-body.is-alert { padding: var(--pad-vert-0) var(--pad-horiz-16); align-items: flex-start; }
 /* Карточка с Action Bar: слот добирает 8 снизу до бара (правки 01.09,
    медиа и без медиа одинаково). Слот списков — исключение: рама Framed
    не должна липнуть к бару, низ 16 (спека List Card). */
@@ -211,7 +221,7 @@
    углами ложится поверх скругления карточки — последний ребёнок повторяет
    её нижний радиус (симметрично шапке с её 16/16/0/0). */
 .sb-card > .sb-action-bar:last-child {
-  border-radius: var(--radius-0) var(--radius-0) var(--radius-16) var(--radius-16);
+  border-radius: var(--radius-0) var(--radius-0) var(--radius-8) var(--radius-8);
 }
 
 /* ── Stat-слот ───────────────────────────────────────────────────────── */

@@ -1,0 +1,17 @@
+# Tooltips
+
+> Tooltips — скелет; заметки заполняются по ходу работы.
+
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+**Факты из кода:**
+- Файлы: `js/components/tooltips.js` (257 строк) + `css/components/tooltips.css` (127 строк)
+- Load order: 22/53 в `index.html`
+- Deps: `status` (см. `js/_index.js`)
+- Используют его: никто
+- Public API: `sbMkTooltip`, `sbTipToggle`
+- COMP_CSS: `tooltips`
+<!-- GEN:END -->
+
+## Заметки
+
+—

@@ -1,0 +1,17 @@
+# Side Panel
+
+> Side Panel — скелет; заметки заполняются по ходу работы.
+
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+**Факты из кода:**
+- Файлы: `js/components/side-panel.js` (163 строк) + `css/components/side-panel.css` (69 строк)
+- Load order: 51/53 в `index.html`
+- Deps: `header-s`, `search-bar`, `buttons`, `cards`, `badge`, `status`, `grid-system` (см. `js/_index.js`)
+- Используют его: никто
+- Public API: `sbMkSidePanel`
+- COMP_CSS: `side-panel`
+<!-- GEN:END -->
+
+## Заметки
+
+—

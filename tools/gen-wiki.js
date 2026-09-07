@@ -144,7 +144,7 @@ var rows = COMPONENTS.map(function (c) {
   return '- [' + c.name + '.md](components/' + c.name + '.md) — ' + hook(c.name, title);
 });
 var idx = read(WIKI + 'INDEX.md');
-var GEN_RE = /<!-- GEN:COMPONENTS:BEGIN -->[\s\S]*?<!-- GEN:COMPONENTS:END -->/;
+var GEN_RE = /<!-- GEN:COMPONENTS:BEGIN[^>]*-->[\s\S]*?<!-- GEN:COMPONENTS:END -->/;
 if (!GEN_RE.test(idx)) {
   print('ОШИБКА: в INDEX.md нет маркеров GEN:COMPONENTS:BEGIN/END — секция не обновлена.');
 } else {

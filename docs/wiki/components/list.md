@@ -1,6 +1,6 @@
 # Standard List
 
-> Standard List — скелет; заметки заполняются по ходу работы.
+> Standard List (Profile/Info/Control); Property List — отдельная NAV-страница, но живёт в этом же файле.
 
 <!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
 **Факты из кода:**
@@ -15,4 +15,4 @@
 
 ## Заметки
 
-—
+`33f5bba` — List и Property List разделены на две NAV-страницы (файл общий). `df51bab` — тексты Property List переписаны как образец нового стиля документации.

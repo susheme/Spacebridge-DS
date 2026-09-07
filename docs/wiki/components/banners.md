@@ -1,6 +1,6 @@
 # Banners
 
-> Banners — скелет; заметки заполняются по ходу работы.
+> 4 типа (info/success/warning/error), left-marker 4px; sbDocNote рендерит именно Banner.
 
 <!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
 **Факты из кода:**
@@ -14,4 +14,4 @@
 
 ## Заметки
 
-—
+Типы по составу, тайтл-ссылка, генерик right-slot. `sbDocNote` (плашки Tech Info/Important в доках) рендерит наш Banner — разметка заинлайнена из-за load order. Подробная история — [infra/docs-i18n.md](../infra/docs-i18n.md).

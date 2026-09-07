@@ -9,22 +9,23 @@
 1. **Перед работой над компонентом** — открой его страницу в `components/` (если есть) и просмотри `patterns/`-заголовки ниже: вероятная грабля уже описана.
 2. **После работы** — обнови затронутую страницу: новые решения, новые грабли, статус. Нет страницы — создай по образцу соседней.
 3. Страницы — компактные: факты и решения, без пересказа кода. Ссылки между страницами — обычные относительные md-ссылки.
-4. Обновление индекса: новая страница вне components/ = одна строка в списке ниже; components-список собирается генератором.
-5. **Скелеты компонентов** — `jsc tools/gen-wiki.js` пересобирает GEN-блоки «фактов из кода» (файлы, load order, deps, API) во всех `components/*.md` и этот список. Ручной текст вне маркеров не трогает. Гонять после заметных правок компонентов.
+4. Знания, которые УЖЕ ведёт репо, в вики не дублируются, на них ссылаются: релизы — `CHANGELOG.md`, отложенное и известные баги — `BACKLOG.md`, история компонента — `git log --oneline --follow -- js/components/<name>.js`.
+5. Обновление индекса: новая страница вне components/ = одна строка в списке ниже; components-список собирается генератором.
+6. **Скелеты компонентов** — `jsc tools/gen-wiki.js` пересобирает GEN-блоки «фактов из кода» (файлы, load order, deps, API) во всех `components/*.md` и этот список. Ручной текст вне маркеров не трогает. Гонять после заметных правок компонентов.
 
 ## Components
 
 <!-- GEN:COMPONENTS:BEGIN — список собирает `jsc tools/gen-wiki.js`, руками не править -->
 - [chevron.md](components/chevron.md) — Chevron Button — скелет; заметки заполняются по ходу работы.
-- [grid-system.md](components/grid-system.md) — Grid System — скелет; заметки заполняются по ходу работы.
+- [grid-system.md](components/grid-system.md) — Примитивы раскладки: Flex, Flex Item, Grid (auto-fit + minmax), Page. 12-колоночной сетки нет намеренно.
 - [buttons.md](components/buttons.md) — Button — фабрика sbMkButton СДЕЛАНА 04.08.2026, ~150 мест мигрированы; догма Клементия закрыта полностью
 - [badge.md](components/badge.md) — Badge — скелет; заметки заполняются по ходу работы.
-- [banners.md](components/banners.md) — Banners — скелет; заметки заполняются по ходу работы.
-- [snackbar.md](components/snackbar.md) — Snackbar — скелет; заметки заполняются по ходу работы.
+- [banners.md](components/banners.md) — 4 типа (info/success/warning/error), left-marker 4px; sbDocNote рендерит именно Banner.
+- [snackbar.md](components/snackbar.md) — Инверс-плашка БЕЗ inverse-токенов: фон --text-tertiary + контент --surface-1 (трюк юзера).
 - [action-bar.md](components/action-bar.md) — Action Bar — скелет; заметки заполняются по ходу работы.
 - [popover.md](components/popover.md) — Spacebridge DS — Popover (примитив якорного позиционирования) готов 28.07.2026; раздел Pop-Ups переименован;…
 - [separators.md](components/separators.md) — Separators — скелет; заметки заполняются по ходу работы.
-- [avatar.md](components/avatar.md) — Avatar — скелет; заметки заполняются по ходу работы.
+- [avatar.md](components/avatar.md) — Единственный размер 32px; 24px-вариант для Table Cell отложен («посмотрим позже»).
 - [toggles.md](components/toggles.md) — Toggles — скелет; заметки заполняются по ходу работы.
 - [checkbox.md](components/checkbox.md) — Checkbox — скелет; заметки заполняются по ходу работы.
 - [radio.md](components/radio.md) — Radio — скелет; заметки заполняются по ходу работы.
@@ -36,17 +37,17 @@
 - [password.md](components/password.md) — Password Input — скелет; заметки заполняются по ходу работы.
 - [header-xs.md](components/header-xs.md) — Header XS — скелет; заметки заполняются по ходу работы.
 - [file-uploader.md](components/file-uploader.md) — File Uploader — ГОТОВ (done в NAV, июль 2026): дропзона, Upload Cell (Completed/Uploading/Failed), живой…
-- [tags.md](components/tags.md) — Tags — скелет; заметки заполняются по ходу работы.
+- [tags.md](components/tags.md) — Пилюли-теги; есть clickable-режим.
 - [status.md](components/status.md) — Status — скелет; заметки заполняются по ходу работы.
 - [tooltips.md](components/tooltips.md) — Tooltips — скелет; заметки заполняются по ходу работы.
 - [chips.md](components/chips.md) — Chips — скелет; заметки заполняются по ходу работы.
-- [toast.md](components/toast.md) — Toast — скелет; заметки заполняются по ходу работы.
+- [toast.md](components/toast.md) — Тосты + стек с Clear-чипсой.
 - [info-footer.md](components/info-footer.md) — Info Footer — скелет; заметки заполняются по ходу работы.
-- [list.md](components/list.md) — Standard List — скелет; заметки заполняются по ходу работы.
-- [property-list.md](components/property-list.md) — Property List — скелет; заметки заполняются по ходу работы.
-- [context-menu.md](components/context-menu.md) — Context Menu — скелет; заметки заполняются по ходу работы.
+- [list.md](components/list.md) — Standard List (Profile/Info/Control); Property List — отдельная NAV-страница, но живёт в этом же файле.
+- [property-list.md](components/property-list.md) — Property List — образец нового стиля текстов DS; живёт в list.js.
+- [context-menu.md](components/context-menu.md) — Контекстное меню (sbMkContextCard/Cell); нет danger-варианта ячейки — см. BACKLOG.md.
 - [table.md](components/table.md) — Spacebridge DS — компонент Table (хедеры, ячейки, состояния, footer, tool bar, пагинация, kebab). Готов,…
-- [section-header.md](components/section-header.md) — Header Section — скелет; заметки заполняются по ходу работы.
+- [section-header.md](components/section-header.md) — Заголовок секции со слотами; sticky-вариант сознательно НЕ вынесен в компонент — см. BACKLOG.md.
 - [selectors.md](components/selectors.md) — Selectors / Dropdowns — скелет; заметки заполняются по ходу работы.
 - [segment-menu.md](components/segment-menu.md) — Segment Menu — скелет; заметки заполняются по ходу работы.
 - [tabs.md](components/tabs.md) — Tabs — скелет; заметки заполняются по ходу работы.
@@ -54,33 +55,33 @@
 - [toc.md](components/toc.md) — Sticky Table of Contents — скелет; заметки заполняются по ходу работы.
 - [breadcrumbs.md](components/breadcrumbs.md) — Breadcrumbs — скелет; заметки заполняются по ходу работы.
 - [pagination.md](components/pagination.md) — Pagination — скелет; заметки заполняются по ходу работы.
-- [table-footer.md](components/table-footer.md) — Table Footer — скелет; заметки заполняются по ходу работы.
+- [table-footer.md](components/table-footer.md) — Pagination (центр) + «Selected: N» (право); page-size селектора нет — см. BACKLOG.md.
 - [header-s.md](components/header-s.md) — Header S — скелет; заметки заполняются по ходу работы.
 - [header-m.md](components/header-m.md) — Header M — скелет; заметки заполняются по ходу работы.
 - [header-l.md](components/header-l.md) — Header L — скелет; заметки заполняются по ходу работы.
 - [nav-bar.md](components/nav-bar.md) — Архитектура и решения по Nav Bar: container queries, slot-padding, hover-dropdown, search compact overlay,…
-- [tool-bar.md](components/tool-bar.md) — Tool Bar — скелет; заметки заполняются по ходу работы.
+- [tool-bar.md](components/tool-bar.md) — 3 слота, smart-collapse. ИЗВЕСТНЫЙ БАГ: compact-режим сломан в двух местах — детали в BACKLOG.md.
 - [led-panel.md](components/led-panel.md) — LED Panel — скелет; заметки заполняются по ходу работы.
 - [sub-nav.md](components/sub-nav.md) — Sub Nav — скелет; заметки заполняются по ходу работы.
 - [overlay.md](components/overlay.md) — Overlay — скелет; заметки заполняются по ходу работы.
 - [side-navigation.md](components/side-navigation.md) — Side Navigation в Spacebridge DS = два типа (Side Menu / Side Bar) в одном компоненте через variant
 - [placeholders.md](components/placeholders.md) — Placeholders — скелет; заметки заполняются по ходу работы.
 - [cards.md](components/cards.md) — Spacebridge DS Cards — 5 типов закоммичены (aa2d028, 01.09.2026), статус Incomplete; механика слотов, гочи,…
-- [side-panel.md](components/side-panel.md) — Side Panel — скелет; заметки заполняются по ходу работы.
+- [side-panel.md](components/side-panel.md) — Панель ленты обновлений (updates feed); демо: Header S + Search + Notification Card.
 - [dialogues.md](components/dialogues.md) — Dialogues — скелет; заметки заполняются по ходу работы.
 - [getting-started.md](components/getting-started.md) — Getting Started — скелет; заметки заполняются по ходу работы.
 <!-- GEN:COMPONENTS:END -->
 
 Вне генератора (файлы не в `js/components/`):
 
-- [updates.md](components/updates.md) — колокольчик обновлений (`js/updates.js` + `js/updates-ui.js`): лента + read/unread; панель ждёт Figma
+- [updates.md](components/updates.md) — колокольчик обновлений (`js/updates.js` + `js/updates-ui.js`): лента + read/unread; закоммичен вместе с Side Panel (c3fa218)
 
 ## Infra
 
 - [index-structure.md](infra/index-structure.md) — зоны index.html, SYNC-блоки, COMP_CSS, цветовые токены, гочи правок
 - [tokens-generator.md](infra/tokens-generator.md) — `jsc tools/gen-tokens.js`, три режима Figma → mobile-first, брейкпоинты 320/768/1280
 - [figma-tokens-immutable.md](infra/figma-tokens-immutable.md) — токены не правятся под нужды playground; обёртка вместо правки
-- [tests.md](infra/tests.md) — `jsc tests/run.js`, что ловят 19 проверок и чего принципиально не ловят
+- [tests.md](infra/tests.md) — `jsc tests/run.js`, что ловят 23 проверки и чего принципиально не ловят
 - [docs-i18n.md](infra/docs-i18n.md) — sbT(en,ru), sbDocNote, стиль-критерии, статус 39/40, FR отложен
 - [playground-wide-mode.md](infra/playground-wide-mode.md) — wide: true, фиксы ширины preview/controls
 - [playground-pg-toggles.md](infra/playground-pg-toggles.md) — единый .pg-toggles, auto-fill сетки, грабли minmax

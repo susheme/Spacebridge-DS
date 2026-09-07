@@ -34,6 +34,8 @@ window.COMP_CSS.buttons = `.sb-btn {
 }
 .sb-btn-secondary { background: var(--surface-1); color: var(--primary); border-color: transparent; }
 .sb-btn-text { background: transparent; color: var(--primary); border-color: transparent; min-width: unset; padding: 0 var(--pad-horiz-8); }
+.sb-btn-link { background: var(--background); color: var(--primary); border-color: transparent; height: var(--btn-rounded-max-height-s); min-height: var(--btn-rounded-min-height-s); max-height: var(--btn-rounded-max-height-s); min-width: unset; padding: 0; border-radius: var(--radius-2); font-size: var(--link-font-size-s); line-height: var(--link-line-height); font-weight: var(--font-weight-medium); text-decoration: underline; text-underline-position: from-font; }
+.sb-btn-link:hover, .sb-btn-link.is-hover { opacity: 0.8; }
 .sb-btn-mini {
   height: var(--btn-rounded-max-height-s);
   min-height: var(--btn-rounded-min-height-s);
@@ -76,6 +78,7 @@ function btnClass({ variant, size, critical, iconOnly, twoIcons, loading, cls })
   if (variant === 'primary')   c += critical ? ' sb-btn-critical' : ' sb-btn-primary';
   if (variant === 'secondary') c += critical ? ' sb-btn-secondary sb-btn-critical' : ' sb-btn-secondary';
   if (variant === 'text')      c += critical ? ' sb-btn-text sb-btn-critical' : ' sb-btn-text';
+  if (variant === 'link')      c += ' sb-btn-link';
   if (size === 's')            c += ' sb-btn-sm';
   if (size === 'mini')         c += ' sb-btn-mini';
   if (iconOnly)                c += twoIcons ? ' sb-btn-icon-2' : ' sb-btn-icon';
@@ -89,7 +92,9 @@ function btnClass({ variant, size, critical, iconOnly, twoIcons, loading, cls })
  *              iconOnly, disabled, loading, href, cls, attrs })
  *
  *  label      — текст кнопки. Пустой + есть icon → кнопка становится icon-only.
- *  variant    — 'primary' | 'secondary' | 'text'   (default 'secondary')
+ *  variant    — 'primary' | 'secondary' | 'text' | 'link'   (default 'secondary')
+ *               link — кнопка-ссылка Link S с underline; с critical и
+ *               size не сочетается, обычно рендерится с href
  *  size       — 'l' | 's' | 'mini'                 (default 'l')
  *  critical   — деструктивный акцент (Delete и пр.)
  *  icon       — имя из ICON_PATHS; слева от лейбла, либо единственная иконка
@@ -212,6 +217,7 @@ sbRegister({
           { value: 'primary',   label: 'Primary'   },
           { value: 'secondary', label: 'Secondary' },
           { value: 'text',      label: 'Text'      },
+          { value: 'link',      label: 'Link'      },
         ], { label: 'Variant' })}
         ${sbPgGroup('Modifiers', `
             <div class="pg-toggles">

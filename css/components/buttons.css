@@ -117,6 +117,31 @@
 .sb-btn-text.sb-btn-critical:hover,
 .sb-btn-text.sb-btn-critical.is-hover { background: transparent; border-color: var(--error); box-shadow: none; }
 
+/* ── Variant: Link ── кнопка-ссылка (спека 04.09): бокс Rounded-S 24px,
+   padding 0, radius 2, фон background; типографика Link S 14/500 c
+   underline. Line-height — общий Link 14: переменной Line-Hight-S=10 в
+   Figma-экспорте нет. Цвет «Color» в экспорте не зарезолвился — принят
+   --primary, как у .sb-link-*. Ховер — прозрачность 0.8 (решение 04.09).
+   С critical не сочетается. */
+.sb-btn-link {
+  background: var(--background);
+  color: var(--primary);
+  border-color: transparent;
+  height: var(--btn-rounded-max-height-s);
+  min-height: var(--btn-rounded-min-height-s);
+  max-height: var(--btn-rounded-max-height-s);
+  min-width: unset;
+  padding: 0;
+  border-radius: var(--radius-2);
+  font-size: var(--link-font-size-s);
+  line-height: var(--link-line-height);
+  font-weight: var(--font-weight-medium);
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+.sb-btn-link:hover,
+.sb-btn-link.is-hover { opacity: 0.8; }
+
 /* ── CRITICAL (Primary flavor) ── */
 .sb-btn-critical {
   background: var(--error);

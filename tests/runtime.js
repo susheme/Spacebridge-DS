@@ -295,7 +295,7 @@ suite('Целостность разметки', function () {
     // Канон: sb-btn → вариант → critical → размер → icon → loading → cls.
     var RANK = {
       'sb-btn': 0,
-      'sb-btn-primary': 1, 'sb-btn-secondary': 1, 'sb-btn-text': 1,
+      'sb-btn-primary': 1, 'sb-btn-secondary': 1, 'sb-btn-text': 1, 'sb-btn-link': 1,
       'sb-btn-critical': 2,
       'sb-btn-sm': 3, 'sb-btn-mini': 3,
       'sb-btn-icon': 4, 'sb-btn-icon-2': 4,

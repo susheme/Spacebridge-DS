@@ -152,7 +152,8 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
       ? (s.critical
           ? [{ label: 'Delete', critical: true }, { label: 'Cancel', variant: 'secondary' }]
           : [{ label: 'OK', variant: 'primary' }, { label: 'Cancel', variant: 'secondary' }])
-      : [{ label: 'OK', variant: 'primary' }];
+      // Critical-алерт: OK — Secondary (правило юзера, 09.09.2026)
+      : [{ label: 'OK', variant: s.critical ? 'secondary' : 'primary' }];
     return {
       type: s.type,
       symbol: s.symbol === 'none' ? false : s.symbol,
@@ -257,6 +258,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
             symbol: 'critLine',
             title: 'Upload failed',
             message: 'The file could not be uploaded.',
+            buttons: [{ label: 'OK', variant: 'secondary' }], // critical → OK Secondary
           })}
           ${mkDialogue({
             symbol: false,

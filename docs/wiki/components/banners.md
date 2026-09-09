@@ -15,3 +15,5 @@
 ## Заметки
 
 Типы по составу, тайтл-ссылка, генерик right-slot. `sbDocNote` (плашки Tech Info/Important в доках) рендерит наш Banner — разметка заинлайнена из-за load order. Подробная история — [infra/docs-i18n.md](../infra/docs-i18n.md).
+
+**09.09.2026:** статус в NAV: Incomplete → Done (ready+done, решение юзера).

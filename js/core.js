@@ -84,7 +84,7 @@ const NAV = [
     ]},
   ]},
   { category: 'Feedback', items: [
-    { id: 'banners', label: 'Banners', incomplete: true },
+    { id: 'banners', label: 'Banners', ready: true, done: true },
     { id: 'dialogues', label: 'Dialogues', inProgress: true },
     { id: 'loaders', label: 'Loaders' },
     { id: 'overlay', label: 'Overlay', ready: true, done: true },

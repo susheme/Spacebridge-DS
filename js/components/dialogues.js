@@ -4,9 +4,11 @@
 //  При правке стилей — обновить ОБА места (window.COMP_CSS и CSS-файл).
 //
 //  Окно-разговор: определяется контентом (символ / headline / message /
-//  экшены). Модальность — НЕ здесь: modal-режим = монтирование в примитив
-//  Overlay (sbMkOverlay + sbOverlayOpen). Пока вариант Alert по Figma-спеке;
-//  Confirm / Form — следующие заходы.
+//  экшены). Два типа с одной разметкой, но разным поведением:
+//    alert   — информирует, выбора нет: одна кнопка OK, «ничего не возвращает»
+//    confirm — просит решение: OK + Cancel, «возвращает» true/false (Esc = false)
+//  Модальность — НЕ здесь: modal-режим = монтирование в примитив Overlay.
+//  Готовые обёртки: sbShowAlert / sbShowConfirm (промисы). Form — следующий заход.
 // ═══════════════════════════════════════════════════════════════════════════
 
 window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: column; align-items: center; gap: var(--gap-vert-m); width: 320px; min-width: 296px; max-width: 320px; padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-0) var(--pad-horiz-16); box-sizing: border-box; border-radius: var(--radius-16); background: var(--background); box-shadow: 0 10px 20px 0 var(--shadow-overlay); }
@@ -22,13 +24,19 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
 // --- DIALOGUES ---
 (() => {
   /**
-   * sbMkDialogue(opts) — окно диалога (Alert).
+   * sbMkDialogue(opts) — окно диалога.
+   *   type    — 'alert' (default) | 'confirm'. Разметка общая, различие в
+   *             семантике: alert информирует (одна кнопка OK, role="alertdialog"),
+   *             confirm просит решение (OK + Cancel, role="dialog"). Политика
+   *             закрытия и «возвращаемое значение» — у модальных обёрток
+   *             sbShowAlert / sbShowConfirm ниже.
    *   symbol  — верхний символ: ключ SB_SVG ('warnLine', 'critLine', 'infoLine',
    *             'checkCircle'…), либо готовый html (img/иконка), либо false
    *   title   — headline (H7, --text-tertiary, по центру)
    *   message — описание (Body L, --text-secondary, по центру)
    *   buttons — экшены Action Bar'а: [{ label, variant, onClick, critical… }];
    *             рендерятся align center — одна кнопка = full-width, две = поровну.
+   *             Дефолт по типу: alert — [OK], confirm — [OK, Cancel].
    *             ПРАВИЛО: critical-кнопка без явного variant — Secondary
    *             (красный деструктив не должен быть главным CTA по умолчанию)
    *   check   — consent-чекбокс: { label, checked } | false;
@@ -37,17 +45,23 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
    *
    * Modal-режим — композиция с примитивом Overlay:
    *   sbMkOverlay({ content: sbMkDialogue({...}) }) + sbOverlayOpen(...)
+   * или готовые обёртки: sbShowAlert(opts) / sbShowConfirm(opts).
    */
   function mkDialogue(opts = {}) {
+    const type = opts.type === 'confirm' ? 'confirm' : 'alert';
     const {
       symbol = 'warnLine',
-      title = 'Changes are not saved',
-      message = 'All changes will be lost if you go back.',
+      title = type === 'confirm' ? 'Changes are not saved' : 'Operation completed',
+      message = type === 'confirm'
+        ? 'All changes will be lost if you go back.'
+        : 'The file has been uploaded.',
       check = false,
-      buttons = [
-        { label: 'Button', variant: 'primary' },
-        { label: 'Button', variant: 'secondary' },
-      ],
+      buttons = type === 'confirm'
+        ? [
+            { label: 'OK', variant: 'primary' },
+            { label: 'Cancel', variant: 'secondary' },
+          ]
+        : [{ label: 'OK', variant: 'primary' }],
     } = opts;
     const sym = !symbol ? ''
       : `<span class="sb-dialogue-symbol">${(typeof SB_SVG === 'object' && SB_SVG[symbol]) ? SB_SVG[symbol] : symbol}</span>`;
@@ -60,7 +74,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
       checked: !!check.checked,
       cls: 'sb-dialogue-check',
     }) : '';
-    return `<div class="sb-dialogue${symbol ? '' : ' no-symbol'}" role="alertdialog" aria-label="${title}">
+    return `<div class="sb-dialogue${symbol ? '' : ' no-symbol'}" role="${type === 'confirm' ? 'dialog' : 'alertdialog'}" aria-label="${title}">
       <div class="sb-dialogue-center">
         ${sym}
         <div class="sb-dialogue-title sb-h8">${title}</div>
@@ -72,6 +86,50 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
   }
   window.sbMkDialogue = mkDialogue;
 
+  // ── Модальные обёртки: семантика alert() / confirm(), но асинхронная ──
+  // Браузерные alert/confirm блокируют ПОТОК; здесь блокируется только
+  // интерфейс (скрим + scroll lock + focus trap из Overlay), а «возвращаемое
+  // значение» приезжает промисом:
+  //   sbShowAlert(opts)   → Promise<undefined> — цель проинформировать, не
+  //                         получить ответ; закрывается только кнопкой OK
+  //   sbShowConfirm(opts) → Promise<boolean> — true если OK, false если
+  //                         Cancel или Esc; готово для if:
+  //                         if (await sbShowConfirm({ title: '…' })) { … }
+  // Кнопки ожидаются 1–2: [0] — подтверждение, [1] — отмена.
+  function showModal(opts, isConfirm) {
+    return new Promise((resolve) => {
+      const host = document.createElement('div');
+      // closeOnBackdrop/-Esc выключены: клик мимо — не ответ; Esc confirm'а
+      // обрабатываем сами, чтобы зарезолвить false, а не молча закрыть.
+      host.innerHTML = sbMkOverlay({
+        closeOnBackdrop: false,
+        closeOnEsc: false,
+        content: mkDialogue({ ...opts, type: isConfirm ? 'confirm' : 'alert' }),
+      });
+      const ov = host.firstElementChild;
+      document.body.appendChild(ov);
+      let settled = false;
+      const settle = (val) => {
+        if (settled) return;
+        settled = true;
+        document.removeEventListener('keydown', onKey, true);
+        sbOverlayClose(ov);
+        setTimeout(() => ov.remove(), 250); // после close-фейда Overlay (0.2s)
+        resolve(val);
+      };
+      const onKey = (e) => { if (isConfirm && e.key === 'Escape') settle(false); };
+      const btns = ov.querySelectorAll('.sb-action-bar .sb-btn');
+      if (btns[0]) btns[0].addEventListener('click', () => settle(isConfirm ? true : undefined));
+      if (btns[1]) btns[1].addEventListener('click', () => settle(false));
+      document.addEventListener('keydown', onKey, true);
+      sbOverlayOpen(ov);
+      // Confirm: дефолтный фокус — на безопасной кнопке (Cancel), не на OK.
+      if (isConfirm && btns[1]) btns[1].focus();
+    });
+  }
+  window.sbShowAlert = (opts) => showModal(opts || {}, false);
+  window.sbShowConfirm = (opts) => showModal(opts || {}, true);
+
   // sbDialogueToggleCheck снесён: тогл, клавиатура и aria приехали вместе
   // с нативным Checkbox (делегирование в checkbox.js).
   // Прочитать согласие: sbCheckboxChecked(dlg.querySelector('.sb-dialogue-check'))
@@ -80,16 +138,27 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
   // Playground state → опции mkDialogue. Вынесено, чтобы render и genCode
   // собирали ОДНО И ТО ЖЕ: превью и скопированный код не расходятся.
   function pgOpts(s) {
-    const buttons = s.critical
-      ? [{ label: 'Delete', critical: true }, { label: 'Cancel', variant: 'secondary' }]
-      : [{ label: 'Button', variant: 'primary' }, { label: 'Button', variant: 'secondary' }];
+    const confirm = s.type === 'confirm';
+    // Тексты и кнопки следуют типу: alert информирует (одна OK),
+    // confirm спрашивает (OK/Cancel; critical — деструктив по правилу Secondary).
+    const texts = confirm
+      ? (s.critical
+          ? { title: 'Delete this file?', message: 'This action cannot be undone.' }
+          : { title: 'Changes are not saved', message: 'All changes will be lost if you go back.' })
+      : (s.critical
+          ? { title: 'Upload failed', message: 'The file could not be uploaded.' }
+          : { title: 'Operation completed', message: 'The file has been uploaded.' });
+    const buttons = confirm
+      ? (s.critical
+          ? [{ label: 'Delete', critical: true }, { label: 'Cancel', variant: 'secondary' }]
+          : [{ label: 'OK', variant: 'primary' }, { label: 'Cancel', variant: 'secondary' }])
+      : [{ label: 'OK', variant: 'primary' }];
     return {
+      type: s.type,
       symbol: s.symbol === 'none' ? false : s.symbol,
-      title: s.critical ? 'Delete this file?' : 'Changes are not saved',
-      message: s.message
-        ? (s.critical ? 'This file will be removed permanently.' : 'All changes will be lost if you go back.')
-        : '',
-      buttons: s.second ? buttons : buttons.slice(0, 1),
+      title: texts.title,
+      message: s.message ? texts.message : '',
+      buttons,
       check: s.consent ? { label: 'Don’t ask again' } : false,
     };
   }
@@ -99,28 +168,40 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
     name: 'dialogues',
     title: 'Dialogues',
     description: sbT(
-      'A chat box prompts a question or request and waits for a response. Dialogues can include symbols, titles, messages, and actions. They vary in appearance: modal dialogues cover the screen with a dark background, while non-modal ones stand alone. Dialogues consist of a symbol at the top and button bars at the bottom. Currently, there are alert dialogues; confirm and form dialogues are upcoming.',
-      'Окно диалога задаёт вопрос или запрос и ждёт ответа. Диалог может включать символ, заголовок, сообщение и действия. Внешний вид различается: модальные диалоги закрывают экран тёмной подложкой, немодальные стоят сами по себе. Диалог состоит из символа сверху и панелей кнопок снизу. Сейчас доступны alert-диалоги; confirm- и form-диалоги — на подходе.'
+      'A chat box prompts a question or request and waits for a response. Dialogues can include symbols, titles, messages, and actions. They vary in appearance: modal dialogues cover the screen with a dark background, while non-modal ones stand alone. Dialogues consist of a symbol at the top and button bars at the bottom. Currently, there are alert and confirm dialogues; form dialogues are upcoming.',
+      'Окно диалога задаёт вопрос или запрос и ждёт ответа. Диалог может включать символ, заголовок, сообщение и действия. Внешний вид различается: модальные диалоги закрывают экран тёмной подложкой, немодальные стоят сами по себе. Диалог состоит из символа сверху и панелей кнопок снизу. Сейчас доступны alert- и confirm-диалоги; form-диалоги — на подходе.'
     ) + sbDocNote('Tech Info', sbT(
       '<b>Geometry (Alert):</b>'
       + '<ul><li>Width: 320px (min 296 / max 320);</li><li>Radius: 16; Shadow-L; --background fill;</li><li>Padding: 16/16/0/16 — the bottom belongs to the Action Bar; card gap 16, center slot gap 8;</li><li>No top symbol — the top padding grows to 24.</li></ul>'
       + '<b>Typography:</b>'
       + '<ul><li>Headline — H8, --text-tertiary, centered;</li><li>Message — Body L, --text-secondary, centered.</li></ul>'
       + '<b>Slots:</b>'
-      + '<ul><li>Top (optional) — a Symbol Badge, icon or image;</li><li>Footer — the Action Bar component, align center: one button goes full-width, two split evenly; its side padding is zeroed — the card provides the 16px inset;</li><li>Consent check (optional) — a Checkbox with a label at the left edge, always below the Action Bar and flush to it (0px);</li><li>A critical (red) button defaults to Secondary — a destructive action must not be the main CTA; an explicit variant overrides.</li></ul>',
+      + '<ul><li>Top (optional) — a Symbol Badge, icon or image;</li><li>Footer — the Action Bar component, align center: one button goes full-width, two split evenly; its side padding is zeroed — the card provides the 16px inset;</li><li>Consent check (optional) — a Checkbox with a label at the left edge, always below the Action Bar and flush to it (0px);</li><li>A critical (red) button defaults to Secondary — a destructive action must not be the main CTA; an explicit variant overrides.</li></ul>'
+      + '<b>Behaviour (alert vs confirm):</b>'
+      + '<ul><li>Alert informs and expects no answer: one OK button, role alertdialog; the modal version closes only via OK — Esc and the backdrop are off. sbShowAlert(opts) returns a Promise that resolves with nothing, like window.alert;</li><li>Confirm asks for a decision: OK and Cancel, role dialog; Esc equals Cancel. sbShowConfirm(opts) resolves with a boolean — true for OK, false for Cancel or Esc — ready for an if branch. The default focus lands on Cancel, the safe choice;</li><li>Both are modal through the Overlay primitive: the interface is blocked, the code is not — the answer arrives via the Promise.</li></ul>',
       '<b>Геометрия (Alert):</b>'
       + '<ul><li>Ширина: 320px (min 296 / max 320);</li><li>Radius: 16; Shadow-L; заливка --background;</li><li>Padding: 16/16/0/16 — низ отдан Action Bar\'у; gap карточки 16, центрального слота 8;</li><li>Без Very Top символа — верхний padding вырастает до 24.</li></ul>'
       + '<b>Типографика:</b>'
       + '<ul><li>Headline — H8, --text-tertiary, по центру;</li><li>Message — Body L, --text-secondary, по центру.</li></ul>'
       + '<b>Слоты:</b>'
       + '<ul><li>Верхний (опциональный) — Symbol Badge, иконка или картинка;</li><li>Футер — компонент Action Bar, align center: одна кнопка — во всю ширину, две — поровну; его боковой padding обнулён — отступ 16 даёт карточка;</li><li>Consent check (опциональный) — Checkbox с лейблом у левого края, всегда под Action Bar и вплотную к нему (0px);</li><li>Критическая (красная) кнопка по умолчанию Secondary — деструктив не должен быть главным CTA; явный variant побеждает.</li></ul>'
+      + '<b>Поведение (alert vs confirm):</b>'
+      + '<ul><li>Alert информирует и не ждёт ответа: одна кнопка OK, role alertdialog; модальная версия закрывается только по OK — Esc и подложка выключены. sbShowAlert(opts) возвращает промис без значения, как window.alert;</li><li>Confirm просит решение: OK и Cancel, role dialog; Esc равен Cancel. sbShowConfirm(opts) резолвится булевым — true при OK, false при Cancel или Esc — готово для if. Дефолтный фокус — на Cancel, безопасном выборе;</li><li>Оба модальны через примитив Overlay: блокируется интерфейс, а не код — ответ приезжает промисом.</li></ul>'
     )),
     playground: {
       title: 'Dialogues Playground',
       // Лейблы тоглов — одним словом: ячейка .pg-toggles узкая, режет длинные.
-      state: { symbol: 'warnLine', message: true, second: true, critical: false, consent: false },
+      // Кнопки не переключаются отдельно — их диктует тип (alert = OK,
+      // confirm = OK/Cancel; critical заменяет OK на деструктив).
+      state: { type: 'alert', symbol: 'warnLine', message: true, critical: false, consent: false },
       controls(pg) {
-        return sbPgGroup('Symbol', `
+        return sbPgGroup('Type', `
+          ${pg.select('type', [
+            { value: 'alert',   label: 'Alert' },
+            { value: 'confirm', label: 'Confirm' },
+          ])}
+          <div class="pg-toggles">${pg.toggle('critical', 'Critical')}</div>
+        `) + sbPgGroup('Symbol', `
           ${pg.select('symbol', [
             { value: 'warnLine',    label: 'Warning' },
             { value: 'critLine',    label: 'Critical' },
@@ -130,8 +211,6 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
           ])}
         `) + sbPgGroup('Content', `
           <div class="pg-toggles">${pg.toggle('message', 'Message')}${pg.toggle('consent', 'Consent')}</div>
-        `) + sbPgGroup('Actions', `
-          <div class="pg-toggles">${pg.toggle('second', 'Second')}${pg.toggle('critical', 'Critical')}</div>
         `);
       },
       render(s) {
@@ -140,6 +219,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
       genCode(s) {
         const o = pgOpts(s);
         const call = `sbMkDialogue({\n`
+          + `  type: '${o.type}',\n`
           + `  symbol: ${o.symbol ? `'${o.symbol}'` : 'false'},\n`
           + `  title: '${o.title}',\n`
           + (o.message ? `  message: '${o.message}',\n` : `  message: '',\n`)
@@ -151,7 +231,7 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
           + `})`;
         const html = `<!-- Собирается хелпером: -->\n${call}\n\n`
           + `<!-- Разметка: -->\n`
-          + `<div class="sb-dialogue${o.symbol ? '' : ' no-symbol'}" role="alertdialog">\n`
+          + `<div class="sb-dialogue${o.symbol ? '' : ' no-symbol'}" role="${o.type === 'confirm' ? 'dialog' : 'alertdialog'}">\n`
           + `  <div class="sb-dialogue-center">\n`
           + (o.symbol ? `    <span class="sb-dialogue-symbol"><!-- ${o.symbol} 24px --></span>\n` : '')
           + `    <div class="sb-dialogue-title sb-h8">${o.title}</div>\n`
@@ -165,20 +245,18 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
     },
     sections: [
       {
-        title: sbT('Alert — anatomy and variants', 'Alert — анатомия и варианты'),
+        title: sbT('Alert — informs', 'Alert — информирует'),
         desc: sbT(
-          'The specced Alert: a warning symbol, a headline, a message and two actions. Next to it — a critical flavour (critLine symbol plus a critical primary) and a symbol-less one with a single full-width button.',
-          'Alert по спеке: warning-символ, headline, message и два экшена. Рядом — критический вариант (символ critLine и critical primary) и вариант без символа с одной full-width кнопкой.'
+          'An alert reports a fact and expects no answer: a single OK button, no choice to make. The role is alertdialog; in the modal version Esc and the backdrop are off — the window closes only via its button. Variants: a success message, a critical one and a symbol-less one.',
+          'Alert сообщает факт и не ждёт ответа: одна кнопка OK, выбора нет. Роль — alertdialog; в модальной версии Esc и подложка выключены — окно закрывается только кнопкой. Варианты: успех, критический и без символа.'
         ),
-        preview: `${sbMkFlex({ gap: 'lg', align: 'start', wrap: true, attrs: ' style="padding:var(--pad-vert-24); background:var(--surface-1); border-radius:var(--radius-12)"', content: `${mkDialogue({})}
+        preview: `${sbMkFlex({ gap: 'lg', align: 'start', wrap: true, attrs: ' style="padding:var(--pad-vert-24); background:var(--surface-1); border-radius:var(--radius-12)"', content: `${mkDialogue({
+            symbol: 'checkCircle',
+          })}
           ${mkDialogue({
             symbol: 'critLine',
-            title: 'Delete the file?',
-            message: 'This action cannot be undone.',
-            buttons: [
-              { label: 'Delete', critical: true }, // без variant → Secondary (правило)
-              { label: 'Cancel', variant: 'secondary' },
-            ],
+            title: 'Upload failed',
+            message: 'The file could not be uploaded.',
           })}
           ${mkDialogue({
             symbol: false,
@@ -186,19 +264,58 @@ window.COMP_CSS.dialogues = `.sb-dialogue { display: flex; flex-direction: colum
             message: 'Please log in again to continue.',
             buttons: [{ label: 'Log In', variant: 'primary' }],
           })}` })}`,
-        html: `<div class="sb-dialogue" role="alertdialog" aria-label="Changes are not saved">
+        html: `<!-- Alert информирует — промис резолвится без значения, как window.alert -->
+sbShowAlert({ symbol: 'checkCircle', title: 'Operation completed', message: 'The file has been uploaded.' });
+
+<!-- Разметка (sbMkDialogue({ type: 'alert', ... })): -->
+<div class="sb-dialogue" role="alertdialog" aria-label="Operation completed">
   <div class="sb-dialogue-center">
-    <span class="sb-dialogue-symbol"><!-- Symbol Badge: warnLine 24×24 --></span>
-    <div class="sb-dialogue-title sb-h8">Changes are not saved</div>
-    <div class="sb-dialogue-message sb-body-l">All changes will be lost if you go back.</div>
+    <span class="sb-dialogue-symbol"><!-- Symbol Badge: checkCircle 24×24 --></span>
+    <div class="sb-dialogue-title sb-h8">Operation completed</div>
+    <div class="sb-dialogue-message sb-body-l">The file has been uploaded.</div>
   </div>
   <nav class="sb-action-bar align-center" aria-label="Actions">
-    ${sbMkButton({ label: 'Button', variant: 'primary' })}
-    ${sbMkButton({ label: 'Button' })}
+    ${sbMkButton({ label: 'OK', variant: 'primary' })}
   </nav>
-</div>
+</div>`,
+        css: COMP_CSS.dialogues,
+      },
+      {
+        title: sbT('Confirm — asks for a decision', 'Confirm — просит решение'),
+        desc: sbT(
+          'A confirm intercepts an action and waits for a decision: OK and Cancel, role dialog. sbShowConfirm resolves with a boolean — true for OK, false for Cancel or Esc — so the result drops straight into an if. The default focus lands on Cancel, the safe choice. A destructive confirmation follows the critical rule: the red button is Secondary, not the main CTA.',
+          'Confirm перехватывает действие и ждёт решения: OK и Cancel, роль dialog. sbShowConfirm резолвится булевым — true при OK, false при Cancel или Esc — результат сразу ложится в if. Дефолтный фокус — на Cancel, безопасном выборе. Деструктивное подтверждение следует critical-правилу: красная кнопка — Secondary, не главный CTA.'
+        ),
+        preview: `${sbMkFlex({ gap: 'lg', align: 'start', wrap: true, attrs: ' style="padding:var(--pad-vert-24); background:var(--surface-1); border-radius:var(--radius-12)"', content: `${mkDialogue({ type: 'confirm' })}
+          ${mkDialogue({
+            type: 'confirm',
+            symbol: 'critLine',
+            title: 'Delete the file?',
+            message: 'This action cannot be undone.',
+            buttons: [
+              { label: 'Delete', critical: true }, // без variant → Secondary (правило)
+              { label: 'Cancel', variant: 'secondary' },
+            ],
+          })}` })}`,
+        html: `<!-- Confirm возвращает решение: true — OK, false — Cancel или Esc -->
+if (await sbShowConfirm({ title: 'Do you want to continue?' })) {
+  // действие подтверждено
+} else {
+  // действие отменено
+}
 
-<!-- JS: sbMkDialogue({ symbol, title, message, buttons }) → html -->`,
+<!-- Деструктив: критическая кнопка остаётся Secondary -->
+sbShowConfirm({
+  symbol: 'critLine',
+  title: 'Delete the file?',
+  message: 'This action cannot be undone.',
+  buttons: [
+    { label: 'Delete', critical: true },
+    { label: 'Cancel', variant: 'secondary' },
+  ],
+})
+
+<!-- Разметка та же, что у Alert, но role="dialog" и две кнопки -->`,
         css: COMP_CSS.dialogues,
       },
       {
@@ -239,39 +356,27 @@ dlg.addEventListener('sb-checkbox:change', e => console.log(e.detail.checked));`
       {
         title: sbT('Modal — on the Overlay primitive', 'Modal — на примитиве Overlay'),
         desc: sbT(
-          'Modality is composition, not a prop of the window: the Dialogue mounts into the Overlay and gets the scrim, focus trap and the portal to body for free. For alerts both escape hatches are off (closeOnBackdrop / closeOnEsc: false) — an alert demands a decision, so it closes only via its buttons.',
-          'Модальность — композиция, а не свойство окна: Dialogue монтируется в Overlay и бесплатно получает скрим, focus trap и portal в body. Для алертов оба «запасных выхода» выключены (closeOnBackdrop / closeOnEsc: false) — алерт требует решения, закрывается только кнопками.'
+          'Modality is composition, not a prop of the window: the Dialogue mounts into the Overlay and gets the scrim, scroll lock, focus trap and the portal to body for free. The escape hatches follow the type: an alert closes only via OK, a confirm treats Esc as Cancel and resolves false. The buttons below call the real helpers — the snackbar reports what the confirm returned.',
+          'Модальность — композиция, а не свойство окна: Dialogue монтируется в Overlay и бесплатно получает скрим, scroll lock, focus trap и portal в body. «Запасные выходы» следуют типу: alert закрывается только по OK, confirm трактует Esc как Cancel и резолвит false. Кнопки ниже зовут настоящие хелперы — снэкбар показывает, что вернул confirm.'
         ),
-        preview: sbMkButton({ label: 'Open Alert', variant: 'primary', attrs: ` onclick="sbOverlayOpen('#sb-dialogue-modal-demo')"` }) + `
-          ${sbMkOverlay({
-            id: 'sb-dialogue-modal-demo',
-            closeOnBackdrop: false,
-            closeOnEsc: false,
-            content: mkDialogue({
-              buttons: [
-                { label: 'Stay', variant: 'primary', onClick: "sbOverlayClose(this.closest('.sb-overlay'))" },
-                { label: 'Leave', variant: 'secondary', onClick: "sbOverlayClose(this.closest('.sb-overlay'))" },
-              ],
-            }),
-          })}`,
-        html: `<!-- Модальный Alert = Dialogue внутри Overlay.
-     Алерт требует решения: запасные выходы выключены, закрытие только кнопками. -->
-sbMkOverlay({
-  id: 'my-alert',
-  closeOnBackdrop: false,
-  closeOnEsc: false,
-  content: sbMkDialogue({
-    title: 'Changes are not saved',
-    message: 'All changes will be lost if you go back.',
-    buttons: [
-      { label: 'Stay',  variant: 'primary',   onClick: "sbOverlayClose(this.closest('.sb-overlay'))" },
-      { label: 'Leave', variant: 'secondary', onClick: "sbOverlayClose(this.closest('.sb-overlay'))" },
-    ],
-  }),
-})
+        preview: `${sbMkFlex({ gap: 'm', align: 'center', content: sbMkButton({ label: 'Open Alert', variant: 'primary', attrs: ` onclick="sbShowAlert({ symbol: 'checkCircle' })"` })
+          + sbMkButton({ label: 'Open Confirm', variant: 'secondary', attrs: ` onclick="sbShowConfirm({ symbol: 'critLine', title: 'Delete the file?', message: 'This action cannot be undone.', buttons: [{ label: 'Delete', critical: true }, { label: 'Cancel', variant: 'secondary' }] }).then((ok) => sbShowSnackbar({ success: ok, text: ok ? 'Deleted' : 'Cancelled' }))"` }) })}`,
+        html: `// Alert: интерфейс заблокирован до OK; промис — без значения
+await sbShowAlert({ symbol: 'checkCircle', title: 'Operation completed', message: 'The file has been uploaded.' });
 
-// открытие: скрим + scroll lock + focus trap из примитива
-sbOverlayOpen('#my-alert');`,
+// Confirm: true — OK, false — Cancel или Esc
+const ok = await sbShowConfirm({
+  symbol: 'critLine',
+  title: 'Delete the file?',
+  message: 'This action cannot be undone.',
+  buttons: [{ label: 'Delete', critical: true }, { label: 'Cancel', variant: 'secondary' }],
+});
+sbShowSnackbar({ success: ok, text: ok ? 'Deleted' : 'Cancelled' });
+
+// Под капотом — та же композиция, доступная и вручную:
+sbMkOverlay({ id: 'my-dialogue', closeOnBackdrop: false, closeOnEsc: false,
+              content: sbMkDialogue({ type: 'confirm', ... }) })
+sbOverlayOpen('#my-dialogue'); // скрим + scroll lock + focus trap из примитива`,
         css: COMP_CSS.dialogues,
       },
     ],

@@ -68,7 +68,7 @@
 - [placeholders.md](components/placeholders.md) — Placeholders — скелет; заметки заполняются по ходу работы.
 - [cards.md](components/cards.md) — Spacebridge DS Cards — 5 типов закоммичены (aa2d028, 01.09.2026), статус Incomplete; механика слотов, гочи,…
 - [side-panel.md](components/side-panel.md) — Панель ленты обновлений (updates feed); демо: Header S + Search + Notification Card.
-- [dialogues.md](components/dialogues.md) — Dialogues — скелет; заметки заполняются по ходу работы.
+- [dialogues.md](components/dialogues.md) — Два типа с одной разметкой: alert информирует (OK, alertdialog, Esc выключен), confirm просит решение…
 - [getting-started.md](components/getting-started.md) — Getting Started — скелет; заметки заполняются по ходу работы.
 <!-- GEN:COMPONENTS:END -->
 

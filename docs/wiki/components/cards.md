@@ -2,7 +2,7 @@
 
 > Spacebridge DS Cards — 5 типов закоммичены (aa2d028, 01.09.2026), статус Incomplete; механика слотов, гочи, хвосты
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/cards.js` (663 строк) + `css/components/cards.css` (241 строк)
 - Load order: 50/53 в `index.html`

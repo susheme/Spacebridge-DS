@@ -2,7 +2,7 @@
 
 > Spacebridge DS — Popover (примитив якорного позиционирования) готов 28.07.2026; раздел Pop-Ups переименован; долг — миграция sbOverflowMenuToggle
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/popover.js` (461 строк) + `css/components/popover.css` (92 строк)
 - Load order: 10/53 в `index.html`

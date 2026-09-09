@@ -46,7 +46,7 @@
 - [list.md](components/list.md) — Standard List (Profile/Info/Control); Property List — отдельная NAV-страница, но живёт в этом же файле.
 - [property-list.md](components/property-list.md) — Property List — образец нового стиля текстов DS; живёт в list.js.
 - [context-menu.md](components/context-menu.md) — Контекстное меню (sbMkContextCard/Cell); нет danger-варианта ячейки — см. BACKLOG.md.
-- [table.md](components/table.md) — Spacebridge DS — компонент Table (хедеры, ячейки, состояния, footer, tool bar, пагинация, kebab). Готов,…
+- [table.md](components/table.md) — Spacebridge DS — компонент Table (хедеры, ячейки, состояния, footer, tool bar, пагинация, kebab). Статус:…
 - [section-header.md](components/section-header.md) — Заголовок секции со слотами; sticky-вариант сознательно НЕ вынесен в компонент — см. BACKLOG.md.
 - [selectors.md](components/selectors.md) — Selectors / Dropdowns — скелет; заметки заполняются по ходу работы.
 - [segment-menu.md](components/segment-menu.md) — Segment Menu — скелет; заметки заполняются по ходу работы.

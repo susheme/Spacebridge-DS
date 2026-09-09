@@ -2,7 +2,7 @@
 
 > Примитивы раскладки: Flex, Flex Item, Grid (auto-fit + minmax), Page. 12-колоночной сетки нет намеренно.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/grid-system.js` (455 строк) + `css/components/grid-system.css` (142 строк)
 - Load order: 2/53 в `index.html`

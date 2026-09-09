@@ -56,8 +56,8 @@ const NAV = [
     ]},
     { id: 'placeholders', label: 'Placeholders', ready: true },
     { id: 'status', label: 'Status', ready: true },
-    { id: 'table', label: 'Table', inProgress: true },
-    { id: 'table-footer', label: 'Table Footer', inProgress: true },
+    { id: 'table', label: 'Table', incomplete: true },
+    { id: 'table-footer', label: 'Table Footer', incomplete: true },
     { id: 'tags', label: 'Tags', ready: true },
   ]},
   { category: 'Forms', items: [

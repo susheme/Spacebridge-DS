@@ -2,7 +2,7 @@
 
 > Button — фабрика sbMkButton СДЕЛАНА 04.08.2026, ~150 мест мигрированы; догма Клементия закрыта полностью
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/buttons.js` (318 строк) + `css/components/buttons.css` (253 строк)
 - Load order: 3/53 в `index.html`

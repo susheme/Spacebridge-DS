@@ -2,7 +2,7 @@
 
 > Pagination (центр) + «Selected: N» (право); page-size селектора нет — см. BACKLOG.md.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/table-footer.js` (171 строк) + `css/components/table-footer.css` (37 строк)
 - Load order: 35/53 в `index.html`
@@ -15,3 +15,5 @@
 ## Заметки
 
 Временный компактный селектор «10 ▾» убран как уродский; нормальный page-size селектор (10/25/50/100) — отложен, см. `BACKLOG.md`.
+
+**09.09.2026:** статус в NAV: inProgress → Incomplete (решение юзера).

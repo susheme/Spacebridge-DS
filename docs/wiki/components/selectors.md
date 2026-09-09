@@ -2,7 +2,7 @@
 
 > Selectors / Dropdowns — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/selectors.js` (332 строк) — CSS-файла нет
 - Load order: 27/53 в `index.html`

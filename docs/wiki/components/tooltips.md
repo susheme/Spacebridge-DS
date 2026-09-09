@@ -2,7 +2,7 @@
 
 > Tooltips — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/tooltips.js` (257 строк) + `css/components/tooltips.css` (127 строк)
 - Load order: 22/53 в `index.html`

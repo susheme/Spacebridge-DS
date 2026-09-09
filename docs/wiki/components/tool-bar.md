@@ -2,7 +2,7 @@
 
 > 3 слота, smart-collapse. ИЗВЕСТНЫЙ БАГ: compact-режим сломан в двух местах — детали в BACKLOG.md.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/tool-bar.js` (584 строк) + `css/components/tool-bar.css` (173 строк)
 - Load order: 43/53 в `index.html`

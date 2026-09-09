@@ -2,7 +2,7 @@
 
 > Инверс-плашка БЕЗ inverse-токенов: фон --text-tertiary + контент --surface-1 (трюк юзера).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/snackbar.js` (237 строк) + `css/components/snackbar.css` (86 строк)
 - Load order: 6/53 в `index.html`

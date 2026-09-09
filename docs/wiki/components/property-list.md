@@ -2,7 +2,7 @@
 
 > Property List — образец нового стиля текстов DS; живёт в list.js.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/list.js` (1073 строк) + `css/components/list.css` (261 строк)
 - Файл общий с: `list`

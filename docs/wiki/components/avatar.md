@@ -2,7 +2,7 @@
 
 > Единственный размер 32px; 24px-вариант для Table Cell отложен («посмотрим позже»).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/avatar.js` (241 строк) + `css/components/avatar.css` (22 строк)
 - Load order: 12/53 в `index.html`

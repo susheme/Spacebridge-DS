@@ -1,8 +1,8 @@
 # Table
 
-> Spacebridge DS — компонент Table (хедеры, ячейки, состояния, footer, tool bar, пагинация, kebab). Готов, закоммичен.
+> Spacebridge DS — компонент Table (хедеры, ячейки, состояния, footer, tool bar, пагинация, kebab). Статус: Incomplete (09.09.2026, решение юзера; был inProgress).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/table.js` (829 строк) + `css/components/table.css` (202 строк)
 - Load order: 26/53 в `index.html`

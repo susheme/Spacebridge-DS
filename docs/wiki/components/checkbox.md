@@ -2,7 +2,7 @@
 
 > Checkbox — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/checkbox.js` (253 строк) + `css/components/checkbox.css` (72 строк)
 - Load order: 7/53 в `index.html`

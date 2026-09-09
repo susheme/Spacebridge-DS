@@ -2,7 +2,7 @@
 
 # Nav Bar — что это и зачем
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-07), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/nav-bar.js` (1203 строк) + `css/components/nav-bar.css` (321 строк)
 - Load order: 47/53 в `index.html`

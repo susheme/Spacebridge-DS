@@ -32,7 +32,7 @@
 - [counters.md](components/counters.md) — Counters — скелет; заметки заполняются по ходу работы.
 - [kbd.md](components/kbd.md) — Keyboard Shortcut — скелет; заметки заполняются по ходу работы.
 - [search-bar.md](components/search-bar.md) — В Search Bar опции iconLeft и rightSlot взаимоисключают .sb-search-btn. Используется для глобального поиска с…
-- [input.md](components/input.md) — Input — скелет; заметки заполняются по ходу работы.
+- [input.md](components/input.md) — Однострочное поле; фабрики sbMkTextField/sbMkField экспортированы (потребитель — Dialogues form).
 - [textarea.md](components/textarea.md) — Textarea — скелет; заметки заполняются по ходу работы.
 - [password.md](components/password.md) — Password Input — скелет; заметки заполняются по ходу работы.
 - [header-xs.md](components/header-xs.md) — Header XS — скелет; заметки заполняются по ходу работы.

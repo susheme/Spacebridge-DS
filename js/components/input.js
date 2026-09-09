@@ -65,8 +65,9 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
     if (disabled)  cls += ' disabled';
     if (readOnly)  cls += ' read-only';
     if (lineView)  cls += ' line-view';
+    // placeholder: true → демо-текст 'Placeholder'; строка → свой текст.
     const inputVal    = placeholder ? '' : value;
-    const inputPH     = placeholder ? 'Placeholder' : '';
+    const inputPH     = placeholder ? (typeof placeholder === 'string' ? placeholder : 'Placeholder') : '';
     const widthCls  = fieldMode ? 'sec-w100' : 'sec-narrow';
     const onInput     = `oninput="var b=this.closest('.sb-tf').querySelector('.sb-tf-clear');if(b)b.style.display=this.value.length?'flex':'none'"`;
     const clearBtn    = `<button class="sb-tf-clear" style="background:none;border:none;cursor:pointer;color:var(--text-secondary);display:none;padding:0;align-items:center" onclick="var i=this.closest('.sb-tf').querySelector('input');i.value='';i.dispatchEvent(new Event('input'));i.focus()">${CLEAR_ICON}</button>`;
@@ -100,6 +101,11 @@ window.COMP_CSS["input-field-wrap"] = `.sb-field { display: flex; flex-direction
       ${subEl}
     </div>`;
   }
+
+  // Экспорт фабрик (09.09.2026, для Dialogues type='form'/sbShowPrompt):
+  // потребители собирают поле фабрикой, а не копией разметки (Догма Клементия).
+  window.sbMkTextField = mkTf;
+  window.sbMkField = mkField;
 
   sbRegister({
     name: 'input',

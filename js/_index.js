@@ -62,7 +62,7 @@ window.SB_COMPONENTS = [
   { name: 'placeholders',  file: 'placeholder.js',    deps: [] },                    // заглушки изображений; собственная графика (allowlist INLINE_SVG_OK), зависимостей нет
   { name: 'cards',         file: 'cards.js',          deps: ['buttons', 'badge', 'status', 'counters', 'avatar', 'checkbox', 'tags', 'list', 'popover', 'context-menu', 'action-bar', 'grid-system', 'placeholders'] }, // контейнер-слоты; типы карточек = композиции, все примеры собраны фабриками DS; media-демо = sbMkPlaceholder
   { name: 'side-panel',    file: 'side-panel.js',     deps: ['header-s', 'search-bar', 'buttons', 'cards', 'badge', 'status', 'grid-system'] }, // панель ленты обновлений; демо: Header S + sbMkSearch + Notification Card (sbMkMark из status)
-  { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay', 'checkbox', 'buttons'] }, // Alert: SB_SVG символ + sbMkActionBar футер; consent = sbMkCheckbox; modal-демо = sbMkOverlay
+  { name: 'dialogues',     file: 'dialogues.js',      deps: ['badge', 'action-bar', 'overlay', 'checkbox', 'buttons', 'input'] }, // SB_SVG символ + sbMkActionBar футер; consent = sbMkCheckbox; form-поле = sbMkField/sbMkTextField (input) при регистрации; modal-демо зовёт sbShow* лениво
   { name: 'getting-started', file: 'getting-started.js', deps: ['buttons'] },                 // docs page, не playground
 ];
 

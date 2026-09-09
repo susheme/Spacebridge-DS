@@ -58,6 +58,10 @@
    форсим lowercase: иначе полегли бы акронимы (API, URL) и имена. */
 .sb-dialogue-check .sb-checkbox-label { white-space: normal; text-transform: none; }
 
+/* Поле form-диалога (prompt): на всю ширину карточки — flex-column
+   центрирует детей, без stretch поле схлопнулось бы до min-width. */
+.sb-dialogue-field { align-self: stretch; }
+
 /* Без Very Top символа заголовок ближе к краю — компенсируем: 24 сверху. */
 .sb-dialogue.no-symbol { padding-top: var(--pad-vert-24); }
 /* --- [/SYNC:dialogues] --- */

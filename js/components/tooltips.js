@@ -227,8 +227,8 @@ window.COMP_CSS.tooltips = `.sb-tooltip-wrap {
           </div>`;
       },
       render(s) {
-        // Запас по вертикали/горизонтали под absolute-bubble всех позиций.
-        return `<div style="display:flex;align-items:center;justify-content:center;padding:160px 200px">
+        // Фикс-высота окна 256px; горизонтальный запас под absolute-bubble left/right.
+        return `<div style="display:flex;align-items:center;justify-content:center;height:256px;box-sizing:border-box;padding:0 200px">
           ${sbMkTooltip({
             trigger: demoTrigger(),
             text: s.variant === 'line' ? 'Active' : DEMO_PARA,

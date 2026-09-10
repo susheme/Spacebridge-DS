@@ -1,0 +1,170 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:headerS] Header S --- */
+.sb-header-s {
+  display: flex;
+  width: 100%;
+  /* 320 — практический минимум: sub-nav слот внутри требует min-width 320,
+     меньше не имеет смысла (Tab Bar схлопывается). Override общего
+     --header-min-width (272) хардкодом, потому что отдельного токена для
+     Header S min-width в Figma JSON нет. */
+  min-width: 320px;
+  max-width: var(--header-s-max-width);
+  min-height: var(--header-s-min-height);
+  max-height: var(--header-s-max-height);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-0);
+  border-radius: var(--radius-16) var(--radius-16) 0 0;
+  background: var(--background);
+  /* Container queries — Header S может реагировать на свою ширину
+     для коллапса inline-actions в overflow-menu. */
+  container-type: inline-size;
+}
+
+/* Variant: Top right slot = true. Root становится row-flex с space-between,
+   правый слот рендерится в одной строке с Left slot + Headline. */
+.sb-header-s.top-right {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+
+/* Head row: top-right С суб-слотом — «left + title» и правый слот в одном
+   ряду, корень остаётся колонкой (класс top-right переключил бы его в row
+   и вытеснил суб-слот). Топ-блок отдаёт ширину ряду, а не тянет 100%. */
+.sb-header-s-head {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+.sb-header-s-head > .sb-header-s-top { width: auto; flex: 1 1 auto; min-width: 0; }
+
+/* Top row: Left slot + Headline */
+.sb-header-s-top {
+  display: flex;
+  width: 100%;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--header-s-row-height);
+  max-height: var(--header-s-row-height);
+  align-items: center;
+  gap: var(--gap-vert-s);
+  color: var(--text-tertiary);
+}
+
+.sb-header-s-left {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--gap-vert-s);
+}
+
+.sb-header-s-right {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-s);
+}
+
+/* Meta row: ADDITIONAL INFO (caption, left) + actions (status / icon-only buttons, right) */
+.sb-header-s-meta {
+  display: flex;
+  align-self: stretch;
+  max-width: var(--nav-menu-max-width-right-content);
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-s);
+}
+/* Когда в meta-row только actions (без caption) — толкаем их вправо. */
+.sb-header-s-meta:not(:has(.sb-header-s-meta-info)) {
+  justify-content: flex-end;
+}
+
+.sb-header-s-meta-info {
+  color: var(--text-secondary);
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* sb-caption line-height = 12px, но meta-row высотой 24 (по badge/button).
+     Бампаем до 24, чтобы CAPTION-текст визуально центрировался по той же оси. */
+  line-height: var(--headline-line-height-24);
+}
+
+.sb-header-s-meta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-vert-s);
+  flex-shrink: 0;
+}
+
+/* Overflow-menu trigger — generic behavior in context-menu.css/js. */
+.sb-header-s-more { flex-shrink: 0; }
+.sb-header-s-menu-extra { display: none; }
+
+/* Responsive: < 400px — мобильный сжатый режим, inline-actions
+   правого слота прячутся, всплывают в выпадающем меню под More. */
+@container (max-width: 400px) {
+  .sb-header-s-action     { display: none; }
+  .sb-header-s-menu-extra { display: flex; }
+}
+
+/* Tab Bar slot — опциональный нижний слот.
+   Когда он присутствует, padding-bottom у root становится 0 (flush с табами). */
+.sb-header-s:has(.sb-header-s-tabs) {
+  padding-bottom: var(--pad-horiz-0);
+}
+
+.sb-header-s-tabs {
+  display: flex;
+  width: 100%;
+  min-width: 320px;
+  /* max-width не задаём — слот всегда заполняет content area Header S.
+     Tab Bar внутри (width:100%) тоже фуллит. Иначе на широких Header S
+     слот capил по 700 и пилюля визуально «не доходила» до края. */
+  min-height: var(--tabs-min-height);
+  /* Spec: max-height 120px (--Tabs-Max-Height в Figma). У нас --tabs-max-height = 64
+     для standalone Tab Bar; здесь хардкод 120, согласовать с дизайнером. */
+  max-height: 120px;
+  /* Padding: vertical 16, horizontal 0 — Tab Bar внутри слота выравнивается
+     по горизонтали с title/meta content'ом (отступы 16 уже даёт root .sb-header-s). */
+  padding: var(--pad-vert-16) var(--pad-horiz-0);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+  background: var(--background);
+}
+/* В Header S sub-nav слоте Tab Bar должен заполнять Header S по ширине.
+   Базовый .sb-tab имеет max-width 256px (стандартный cap для standalone
+   Tab Bar в узких контекстах) — 3 таба capят пилюлю на 3×256=768px,
+   и при широком Header S справа остаётся пустота. Снимаем cap локально. */
+.sb-header-s-tabs .sb-tab { max-width: none; }
+
+.sb-header-s-title {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* sb-h7 даёт font-size 22 / line-height 16 по Figma-спеке Header S.
+     Дополнительный override не нужен. */
+}
+
+/* Popover уносит карточку меню порталом в <body>, где @container выше её уже
+   не достаёт — а зеркала так и остались бы скрытыми, и на узком хедере
+   действие пропало бы совсем (ни inline, ни в меню). Класс на панель вешает
+   sbHeaderSSyncMenu при открытии, померив хедер на месте. */
+.sb-header-s-narrow .sb-header-s-menu-extra {
+  display: flex;
+}
+/* --- [/SYNC:headerS] --- */

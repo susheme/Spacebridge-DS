@@ -1,0 +1,96 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:headerL] Header L --- */
+.sb-header-l {
+  display: flex;
+  width: 100%;
+  min-width: var(--header-min-width);
+  max-width: var(--header-max-width);
+  max-height: var(--header-max-height);
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-0) var(--radius-0) 0 0;
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+  background: var(--background);
+  /* Enables @container queries below — Header L reacts to its own width,
+     not the viewport, so it works correctly inside narrow side panels. */
+  container-type: inline-size;
+}
+
+.sb-header-l-left,
+.sb-header-l-right {
+  display: inline-flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--header-s-max-min-height);
+  max-height: var(--header-s-max-min-height);
+  align-items: center;
+  gap: var(--gap-vert-m);
+  color: var(--text-tertiary);
+}
+
+/* Left slot fills available space; min-width:0 lets the inner title
+   actually shrink past its content width (otherwise flexbox refuses). */
+.sb-header-l-left {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* Right slot is rigid — buttons/badges/caption never compress.
+   When the row gets tight, only the title shrinks/ellipsizes. */
+.sb-header-l-right {
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+
+/* Caption stays single-line. Without this, "ADDITIONAL INFO" wraps
+   to two rows once the right slot is squeezed. */
+.sb-header-l-right .sb-caption {
+  white-space: nowrap;
+}
+
+.sb-header-l-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Overflow-menu trigger ─────────────────────────────────────────── */
+/* The "..." (more-2-line) button + dropdown card. Wrapper carries both
+   .sb-header-l-more (component-scoped) and .sb-popover-wrap — positioning,
+   flip/shift, portal, click-outside and Esc live in the Popover primitive
+   (css/components/popover.css + js/components/popover.js). */
+.sb-header-l-more {
+  flex-shrink: 0;
+}
+
+/* Cells that mirror inline actions in the menu — hidden by default,
+   surfaced only at narrow widths via the @container rule below. */
+.sb-header-l-menu-extra {
+  display: none;
+}
+
+/* ── Responsive: < 768px container width ──────────────────────────── */
+@container (max-width: 768px) {
+  .sb-header-l-left,
+  .sb-header-l-right {
+    gap: var(--gap-vert-s);          /* 16 → 8 */
+  }
+  .sb-header-l-action {
+    display: none;                   /* hide inline action buttons */
+  }
+  .sb-header-l-menu-extra {
+    display: flex;                   /* surface them inside the menu */
+  }
+}
+
+/* Popover уносит карточку меню порталом в <body>, где @container выше её уже
+   не достаёт — а зеркала так и остались бы скрытыми, и на узком хедере
+   действие пропало бы совсем (ни inline, ни в меню). Класс на панель вешает
+   sbHeaderLSyncMenu при открытии, померив хедер на месте. */
+.sb-header-l-narrow .sb-header-l-menu-extra {
+  display: flex;
+}
+/* --- [/SYNC:headerL] --- */

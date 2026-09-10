@@ -1,0 +1,130 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:context-menu] Context Cell ---
+   Figma: 40px height, padding 8/8, gap 16, justify-content space-between.
+   Title M Bold (16/600/lh 12).
+   Right slot: hover-icon (configurable S, shown on :hover), check S (shown on .is-selected).
+   States: default, :hover/.is-hover, .is-selected, .is-disabled.
+   Modifier: .has-radius — 4px corner radius for standalone use. */
+.sb-ctx-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-vert-m);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-horiz-8) var(--pad-vert-8);
+  background: var(--background);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  user-select: none;
+}
+.sb-ctx-cell-icon-left {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+.sb-ctx-cell-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* sb-title-m sb-fw-semibold sets line-height 12 by Figma, but inside overflow:hidden
+     that clips descenders ("y","g","p"). Bump to 24 (= reserved label height
+     in the 40px cell after 8/8 padding) so glyphs render fully. */
+  line-height: var(--headline-line-height-24);
+}
+/* Right slot — fixed reserved 16×16 so layout doesn't shift across states */
+.sb-ctx-cell-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+}
+.sb-ctx-cell-icon-hover,
+.sb-ctx-cell-icon-check {
+  display: none;
+  align-items: center;
+}
+
+/* Hover (mouse :hover and explicit .is-hover) — only when not selected/disabled */
+.sb-ctx-cell:hover:not(.is-disabled):not(.is-selected),
+.sb-ctx-cell.is-hover:not(.is-disabled):not(.is-selected) { background: var(--surface-1); }
+.sb-ctx-cell:hover:not(.is-disabled):not(.is-selected) .sb-ctx-cell-icon-hover,
+.sb-ctx-cell.is-hover:not(.is-disabled):not(.is-selected) .sb-ctx-cell-icon-hover { display: inline-flex; }
+
+/* Selected — primary tint, check on right */
+.sb-ctx-cell.is-selected {
+  background: var(--primary-hover);
+  color: var(--primary);
+}
+.sb-ctx-cell.is-selected .sb-ctx-cell-icon-left { color: var(--primary); }
+.sb-ctx-cell.is-selected .sb-ctx-cell-icon-check { display: inline-flex; }
+
+/* Disabled */
+.sb-ctx-cell.is-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.sb-ctx-cell.is-disabled > * { opacity: 0.5; }
+
+/* Standalone — 4px radius for cells outside a flush layout */
+.sb-ctx-cell.has-radius { border-radius: var(--radius-4); }
+
+/* Action mode — cell behaves as a one-shot action button (Copy, Download…),
+   never enters the selected state. Hover background still applies; clicking
+   triggers the user's callback and (for cells inside Header L overflow)
+   closes the parent menu. The check-on-selected indicator is suppressed so
+   even an accidental .is-selected class won't render. */
+.sb-ctx-cell.is-action.is-selected {
+  background: var(--background);
+  color: var(--text-tertiary);
+}
+.sb-ctx-cell.is-action.is-selected .sb-ctx-cell-icon-left { color: var(--text-secondary); }
+.sb-ctx-cell.is-action .sb-ctx-cell-icon-check { display: none; }
+
+/* Context Card — wrapper for grouped cells (dropdown / pop-up).
+   Used by Header L overflow menu and standalone context cards.
+   Radius 12, padding 8/8, gap 8 between cells, soft shadow. */
+.sb-ctx-card {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  min-width: 160px;
+  background: var(--background);
+  border-radius: var(--radius-12);
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+}
+/* Cells inside a card have visible gaps around them — give each its own
+   4px corner radius (matches the .has-radius standalone modifier). */
+.sb-ctx-card > .sb-ctx-cell {
+  border-radius: var(--radius-4);
+}
+
+/* Блок .sb-overflow-menu удалён 28.07.2026 — позиционированием и анимацией
+   выпадающих карточек владеет примитив Popover (css/components/popover.css).
+   Карточка остаётся чистым контейнером: её кладут в слот, а координаты,
+   flip/shift, портал и появление даёт Popover. */
+
+/* Tip-modifier — маленький треугольник сверху-справа карточки, «указывает»
+   на триггер. Канонично для callout-меню над аватаром, kebab-кнопками,
+   tooltip'ами с действиями. Цвет триангла совпадает с фоном карточки,
+   шёва не видно. Right-offset 16px подобран под типичный 32-40px триггер
+   (треугольник попадает примерно в центр триггера). */
+.sb-ctx-card.with-tip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--background);
+}
+/* --- [/SYNC:context-menu] --- */

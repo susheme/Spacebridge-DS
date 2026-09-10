@@ -1,0 +1,73 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:selector] Selector / Dropdown --- */
+.sb-sel {
+  display: flex; align-items: center;
+  height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width);
+  border-radius: var(--radius-2); border: var(--border-width-1-5) solid var(--border);
+  background: var(--surface-1); overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+}
+.sb-sel-row .sb-sel { flex: 1; }
+.sb-sel-val {
+  flex: 1; padding: 0 var(--pad-horiz-8); min-width: 0;
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
+  color: var(--text-tertiary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sb-sel-right {
+  flex-shrink: 0; height: 100%; padding: var(--pad-vert-4) var(--pad-horiz-8);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--background);
+  border-left: var(--border-width-1-5) solid var(--border);
+  border-radius: 0 2px 2px 0;
+  transition: border-color 0.15s, background 0.15s;
+}
+/* Row wrapper: icon + sel + button */
+.sb-sel-row { display: flex; align-items: center; gap: var(--gap-horiz-s); width: 100%; max-width: var(--text-field-max-width); }
+.sb-sel-icon-left { flex-shrink: 0; display: flex; align-items: center; color: var(--primary); }
+.sb-sel-btn-add {
+  flex-shrink: 0; width: var(--btn-rounded-max-width-s); height: var(--btn-rounded-max-height-s); padding: var(--pad-horiz-2);
+  border-radius: var(--radius-4); background: var(--surface-1);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--primary);
+}
+/* States */
+.sb-sel.selected { background: var(--background); border-color: var(--primary); }
+.sb-sel.selected .sb-sel-right { border-left-color: var(--primary); background: var(--background); }
+.sb-sel.critical { background: var(--background); border-color: var(--error); }
+.sb-sel.critical .sb-sel-right { border-left-color: var(--error); background: var(--background); }
+.sb-sel.disabled { pointer-events: none; }
+.sb-sel.disabled .sb-sel-val { color: var(--border); }
+.sb-sel.disabled .sb-sel-right { background: var(--surface-1); }
+.sb-sel.disabled .sb-chevron { color: var(--border); }
+.sb-sel.placeholder .sb-sel-val { color: var(--text-secondary); }
+/* Disabled selector → disabled sibling add button */
+.sb-sel.disabled ~ .sb-sel-btn-add { pointer-events: none; color: var(--border); }
+/* Open state */
+.sb-sel.open { border-color: var(--primary); }
+.sb-sel.open .sb-sel-right { border-left-color: var(--primary); }
+.sb-sel.open .sb-chevron { transform: rotate(180deg); }
+/* Live dropdown — обёртка Popover'а вокруг поля (wrapCls: sb-sel-pop).
+   Примитив держит на .sb-popover-wrap inline-flex + flex-shrink: 0 (якорь в
+   тесном flex-ряду не должен схлопываться), а поле выбора наоборот тянется на
+   всю ширину. Компаунд-селектор, а не голый .sb-sel-pop — чтобы перебивать
+   примитив по specificity, а не по порядку загрузки файлов. */
+/* Габариты обёртки повторяют габариты поля (те же спековые токены). Иначе в
+   тесном контейнере обёртка схлопывается (width: 100% от нулевого родителя,
+   а min-width: auto в колоночном flex по горизонтали не работает), поле
+   выпирает из неё — и Popover считает позицию и matchWidth по нулевому якорю. */
+.sb-popover-wrap.sb-sel-pop {
+  display: flex;
+  min-width: var(--text-field-min-width);
+  max-width: var(--text-field-max-width);
+}
+.sb-sel-pop > .sb-sel { flex: 1 1 auto; }
+.sb-sel-row > .sb-sel-pop { flex: 1 1 auto; }
+/* Пока панель открыта, обёртка носит .is-open (контракт Popover) — поле
+   держит открытый вид: рамка primary и развёрнутый шеврон. */
+.sb-sel-pop.is-open .sb-sel { border-color: var(--primary); }
+.sb-sel-pop.is-open .sb-sel-right { border-left-color: var(--primary); }
+.sb-sel-pop.is-open .sb-chevron { transform: rotate(180deg); }
+/* --- [/SYNC:selector] --- */

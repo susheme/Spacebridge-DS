@@ -1,0 +1,86 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:search-bar] Search Bar --- */
+.sb-search {
+  display: flex; align-items: center;
+  height: var(--text-field-height-l); min-width: var(--text-field-min-width); max-width: var(--text-field-max-width);
+  border-radius: var(--radius-100);
+  border: var(--border-width-1-5) solid var(--border-soft);
+  background: var(--surface-1);
+  position: relative; overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+}
+.sb-search-input {
+  flex: 1; min-width: 0; height: 100%; border: none; outline: none;
+  background: transparent;
+  padding: 0 var(--pad-horiz-8) 0 16px;
+  font-size: var(--title-font-size-m); font-weight: var(--font-weight-regular); line-height: var(--body-line-height);
+  font-family: var(--font-body);
+  color: var(--text-primary);
+}
+.sb-search-input::placeholder { color: var(--text-secondary); }
+.sb-search-btn {
+  flex-shrink: 0; height: 100%; width: var(--btn-rounded-min-width);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-1);
+  border: none; border-left: var(--border-width-1-5) solid var(--border-soft);
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+/* Selected / Focus */
+.sb-search.selected,
+.sb-search:focus-within {
+  background: var(--background);
+  border-color: var(--primary);
+}
+.sb-search.selected .sb-search-btn,
+.sb-search:focus-within .sb-search-btn {
+  background: var(--background);
+  border-left-color: var(--primary);
+  color: var(--primary);
+}
+.sb-search.selected .sb-search-input,
+.sb-search:focus-within .sb-search-input { background: var(--background); }
+/* LineView */
+.sb-search.line-view {
+  background: transparent;
+  border: none; border-radius: 0;
+  border-bottom: var(--border-width-1-5) solid var(--border-soft);
+}
+.sb-search.line-view .sb-search-btn {
+  background: transparent; border-left: none;
+}
+.sb-search.line-view.selected,
+.sb-search.line-view:focus-within {
+  background: transparent;
+  border-bottom-color: var(--primary);
+}
+.sb-search.line-view.selected .sb-search-btn,
+.sb-search.line-view:focus-within .sb-search-btn {
+  background: transparent; color: var(--primary);
+}
+/* Disabled — паттерн как у Input/Password/Textarea/Selector: серый текст
+   --border, серый правый блок --surface-1, без opacity. */
+.sb-search.disabled { pointer-events: none; cursor: not-allowed; }
+.sb-search.disabled .sb-search-input,
+.sb-search.disabled .sb-search-input::placeholder { color: var(--border); }
+.sb-search.disabled .sb-search-btn { background: var(--surface-1); color: var(--border); }
+.sb-search.disabled .sb-search-icon-left { color: var(--border); }
+/* Critical */
+.sb-search.critical { border-color: var(--error); }
+.sb-search.critical .sb-search-btn { border-left-color: var(--error); color: var(--error); }
+/* Icon Left */
+.sb-search.icon-left .sb-search-input { padding-left: var(--pad-horiz-40); }
+.sb-search-icon-left {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--text-tertiary); display: flex; align-items: center; pointer-events: none;
+}
+/* Right slot — для KBS-подсказок, clear-кнопок и т.п.
+   Используется в icon-left варианте вместо .sb-search-btn. */
+.sb-search-right-slot {
+  flex-shrink: 0; display: flex; align-items: center;
+  padding: 0 var(--pad-vert-8) 0 var(--pad-vert-8);
+  color: var(--text-secondary);
+}
+/* --- [/SYNC:search-bar] --- */

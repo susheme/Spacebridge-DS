@@ -1,0 +1,78 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* Цветовые токены Spacebridge DS. Источник — js/tokens.js (COLOR_TOKENS).
+   Светлая тема — дефолт; тёмная включается атрибутом data-theme="dark"
+   на <html> (или любом контейнере). */
+
+:root,
+[data-theme="light"] {
+  /* Brand */
+  --primary: #017BFF;
+  --secondary: #295AA3;
+  --tertiary: #13273F;
+  /* Background */
+  --background: #FFFFFF;
+  --surface-1: #F5F6F7;
+  --surface-2: #E7EAEF;
+  /* Text */
+  --text-primary: #1F222C;
+  --text-secondary: #8798AD;
+  --text-muted: #556579;
+  --text-tertiary: #313D53;
+  /* Border */
+  --border: #BFC5D2;
+  --border-soft: #E7EBF1;
+  /* Status */
+  --error: #EF0C0F;
+  --warning: #FFC107;
+  --alert: #FF7300;
+  --success: #04C40C;
+  --info: #017BFF;
+  /* Hover */
+  --primary-hover: rgba(1,123,245,0.1);
+  --error-hover: rgba(239,11,16,0.1);
+  --success-hover: rgba(4,196,12,0.1);
+  --alert-hover: rgba(255,115,0,0.1);
+  --warning-hover: rgba(255,193,7,0.1);
+  /* Shadows */
+  --shadow-sm: rgba(0,0,0,0.08);
+  --shadow-md: rgba(0,0,0,0.16);
+  --shadow-lg: rgba(255,255,255,0.55);
+  --shadow-overlay: rgba(135,152,173,0.3);
+}
+
+[data-theme="dark"] {
+  /* Brand */
+  --primary: #0A84FF;
+  --secondary: #4A9EFF;
+  --tertiary: #1C3A5C;
+  /* Background */
+  --background: #0D1117;
+  --surface-1: #141C29;
+  --surface-2: #0F151E;
+  /* Text */
+  --text-primary: #F0F2F5;
+  --text-secondary: #8899AA;
+  --text-muted: #5A6B7F;
+  --text-tertiary: #6885AA;
+  /* Border */
+  --border: #2A3545;
+  --border-soft: #263141;
+  /* Status */
+  --error: #E5484D;
+  --warning: #FFC107;
+  --alert: #FF8B3E;
+  --success: #3FC241;
+  --info: #2B8FFF;
+  /* Hover */
+  --primary-hover: rgba(10,132,255,0.1);
+  --error-hover: rgba(229,72,77,0.05);
+  --success-hover: rgba(63,194,65,0.25);
+  --alert-hover: rgba(255,139,62,0.1);
+  --warning-hover: rgba(255,193,7,0.1);
+  /* Shadows */
+  --shadow-sm: rgba(20,28,41,0.25);
+  --shadow-md: rgba(20,28,41,0.5);
+  --shadow-lg: rgba(0,0,0,0.2);
+  --shadow-overlay: rgba(0,0,0,0.35);
+}

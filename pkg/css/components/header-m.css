@@ -1,0 +1,76 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:headerM] Header M --- */
+.sb-header-m {
+  display: flex;
+  width: 100%;
+  min-width: var(--header-min-width);
+  max-width: var(--header-max-width);
+  min-height: var(--header-min-height-m);
+  max-height: var(--header-max-height-m);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius-0);
+  background: var(--background);
+  /* Enables @container queries below — Header M reacts to its own width. */
+  container-type: inline-size;
+}
+/* divider — опциональный нижний бордер (separator). Toggled через sbMkHeaderM({divider:true}). */
+.sb-header-m.has-divider { border-bottom: var(--border-width-1) solid var(--border-soft); }
+
+.sb-header-m-left,
+.sb-header-m-right {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-height: var(--header-m-row-height);
+  max-height: var(--header-m-row-height);
+  align-items: center;
+  gap: var(--gap-vert-s);
+  color: var(--text-tertiary);
+}
+
+/* Same shrink-protection pattern as Header L — only the title compresses
+   under pressure; right slot's actions / badges stay rigid. */
+.sb-header-m-left {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.sb-header-m-right {
+  flex-shrink: 0;
+  justify-content: flex-end;
+}
+.sb-header-m-right .sb-caption {
+  white-space: nowrap;
+}
+
+.sb-header-m-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* sb-h6 даёт font-size 24 / line-height 24 по Figma-спеке Header M. */
+}
+
+/* Overflow-menu trigger — generic behavior in context-menu.css/js. */
+.sb-header-m-more { flex-shrink: 0; }
+.sb-header-m-menu-extra { display: none; }
+
+/* Responsive: when the Header M is narrower than 600 px, hide inline
+   actions and surface them inside the More dropdown. Header M lives in
+   tighter contexts (cards, modals) than Header L, so the breakpoint is
+   smaller. */
+@container (max-width: 600px) {
+  .sb-header-m-action     { display: none; }
+  .sb-header-m-menu-extra { display: flex; }
+}
+
+/* Popover уносит карточку меню порталом в <body>, где @container выше её уже
+   не достаёт — а зеркала так и остались бы скрытыми, и на узком хедере
+   действие пропало бы совсем (ни inline, ни в меню). Класс на панель вешает
+   sbHeaderMSyncMenu при открытии, померив хедер на месте. */
+.sb-header-m-narrow .sb-header-m-menu-extra {
+  display: flex;
+}
+/* --- [/SYNC:headerM] --- */

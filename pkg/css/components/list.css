@@ -1,0 +1,262 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:list] List ---
+   Figma: cell 40px height, surface-1 background, padding 8px, gap 8px.
+   Cell variants by position in list: single/top/inside/bottom — only border-radius differs.
+
+   Размеры — из группы List в Figma: --list-min-height-cell (40),
+   --list-cell-min-width-standard (80), --list-max-width-cell (980 / 1024 с
+   планшета). Раньше ширину задавали текстфилдовые токены — чужая шкала,
+   от которой список ездил вслед за полями ввода.
+
+   Высота — ФИКСИРОВАННАЯ height, хотя токен и называется min-height-cell.
+   Пробовали min-height — Profile Cell вырастал до 49 (аватар 32 + паддинги
+   16 + бордер 1) и ряды профильных списков разъезжались. Замер показал, что
+   в жёстких 40 аватар лежит спокойно: 3.5px сверху, 4.5px снизу, ничего не
+   клипается — он переполняет только content-box, а тот невидим. Нужен ряд,
+   растущий под контент, — это Property List с его min-height, не этот файл.
+
+   Gap 8 берётся из --gap-vert-s: это единственный gap-токен с плоской
+   восьмёркой, у --gap-horiz-s на мобиле 4. Имя оси врёт, значение верное. */
+.sb-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+}
+.sb-list-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  background: var(--surface-1);
+}
+.sb-list-cell.single { border-radius: var(--radius-8); }
+.sb-list-cell.top    { border-radius: var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0); }
+.sb-list-cell.inside { border-radius: var(--radius-0); }
+.sb-list-cell.bottom { border-radius: var(--radius-0) var(--radius-0) var(--radius-8) var(--radius-8); }
+.sb-list-cell-label {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* List-Standard — Profile cell (background + hairline divider) */
+.sb-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+}
+.sb-profile-cell-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  flex: 1;
+  min-width: 0;
+}
+.sb-profile-cell-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-xs);
+  flex: 1;
+  min-width: 0;
+}
+.sb-profile-cell-text .sb-title-s,
+.sb-profile-cell-text .sb-sub {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.sb-profile-cell-text .sb-title-s { color: var(--text-tertiary); }
+.sb-profile-cell-text .sb-sub     { color: var(--text-secondary); }
+.sb-profile-cell-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  flex-shrink: 0;
+  color: var(--border);
+}
+.sb-profile-cell:hover,
+.sb-profile-cell.is-hover { background: var(--surface-1); }
+.sb-profile-cell.is-disabled { cursor: not-allowed; pointer-events: none; }
+.sb-profile-cell.is-disabled > * { opacity: 0.5; }
+
+/* Standard List — Info cell (notifications, events, alarms — no divider) */
+.sb-info-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  width: 100%;
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+  height: var(--list-min-height-cell);
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  background: var(--background);
+  cursor: pointer;
+  user-select: none;
+}
+.sb-info-cell-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-xs);
+  flex: 1;
+  min-width: 0;
+}
+.sb-info-cell-title {
+  color: var(--text-tertiary);
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sb-info-cell-sub { color: var(--text-secondary); }
+.sb-info-cell:hover,
+.sb-info-cell.is-hover { background: var(--surface-1); }
+.sb-info-cell.is-selected {
+  background: var(--primary-hover);
+  border-bottom: var(--border-width-1) solid var(--primary-hover);
+}
+.sb-info-cell.is-disabled { cursor: not-allowed; pointer-events: none; }
+.sb-info-cell.is-disabled > * { opacity: 0.5; }
+/* Indicator subtype — narrower gap so the dot sits close to text */
+.sb-info-cell.has-indicator { gap: var(--gap-vert-s); }
+/* Mark subtype — absolutely positioned 2×38px bar inset 1px top/bottom on the left edge */
+.sb-info-cell.has-mark .sb-mark {
+  position: absolute;
+  top: var(--border-width-1);
+  bottom: var(--border-width-1);
+  left: var(--gap-horiz-0);
+  width: var(--border-width-2);
+  height: auto;
+}
+/* --- [/SYNC:list] --- */
+
+/* --- [SYNC:propertyList] Property List Cell ---
+   Ячейка «лейбл → значение» для карточек: два слота, слева иконка+текст,
+   справа произвольный контент (текст, статус, чипса, кнопка). Высота 40,
+   разделитель снизу. Геометрия по Figma-спеке Property List Cell-40. */
+.sb-prop-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+  /* Высота ФИКСИРОВАННАЯ — ряд всегда 40, чем бы ни набили слоты. Бейдж 28
+     и иконка 24 переполняют content-box (40 − 16 паддингов − 1 бордер = 23),
+     но лежат внутри ячейки и не клипаются: content-box невидим. Тот же
+     случай, что аватар 32 в ячейке Profile из List. */
+  height: var(--list-min-height-cell);
+  /* Оси Figma-экспорта развёрнуты в наши токены: 8 по вертикали, 0 по
+     горизонтали (в Figma эта переменная названа pad-horiz-8, но стоит она
+     в вертикальном поле — см. спеку). */
+  padding: var(--pad-vert-8) var(--pad-horiz-0);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+  background: var(--background);
+  box-sizing: border-box;
+}
+/* Head — одиночная ячейка вне списка: тот же контракт слотов, но линия
+   контрастнее, чтобы самостоятельный элемент не читался обрывком списка. */
+.sb-prop-cell.head { border-bottom-color: var(--border); }
+
+/* ── Левый слот ── лейбл забирает всё свободное место и жмётся с
+   многоточием: значение важнее, режется всегда подпись.
+   min-width:0 обязателен — без него ellipsis во вложенном флексе не
+   срабатывает вообще, слот распухает по контенту. */
+.sb-prop-cell-label {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-tertiary);
+}
+.sb-prop-cell-label .sb-icon-wrap { flex-shrink: 0; }
+.sb-prop-cell-label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Правый слот ── значение не режется и не переносится: за ним человек и
+   пришёл. flex-shrink: 0 — иначе слот ужимается, а при nowrap текст без
+   многоточия просто вылезает за край. Место уступает лейбл, он и жмётся. */
+.sb-prop-cell-value {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  flex: 0 0 auto;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+/* Цвет значения переопределяется модификатором — инлайн-стили запрещены. */
+.sb-prop-cell-value.pv-primary { color: var(--primary); }
+.sb-prop-cell-value.pv-success { color: var(--success); }
+.sb-prop-cell-value.pv-error   { color: var(--error); }
+.sb-prop-cell-value.pv-alert   { color: var(--alert); }
+.sb-prop-cell-value.pv-info    { color: var(--info); }
+.sb-prop-cell-value.pv-text    { color: var(--text-tertiary); }
+
+/* Типографика обоих слотов — Title M 16/600 по спеке. Line-height берём
+   body, а НЕ --title-line-height-s: у Title M в Figma своего line-height
+   нет, а S даёт 12px при шрифте 16 — на лейбле с overflow:hidden это
+   срезает хвосты у/g/p/q. Одинаковый line-height у лейбла и значения
+   держит их на общей базовой линии. */
+.sb-prop-cell-label-text,
+.sb-prop-cell-value {
+  font-size: var(--title-font-size-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--body-line-height);
+  letter-spacing: var(--letter-spacing);
+  /* Моноширинные цифры — ради них колонка значений и стоит ровно. */
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* ── Список ── просто колонка ячеек. Последней разделитель не нужен: его
+   роль играет край карточки. Красим в transparent, а не снимаем border —
+   иначе последняя ячейка стала бы на 1px ниже остальных. */
+.sb-prop-list {
+  display: flex;
+  flex-direction: column;
+  min-width: var(--list-cell-min-width-standard);
+  max-width: var(--list-max-width-cell);
+}
+.sb-prop-list > .sb-prop-cell:last-child { border-bottom-color: transparent; }
+
+/* Framed — список в раме (спека Property List Framed): поле 16, radius 8,
+   рамка border, фон surface-1. Ширину по-прежнему задаёт контейнер.
+   Ячейки в раме перекрашиваются под её фон каскадом — свой тип ячейки под
+   контекст размещения не заводится. */
+.sb-prop-list.is-framed {
+  box-sizing: border-box;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-8);
+  border: var(--border-width-1) solid var(--border);
+  background: var(--surface-1);
+}
+.sb-prop-list.is-framed > .sb-prop-cell { background: var(--surface-1); }
+/* --- [/SYNC:propertyList] --- */

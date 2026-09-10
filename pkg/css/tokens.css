@@ -1,0 +1,502 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* ═══════════════════════════════════════════
+   ZONE 1: FONTS & TOKENS
+
+   ЗНАЧЕНИЯ ТОКЕНОВ РУКАМИ НЕ ПРАВИТЬ.
+   Источник правды — `Figma Tokens/*.json`. Обновил экспорт из Figma:
+
+     jsc tools/gen-tokens.js
+
+   Генератор перепишет значения и блок адаптивных переопределений внизу
+   файла. Тесты (`jsc tests/run.js`) проверяют, что файл совпадает с Figma.
+
+   Правится руками только то, чего в Figma нет: шрифты, тени, transition —
+   генератор такие строки не трогает.
+   ═══════════════════════════════════════════ */
+
+/* --- Custom Fonts --- */
+/* Roboto — ЛОКАЛЬНО (variable woff2, wght 300..900 одним файлом на сабсет).
+   Раньше висел на Google Fonts CDN: без сети (а DS живёт и на file://)
+   фолбэк уходил в Helvetica, у которой нет SemiBold → браузер СИНТЕЗИРОВАЛ
+   600 и лейблы выглядели заметно жирнее, чем в Figma. Сабсеты: latin,
+   latin-ext, cyrillic, cyrillic-ext (доки двуязычные). Обновление —
+   перекачать с fonts.googleapis.com/css2?family=Roboto:wght@300..900. */
+/* Roboto — latin */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto-latin.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Roboto — latin-ext */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto-latin-ext.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Roboto — cyrillic */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto-cyrillic.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* Roboto — cyrillic-ext */
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/roboto-cyrillic-ext.woff2') format('woff2');
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* Roboto Mono — latin */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../fonts/roboto-mono-latin.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Roboto Mono — latin-ext */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../fonts/roboto-mono-latin-ext.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* Roboto Mono — cyrillic */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../fonts/roboto-mono-cyrillic.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* Roboto Mono — cyrillic-ext */
+@font-face {
+  font-family: 'Roboto Mono';
+  src: url('../fonts/roboto-mono-cyrillic-ext.woff2') format('woff2');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+
+@font-face {
+  font-family: 'SpaceBridge Classic';
+  src: url('../SpaceBridge-Classic.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Theme Tokens --- */
+:root {
+  /* ───────── FONT FAMILIES ───────── */
+  /* Figma Typography-DS: Font-Family, Font-Corporate */
+  --font-family: 'Roboto', sans-serif;
+  --font-corporate: 'SpaceBridge Classic', sans-serif;
+  /* Внутренние расширения — mono не из Figma */
+  --font-body: 'Roboto', sans-serif;
+  --font-brand: 'SpaceBridge Classic', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+
+  /* ───────── TYPOGRAPHY FONT SIZES ───────── */
+  /* Figma Typography-DS/Headline. Значения здесь — МОБИЛЬНЫЕ (mobile-first);
+     планшет и десктоп добавляет блок автогенерации в конце файла. */
+  --headline-font-size-h1: 64px;
+  --headline-font-size-h2: 48px;
+  --headline-font-size-h3: 40px;
+  --headline-font-size-h4: 28px;
+  --headline-font-size-h5: 24px;
+  --headline-font-size-h6: 22px;
+  --headline-font-size-h7: 20px;
+  --headline-font-size-h8: 18px;
+  /* Figma Typography-DS/Title */
+  --title-font-size-l: 18px;
+  --title-font-size-m: 16px;
+  --title-font-size-s: 14px;
+  --title-font-size-caption: 12px;
+  /* Figma Typography-DS/Body */
+  --body-font-size-l: 16px;
+  --body-font-size-m: 14px;
+  --body-font-size-s: 12px;
+  /* Figma Typography-DS/Link */
+  --link-font-size-l: 18px;
+  --link-font-size-m: 16px;
+  --link-font-size-s: 14px;
+  /* Figma Typography-DS/Subscription, Button, Badge */
+  --subscription-font-size: 10px;
+  --button-font-size: 15px;
+  --button-mini-font-size: 12px;  /* Figma Button-Mini (12/500/10) */
+  --badge-font-size: 10px;
+
+  /* ───────── TYPOGRAPHY LINE HEIGHTS ───────── */
+  /* Figma Typography-DS/Headline (generic + H5/H8 specific) */
+  --headline-line-height-16: 16px;
+  --headline-line-height-18: 18px;
+  --headline-line-height-20: 20px;
+  --headline-line-height-22: 22px;
+  --headline-line-height-24: 24px;
+  --headline-line-height-32: 28px;
+  --headline-line-height-48: 32px;
+  --headline-line-height-64: 48px;
+  --headline-line-height-96: 64px;
+  --headline-line-height-h5: 28px;
+  --headline-line-height-h8: 16px;
+  /* Figma Typography-DS/Title */
+  --title-line-height-l: 16px;
+  --title-line-height-s: 12px;
+  --title-line-height-caption: 12px;
+  /* Figma Typography-DS/Body/Link/Subscription/Button */
+  --body-line-height: 18px;
+  --link-line-height: 14px;
+  --subscription-line-height: 12px;
+  --button-line-height: 12px;
+  --button-mini-line-height: 10px;  /* Figma Button-Mini (12/500/10) */
+
+  /* ───────── FONT WEIGHTS ───────── */
+  /* Figma Typography-DS/Weight (значение = CSS numeric, имя = семантика Figma) */
+  --font-weight-light: 100;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* ───────── LETTER SPACING ───────── */
+  /* Figma Typography-DS/Letter Spacing, Letter Spacing L */
+  --letter-spacing: 0;
+  --letter-spacing-l: 2px;
+
+  /* ───────── TAB & SEGMENT (typography-related widths) ───────── */
+  --tab-segment-max-width-tab-name: 80px;
+  --tab-segment-max-width-segment-name: 80px;
+
+  /* ───────── RADIUS ───────── */
+  /* Figma Dimensions-DS/Radius (имена как в JSON) */
+  --radius-0: 0;
+  --radius-1: 1px;
+  --radius-2: 2px;
+  --radius-4: 4px;
+  --radius-6: 6px;
+  --radius-8: 8px;
+  --radius-10: 10px;
+  --radius-12: 12px;
+  --radius-14: 14px;
+  --radius-16: 16px;
+  --radius-18: 18px;
+  --radius-20: 20px;
+  --radius-22: 22px;
+  --radius-24: 24px;
+  --radius-28: 28px;
+  --radius-100: 100px;
+
+  /* ───────── BORDER WIDTH ───────── */
+  /* Figma Dimensions-DS/Border */
+  --border-width-1: 1px;
+  --border-width-1-5: 1.5px;
+  --border-width-2: 2px;
+  --border-width-4: 4px;
+
+  /* ───────── GAP ───────── */
+  /* Figma Dimensions-DS/Gap. База — мобильные значения: на телефоне вся
+     система дышит вдвое плотнее (gap-m 8 против 16 и т.д.). Планшетные и
+     десктопные значения поднимает блок автогенерации в конце файла. */
+  --gap-horiz-0: 0;
+  --gap-horiz-xxs: 2px;
+  --gap-horiz-xs: 2px;
+  --gap-horiz-s: 4px;
+  --gap-horiz-m: 8px;
+  --gap-horiz-lg: 16px;
+  --gap-horiz-xl: 24px;
+  --gap-horiz-xxl: 32px;
+  --gap-vert-0: 0;
+  --gap-vert-xxs: 2px;
+  --gap-vert-xs: 2px;
+  --gap-vert-s: 8px;
+  --gap-vert-m: 8px;
+  --gap-vert-lg: 16px;
+  --gap-vert-xl: 24px;
+  --gap-vert-xxl: 32px;
+
+  /* ───────── PADDING ───────── */
+  /* Figma Dimensions-DS/Padding (не responsive) */
+  --pad-horiz-0: 0;
+  --pad-horiz-2: 2px;
+  --pad-horiz-4: 4px;
+  --pad-horiz-8: 8px;
+  --pad-horiz-16: 16px;
+  --pad-horiz-24: 24px;
+  --pad-horiz-28: 28px;
+  --pad-horiz-32: 32px;
+  --pad-horiz-40: 40px;
+  --pad-horiz-42: 42px;
+  --pad-horiz-44: 44px;
+  --pad-horiz-48: 48px;
+  --pad-vert-0: 0;
+  --pad-vert-2: 2px;
+  --pad-vert-4: 4px;
+  --pad-vert-8: 8px;
+  --pad-vert-16: 16px;
+  --pad-vert-24: 24px;
+  --pad-vert-28: 28px;
+  --pad-vert-32: 32px;
+  --pad-vert-40: 40px;
+  --pad-vert-42: 42px;
+  --pad-vert-44: 44px;
+  --pad-vert-48: 48px;
+
+  /* ───────── SCREEN BREAKPOINTS ───────── */
+  /* Figma Dimensions-DS/Screens */
+  --screen-min-width: 320px;
+  --screen-max-width: 5000px;
+
+  /* ───────── BUTTONS ───────── */
+  /* Figma Dimensions-DS/Buttons */
+  --btn-primary-min-width: 112px;
+  --btn-primary-min-height: 40px;
+  --btn-primary-max-height: 40px;
+  --btn-rounded-max-height: 40px;
+  --btn-rounded-max-width: 68px;
+  --btn-rounded-min-width: 40px;
+  --btn-rounded-max-height-s: 24px;
+  --btn-rounded-min-height-s: 24px;
+  --btn-rounded-max-width-s: 24px;
+  --btn-rounded-min-width-s: 24px;
+  --btn-tag-max-height: 24px;
+  --btn-tag-min-width: 32px;
+
+  /* ───────── TEXT FIELDS ───────── */
+  /* Figma Dimensions-DS/Text Fields */
+  --text-field-height-l: 32px;
+  --text-field-height-m: 30px;
+  --text-field-min-width: 96px;
+  --text-field-max-width: 320px;
+  --textarea-min-width: 96px;
+  --textarea-min-height: 96px;
+  --textarea-max-width: 956px;
+  --textarea-max-height: 720px;
+
+  /* ───────── STATUS TEXT (Badge-Status) ───────── */
+  /* Figma Dimensions-DS/Status-Text */
+  --status-text-min-width: 40px;
+  --status-text-max-width: 112px;
+  --status-text-max-height: 40px;
+  --status-text-mini-min-height: 28px;
+  --status-text-mini-max-height: 28px;
+  --status-text-pad-horiz-4: 4px;
+  --status-text-pad-horiz-8: 8px;
+  --status-text-pad-horiz-16: 16px;
+  --status-text-pad-vert-4: 4px;
+  --status-text-pad-vert-8: 8px;
+  --status-text-pad-vert-16: 16px;
+
+  /* ───────── HEADERS ───────── */
+  /* Figma Dimensions-DS/Headers */
+  --header-min-width: 272px;
+  --header-max-width: 1024px;
+  --header-max-height: 136px;
+  --header-min-height-m: 40px;
+  --header-max-height-m: 56px;
+  --header-s-max-min-height: 24px;
+  --header-max-height-responsive: 56px;
+  /* Header XS */
+  --header-xs-max-width: 1024px;
+  --header-xs-min-height: 40px;
+  --header-xs-max-height: 40px;
+  /* Header S */
+  --header-s-max-width: 1024px;
+  --header-s-min-height: 40px;
+  --header-s-max-height: 136px;
+  --header-s-row-height: 24px;
+  /* Header M */
+  --header-m-row-height: 40px;
+
+  /* ───────── SUB-HEADERS ───────── */
+  --sub-header-min-max-height: 40px;
+  --sub-header-min-width: 112px;
+  --sub-header-max-width: 2048px;
+
+  /* ───────── NAVIGATION BAR ───────── */
+  --nav-bar-min-width: 320px;
+  --nav-bar-max-width: 700px;
+  --nav-bar-max-height: 106px;
+
+  /* ───────── NAVIGATION MENU ───────── */
+  --nav-menu-min-width: 320px;
+  --nav-menu-max-width: 700px;
+  --nav-menu-max-height: 64px;
+  --nav-menu-max-width-right-content: 668px;
+
+  /* ───────── SIDE NAVIGATION ───────── */
+  --side-nav-min-max-width: 320px;
+  --side-nav-min-height: 568px;
+  --side-nav-max-height: 2000px;
+  --side-nav-item-width: 272px;
+  --side-nav-item-height: 40px;
+  --side-nav-grand-parent-item-height: 48px;
+
+  /* ───────── TABS ───────── */
+  /* Figma Dimensions-DS/Tabs */
+  --tabs-min-height: 40px;
+  --tabs-max-height: 120px;
+  --navigation-menu-max-height: 64px;
+  --screens-max-screen-width: 956px;
+  --tab-bar-max-width: 640px;
+  --tab-bar-max-height-tab: 28px;
+  --tab-bar-min-height-tab: 28px;
+  --tab-bar-min-width-tab: 32px;
+  --tab-bar-max-width-tab: 128px;
+  --tab-bar-max-width-string: 112px;
+  --segment-menu-max-height: 54px;
+  --segment-menu-min-width-segment: 56px;
+  --segment-menu-max-width-segment: 184px;
+  --segment-menu-max-width-menu: 640px;
+  --segment-menu-max-width-string: 152px;
+
+  /* ───────── LIST ───────── */
+  --list-min-height-cell: 40px;
+  --list-cell-min-width-standard: 80px;
+  --list-max-width-cell: 980px;
+
+  /* ───────── MAP ───────── */
+  --map-min-width: 256px;
+  --map-min-height: 120px;
+
+  /* ───────── PAGE ───────── */
+  /* Figma Dimensions-DS/Page. Контейнер продуктового экрана: боковые поля и
+     предел ширины текстового блока (на 5000px строка нечитаема). */
+  --page-gutter: 16px;
+  --content-max-width-text: 392px;
+
+  /* ───────── GRID ───────── */
+  /* Figma Dimensions-DS/Grid. Минимумы для auto-fit + minmax: плитка (статус,
+     метрика). Вверх — резиновая. */
+  --tile-min-width: 96px;
+  --tile-min-height: 96px;
+
+  /* ───────── CARDS ───────── */
+  /* Figma Dimensions-DS/Cards: габариты карточки и её шапки. */
+  --card-min-width: 280px;
+  --card-max-width: 768px;
+  --card-min-height: 120px;
+  --card-max-height: 800px;
+  --card-header-min-width: 280px;
+  --card-header-max-width: 768px;
+  --card-header-min-height: 56px;
+  --card-header-max-height: 72px;
+
+  /* ───────── SEPARATORS ───────── */
+  --separator-width: 1px;
+
+  /* ───────── APP CHROME (не из Figma — внутренние) ───────── */
+  --sidebar-width: 320px;
+  --topbar-height: 56px;
+  --transition: 0.2s ease;
+
+}
+
+/* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */
+
+/* ═══ АВТОГЕНЕРАЦИЯ: адаптивные значения (tools/gen-tokens.js) ═══ */
+/* База в :root — мобильные значения. Планшет и десктоп добавляются здесь.
+   Пороги взяты из Screens/min-screen-width: Tablet 768, Desktop 1280.
+   Правится НЕ здесь, а в Figma: `jsc tools/gen-tokens.js` перепишет блок. */
+
+@media (min-width: 768px) {
+  :root {
+    --card-header-min-width: 320px;
+    --card-min-width: 320px;
+    --content-max-width-text: 720px;
+    --gap-horiz-lg: 24px;
+    --gap-horiz-m: 16px;
+    --gap-horiz-s: 8px;
+    --gap-horiz-xl: 32px;
+    --gap-horiz-xs: 4px;
+    --gap-horiz-xxl: 64px;
+    --gap-vert-lg: 24px;
+    --gap-vert-m: 16px;
+    --gap-vert-xl: 32px;
+    --gap-vert-xs: 4px;
+    --gap-vert-xxl: 64px;
+    --header-max-height: 88px;
+    --header-max-height-m: 64px;
+    --header-max-width: 2048px;
+    --header-min-height-m: 56px;
+    --header-s-max-min-height: 40px;
+    --headline-font-size-h1: 96px;
+    --headline-font-size-h2: 64px;
+    --headline-font-size-h3: 48px;
+    --headline-font-size-h4: 32px;
+    --headline-font-size-h5: 28px;
+    --headline-font-size-h6: 24px;
+    --headline-font-size-h7: 22px;
+    --headline-font-size-h8: 20px;
+    --headline-line-height-32: 32px;
+    --headline-line-height-48: 48px;
+    --headline-line-height-64: 64px;
+    --headline-line-height-96: 96px;
+    --headline-line-height-h5: 32px;
+    --list-max-width-cell: 1024px;
+    --map-min-width: 320px;
+    --nav-bar-max-height: 114px;
+    --nav-bar-max-width: 1440px;
+    --nav-bar-min-width: 744px;
+    --nav-menu-max-width: 1440px;
+    --nav-menu-min-width: 744px;
+    --page-gutter: 24px;
+    --screen-min-width: 768px;
+    --screens-max-screen-width: 1440px;
+    --segment-menu-max-width-menu: 1024px;
+    --segment-menu-max-width-segment: 240px;
+    --segment-menu-max-width-string: 208px;
+    --side-nav-min-height: 720px;
+    --subscription-line-height: 14px;
+    --tab-bar-max-width-tab: 256px;
+    --tab-segment-max-width-segment-name: 112px;
+    --tab-segment-max-width-tab-name: 112px;
+    --text-field-max-width: 400px;
+    --text-field-min-width: 128px;
+    --textarea-max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --body-line-height: 20px;
+    --card-header-min-width: 280px;
+    --card-max-height: 768px;
+    --card-min-height: 104px;
+    --card-min-width: 280px;
+    --content-max-width-text: 800px;
+    --header-max-height-responsive: 112px;
+    --nav-bar-max-height: 64px;
+    --nav-bar-max-width: 5000px;
+    --nav-bar-min-width: 1025px;
+    --nav-menu-max-width: 5000px;
+    --nav-menu-max-width-right-content: 700px;
+    --nav-menu-min-width: 1025px;
+    --page-gutter: 32px;
+    --screen-min-width: 1280px;
+    --screens-max-screen-width: 5000px;
+    --subscription-font-size: 12px;
+    --tabs-max-height: 64px;
+    --text-field-max-width: 808px;
+    --textarea-max-height: 1024px;
+  }
+}
+/* ═══ КОНЕЦ АВТОГЕНЕРАЦИИ ═══ */

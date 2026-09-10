@@ -1,0 +1,25 @@
+{
+  "name": "@spacebridge-ds/styles",
+  "version": "0.1.0",
+  "description": "Spacebridge Design System — design tokens, typography and component styles. Framework-agnostic CSS.",
+  "license": "Apache-2.0",
+  "style": "css/spacebridge-ds.css",
+  "sideEffects": true,
+  "files": [
+    "css",
+    "fonts",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "keywords": [
+    "design-system",
+    "css",
+    "design-tokens",
+    "spacebridge"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/susheme/Spacebridge-DS.git"
+  }
+}

@@ -1,0 +1,70 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:side-panel] Side Panel --- */
+/* Плавающая панель — колонка «хедер + скролл-зона». Дом ленты обновлений
+   DS (колокольчик в Nav Bar). Спека 04.09: ширина фикс 320 (токен Side
+   Navigation), высота 720–2000, radius 16, Shadow-L (0 10 20
+   shadow-overlay — раскладка спеки, как Shadow-S у карточек).
+   Паддинги спеки (0/16/16/16) несёт скролл-зона, а не панель: хедер лежит
+   full-bleed (Header S несёт свои 16/16 и min-width 320 — панельные бока
+   дали бы двойной отступ и распор), контент при скролле уходит ПОД него. */
+.sb-side-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--side-nav-min-max-width);
+  min-width: var(--side-nav-min-max-width);
+  max-width: var(--side-nav-min-max-width);
+  min-height: var(--side-nav-min-height);
+  max-height: var(--side-nav-max-height);
+  gap: var(--gap-vert-m);
+  border-radius: var(--radius-16);
+  background: var(--background);
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay);
+}
+/* Хедер (Header S: заголовок + close, Search Bar в суб-слоте) не
+   скроллится и повторяет верхний радиус панели — непрозрачный ребёнок
+   срезал бы его (паттерн шапки карточки). */
+.sb-side-panel > .sb-header-s {
+  flex-shrink: 0;
+  border-radius: var(--radius-16) var(--radius-16) var(--radius-0) var(--radius-0);
+  /* Header S и его суб-слот несут min-width 320 (пол Tab Bar) — в панели
+     шириной 320 контент-зоне хедера доступно 288, слот распирал бы серч
+     за правый край. Контекстный сброс, как радиус выше. */
+  min-width: 0;
+}
+.sb-side-panel > .sb-header-s .sb-header-s-tabs { min-width: 0; }
+/* Search Bar ширины не несёт (сидит на своём min-width) — в панели
+   растягивается на весь суб-слот. */
+.sb-side-panel > .sb-header-s .sb-header-s-tabs .sb-search { width: 100%; }
+/* Скролл-зона. min-height: 0 обязателен — без него flex-ребёнок держит
+   высоту контента и скролл не возникает. */
+.sb-side-panel-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-0) var(--pad-horiz-16) var(--pad-vert-16);
+  border-radius: var(--radius-0);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+/* Лента обновлений DS (js/updates-ui.js): панель живёт в Overlay, прижата
+   к правому верхнему углу (отступы даёт padding оверлея). Высота — по
+   контенту, потолок — вьюпорт: min() отпускает спековский минимум 720 на
+   экранах ниже него. */
+.sb-overlay.sb-updates-overlay { justify-content: flex-end; align-items: flex-start; }
+.sb-overlay.sb-updates-overlay .sb-side-panel {
+  min-height: min(var(--side-nav-min-height), calc(100vh - 32px));
+  max-height: calc(100vh - 32px);
+  /* Въезд справа: закрытая панель стоит за правой кромкой (запас 32 уводит
+     и тень Shadow-L), transform не трогает layout. Время — как фейд
+     оверлея (0.2s), едут вместе. */
+  transform: translateX(calc(100% + 32px));
+  transition: transform 0.2s ease;
+}
+.sb-overlay.sb-updates-overlay.is-open .sb-side-panel { transform: translateX(0); }
+/* --- [/SYNC:side-panel] --- */

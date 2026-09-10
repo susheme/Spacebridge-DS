@@ -1,0 +1,322 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:nav-bar] Navigation Bar (Top Bar) --- */
+/* Header-полоса сверху приложения: левый слот (logo + extras), центральные
+   nav-кнопки разделов, правый слот (action-кнопки + avatar + search).
+   Высота 56px по дефолту, до 64px max (--nav-bar-max-height).
+   < 640px (mobile) — content в слотах схлопывается, центральные кнопки
+   прячутся (mobile-overflow handling будет позже через Bottom Sheet). */
+.sb-nav-bar {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 56px;
+  max-height: var(--nav-bar-max-height);
+  min-width: 320px;
+  /* Padding 0 на самом баре — оба горизонтальных «бортика» вынесены
+     на .sb-nav-bar-left / -right как padding-left/right. Это нужно,
+     потому что @container не умеет стилизовать сам container, только
+     его descendants. */
+  padding: 0;
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border);
+  gap: var(--gap-horiz-m);
+  box-sizing: border-box;
+  /* Container query — бар сам реагирует на свою ширину, независимо
+     от viewport. Когда container < 1024px → tabs прячутся, left-slot
+     схлопывается в burger + compact-logo (см. структурные классы ниже
+     и блок @container внизу файла). */
+  container-type: inline-size;
+  container-name: navbar;
+}
+
+/* Структурные элементы left-slot — управляются container query.
+   Чтобы responsive переключение работало, consumer должен передать
+   структурные пропсы (button, logo, logoCompact, logoTitle, badge)
+   в sbMkNavBar, а не raw leftSlot. */
+.sb-nav-bar-button { display: inline-flex; align-items: center; }
+.sb-nav-bar-button-icon-compact { display: none; }
+.sb-nav-bar-button-icon-wide    { display: inline-flex; align-items: center; }
+.sb-nav-bar-logo-compact { display: none; }
+.sb-nav-bar-logo-full,
+.sb-nav-bar-logo-title,
+.sb-nav-bar-badge { display: inline-flex; align-items: center; }
+
+/* Left slot — flex-shrink: 0, держит свою ширину.
+   padding-left = «бортик» слева от лого; в compact падает до 16 (см. @container). */
+.sb-nav-bar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-m);
+  flex-shrink: 0;
+  min-width: 0;
+  padding-left: var(--pad-horiz-24);
+}
+
+/* Center slot — где живут nav-кнопки разделов.
+   По умолчанию justify-content: center (центрирует tabs).
+   .align-right на родителе → justify-content: flex-end + margin-right
+   к правому слоту 16/24. */
+.sb-nav-bar-center {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  /* НЕ ставим overflow: hidden — клипает popover'ы / tooltips, которые
+     tab может открыть (особенно absolute-positioned). Слишком много табов —
+     обрабатываем through More-button (overflow-pattern), не клипом. */
+}
+.sb-nav-bar.align-right .sb-nav-bar-center { justify-content: flex-end; }
+.sb-nav-bar.align-right .sb-nav-bar-tabs { margin-right: var(--pad-horiz-24); }
+
+/* Tabs container — горизонтальный ряд nav-кнопок. */
+.sb-nav-bar-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xxs);
+  min-width: 0;
+}
+
+/* Right slot — до 4 элементов. Лимит — рекомендация; в helper'е
+   sbMkNavBar() элементы сверх 4 игнорируются с warn'ом.
+   padding-right = «бортик» справа; в compact падает до 16 (см. @container). */
+.sb-nav-bar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  flex-shrink: 0;
+  padding-right: var(--pad-horiz-24);
+}
+
+/* ── NAV BUTTON ──────────────────────────────────────────────────────
+   Эксклюзив Navigation Bar. По Figma-спеке:
+   высота 40px (--btn-primary-max-height), radius 100, padding 8×16,
+   ширина hug-content. Hover → --background + Shadow-S;
+   Selected → --surface-1 + Pressed-inset shadow. */
+.sb-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-horiz-0);
+  height: var(--btn-primary-max-height);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  border: none;
+  border-radius: var(--radius-100);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--button-font-size);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: lining-nums tabular-nums;
+  line-height: var(--button-line-height);
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+/* Вариант с правым слотом (chevron / counter / indicator mini):
+   Figma «Layout с правым слотом» — правый padding 8 вместо 16, gap 4. */
+.sb-nav-btn.with-slot {
+  gap: var(--gap-horiz-xs);
+  padding-right: var(--pad-horiz-8);
+}
+
+/* Label. Ellipsis срабатывает, когда бару не хватает места (flex-сжатие).
+   line-height здесь НЕ спековая --button-line-height (=12px) — она меньше
+   font-size 15px и режет descender'ы (g/p/y/q) при overflow:hidden. */
+.sb-nav-btn-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  line-height: var(--body-line-height);
+}
+
+/* Chevron в правом слоте — для кнопок-dropdown'ов. */
+.sb-nav-btn-chevron {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+/* Правый слот с Counter или Indicator Mini — альтернатива chevron'у. */
+.sb-nav-btn-slot {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Hover — фон --background + Shadow-S; текст и иконка окрашиваются
+   в --primary (chevron наследует через color: inherit). */
+.sb-nav-btn:hover:not(.disabled):not(.selected) {
+  background: var(--background);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+  color: var(--primary);
+}
+
+/* Selected — фоновая заливка --surface-1 + Pressed-inset shadow
+   (как «Pressed» effect в Figma: вложенная поверхность). */
+.sb-nav-btn.selected {
+  background: var(--surface-1);
+  color: var(--primary);
+  box-shadow:
+     1px  1px 2px 0 var(--shadow-overlay) inset,
+    -1px -1px 2px 0 var(--shadow-lg) inset;
+}
+
+/* Disabled — паттерн как у Buttons/Input: серый текст, без opacity. */
+.sb-nav-btn.disabled {
+  color: var(--border);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── FLOATING MODIFIER ───────────────────────────────────────────────
+   Variant: бар отрывается от краёв (margin 16, radius 12, Shadow-S), без
+   border-bottom. При скролле — переключается в .is-stuck: схлопывается
+   до full-width (margin 0, radius 0, тень глубже). Транзишн 0.25s.
+   Под капотом: position: sticky + IntersectionObserver на sentinel'е
+   (см. js/components/nav-bar.js — sbWireNavBarFloating).
+
+   ▶ ВАЖНО про размещение в DOM — два паттерна:
+   1) Page-level sticky — bar ВНУТРИ скролл-контейнера (обычно <main>
+      или document). Scrollbar страницы идёт за баром на всю высоту,
+      bar реально «прилипает» при скролле. Для главного chrome.
+        <div style="overflow-y:auto;height:100vh">
+          <header class="sb-nav-bar floating">…</header>
+          <main>…</main>
+        </div>
+   2) Inline panel — bar СНАРУЖИ скролл-области, sibling'ом сверху.
+      Scrollbar упирается в низ bar'а, не покрывает его. Для виджетов,
+      диалогов, встроенных панелей.
+        <div style="display:flex;flex-direction:column;
+                    height:340px;overflow:hidden">
+          <header class="sb-nav-bar floating">…</header>
+          <div style="flex:1;min-height:0;overflow-y:auto;
+                      scrollbar-gutter:stable">…</div>
+        </div>
+      Outer: flex-column + overflow:hidden (бар-sentinel внутри
+      scroll-области, sticky-контекст принадлежит outer'у).
+      Scroll-area: flex:1 + min-height:0 + scrollbar-gutter:stable
+      (gutter резервируется, layout не дёргается).
+      sbWireNavBarFloating сам определит, что bar снаружи scrollRoot,
+      и положит sentinel первым ребёнком scroll-области. */
+.sb-nav-bar.floating {
+  position: sticky;
+  top: 16px;
+  z-index: 10;
+  margin: 16px;
+  max-width: calc(100% - 32px);
+  border-bottom: none;
+  border-radius: var(--radius-12);
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+  transition:
+    margin 0.25s ease,
+    max-width 0.25s ease,
+    border-radius 0.25s ease,
+    top 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.sb-nav-bar.floating.is-stuck {
+  top: 0;
+  margin: 0;
+  max-width: 100%;
+  border-radius: 0;
+  box-shadow: 0 4px 12px 0 var(--shadow-sm);
+}
+
+/* ── SEARCH SLOT в right ─────────────────────────────────────────────
+   Wide-вариант — полный sbMkSearch. Compact-trigger — обычная secondary
+   icon-only кнопка (не модифицированный search-bar). По клику открывается
+   overlay с полноразмерным search'ем (см. .sb-nav-bar-search-overlay). */
+.sb-nav-bar-search-wide { display: inline-flex; align-items: center; width: 240px; }
+.sb-nav-bar-search-wide .sb-search { width: 100%; }
+.sb-nav-bar-search-compact-trigger { display: none; }
+
+/* ── SMART COLLAPSE — density levels ─────────────────────────────────
+   Когда JS-helper sbWireNavBarSmartCollapse навешен на бар (auto-wire
+   через MutationObserver, см. js/components/nav-bar.js), он управляет
+   атрибутом data-density. Каждый уровень прячет ОДИН дополнительный
+   элемент относительно предыдущего, чтобы между слотами оставался
+   gap >= 32px (см. SMART_MIN_GAP):
+     L0 — всё видно (default)
+     L1 — drop badge
+     L2 — drop logoTitle
+     L3 — search-wide → icon trigger
+     L4 — drop tabs (center hidden)
+     L5 — logoFull → compact + button icon swap → menu-line + 16px paddings
+   :where() — нулевая специфичность для group; итоговая специфичность
+   = .sb-nav-bar (0,1,0) + descendant (0,1,0) = 0,2,0 — перебивает
+   base-rules (0,1,0). Конкретный [data-density="L5"] = 0,2,0 тоже. */
+.sb-nav-bar:where([data-density="L1"],[data-density="L2"],[data-density="L3"],[data-density="L4"],[data-density="L5"]) .sb-nav-bar-badge { display: none; }
+.sb-nav-bar:where([data-density="L2"],[data-density="L3"],[data-density="L4"],[data-density="L5"]) .sb-nav-bar-logo-title { display: none; }
+.sb-nav-bar:where([data-density="L3"],[data-density="L4"],[data-density="L5"]) .sb-nav-bar-search-wide { display: none; }
+.sb-nav-bar:where([data-density="L3"],[data-density="L4"],[data-density="L5"]) .sb-nav-bar-search-compact-trigger { display: inline-flex; align-items: center; }
+.sb-nav-bar:where([data-density="L4"],[data-density="L5"]) .sb-nav-bar-center { display: none; }
+/* L4+: центр скрыт → right прижимается влево к left'у. margin-left:auto
+   возвращает его к правому краю бара. */
+.sb-nav-bar:where([data-density="L4"],[data-density="L5"]) .sb-nav-bar-right { margin-left: auto; }
+.sb-nav-bar[data-density="L5"] .sb-nav-bar-logo-full { display: none; }
+.sb-nav-bar[data-density="L5"] .sb-nav-bar-logo-compact { display: inline-flex; align-items: center; }
+.sb-nav-bar[data-density="L5"] .sb-nav-bar-button-icon-wide { display: none; }
+.sb-nav-bar[data-density="L5"] .sb-nav-bar-button-icon-compact { display: inline-flex; align-items: center; }
+.sb-nav-bar[data-density="L5"] .sb-nav-bar-left { padding-left: var(--pad-horiz-16); }
+.sb-nav-bar[data-density="L5"] .sb-nav-bar-right { padding-right: var(--pad-horiz-16); margin-left: auto; }
+
+/* ── COMPACT MODE FALLBACK (container < 1024px, JS не загружен) ───────
+   Эти правила фигачат только если на баре НЕТ data-density (JS-helper
+   не успел навеситься, либо отключён). Когда smart-collapse работает —
+   атрибут есть, @container здесь не срабатывает; решения принимает JS.
+   Это нужно чтобы избежать FOUC между insert'ом и первым auto-wire,
+   а также чтобы bare-HTML usage без JS работал хоть как-то. */
+@container navbar (max-width: 1024px) {
+  /* Padding'и стилизуются на слотах, а не на самом баре —
+     @container не умеет стилизовать container element. */
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-left  { padding-left:  var(--pad-horiz-16); }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-right { padding-right: var(--pad-horiz-16); margin-left: auto; }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-center { display: none; }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-logo-full,
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-logo-title,
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-badge { display: none; }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-logo-compact { display: inline-flex; align-items: center; }
+  /* Кнопка слева остаётся видимой, но swap'ает иконку:
+     wide → side-bar-line (collapse sidebar), compact → menu-line (burger). */
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-button-icon-wide    { display: none; }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-button-icon-compact { display: inline-flex; align-items: center; }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-search-wide { display: none; }
+  .sb-nav-bar:not([data-density]) .sb-nav-bar-search-compact-trigger { display: inline-flex; align-items: center; }
+}
+@container navbar (max-width: 640px) {
+  .sb-nav-bar.floating { margin: 8px; max-width: calc(100% - 16px); }
+}
+
+/* ── SEARCH OVERLAY ──────────────────────────────────────────────────
+   С июля 2026 — на примитиве Overlay (sbMkOverlay, placement top):
+   скрим --shadow-overlay БЕЗ блюра, Esc, клик в подложку, focus trap и
+   portal в body даёт примитив. Здесь — только контентная строка
+   (search + close): ширина, gap. Класс живёт на корне .sb-overlay. */
+/* Контент — панель-карточка в верхней трети экрана (spotlight-паттерн):
+   свой фон/radius/Shadow-S, чтобы search не «висел голым» на скриме.
+   12vh и 560px — вне Figma JSON, согласовать с дизайнером. */
+.sb-nav-bar-search-overlay .sb-overlay-content {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  width: min(560px, 100%);
+  margin-top: 12vh;
+  padding: var(--pad-vert-8);
+  border-radius: var(--radius-12);
+  background: var(--background);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+.sb-nav-bar-search-overlay .sb-overlay-content > .sb-search { flex: 1; min-width: 0; }
+
+/* Language switcher — компактная Secondary кнопка: без min-width 112,
+   ширина под контент (3 буквы + chevron). Chevron поворачивается на 180°
+   когда dropdown открыт. */
+.sb-nav-lang-btn { min-width: auto; }
+.sb-nav-lang-switcher.is-open .sb-nav-lang-btn svg { transform: rotate(180deg); }
+.sb-nav-lang-btn svg { transition: transform 0.15s ease; }
+/* --- [/SYNC:nav-bar] --- */

@@ -1,0 +1,242 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:cards] Cards --- */
+/* Контейнер-примитив. Своего контента у карточки нет: шапка, слот контента
+   и Action Bar — слоты, в которые кладут готовые компоненты DS (Button,
+   Badge, Status, Property List, Avatar, Tag, Checkbox, Popover).
+   Типы карточек (Default Content / Stat and Metrics / Alert / Selectable /
+   List) — это композиции слотов, а не отдельные классы. */
+.sb-card {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  /* Ребёнок грида/флекса: без этого длинный контент распирает трек и
+     ломает auto-fit-раскладку на узких экранах. */
+  min-width: 0;
+  /* Шапка реагирует на ширину САМОЙ карточки, а не экрана: в гриде две
+     карточки одного размера могут стоять в колонках разной ширины.
+     ВНИМАНИЕ: inline-size-containment обнуляет вклад контента в ширину.
+     В гриде это не видно (ширину диктует трек), но во flex-контексте
+     shrink-to-fit схлопывает карточку в ноль — поэтому ниже width: 100%:
+     ширину карточке всегда даёт контейнер, а не контент. */
+  container-type: inline-size;
+  width: 100%;
+  /* Спека: inline-flex — высота от контента. В гриде дефолтный stretch
+     растягивал бы карточку до самой высокой в ряду, и убирание Action Bar
+     или шапки не меняло бы высоту. Ширину align-self не трогает: во
+     flex-column она задана width: 100%. */
+  align-self: start;
+  /* Слоты вплотную (решение дизайнера 01.09: gap 0 у всех типов) —
+     вертикальный ритм целиком несут поля слотов. */
+  gap: var(--gap-vert-0);
+  background: var(--background);
+  /* Рамки у карточки нет — резерв под состояния, красящие border-color:
+     без прозрачной базы габарит прыгает при появлении рамки. */
+  border: var(--border-width-1) solid transparent;
+  border-radius: var(--radius-8);
+  /* Shadow-S по спеке. */
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+  transition: var(--transition);
+}
+/* Вариант No Action Bar: нижнее поле даёт сама карточка (спека pb 16).
+   Action Bar и футер несут свои поля и бордер сами — при них поле карточки
+   гасится (спека варианта с Action Bar: padding 0). Метрика — исключение:
+   у неё карточка с padding 0, нижние 16 несёт слот is-stat (спека Stat). */
+.sb-card:not(:has(> .sb-card-footer)):not(:has(> .sb-action-bar)):not(:has(> .sb-card-body.is-stat)) { padding-bottom: var(--pad-vert-16); }
+
+
+/* Кликабельная карточка — вся плашка как один таргет. Ховер и выбор — один
+   стиль по спеке Selectable: рамка primary + тень Hover-blue (три слоя
+   primary-hover), фон карточки не меняется. */
+.sb-card.is-interactive { cursor: pointer; }
+.sb-card.is-interactive:hover,
+.sb-card.is-selected {
+  border-color: var(--primary);
+  box-shadow: 0 6px 10px -6px var(--primary-hover),
+              0 2px 8px 0 var(--primary-hover),
+              0 10px 20px 0 var(--primary-hover);
+}
+.sb-card.is-interactive:focus-visible {
+  outline: var(--border-width-2) solid var(--primary);
+  outline-offset: 2px;
+}
+/* Bordered: рамка --border-soft вместо тени — для плотных стопок карточек,
+   где тени сливаются (лента обновлений). В покое тени нет; ховер и выбор —
+   штатный стиль is-interactive: рамка primary + тень Hover-blue (спека
+   ховера Notification Card 04.09). */
+.sb-card.bordered { border-color: var(--border-soft); box-shadow: none; }
+/* Disable: тексты шапки и контента цветом border (спека), без opacity.
+   Серый бейдж и погашенный чекбокс ставит потребитель. */
+.sb-card.is-disabled { pointer-events: none; }
+.sb-card.is-disabled .sb-card-title,
+.sb-card.is-disabled .sb-card-subtitle,
+.sb-card.is-disabled .sb-card-text-title,
+.sb-card.is-disabled .sb-card-body { color: var(--border); }
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+/* Шапка по Figma-спеке Cards/Header. Два слота, разведённые space-between:
+   левый — лид (иконка, аватар, статус-точка, чекбокс) и стек Headline H8 +
+   Subscription либо текст Body L; правый — действия.
+   Отдельным компонентом в NAV не выносится: вне карточки шапка смысла не
+   имеет (прецедент — sbMkTableCell в table.js).
+   min-width спеки не ставится: минимум держит --card-min-width грида, а
+   минимум на слоте внутри рамки карточки даёт распор на ширину рамки.
+   max-width спеки равен --card-max-width — ограничение будет висеть на
+   карточке после её спеки. */
+.sb-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  align-self: stretch;
+  box-sizing: border-box;
+  min-height: var(--card-header-min-height);
+  max-height: var(--card-header-max-height);
+  padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-8);
+  border-radius: var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);
+  background: var(--background);
+  min-width: 0;
+}
+
+/* Слоты. Кап высоты 40 един во всех режимах (решение дизайнера); токен
+   Header S не годится — несёт 24 на мобиле. Согласованный hardcoded.
+   Gap 8 — Figma ссылается на gap-vert-s: единственный gap, который держит
+   8px во всех трёх режимах. */
+.sb-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  min-height: 24px;
+  max-height: 40px;
+  max-width: var(--nav-menu-max-width-right-content);
+  min-width: 0;
+}
+/* Лид не сжимается. */
+.sb-card-header-lead { display: inline-flex; align-items: center; flex-shrink: 0; }
+.sb-card-header-stack {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* Токен по фрейму Figma (решение дизайнера 01.09): 2 на телефоне,
+     4 на планшете и десктопе. */
+  gap: var(--gap-horiz-xs);
+  min-width: 0;
+}
+.sb-card-header-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  min-height: 24px;
+  max-height: 40px;
+  max-width: var(--nav-menu-max-width-right-content);
+  flex-shrink: 0;
+}
+.sb-card-title,
+.sb-card-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  /* Высота строки — из типографики: H8 16, Subscription 12/14. Line-height
+     плотнее кегля, и overflow:hidden резал бы descender'ы (р, у, д):
+     обрезка идёт по padding-box, поэтому паддинг даёт глифам место, а
+     отрицательный маргин возвращает строке её метрики. У элементов нет
+     своего фона и рамки — иначе трюк не годится. */
+  padding-block: 4px;
+  margin-block: -4px;
+}
+.sb-card-title    { color: var(--text-tertiary); }
+.sb-card-subtitle { color: var(--text-secondary); }
+
+/* ── Content Slot ────────────────────────────────────────────────────── */
+/* Спека Content Card + правка 01.09: верх 8, бока 16, низа у слота нет —
+   нижнее поле целиком несёт карточка (16) или Action Bar своими полями.
+   Типографика контента — Body L цветом text-tertiary. */
+.sb-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-8) var(--pad-horiz-16) var(--pad-vert-0);
+  min-width: 0;
+  color: var(--text-tertiary);
+}
+/* Слот первым ребёнком (шапки нет) — верх 16; после шапки остаётся 8:
+   вместе с её нижним полем 8 выходит тот же ритм 16 (референс 01.09). */
+.sb-card > .sb-card-body:first-child { padding-top: var(--pad-vert-16); }
+/* Медиа внутри контент-слота: между медиа и текстом gap 16 (8 на телефоне),
+   текстовый блок держит свой внутренний ритм 8. */
+.sb-card-body.has-media { gap: var(--gap-vert-m); }
+/* Alert: слот 0/16 — верхний ритм даёт нижнее поле шапки; элементы прижаты
+   к началу (спека Alert Card 04.09; фикс-ширина фрейма 342 не переносится —
+   карточка живёт в гриде). В Figma-экспорте имена pad-horiz/pad-vert
+   перепутаны местами, здесь — по конвенции DS. */
+.sb-card-body.is-alert { padding: var(--pad-vert-0) var(--pad-horiz-16); align-items: flex-start; }
+/* Карточка с Action Bar: слот добирает 8 снизу до бара (правки 01.09,
+   медиа и без медиа одинаково). Слот списков — исключение: рама Framed
+   не должна липнуть к бару, низ 16 (спека List Card). */
+.sb-card:has(> .sb-action-bar) > .sb-card-body { padding-bottom: var(--pad-vert-8); }
+.sb-card:has(> .sb-action-bar) > .sb-card-body.is-list { padding-bottom: var(--pad-vert-16); }
+.sb-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-vert-s);
+  align-self: stretch;
+  min-width: 0;
+}
+/* Стек Title + Subscription в контенте (Stack Slot). Тайтл — Title L цветом
+   text-tertiary, клампится в одну строку; спековые -webkit-line-clamp: 1 и
+   ellipsis выражены nowrap-трункейтом DS. */
+.sb-card-text-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: var(--gap-horiz-s);
+  align-self: stretch;
+  min-width: 0;
+}
+.sb-card-text-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  color: var(--text-tertiary);
+  /* Title L: line-height 16 при кегле 18 — место хвостам букв даёт паддинг,
+     маргин возвращает метрики (см. правило трункейтов). */
+  padding-block: 4px;
+  margin-block: -4px;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+.sb-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-horiz-m);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  min-width: 0;
+  border-top: var(--border-width-1) solid var(--border);
+}
+/* Action Bar обёртки не требует: встаёт прямым ребёнком .sb-card, бордер
+   и поля несёт сам (см. action-bar.css). Его непрозрачный фон с прямыми
+   углами ложится поверх скругления карточки — последний ребёнок повторяет
+   её нижний радиус (симметрично шапке с её 16/16/0/0). */
+.sb-card > .sb-action-bar:last-child {
+  border-radius: var(--radius-0) var(--radius-0) var(--radius-8) var(--radius-8);
+}
+
+/* ── Stat-слот ───────────────────────────────────────────────────────── */
+/* Метрика (спека Stat and Metrics Card): кэпшен живёт в шапке, значение
+   H4 в ряду Top Content, под ним Subscription. Слот контента метрики —
+   0/16/16: верх отдан шапке, нижние 16 несёт слот, а не карточка. */
+.sb-card-body.is-stat { padding: var(--pad-vert-0) var(--pad-horiz-16) var(--pad-vert-16); }
+.sb-card-stat {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-horiz-m);
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.sb-card-stat-value { color: var(--text-primary); }
+/* --- [/SYNC:cards] --- */

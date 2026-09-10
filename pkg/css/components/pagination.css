@@ -1,0 +1,60 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:pagination] Pagination ---
+   Page-навигация: prev-arrow + page-numbers + next-arrow.
+   Info-текст (Visible X of Y) и Jump-input — отдельные атомы, рендерятся
+   consumer'ом (обычно через Table Footer слоты). Pagination = controls only.
+
+   Контролы — на базе Button Secondary Icon-Only Small (квадрат 24, как стрелки):
+     - page-numbers   : sb-btn-secondary.sb-btn-icon + .sb-pagination-page (рост ширины для много-значных)
+     - current page   : sb-btn-primary.sb-btn-icon (визуальная активность)
+     - prev/next      : sb-btn-secondary.sb-btn-icon с arrow-drop-left/right-line (S=16) */
+.sb-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+}
+/* Page-номер = Icon-Only Small (24×24). Override (0,3,0 > .sb-btn-icon.sb-btn-sm
+   0,2,0): держим квадрат-минимум 24, но разрешаем ширине расти под много-значные
+   номера (иначе «100» вылезает за 24px-бокс). Single/2-значные = 24px, как стрелки. */
+.sb-btn-sm.sb-btn-icon.sb-pagination-page {
+  width: auto;
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: none;
+  padding-left: var(--pad-horiz-4);
+  padding-right: var(--pad-horiz-4);
+}
+/* «…» между неcмежными номерами. Та же высота/min-width (24), что у кнопок — выравнивание. */
+.sb-pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--btn-rounded-min-width-s);
+  height: var(--btn-rounded-max-height-s);
+  color: var(--text-secondary);
+  font-size: var(--body-font-size-m);
+  user-select: none;
+}
+
+/* ── Jump-to-page input — отдельный атом, рендерится через sbMkPaginationJump.
+   Built on sb-tf (Input Field), shrink min-width 128 → 64. Спиннеры скрыты —
+   ввод цифрой + Enter. Специфичность .sb-tf.sb-pagination-jump (0,2,0)
+   перебивает .sb-tf (0,1,0). */
+.sb-tf.sb-pagination-jump {
+  min-width: 64px;
+  width: 64px;
+}
+.sb-tf.sb-pagination-jump .sb-tf-input {
+  text-align: center;
+  padding: 0;
+}
+.sb-tf.sb-pagination-jump .sb-tf-input::-webkit-inner-spin-button,
+.sb-tf.sb-pagination-jump .sb-tf-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sb-tf.sb-pagination-jump .sb-tf-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+/* --- [/SYNC:pagination] --- */

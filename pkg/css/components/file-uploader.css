@@ -1,0 +1,217 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FILE UPLOADER
+   Зеркало в window.COMP_CSS['file-uploader'] (js/components/file-uploader.js).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* --- [SYNC:file-uploader] File Uploader Area --- */
+.sb-uploader-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-0);
+  width: 328px;
+  min-width: 320px;
+  max-width: 1024px;
+  min-height: 96px;
+  max-height: 640px;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  box-sizing: border-box;
+  border-radius: var(--radius-4);
+  border: var(--border-width-1) dashed var(--border);
+  background: var(--surface-1);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+/* Hover / файл тащат над зоной — синий dashed + заливка --primary-hover.
+   (В Figma-экспорте цвет бордера битый «Color» — взят --primary по скриншоту.) */
+.sb-uploader-area:hover,
+.sb-uploader-area.dragover {
+  border-color: var(--primary);
+  background: var(--primary-hover);
+}
+
+/* Центральный слот: иконка + тайтл + подсказка + Add-кнопка. */
+.sb-uploader-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-vert-s);
+  padding: var(--pad-vert-0) var(--pad-horiz-0);
+  text-align: center;
+}
+.sb-uploader-icon  { display: inline-flex; color: var(--text-primary); }
+.sb-uploader-title { color: var(--text-primary); }
+.sb-uploader-hint  { color: var(--text-secondary); }
+
+/* Скрытый file input — кликабельна вся область целиком. */
+.sb-uploader-input { display: none; }
+
+/* ── UPLOAD CELL ─────────────────────────────────────────────────────
+   Ячейка списка загрузок. Пока состояние Completed;
+   Uploading / Failed — следующий заход (спека ожидается). */
+.sb-uploader-cell {
+  position: relative; /* якорь для progress-бара Uploading-состояния */
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  width: 272px;
+  min-width: 80px;
+  max-width: 1024px;
+  /* 50px мин/макс — правка дизайнера (июль 2026); токена нет, hardcoded */
+  min-height: 50px;
+  max-height: 50px;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  box-sizing: border-box;
+  background: var(--background);
+  /* Спека даёт --surface-2 — в dark он сливается с фоном;
+     по правилу границ транслирован в --border-soft (мягкий разделитель). */
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+}
+
+/* File Icon — квадрат с типом файла (JSON/PDF/…).
+   Типографика заглушки — по скриншоту, отдельная спека ожидается. */
+.sb-uploader-cell-file {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-radius: var(--radius-1);
+  border: var(--border-width-1-5) solid var(--border-soft);
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--title-line-height-s);
+  text-transform: uppercase;
+}
+
+/* Центральный слот: тайтл-имя + инфострока. min-width:0 — для ellipsis. */
+.sb-uploader-cell-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  /* Спека: gap 8 при leading-trim. У нас line-height тайтла 20px (анти-клипинг)
+     добавляет ~4px воздуха сам — gap 4 даёт визуально спековые ~8px
+     и контент влезает в 50px ячейку. */
+  gap: var(--gap-vert-xs);
+  flex: 1 0 0;
+  min-width: 0;
+}
+.sb-uploader-cell-title {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-tertiary);
+  /* Опт-аут из Title-Case enforcement: имя файла рендерим как есть. */
+  text-transform: none;
+  /* НЕ спековая --title-line-height-s (12px < font-size 14px): при
+     overflow:hidden она режет descender'ы (g/p/y/j) — паттерн Nav Button. */
+  line-height: var(--body-line-height);
+}
+.sb-uploader-cell-info {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xxs);
+  align-self: stretch;
+  color: var(--text-secondary);
+}
+
+/* Symbol Badge S — 16×16 (глиф из Symbol Badges масштабируется CSS'ом). */
+.sb-uploader-cell-badge { display: inline-flex; justify-content: center; align-items: center; width: 16px; height: 16px; flex-shrink: 0; }
+.sb-uploader-cell-badge svg { width: 16px; height: 16px; }
+
+/* Имя статуса — Badge-типографика (10/500/12). */
+.sb-uploader-cell-status {
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--title-line-height-s);
+}
+/* ── UPLOADER — составная карточка ───────────────────────────────────
+   Дропзона + хедер списка (Header XS + Counter range) + Upload Cells.
+   Ширину задаёт consumer (style="width:..."), внутренности тянутся. */
+.sb-uploader {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-vert-m);
+  padding: var(--pad-vert-16) var(--pad-horiz-16) var(--pad-vert-24) var(--pad-horiz-16);
+  box-sizing: border-box;
+  border-radius: var(--radius-18);
+  /* Прозрачный бордер ВСЕГДА: резервирует место под Framed-рамку,
+     иначе габариты прыгали на 2px при переключении Card ↔ Framed. */
+  border: var(--border-width-1) solid transparent;
+  background: var(--background);
+  /* Shadow-S */
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+}
+/* Framed-вариант: бордер вместо тени (для плотных лэйаутов без elevation). */
+.sb-uploader.framed {
+  box-shadow: none;
+  border-color: var(--border);
+}
+.sb-uploader > .sb-uploader-area,
+.sb-uploader > .sb-header-xs { align-self: stretch; }
+/* Список — ДВА процесса раздельно: сверху группа Completed, снизу
+   активные (Uploading / Failed), между группами gap 16. Докачавшийся
+   файл переезжает в верхнюю группу (см. simulate в JS). */
+.sb-uploader-list {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: var(--gap-vert-m);
+}
+.sb-uploader-list-done,
+.sb-uploader-list-active {
+  display: flex;
+  flex-direction: column;
+}
+/* Пустая группа не должна оставлять холостой gap. */
+.sb-uploader-list-done:empty,
+.sb-uploader-list-active:empty { display: none; }
+.sb-uploader-list .sb-uploader-cell { width: 100%; }
+
+.sb-uploader-cell.completed .sb-uploader-cell-status { color: var(--success); }
+.sb-uploader-cell.uploading .sb-uploader-cell-status { color: var(--primary); }
+.sb-uploader-cell.failed    .sb-uploader-cell-status { color: var(--error); }
+/* Глифы SB_SVG красятся инлайновым fill:var(--токен) — локальный ремап
+   переменной даёт спековый цвет без !important:
+   time (--info) → --primary, warnLine (--alert) → --error. */
+.sb-uploader-cell.uploading .sb-uploader-cell-badge { --info: var(--primary); }
+.sb-uploader-cell.failed    .sb-uploader-cell-badge { --alert: var(--error); }
+
+/* Retry — текст-кнопка (Badge-типографика, --primary), возобновляет загрузку. */
+.sb-uploader-cell-retry {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: var(--badge-font-size);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--title-line-height-s);
+  color: var(--primary);
+  cursor: pointer;
+}
+
+/* Progress Bar (Uploading) — синяя полоса 2px прямо ПО нижнему строуку
+   ячейки (bottom:-1px перекрывает border-bottom); трека нет — его роль
+   играет сам разделитель. Ширина инлайном: style="width:NN%". */
+.sb-uploader-cell-progress {
+  position: absolute;
+  left: 0;
+  bottom: calc(var(--border-width-1) * -1);
+  height: 2px;
+  border-radius: var(--radius-2);
+  background: var(--primary);
+}
+/* --- [/SYNC:file-uploader] --- */

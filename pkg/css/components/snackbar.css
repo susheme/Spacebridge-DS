@@ -1,0 +1,87 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:snackbar] Snackbar --- */
+/* ── Snackbar ── floating bottom feedback about an action. Inverse plate
+   without inverse tokens: --text-tertiary bg + --surface-1 text — the pair
+   flips with the theme automatically. Types by composition, not colour:
+   Feedback (message only) / Action (message + a mini action button). */
+.sb-snackbar {
+  display: flex;
+  min-width: 320px;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  border-radius: var(--radius-8);
+  background: var(--text-tertiary);
+  box-shadow: 0 10px 20px 0 var(--shadow-overlay); /* Shadow-L */
+  box-sizing: border-box;
+}
+.sb-snackbar-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  flex: 1 0 0;
+  min-width: 0;
+}
+.sb-snackbar-lead { flex-shrink: 0; display: inline-flex; align-items: center; color: var(--surface-1); }
+/* Позитивный исход (sent / copied) — зелёный Check Circle. */
+.sb-snackbar-lead.is-success { color: var(--success); }
+/* Message: Title S Regular via sb-* classes in markup; single line + ellipsis.
+   Вертикальный padding обязателен: Title S — 14px при line-height 12px,
+   overflow:hidden без запаса клипает выносные элементы глифов. */
+.sb-snackbar-msg {
+  flex: 1 0 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: var(--pad-vert-4) 0;
+  color: var(--surface-1);
+}
+.sb-snackbar-close {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-4);
+  color: var(--surface-1);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.sb-snackbar-close:hover { background: var(--shadow-overlay); }
+
+/* Обратный таймер-лоадер: кольцо 20px, убывает 5 секунд. В статичных
+   демо кольцо полное; анимация — только на живом снэкбаре (.is-live,
+   вешает sbShowSnackbar). Длина окружности r=8 → 2πr ≈ 50.27. */
+.sb-snackbar-timer {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--surface-1);
+}
+.sb-snackbar.is-live .sb-snackbar-timer circle {
+  animation: sb-snackbar-countdown 5s linear forwards;
+}
+@keyframes sb-snackbar-countdown {
+  to { stroke-dashoffset: 50.27; }
+}
+
+/* Host живого снэкбара (sbShowSnackbar): фикс снизу по центру экрана,
+   слайд вверх при появлении. 24px от низа — поведенческий слой, не Figma. */
+.sb-snackbar-host {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 8px);
+  opacity: 0;
+  z-index: 10000;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.sb-snackbar-host.is-in { opacity: 1; transform: translate(-50%, 0); }
+/* --- [/SYNC:snackbar] --- */

@@ -1,0 +1,203 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:table] Table ---
+   Composable flex-таблица (div + ARIA-роли, не <table>). Фаза 1 — CAPTION-хедер.
+   Ряды / типы ячеек (slots) / selection+тулбар / pin/drag/accordion / filter /
+   empty — следующими шагами. */
+.sb-table {
+  display: inline-flex;
+  flex-direction: column;
+}
+/* Хедер-ряд — flex-строка ячеек, gap 0 (границы дают separator'ы). */
+.sb-thead-row {
+  display: inline-flex;
+  align-items: flex-start;
+}
+/* Текстовая ячейка хедера. Типографика CAPTION — на лейбле (.sb-caption +
+   .sb-fw-medium), цвет наследуется от ячейки. */
+.sb-th {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  height: 40px;
+  min-width: 80px;
+  box-sizing: border-box;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  user-select: none;
+}
+/* Чекбокс-ячейка — квадрат 40×40, контент по центру. */
+.sb-th-check {
+  width: 40px;
+  min-width: 40px;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  justify-content: center;
+  gap: var(--gap-vert-0);
+}
+/* Скруглены ТОЛЬКО верхние углы хедера: первая ячейка — TL, последняя — TR. */
+.sb-thead-row > :first-child { border-top-left-radius: var(--radius-8); }
+.sb-thead-row > :last-child  { border-top-right-radius: var(--radius-8); }
+/* Ячейки кликабельны: текстовые — сортировка, чекбокс-ячейка — select-all. */
+.sb-th { cursor: pointer; }
+/* Sort-иконка 24×24, всегда ghost (--border) — цвет при сортировке НЕ меняется.
+   Направление — поворотом одной иконки (arrow-up): asc = 0°, desc = 180°. */
+.sb-th-sort {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--border);
+  transition: transform 0.15s ease;
+}
+.sb-th-sort svg { width: 24px; height: 24px; }
+.sb-th[data-sort="desc"] .sb-th-sort { transform: rotate(180deg); }
+/* Вертикальный separator ВНУТРИ ячейки — у правого края, ПОЛНОСТЬЮ внутри (без
+   выноса наружу: вынесенная половина перекрывалась непрозрачным фоном соседней
+   ячейки и резала сепаратор пополам). Ячейки встык → border-bottom сплошной.
+   sep-v sep-l = 23px, центр по ряду 40px → зазор ~8px сверху/снизу. */
+.sb-th > .sb-sep.sep-v {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+/* === Header Secondary — ячейка типа Title M (16/600 --text-tertiary) с иконка-
+   слотом (антенна-статус или любая sbIcon) слева/справа. База — .sb-th, тут
+   только отличия от Primary: gap-vert-s, min-width 40, паддинг 8/8, цвет, курсор.
+   Бордер-низ — наследует --border (как у Primary). Сортировки нет. */
+.sb-th-secondary {
+  gap: var(--gap-vert-s);
+  min-width: 40px;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  color: var(--text-tertiary);
+  cursor: default;
+}
+/* Иконка-слот 24×24, не сжимается (антенна .sb-antenna-icon и sbIconRaw — оба 24). */
+.sb-th-ic { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.sb-th-ic svg { width: 24px; height: 24px; display: block; }
+/* === Table Cell (body-ячейка ряда, 40px) === Контейнер: flex, ширина 200
+   (min 80), padding 8/8, space-between, border-bottom --border-soft,
+   цвет --text-tertiary. Внутрь — один из типов контента. */
+.sb-td {
+  display: flex;
+  width: 200px;
+  min-width: 80px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  justify-content: space-between;
+  align-items: center;
+  background: var(--background);
+  border-bottom: var(--border-width-1) solid var(--border-soft);
+  color: var(--text-tertiary);
+}
+/* Состояния Hover/Selected — цвета как у Context Cell (context-menu.css):
+   hover → surface-1 (если не selected); selected → primary-hover + текст primary.
+   Hover/Selected — на уровне РЯДА (.sb-trow); .is-hover/.is-selected на ячейке —
+   для одиночного показа состояния в демо. Selected перебивает hover. */
+.sb-trow:hover:not(.is-selected) .sb-td,
+.sb-td.is-hover:not(.is-selected) { background: var(--surface-1); }
+.sb-trow.is-selected .sb-td,
+.sb-td.is-selected { background: var(--primary-hover); color: var(--primary); }
+/* Узкие control-ячейки: контент по центру, без горизонтального паддинга.
+   Ширина — модификатором: Checkbox = 40 (дефолт), Chevron/Icon-Button/Drawer = 32
+   (и компактный чекбокс). */
+.sb-td-ctrl { padding-left: 0; padding-right: 0; justify-content: center; }
+.sb-td-w40 { width: 40px; min-width: 40px; }
+.sb-td-w32 { width: 32px; min-width: 32px; }
+/* Toggle-ячейка — ширина по содержимому (тоглу) + паддинг 8. */
+.sb-td-auto { width: auto; min-width: 0; }
+/* Drawer — иконка draggable (16px, size S), muted, grab-курсор. */
+.sb-td-drag { display: inline-flex; align-items: center; color: var(--text-secondary); cursor: grab; }
+.sb-td-drag svg { display: block; }
+/* Text-контент: Title S (14/600) с обрезкой по ellipsis. min-width:0 — чтобы
+   flex-ребёнок мог ужиматься и реально включился text-overflow. */
+.sb-td-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-variant-numeric: lining-nums tabular-nums;
+  text-transform: none;  /* данные — как есть, без Title-Case энфорсмента */
+}
+/* Date-контент — CAPTION + цвет --text-secondary (светлее обычного текста). */
+.sb-td-date { color: var(--text-secondary); }
+/* Слотовая система: левый слот (ведущая группа — растёт и ужимается под
+   ellipsis) + правый (трейлинг: icon/chevron/toggle/btn — не ужимается).
+   space-between на .sb-td разводит их по краям. Gap внутри слота — 8px. */
+.sb-td-l, .sb-td-r { display: flex; align-items: center; gap: var(--gap-vert-s); }
+.sb-td-l { flex: 1; min-width: 0; }
+.sb-td-r { flex-shrink: 0; margin-left: auto; }
+/* Иконочный слот (icon/chevron) 24×24, чуть светлее текста. */
+.sb-td-ic { display: inline-flex; align-items: center; flex-shrink: 0; color: var(--text-secondary); }
+.sb-td-ic svg { width: 24px; height: 24px; display: block; }
+/* Input внутри ячейки тянется на ширину слота (перебиваем min/max-width поля). */
+.sb-td .sb-tf { flex: 1; min-width: 0; }
+/* Body-ряд таблицы — горизонтальный flex ячеек (как thead-row, но для данных). */
+.sb-trow { display: flex; }
+/* Kebab-колонка (row-actions): пустой хедер без сортировки. */
+.sb-th-kebab { cursor: default; }
+/* Delete (последний пункт row-меню) — danger-цвет. Скоуп таблицы, чтобы не
+   трогать общий Context Menu (там нет danger-варианта — см. BACKLOG). */
+.sb-td .sb-ctx-card > .sb-ctx-cell:last-child,
+.sb-td .sb-ctx-card > .sb-ctx-cell:last-child .sb-ctx-cell-icon-left { color: var(--error); }
+/* Table Wrap — контейнер: таблица + Tool Bar + Footer, общий бордер/радиус/клип. */
+.sb-table-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  max-width: 100%;
+  border-radius: var(--radius-8);
+  background: var(--background);
+}
+/* Footer — низ wrap'а: скруглён снизу. position/z-index — футер поверх
+   выезжающего из-под него Tool Bar (тень — на тул-баре, не на футере). */
+.sb-table-wrap .sb-table-footer {
+  position: relative;
+  z-index: 2;
+  border-top-color: var(--border-soft);
+  border-bottom-left-radius: var(--radius-8);
+  border-bottom-right-radius: var(--radius-8);
+}
+/* Зона футера — позиционный контекст для floating Tool Bar. */
+.sb-table-foot { position: relative; }
+/* Table Tool Bar — ФЛОУТИНГ ОСТРОВОК: компактная плашка по центру над футером
+   (gap 8px), авто-ширина под контент, НЕ меняет высоту таблицы (всплывает поверх
+   центра нижнего ряда). Выезжает вверх (translateY + fade). Shadow-S, radius-8. */
+.sb-table-toolbar {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + var(--gap-vert-s));
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  max-width: calc(100% - var(--pad-horiz-16));
+  padding: var(--pad-vert-8) var(--pad-horiz-8);
+  background: var(--background);
+  border-radius: var(--radius-8);
+  box-shadow: 0 2px 8px 0 var(--shadow-overlay);
+  box-sizing: border-box;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  pointer-events: none;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.sb-table-toolbar.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+/* Кнопки островка — единая высота 32 (S); иконки — квадрат 32, Apply — снаг. */
+.sb-table-toolbar .sb-btn { height: 32px; }
+.sb-table-toolbar .sb-btn-icon { width: 32px; min-width: 32px; min-height: 32px; max-height: 32px; }
+.sb-table-toolbar .sb-btn:not(.sb-btn-icon) { min-width: 0; }
+/* --- [/SYNC:table] --- */

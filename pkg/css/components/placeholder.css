@@ -1,0 +1,16 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:placeholder] Placeholder --- */
+/* Заглушка изображения. Источник графики — Placeholders/*.svg (Figma).
+   У каждой формы два рисунка: дневной и ночной (у ночного своя композиция),
+   переключение — [data-theme] на <html>. Цвета переведены в токены.
+   Пропорции держит viewBox: 310:179 у landscape, 1:1 у square. */
+.sb-placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.sb-placeholder.night { display: none; }
+[data-theme="dark"] .sb-placeholder.day { display: none; }
+[data-theme="dark"] .sb-placeholder.night { display: block; }
+/* --- [/SYNC:placeholder] --- */

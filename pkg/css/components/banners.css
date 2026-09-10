@@ -1,0 +1,166 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:banners] Banners / Notification Bar / Doc Note --- */
+.sb-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  width: 100%;
+  min-width: 288px;
+  max-width: 800px;
+  min-height: 60px;
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-4);
+  border-left: var(--border-width-4) solid var(--border);
+  background: var(--surface-1);
+  box-sizing: border-box;
+}
+
+/* Content column: title-row (lead + title) + description. Grows to ~80%. */
+.sb-banner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--gap-vert-xs);
+  flex: 1 1 80%;
+  min-width: 0;
+  align-self: stretch;
+}
+.sb-banner-titlerow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-horiz-xs);
+  max-width: 100%;
+}
+.sb-banner-lead { flex-shrink: 0; display: inline-flex; align-items: center; }
+/* Icon leads inherit the type colour (Status-dots carry their own bg). */
+.sb-banner.info    .sb-banner-lead { color: var(--info); }
+.sb-banner.success .sb-banner-lead { color: var(--success); }
+.sb-banner.warning .sb-banner-lead { color: var(--alert); }
+.sb-banner.error   .sb-banner-lead { color: var(--error); }
+
+/* Title: Title M typography via .sb-title-m in markup; colour per type.
+   Link-title — underlined, colour follows the type. */
+.sb-banner-title { color: var(--text-tertiary); }
+a.sb-banner-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-horiz-xxs);
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.sb-banner-text { color: var(--text-secondary); }
+
+/* Right slot — pinned to the right edge, ~20% of the width. Generic:
+   Badge-Status, close button, actions — any content. */
+.sb-banner-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-horiz-s);
+  flex: 0 1 20%;
+  /* НЕ stretch: растянутый слот центрировал контент по всей высоте, и при
+     росте баннера (длинный текст, раскрытие) Badge-Status уезжал к середине.
+     Прижимаем слот к верху; min-height 28 = 60(min-height баннера) − 2×16
+     (padding) — в компактном баннере позиция та же, что была при центре,
+     в выросшем бейдж остаётся на месте (паттерн закреплённого шеврона). */
+  align-self: flex-start;
+  min-height: 28px;
+}
+
+/* Types. Info / Success — neutral surface, coloured marker only.
+   Warning / Critical — tinted surface + coloured title & text. */
+.sb-banner.info    { border-left-color: var(--info); }
+.sb-banner.success { border-left-color: var(--success); }
+.sb-banner.warning {
+  border-left-color: var(--alert);
+  background: var(--alert-hover);
+}
+.sb-banner.warning .sb-banner-title,
+.sb-banner.warning .sb-banner-text { color: var(--alert); }
+.sb-banner.error {
+  border-left-color: var(--error);
+  background: var(--error-hover);
+}
+.sb-banner.error .sb-banner-title,
+.sb-banner.error .sb-banner-text { color: var(--error); }
+
+/* ── Collapsible Banner ── правило контента: баннер С правым слотом несёт
+   не более 5 строк body — кламп молча (.capped), без раскрытия. Баннер
+   БЕЗ правого слота (.collapsible) тоже клампится 5 строками, но при
+   переполнении (замер sbBannerSyncOverflow → .has-overflow) получает
+   закреплённый Chevron Button в правом верхнем углу (16/16) — раскрытие
+   и сборка. docNote-плашки (sbDocNote в docs-i18n.js) собраны тем же
+   контрактом — длинные Tech Info сворачиваются из коробки. */
+.sb-banner { position: relative; }
+.sb-banner.capped .sb-banner-text,
+.sb-banner.collapsible .sb-banner-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+.sb-banner.collapsible.expanded .sb-banner-text {
+  -webkit-line-clamp: unset;
+  max-height: none;
+}
+.sb-banner-chevron {
+  display: none;
+  position: absolute;
+  top: var(--pad-vert-16);
+  right: var(--pad-horiz-16);
+}
+.sb-banner.has-overflow .sb-banner-chevron,
+.sb-banner.expanded .sb-banner-chevron { display: flex; }
+/* Плавный collapse: line-clamp не анимируется, поэтому sbBannerToggle ведёт
+   высоту инлайновым max-height (px→px) — transition ниже его подхватывает.
+   0.28s — синхронно с таймаутом в JS (300ms). Без inline max-height переход
+   не срабатывает вовсе (none→none), так что первичный рендер мгновенный. */
+.sb-banner.collapsible .sb-banner-text { transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+@media (prefers-reduced-motion: reduce) {
+  .sb-banner.collapsible .sb-banner-text { transition: none; }
+}
+.sb-banner-chevron svg { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1); }
+.sb-banner.expanded .sb-banner-chevron svg { transform: rotate(180deg); }
+/* Контент не подлезает под закреплённый шеврон. */
+.sb-banner.has-overflow .sb-banner-content,
+.sb-banner.expanded .sb-banner-content { padding-right: var(--pad-horiz-32); }
+
+/* ── Notification Bar ── slim full-width strip right under the Navigation Bar.
+   Content centered by default; .align-left pins it to the left edge.
+   Text — Body M in the type colour; links inherit it, bold + underline. */
+.sb-notif-bar {
+  display: flex;
+  width: 100%;
+  min-width: 320px;
+  height: 28px;
+  padding: var(--pad-vert-2) var(--pad-horiz-8);
+  justify-content: center;
+  align-items: center;
+  gap: var(--gap-horiz-s);
+  box-sizing: border-box;
+  border-left: var(--border-width-4) solid var(--info);
+  background: var(--primary-hover);
+  color: var(--info);
+}
+.sb-notif-bar.align-left { justify-content: flex-start; }
+.sb-notif-bar-lead { flex-shrink: 0; display: inline-flex; align-items: center; }
+/* Fixed 28px height — no wrapping; long text truncates with an ellipsis. */
+.sb-notif-bar-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sb-notif-bar a {
+  color: inherit;
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.sb-notif-bar.success { border-left-color: var(--success); background: var(--success-hover); color: var(--success); }
+.sb-notif-bar.warning { border-left-color: var(--alert);   background: var(--alert-hover);   color: var(--alert); }
+.sb-notif-bar.error   { border-left-color: var(--error);   background: var(--error-hover);   color: var(--error); }
+/* --- [/SYNC:banners] --- */

@@ -1,0 +1,174 @@
+/* Файл собран tools/gen-pkg.js — руками не править. */
+
+/* --- [SYNC:tool-bar] Tool Bar (Top) --- */
+/* Top Tool Bar — горизонтальная полоска инструментов под Header'ами /
+   Sub Nav'ом. Содержит 3 слота: Left (action buttons), Center (Tab Bar
+   или контент), Right (поиск + actions). Размеры/отступы по Figma спеке.
+   Bottom Tool Bar — отдельный вариант, будет добавлен позже.
+
+   Border-color: используем --border-soft (light #E7EBF1) вместо
+   изначально предложенного --surface-2 (#E7EAEF) — визуально идентично
+   (1px diff), но --border-soft работает в dark mode (surface-2 невидим).
+   См. memory: feedback_border_token_rule.md. */
+.sb-tool-bar {
+  display: flex;
+  width: 100%;
+  max-width: var(--screens-max-screen-width);
+  padding: var(--pad-vert-8) var(--pad-horiz-16);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--gap-horiz-m);
+  border-radius: 0;
+  border-bottom: var(--border-width-1-5) solid var(--border-soft);
+  background: var(--background);
+  box-sizing: border-box;
+  /* Container query — auto-responsive compact + actions collapse. */
+  container-type: inline-size;
+  container-name: tool-bar;
+}
+
+/* Inline action кнопки (.sb-tool-bar-action) — видимы в wide режиме,
+   при container width <= threshold скрываются и появляются как extra
+   cells в overflow menu. Менюшные дубликаты (.sb-tool-bar-menu-extra) —
+   скрыты в wide, видимы в narrow. См. mkToolBarActions builder. */
+.sb-tool-bar-menu-extra { display: none; }
+
+/* Left slot — actions слева. По Figma фикс-width 165, но в реальном
+   использовании контент варьируется → используем flex-shrink:0 и
+   shrink-to-content, ограничивая max-width согласно nav-menu cap. */
+.sb-tool-bar-left {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  align-items: center;
+  gap: var(--gap-vert-m);
+  flex-shrink: 0;
+}
+
+/* Center slot — Tab Bar или любой контент. Flex:1 чтобы занять
+   оставшееся пространство между left и right. justify-content: center
+   центрирует контент. */
+.sb-tool-bar-center {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Right slot — actions справа. Прижат к правому краю. */
+.sb-tool-bar-right {
+  display: flex;
+  max-width: var(--nav-menu-max-width-right-content);
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--gap-vert-m);
+  flex-shrink: 0;
+}
+
+/* ── COMPACT variant ─────────────────────────────────────────────────
+   Для узких контекстов (мобила, Header S / sidebar). Уменьшенные паддинги
+   Tool Bar'а, icon-only Secondary кнопки переходят в Small (24×24 по
+   Figma Buttons-Rounded-S). Текстовые label'ы остаются sb-title-m;
+   опционально консьюмер может применить sb-title-s для ещё меньших.
+
+   Auto-responsive (container query / overflow-menu collapse) — TODO,
+   следующая итерация. Сейчас compact включается явно через
+   sbMkToolBar({ compact: true }) или класс .sb-tool-bar.compact. */
+.sb-tool-bar.compact {
+  padding: var(--pad-vert-4) var(--pad-horiz-8);
+  gap: var(--gap-horiz-s);
+}
+.sb-tool-bar.compact .sb-tool-bar-left,
+.sb-tool-bar.compact .sb-tool-bar-right {
+  gap: var(--gap-vert-s);
+}
+/* Icon-only Secondary внутри compact Tool Bar становятся Small (24×24).
+   Мимикрит .sb-btn-icon.sb-btn-sm правила без необходимости проставлять
+   sb-btn-sm на каждую кнопку в потребительском коде. */
+.sb-tool-bar.compact .sb-btn-icon {
+  width: var(--btn-rounded-max-width-s);
+  min-width: var(--btn-rounded-min-width-s);
+  max-width: var(--btn-rounded-max-width-s);
+  height: var(--btn-rounded-max-height-s);
+  min-height: var(--btn-rounded-min-height-s);
+  max-height: var(--btn-rounded-max-height-s);
+  padding: var(--pad-horiz-4) var(--pad-vert-2);
+  gap: var(--gap-vert-0);
+  border-radius: var(--radius-4);
+}
+.sb-tool-bar.compact .sb-btn-icon svg { width: 16px; height: 16px; }
+
+/* ── BOTTOM variant ──────────────────────────────────────────────────
+   Tool Bar в нижней части карточки. Разделительная линия сверху
+   (отделяет от контента над собой), не снизу. */
+.sb-tool-bar.bottom {
+  border-bottom: none;
+  border-top: var(--border-width-1-5) solid var(--border-soft);
+}
+
+/* ── FLOATING variant ────────────────────────────────────────────────
+   Bar отрывается от краёв (margin 16, radius 12, shadow-sm). При скролле
+   получает .is-stuck (через JS IntersectionObserver) — схлопывается до
+   full-width без отступов с глубокой тенью. Транзишн плавный (0.25s).
+   Wire через sbWireToolBarFloating(scrollRoot, bar). */
+.sb-tool-bar.floating {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: calc(100% - 2 * var(--pad-horiz-16));
+  margin: var(--pad-vert-16) var(--pad-horiz-16);
+  border-radius: var(--radius-12);
+  border-bottom: none;
+  box-shadow: 0 2px 8px 0 var(--shadow-sm);
+  transition: margin 0.25s ease, width 0.25s ease, border-radius 0.25s ease, box-shadow 0.25s ease;
+}
+.sb-tool-bar.floating.is-stuck {
+  width: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: 0 4px 16px 0 var(--shadow-md);
+}
+.sb-tool-bar-sentinel { height: 1px; flex-shrink: 0; }
+
+/* ── AUTO-RESPONSIVE ──────────────────────────────────────────────────
+   При container width ≤ 600px:
+   - применяются compact-стили (padding, button sizes)
+   - inline actions (.sb-tool-bar-action) скрываются
+   - дубликаты в overflow menu (.sb-tool-bar-menu-extra) — показываются
+   Override: .sb-tool-bar.compact-disabled — отключает auto (например для
+   embedded use внутри fixed-layout'а). */
+@container tool-bar (max-width: 600px) {
+  .sb-tool-bar:not(.compact-disabled) {
+    padding: var(--pad-vert-4) var(--pad-horiz-8);
+    gap: var(--gap-horiz-s);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-tool-bar-left,
+  .sb-tool-bar:not(.compact-disabled) .sb-tool-bar-right {
+    gap: var(--gap-vert-s);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-btn-icon {
+    width: var(--btn-rounded-max-width-s);
+    min-width: var(--btn-rounded-min-width-s);
+    max-width: var(--btn-rounded-max-width-s);
+    height: var(--btn-rounded-max-height-s);
+    min-height: var(--btn-rounded-min-height-s);
+    max-height: var(--btn-rounded-max-height-s);
+    padding: var(--pad-horiz-4) var(--pad-vert-2);
+    gap: var(--gap-vert-0);
+    border-radius: var(--radius-4);
+  }
+  .sb-tool-bar:not(.compact-disabled) .sb-btn-icon svg { width: 16px; height: 16px; }
+
+  /* Actions collapse. */
+  .sb-tool-bar-action     { display: none; }
+  .sb-tool-bar-menu-extra { display: flex; }
+}
+
+/* Popover уносит карточку меню порталом в <body>, где именованный контейнер
+   tool-bar её уже не достаёт — дубликаты так и остались бы скрытыми, и в
+   compact-режиме действия пропали бы совсем. Класс вешает sbToolBarSyncMenu
+   при открытии, померив бар на месте. */
+.sb-tool-bar-narrow .sb-tool-bar-menu-extra {
+  display: flex;
+}
+/* --- [/SYNC:tool-bar] --- */

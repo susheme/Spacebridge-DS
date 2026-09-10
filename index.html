@@ -105,7 +105,7 @@
       <!-- Бейдж версии наполняется скриптом ниже через sbMkBadgeStatus: разметку
            Status руками не пишем. Версия живёт в data-version — единственный
            источник, из него же её читает Info Footer в подвале. -->
-      <span class="sb-nav-bar-badge" id="dsVersionBadge" data-version="v1.14.0"></span>
+      <span class="sb-nav-bar-badge" id="dsVersionBadge" data-version="v1.15.0"></span>
     </div>
     <div class="sb-nav-bar-center"></div>
     <div class="sb-nav-bar-right" id="dsNavRight">
@@ -332,7 +332,7 @@
   var el = document.getElementById('app-info-footer');
   if (!el || typeof sbMkInfoFooter !== 'function') return;
   var badge = document.getElementById('dsVersionBadge');
-  var ver = badge ? badge.getAttribute('data-version') : 'v1.14.0';
+  var ver = badge ? badge.getAttribute('data-version') : 'v1.15.0';
   el.innerHTML = sbMkInfoFooter({
     variant: 'long',
     align: 'center',

@@ -7,6 +7,29 @@
 
 Источник версии — бейдж в Nav Bar (`index.html`), его читает Info Footer в подвале.
 
+## [1.15.0] — 2026-09-10
+
+- **Cards** — пять типов карточек, компонент Placeholder, Notification Card
+  (bordered-вариант, is-alert слот). Статус — Incomplete.
+- **Property List** — отдельная страница; живёт в `list.js` вместе со Standard
+  List. Тексты документации — образец нового инфостиля DS.
+- **Лента обновлений** — колокольчик в Nav Bar, Side Panel с фидом, read/unread.
+- **Dialogues** — alert и confirm разделены: alert информирует (OK, Esc
+  выключен), confirm просит решение; добавлен тип form (`sbShowPrompt`).
+- **Button** — вариант Link. **Tags** — clickable-режим.
+- **npm-пакет стилей `pkg/`** — фреймворк-независимый CSS для Angular-команд:
+  токены, цвета (светлая — дефолт, тёмная — `data-theme="dark"`), база без
+  site-shell правил, типографика, все компоненты, шрифты. Собирается
+  `tools/gen-pkg.js`; версия пакета наследуется от бейджа DS.
+- **Вики агента** (`docs/wiki`) — 54 компонентные страницы, страницы
+  инфраструктуры и паттернов, генератор скелетов `tools/gen-wiki.js`.
+
+### Фиксы
+
+- Toast: в стеке отдельно держится только свежайший action-тост.
+- Tooltips: высота превью плейграунда зафиксирована (256px).
+- NAV: Banners — Done; Table и Table Footer — Incomplete.
+
 ## [1.14.0] — 2026-08-04
 
 - **Grid System** — примитивы раскладки: Flex, Flex Item, Grid (карточная сетка

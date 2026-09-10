@@ -2,7 +2,7 @@
 
 > Chips — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/chips.js` (117 строк) + `css/components/chips.css` (39 строк)
 - Load order: 39/53 в `index.html`

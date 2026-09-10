@@ -2,7 +2,7 @@
 
 > Pagination (центр) + «Selected: N» (право); page-size селектора нет — см. BACKLOG.md.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/table-footer.js` (171 строк) + `css/components/table-footer.css` (37 строк)
 - Load order: 35/53 в `index.html`

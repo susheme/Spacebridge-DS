@@ -2,7 +2,7 @@
 
 > Панель ленты обновлений (updates feed); демо: Header S + Search + Notification Card.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/side-panel.js` (163 строк) + `css/components/side-panel.css` (69 строк)
 - Load order: 51/53 в `index.html`

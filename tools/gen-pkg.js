@@ -19,7 +19,9 @@
 //    pkg/LICENSE, pkg/NOTICE — копии из корня
 //
 //  ЧЕГО НЕ ДЕЛАЕТ. pkg/package.json и pkg/README.md создаёт только если их нет
-//  (имя пакета и версия — ручные решения, генератор их не перетирает).
+//  (имя пакета — ручное решение, генератор его не перетирает). Исключение —
+//  поле version: оно ВСЕГДА синхронизируется с версией DS из бейджа Nav Bar
+//  (data-version в index.html) — единственного источника версии по CONTRIBUTING.md.
 //  Шрифты не копирует — см. cp выше; если pkg/fonts пуст, предупреждает.
 //
 //  Source of truth не меняется: цвета — js/tokens.js, размеры — Figma JSON
@@ -71,8 +73,13 @@ if (reset.indexOf(SHELL) < 0) {
 }
 var baseCss = GEN_NOTE + reset.replace(SHELL, '');
 
-// ── порядок компонентов из index.html ───────────────────────────────────────
+// ── версия DS из бейджа Nav Bar (источник версии — один, CONTRIBUTING.md) ───
 var indexHtml = read(ROOT + 'index.html');
+var vm = indexHtml.match(/id="dsVersionBadge"[^>]*data-version="v([\d.]+)"/);
+if (!vm) { print('ОШИБКА: не найден dsVersionBadge с data-version в index.html'); quit(1); }
+var DS_VERSION = vm[1];
+
+// ── порядок компонентов из index.html ───────────────────────────────────────
 var COMP_ORDER = [];
 indexHtml.replace(/css\/components\/([\w-]+\.css)/g, function (_, f) {
   if (COMP_ORDER.indexOf(f) < 0) COMP_ORDER.push(f);
@@ -107,11 +114,18 @@ emit(PKG + 'css/spacebridge-ds.css', bundle);
 emit(PKG + 'LICENSE', read(ROOT + 'LICENSE'));
 emit(PKG + 'NOTICE', read(ROOT + 'NOTICE'));
 
-// ── package.json / README.md — только если нет ──────────────────────────────
-if (tryRead(PKG + 'package.json') === null) {
+// ── package.json: создать если нет, version всегда = версии DS ──────────────
+var pkgJson = tryRead(PKG + 'package.json');
+if (pkgJson !== null) {
+  var synced = pkgJson.replace(/"version":\s*"[^"]*"/, '"version": "' + DS_VERSION + '"');
+  if (synced === pkgJson && pkgJson.indexOf('"version": "' + DS_VERSION + '"') < 0) {
+    print('ОШИБКА: в pkg/package.json не найдено поле version'); quit(1);
+  }
+  if (synced !== pkgJson) emit(PKG + 'package.json', synced);
+} else {
   emit(PKG + 'package.json', JSON.stringify({
     name: '@spacebridge-ds/styles',
-    version: '0.1.0',
+    version: DS_VERSION,
     description: 'Spacebridge Design System — design tokens, typography and component styles. Framework-agnostic CSS.',
     license: 'Apache-2.0',
     style: 'css/spacebridge-ds.css',

@@ -2,7 +2,7 @@
 
 > Два типа с одной разметкой: alert информирует (OK, alertdialog, Esc выключен), confirm просит решение (OK/Cancel, dialog, Esc = Cancel → false). Хелперы sbShowAlert/sbShowConfirm/sbShowPrompt — промисы (prompt: string|null).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/dialogues.js` (498 строк) + `css/components/dialogues.css` (68 строк)
 - Load order: 52/53 в `index.html`

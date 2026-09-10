@@ -2,7 +2,7 @@
 
 > Однострочное поле; фабрики sbMkTextField/sbMkField экспортированы (потребитель — Dialogues form).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/input.js` (249 строк) + `css/components/input.css` (79 строк)
 - Load order: 17/53 в `index.html`

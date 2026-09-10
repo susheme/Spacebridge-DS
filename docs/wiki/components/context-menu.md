@@ -2,7 +2,7 @@
 
 > Контекстное меню (sbMkContextCard/Cell); нет danger-варианта ячейки — см. BACKLOG.md.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/context-menu.js` (347 строк) + `css/components/context-menu.css` (129 строк)
 - Load order: 25/53 в `index.html`

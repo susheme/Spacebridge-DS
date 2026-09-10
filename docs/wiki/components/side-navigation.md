@@ -2,7 +2,7 @@
 
 > Side Navigation в Spacebridge DS = два типа (Side Menu / Side Bar) в одном компоненте через variant
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/side-navigation.js` (996 строк) + `css/components/side-navigation.css` (447 строк)
 - Load order: 48/53 в `index.html`

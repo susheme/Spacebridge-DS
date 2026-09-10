@@ -2,7 +2,7 @@
 
 > Standard List (Profile/Info/Control); Property List — отдельная NAV-страница, но живёт в этом же файле.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/list.js` (1073 строк) + `css/components/list.css` (261 строк)
 - Файл общий с: `property-list`

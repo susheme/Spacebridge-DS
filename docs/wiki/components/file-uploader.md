@@ -2,7 +2,7 @@
 
 # File Uploader — done (24.07.2026)
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/file-uploader.js` (477 строк) + `css/components/file-uploader.css` (216 строк)
 - Load order: 37/53 в `index.html`

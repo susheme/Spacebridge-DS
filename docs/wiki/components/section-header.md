@@ -2,7 +2,7 @@
 
 > Заголовок секции со слотами; sticky-вариант сознательно НЕ вынесен в компонент — см. BACKLOG.md.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/section-header.js` (293 строк) + `css/components/section-header.css` (61 строк)
 - Load order: 28/53 в `index.html`

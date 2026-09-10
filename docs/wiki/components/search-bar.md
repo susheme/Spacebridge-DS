@@ -2,7 +2,7 @@
 
 > В Search Bar опции iconLeft и rightSlot взаимоисключают .sb-search-btn. Используется для глобального поиска с KBS-подсказкой (NAV cmd+K).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/search-bar.js` (184 строк) + `css/components/search-bar.css` (85 строк)
 - Load order: 16/53 в `index.html`

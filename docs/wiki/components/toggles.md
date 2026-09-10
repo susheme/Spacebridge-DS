@@ -2,7 +2,7 @@
 
 > Toggles — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/toggles.js` (159 строк) + `css/components/toggles.css` (82 строк)
 - Load order: 8/53 в `index.html`

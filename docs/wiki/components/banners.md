@@ -2,7 +2,7 @@
 
 > 4 типа (info/success/warning/error), left-marker 4px; sbDocNote рендерит именно Banner.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/banners.js` (675 строк) + `css/components/banners.css` (165 строк)
 - Load order: 5/53 в `index.html`

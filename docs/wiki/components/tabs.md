@@ -2,7 +2,7 @@
 
 > Tabs — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/tabs.js` (103 строк) + `css/components/tabs.css` (70 строк)
 - Load order: 30/53 в `index.html`

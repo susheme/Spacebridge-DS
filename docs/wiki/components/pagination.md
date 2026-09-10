@@ -2,7 +2,7 @@
 
 > Pagination — скелет; заметки заполняются по ходу работы.
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-09), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-10), между маркерами руками не править -->
 **Факты из кода:**
 - Файлы: `js/components/pagination.js` (159 строк) + `css/components/pagination.css` (59 строк)
 - Load order: 34/53 в `index.html`

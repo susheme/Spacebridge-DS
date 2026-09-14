@@ -12,8 +12,9 @@ body{height:100vh;overflow:hidden;display:flex;flex-direction:column;}
 .demo-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;}
 .demo-main{flex:1;display:flex;flex-direction:column;gap:var(--gap-vert-lg);
   padding-top:var(--pad-vert-24);padding-bottom:var(--pad-vert-24);}
-.demo-footer{flex-shrink:0;padding:var(--pad-vert-8) 0;}
+.demo-footer{flex-shrink:0;overflow-x:auto;}
 .demo-panel{width:100%;box-sizing:border-box;}
+.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);}
 .demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}
 .demo-table-scroll{overflow-x:auto;}
 .demo-table-frame{display:inline-flex;max-width:100%;border:var(--border-width-1) solid var(--border);
@@ -30,7 +31,7 @@ html:not([data-theme="dark"]) .demo-ico-moon{display:none;}
 <body>
 <div class="demo-app">
 <header class="sb-nav-bar">
-      <div class="sb-nav-bar-left"><span class="sb-nav-bar-logo-full"><span class="sb-title-l sb-fw-bold" style="color:var(--primary)">APP HOST</span></span><span class="sb-nav-bar-logo-compact"><span class="sb-title-l sb-fw-bold" style="color:var(--primary)">AH</span></span></div>
+      <div class="sb-nav-bar-left"><span class="sb-nav-bar-logo-full"><span class="sb-brand" style="font-size:18px;color:var(--primary)">APP HOST</span></span><span class="sb-nav-bar-logo-compact"><span class="sb-brand" style="font-size:18px;color:var(--primary)">AH</span></span></div>
       <div class="sb-nav-bar-center"><div class="sb-nav-bar-tabs"><button class="sb-nav-btn selected" type="button" onclick="sbSelectNavBtn(this)">
         <span class="sb-nav-btn-label">Management</span>
       </button><button class="sb-nav-btn" type="button" onclick="sbSelectNavBtn(this)">

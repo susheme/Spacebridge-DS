@@ -32,8 +32,9 @@ var SHELL_CSS = [
   '.demo-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;}',
   '.demo-main{flex:1;display:flex;flex-direction:column;gap:var(--gap-vert-lg);',
   '  padding-top:var(--pad-vert-24);padding-bottom:var(--pad-vert-24);}',
-  '.demo-footer{flex-shrink:0;padding:var(--pad-vert-8) 0;}',
+  '.demo-footer{flex-shrink:0;overflow-x:auto;}',
   '.demo-panel{width:100%;box-sizing:border-box;}',
+  '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
   '.demo-table-frame{display:inline-flex;max-width:100%;border:var(--border-width-1) solid var(--border);',
@@ -84,10 +85,10 @@ function page(title, bodyHtml) {
 
 // ── общие элементы ──────────────────────────────────────────────────────────
 
-// App Host — сторонний продукт, фирменный шрифт Spacebridge (sb-brand) ему
-// не полагается: обычная типографика DS.
-var LOGO = '<span class="sb-title-l sb-fw-bold" style="color:var(--primary)">APP HOST</span>';
-var LOGO_COMPACT = '<span class="sb-title-l sb-fw-bold" style="color:var(--primary)">AH</span>';
+// Логотип — фирменный шрифт (sb-brand), как у хрома самой DS; размер и цвет —
+// canon логотипа из index.html DS.
+var LOGO = '<span class="sb-brand" style="font-size:18px;color:var(--primary)">APP HOST</span>';
+var LOGO_COMPACT = '<span class="sb-brand" style="font-size:18px;color:var(--primary)">AH</span>';
 
 var THEME_BTN = '<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"'
   + ' onclick="demoToggleTheme()" aria-label="Toggle theme">'

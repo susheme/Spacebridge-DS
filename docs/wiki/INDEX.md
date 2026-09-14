@@ -95,6 +95,7 @@
 - [dogma-klementiya.md](conventions/dogma-klementiya.md) — только свои компоненты; времянок не делать вообще
 - [reuse-existing-styles.md](conventions/reuse-existing-styles.md) — перед новым font/color/class — grep по DS
 - [new-component-audit.md](conventions/new-component-audit.md) — новый компонент: сначала аудит «что есть / чего нет»
+- [sticky-headers.md](conventions/sticky-headers.md) — хэдэр скроллящегося контейнера (страница/карточка) — sticky; догма юзера 14.09.2026
 - [writing-style.md](conventions/writing-style.md) — инфостиль текстов документации
 - [title-case.md](conventions/title-case.md) — text-transform: capitalize на заголовочных классах
 

@@ -49,7 +49,7 @@ var SHELL_CSS = [
   '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);',
   '  margin:0 calc(-1*var(--pad-vert-16));',
   '  width:calc(100% + 2*var(--pad-vert-16));max-width:none;',
-  '  padding:var(--pad-vert-8) var(--pad-vert-16);',
+  '  padding:var(--pad-vert-16) var(--pad-vert-16);',
   // Прилипший хэдэр держит верхние углы панели (radius-8, как .sb-card);
   // в 0 уходит только Nav Bar — он упирается в углы окна.
   '  border-radius:var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);}',

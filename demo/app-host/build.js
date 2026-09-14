@@ -26,11 +26,13 @@ eval(files.map(function (f) { return '\n//<<<' + f + '>>>\n' + read(f); }).join(
 // ── общий каркас ────────────────────────────────────────────────────────────
 
 var SHELL_CSS = [
-  'body{min-height:100vh;display:flex;flex-direction:column;}',
-  '.demo-app{flex:1;display:flex;flex-direction:column;}',
+  // App-shell: nav и footer прибиты, скроллится только средняя зона.
+  'body{height:100vh;overflow:hidden;display:flex;flex-direction:column;}',
+  '.demo-app{flex:1;display:flex;flex-direction:column;min-height:0;}',
+  '.demo-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;}',
   '.demo-main{flex:1;display:flex;flex-direction:column;gap:var(--gap-vert-lg);',
   '  padding-top:var(--pad-vert-24);padding-bottom:var(--pad-vert-24);}',
-  '.demo-footer{padding:var(--pad-vert-8) 0;}',
+  '.demo-footer{flex-shrink:0;padding:var(--pad-vert-8) 0;}',
   '.demo-panel{width:100%;box-sizing:border-box;}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
@@ -179,7 +181,7 @@ var loginBody =
       sbMkButton({ label: 'Guest Mode', attrs: ' onclick="location.href=\'events.html\'"' }),
     ],
   })
-  + '<div class="demo-login-wrap">'
+  + '<div class="demo-scroll"><div class="demo-login-wrap">'
   + sbMkCard({
       cls: 'demo-login-card',
       body: '<div class="demo-stack">'
@@ -190,7 +192,7 @@ var loginBody =
             attrs: ' onclick="location.href=\'management.html\'"' })
         + '</div>',
     })
-  + '</div>'
+  + '</div></div>'
   + infoFooter();
 
 // ── events.html ─────────────────────────────────────────────────────────────
@@ -228,6 +230,7 @@ var eventsBody =
       sbMkButton({ label: 'Login', attrs: ' onclick="location.href=\'login.html\'"' }),
     ],
   })
+  + '<div class="demo-scroll">'
   + sbMkPage({ cls: 'demo-main', content:
       sbMkCard({
         cls: 'demo-panel',
@@ -239,6 +242,7 @@ var eventsBody =
           + '<div class="sb-table-foot">' + eventsFooter + '</div></div></div></div>'
           + '</div>',
       }) })
+  + '</div>'
   + infoFooter();
 
 // ── management.html ─────────────────────────────────────────────────────────
@@ -314,6 +318,7 @@ var mgmtBody =
       sbMkAvatar({ type: 'initials', initials: 'D' }),
     ],
   })
+  + '<div class="demo-scroll">'
   + sbMkPage({ cls: 'demo-main', content:
       sbMkCard({
         cls: 'demo-panel',
@@ -333,6 +338,7 @@ var mgmtBody =
               + sectionHeader('NTP') + ntpCard + '</div>' }) })
         + '</div>',
       }) })
+  + '</div>'
   + infoFooter();
 
 // ── запись ──────────────────────────────────────────────────────────────────

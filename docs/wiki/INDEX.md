@@ -84,6 +84,7 @@
 - [tests.md](infra/tests.md) — `jsc tests/run.js`, что ловят 23 проверки и чего принципиально не ловят
 - [docs-i18n.md](infra/docs-i18n.md) — sbT(en,ru), sbDocNote, стиль-критерии, статус 39/40, FR отложен
 - [release-checklist.md](infra/release-checklist.md) — шаги обычного пуша и релиза (бейдж → CHANGELOG → gen-pkg → тег → GitHub Release)
+- [demo-app-host.md](infra/demo-app-host.md) — demo/app-host: экраны App Host фабриками DS на pkg-CSS; `jsc demo/app-host/build.js`
 - [pkg-generator.md](infra/pkg-generator.md) — `jsc tools/gen-pkg.js` собирает pkg/ (npm-пакет CSS для Angular); имя пакета — плейсхолдер
 - [playground-wide-mode.md](infra/playground-wide-mode.md) — wide: true, фиксы ширины preview/controls
 - [playground-pg-toggles.md](infra/playground-pg-toggles.md) — единый .pg-toggles, auto-fill сетки, грабли minmax

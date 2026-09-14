@@ -40,24 +40,19 @@ var SHELL_CSS = [
   '  display:flex;flex-direction:column;}',
   // Sticky-хэдэр (догма sticky-headers.md): у скролл-зоны паддинг сверху 0,
   // хэдэр full-bleed перекрывает боковые паддинги плоскости своим фоном.
-  // Специфичность: pkg-правило .sb-card>.sb-card-body:first-child{padding:16}
-  // (0,2,1) перебивает класс-пару — селектор ниже обязан быть сильнее.
-  '.sb-card.demo-panel>.sb-card-body:first-child{flex:1;min-height:0;overflow-y:auto;padding-top:0;}',
-  // Full-bleed: боковой паддинг панели задаёт правило
-  // .sb-card>.sb-card-body:first-child{padding:var(--pad-vert-16)} — тянемся
-  // тем же токеном; width перебивает компонентные width:100%/max-width:1024.
-  '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);',
-  '  margin:0 calc(-1*var(--pad-vert-16));',
-  '  width:calc(100% + 2*var(--pad-vert-16));max-width:none;',
-  '  padding:var(--pad-vert-16) var(--pad-vert-16);',
-  // Прилипший хэдэр держит верхние углы панели (radius-8, как .sb-card);
-  // в 0 уходит только Nav Bar — он упирается в углы окна.
+  // Хэдэр панели ВНЕ скролл-зоны (паттерн 2 из доков Nav Bar): скроллбар
+  // упирается в низ хэдэра, а не едет за ним. Специфичность против
+  // pkg-правила .sb-card>.sb-card-body:first-child{padding:16}.
+  '.sb-card.demo-panel>.sb-card-body:first-child{flex:1;min-height:0;padding:0;',
+  '  display:flex;flex-direction:column;gap:0;}',
+  // Компонентные значения не подменяются: только снятие max-width:1024
+  // (full-width панели шире) и верхние углы панели (radius-8, как .sb-card;
+  // в 0 уходит только Nav Bar — он упирается в углы окна).
+  '.demo-panel .sb-header-l{max-width:none;',
   '  border-radius:var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);}',
-  // Скролл-зона клипает контент по тем же верхним радиусам, иначе он
-  // проезжает в прозрачных уголках. Popover'ов внутри панели нет —
-  // клип безопасен (см. паттерн no-cosmetic-overflow-hidden).
-  '.sb-card.demo-panel>.sb-card-body:first-child{',
-  '  border-radius:var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);}',
+  // Скролл-зона под хэдэром; паддинги — те же, что были у тела панели.
+  '.demo-panel-scroll{flex:1;min-height:0;overflow-y:auto;padding:var(--pad-vert-16);',
+  '  display:flex;flex-direction:column;gap:var(--gap-vert-m);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
   '.demo-table-frame{display:flex;width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);',
@@ -97,7 +92,7 @@ var SHELL_JS = [
   'var sbWireNavBarFloating = ' + sbWireNavBarFloating.toString() + ';',
   "document.addEventListener('DOMContentLoaded',function(){",
   "  var bar=document.querySelector('.sb-nav-bar.floating');",
-  "  var scroll=document.querySelector('.demo-panel>.sb-card-body')",
+  "  var scroll=document.querySelector('.demo-panel-scroll')",
   "    ||document.querySelector('.demo-scroll');",
   '  if(bar&&scroll)sbWireNavBarFloating(scroll,bar);',
   '});',
@@ -276,8 +271,8 @@ var eventsBody =
       sbMkCard({
         border: true,
         cls: 'demo-panel',
-        body: '<div class="demo-stack">'
-          + eventsHeader
+        body: eventsHeader
+          + '<div class="demo-panel-scroll">'
           + sbMkButtonWithLabel({ icon: 'filter-line', text: 'Filter', side: 'right' })
           + '<div class="demo-table-scroll"><div class="demo-table-frame"><div class="sb-table-wrap">'
           + eventsTable
@@ -368,8 +363,8 @@ var mgmtBody =
       sbMkCard({
         border: true,
         cls: 'demo-panel',
-        body: '<div class="demo-stack">'
-        + sbMkHeaderL({ title: 'Management' })
+        body: sbMkHeaderL({ title: 'Management' })
+        + '<div class="demo-panel-scroll">'
         + sbMkFlex({ gap: 'lg', wrap: true, full: true, content:
             sbMkFlexItem({ grow: 2, basis: '480px', content: '<div class="demo-stack">'
               + sectionHeader('Update')

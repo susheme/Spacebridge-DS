@@ -116,5 +116,6 @@
 
 ## Plans
 
+- [asap-after-app-host.md](plans/asap-after-app-host.md) — ASAP-лист DS по итогам догфуда App Host: Table selectable:false, экспорт Password, uploader-адаптив, паддинги Cards, app-shell рецепт
 - [dogfood-headers.md](plans/dogfood-headers.md) — затащить Header L/M/Section в хром самой DS (отдельный заход)
 - [angular-adoption.md](plans/angular-adoption.md) — свой npm-пакет стилей для будущих Angular-проектов; ngx-spacebridge не трогаем; созвон ~14–15.09.2026

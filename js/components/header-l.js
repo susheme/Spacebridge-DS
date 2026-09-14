@@ -418,6 +418,9 @@ ${leftInner}
           + '<ul><li>Headline: H5 (28 / 900 / 32).</li></ul>'
           + '<b>Поведение:</b>'
           + '<ul><li>Breakpoint 768px: gap слотов сжимается до 8px, inline-кнопки правого слота сворачиваются под More (⋯).</li></ul>'
+        )) + sbDocNote('Placement', sbT(
+          'In a scrolling container the header is placed outside the scroll area, as a sibling above it. The scrollbar stops at the header bottom edge and does not overlap it. Top corners repeat the container radius. Only Nav Bar collapses the radius to 0: it meets the browser window corners.',
+          'В скроллящемся контейнере хэдэр размещается вне зоны прокрутки, сиблингом над ней. Полоса прокрутки упирается в нижнюю границу хэдэра и не перекрывает его. Верхние углы повторяют радиус контейнера. Радиус в 0 сворачивает только Nav Bar: он упирается в углы окна браузера.'
         )),
         preview: `<div style="background:var(--surface-1);padding:var(--pad-vert-24);border-radius:var(--radius-12);width:720px">
           ${mkHeaderL({

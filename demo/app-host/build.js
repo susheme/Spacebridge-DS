@@ -49,7 +49,15 @@ var SHELL_CSS = [
   '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);',
   '  margin:0 calc(-1*var(--pad-vert-16));',
   '  width:calc(100% + 2*var(--pad-vert-16));max-width:none;',
-  '  padding:var(--pad-vert-8) var(--pad-vert-16);}',
+  '  padding:var(--pad-vert-8) var(--pad-vert-16);',
+  // Прилипший хэдэр держит верхние углы панели (radius-8, как .sb-card);
+  // в 0 уходит только Nav Bar — он упирается в углы окна.
+  '  border-radius:var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);}',
+  // Скролл-зона клипает контент по тем же верхним радиусам, иначе он
+  // проезжает в прозрачных уголках. Popover'ов внутри панели нет —
+  // клип безопасен (см. паттерн no-cosmetic-overflow-hidden).
+  '.sb-card.demo-panel>.sb-card-body:first-child{',
+  '  border-radius:var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
   '.demo-table-frame{display:flex;width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);',

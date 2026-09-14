@@ -35,12 +35,18 @@ var SHELL_CSS = [
   '.demo-footer{flex-shrink:0;overflow-x:auto;}',
   '.demo-panel{width:100%;box-sizing:border-box;flex:1;min-height:0;',
   '  display:flex;flex-direction:column;}',
-  '.demo-panel>.sb-card-body{flex:1;min-height:0;overflow-y:auto;}',
-  '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);}',
+  // Sticky-хэдэр (догма sticky-headers.md): у скролл-зоны паддинг сверху 0,
+  // хэдэр full-bleed перекрывает боковые паддинги плоскости своим фоном.
+  '.demo-panel>.sb-card-body{flex:1;min-height:0;overflow-y:auto;padding-top:0;}',
+  '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);',
+  '  margin:0 calc(-1*var(--pad-horiz-16));',
+  '  padding:var(--pad-vert-8) var(--pad-horiz-16);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
-  '.demo-table-frame{display:inline-flex;max-width:100%;border:var(--border-width-1) solid var(--border);',
+  '.demo-table-frame{display:flex;width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);',
   '  border-radius:var(--radius-8);overflow:hidden;background:var(--background);}',
+  '.demo-table-frame .sb-table{width:100%;}',
+  '.demo-table-frame .sb-thead-row,.demo-table-frame .sb-trow{display:flex;width:100%;}',
   '.demo-login-wrap{flex:1;display:flex;align-items:center;justify-content:center;',
   '  padding:var(--pad-vert-24) var(--pad-horiz-16);}',
   '.demo-login-card{width:100%;max-width:400px;}',
@@ -68,6 +74,14 @@ var SHELL_JS = [
   'function sbUploaderDragLeave(){}',
   'function sbUploaderDrop(){}',
   'function sbUploaderPick(){}',
+  '// Floating nav: is-stuck при скролле — код DS (sbWireNavBarFloating).',
+  'var sbWireNavBarFloating = ' + sbWireNavBarFloating.toString() + ';',
+  "document.addEventListener('DOMContentLoaded',function(){",
+  "  var bar=document.querySelector('.sb-nav-bar.floating');",
+  "  var scroll=document.querySelector('.demo-panel>.sb-card-body')",
+  "    ||document.querySelector('.demo-scroll');",
+  '  if(bar&&scroll)sbWireNavBarFloating(scroll,bar);',
+  '});',
 ].join('\n');
 
 var THEME_BOOT = "(function(){try{var t=localStorage.getItem('demo-theme');"
@@ -106,6 +120,7 @@ function navBar(opts) {
     logoCompact: LOGO_COMPACT,
     tabs: opts.tabs || [],
     rightSlot: opts.rightSlot || [],
+    floating: true,
   });
 }
 
@@ -133,7 +148,10 @@ function sectionHeader(title) {
 // (canon обёртки из доков Table Footer).
 function demoTable(columns, rows) {
   var sep = '<span class="sb-sep sep-v sep-l"></span>';
-  function w(col) { return ' style="width:' + col.width + 'px;min-width:' + col.width + 'px"'; }
+  function w(col) {
+    if (col.flex) return ' style="flex:1 1 ' + (col.min || 160) + 'px;width:auto;min-width:' + (col.min || 160) + 'px"';
+    return ' style="width:' + col.width + 'px;min-width:' + col.width + 'px"';
+  }
   var h = columns.map(function (c, i) {
     var dir = c.sort ? ' data-sort="' + c.sort + '"' : '';
     var last = i === columns.length - 1;
@@ -205,7 +223,7 @@ var eventsTable = demoTable(
   [
     { title: 'Date', sort: 'desc', width: 240 },
     { title: 'Severity / Type', width: 340 },
-    { title: 'Parameters', width: 240 },
+    { title: 'Parameters', flex: true, min: 160 },
   ],
   [
     [cellText('2026-09-04 16:11:23'), cellDotText('online', 'firmware-update-success'), cellText('—')],
@@ -255,7 +273,7 @@ var eventsBody =
 var updateTable = demoTable(
   [
     { title: '#', width: 56 },
-    { title: 'Version', width: 360 },
+    { title: 'Version', flex: true, min: 260 },
     { title: 'Partition', width: 130 },
     { title: 'Status', width: 120 },
     { title: 'Actions', width: 160 },

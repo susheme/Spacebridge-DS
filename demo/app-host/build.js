@@ -40,10 +40,16 @@ var SHELL_CSS = [
   '  display:flex;flex-direction:column;}',
   // Sticky-хэдэр (догма sticky-headers.md): у скролл-зоны паддинг сверху 0,
   // хэдэр full-bleed перекрывает боковые паддинги плоскости своим фоном.
-  '.demo-panel>.sb-card-body{flex:1;min-height:0;overflow-y:auto;padding-top:0;}',
+  // Специфичность: pkg-правило .sb-card>.sb-card-body:first-child{padding:16}
+  // (0,2,1) перебивает класс-пару — селектор ниже обязан быть сильнее.
+  '.sb-card.demo-panel>.sb-card-body:first-child{flex:1;min-height:0;overflow-y:auto;padding-top:0;}',
+  // Full-bleed: боковой паддинг панели задаёт правило
+  // .sb-card>.sb-card-body:first-child{padding:var(--pad-vert-16)} — тянемся
+  // тем же токеном; width перебивает компонентные width:100%/max-width:1024.
   '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);',
-  '  margin:0 calc(-1*var(--pad-horiz-16));',
-  '  padding:var(--pad-vert-8) var(--pad-horiz-16);}',
+  '  margin:0 calc(-1*var(--pad-vert-16));',
+  '  width:calc(100% + 2*var(--pad-vert-16));max-width:none;',
+  '  padding:var(--pad-vert-8) var(--pad-vert-16);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
   '.demo-table-frame{display:flex;width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);',
@@ -54,6 +60,8 @@ var SHELL_CSS = [
   '  padding:var(--pad-vert-24) var(--pad-horiz-16);}',
   '.demo-login-card{width:100%;max-width:400px;}',
   '.demo-login-card .sb-pw{width:100%;box-sizing:border-box;}',
+  // Uploader: компонентный min-width:320 распирает панель на телефоне.
+  '.demo-stack .sb-uploader-area{min-width:0;}',
   '.demo-btn-full{width:100%;}',
   '[data-theme="dark"] .demo-ico-sun{display:none;}',
   'html:not([data-theme="dark"]) .demo-ico-moon{display:none;}',

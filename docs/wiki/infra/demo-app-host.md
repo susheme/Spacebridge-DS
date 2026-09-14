@@ -20,6 +20,20 @@ Spacebridge DS по скриншотам юзера (14.09.2026). Цель — �
 - Иконка БД в нав-баре не переносится — она только для dev-режима App Host.
 - Иконки filter-line / arrow-go-back-line / save-line добавлены дизайнером в Icons/ и в `ICON_PATHS`+`ICON_PATHS_S` (core.js, с явного разрешения).
 
+## Ревью юзера 14.09.2026 — исправления
+
+10 пунктов + «у страниц свой хэдэр с хэдлайном». Итог:
+
+- Хэдлайны страниц — sbMkHeaderL (Events, Management), в Login-карточке — sbMkHeaderM. Голый `sb-h6` вместо Header-компонентов — ошибка.
+- Filter — `sbMkButtonWithLabel` (иконка + подпись), не secondary с лейблом.
+- Login / Guest Mode — secondary кнопки, НЕ link (консистентность нав-бара).
+- Логотип App Host — обычная типографика: `sb-brand` (фирменный шрифт Spacebridge) стороннему продукту не полагается. Плюс шрифта в pkg вообще не было — см. [pkg-generator.md](pkg-generator.md).
+- Бейджи в ячейках таблиц — ТОЛЬКО mini (canon mkCell `_badge`); полноразмерные упираются в 40px ряд.
+- Backup-дропзона — наш `sbMkUploaderArea`, не самодельная зона с кнопкой.
+- Контейнер страницы — примитив `sbMkPage` (max-width + центр), раскладка колонок — `sbMkFlex`/`sbMkFlexItem`; контент не растягивается на всю ширину.
+- Section Headers (фон --surface-2) кладутся на белую панель, не на фон страницы того же цвета.
+- Центрирование Login: flex-цепочка от `body{min-height:100vh}`, а не от вложенного контейнера с min-height.
+
 ## Грабли / хвосты
 
 - Таблица без чекбокс-колонки собирается локальным `demoTable()` из ячеек `.sb-th/.sb-td`: `sbMkTableFull` всегда рисует select-колонку. Кандидат на опцию `selectable:false` в Table.

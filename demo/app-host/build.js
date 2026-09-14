@@ -12,7 +12,8 @@
 //  ЧЕГО НЕ ДЕЛАЕТ. Не тянет JS DS в браузер: страницы статические, интерактив
 //  (тема, навигация, глазок пароля) — минимальный inline-скрипт SHELL_JS.
 //  Разметка руками не пишется — только вызовы sbMk* и документированные
-//  copy-paste блоки (password, section-header, table-footer-left).
+//  copy-paste блоки (password, section-header, table-footer-left, таблица
+//  без select-колонки — см. demoTable ниже).
 // ═══════════════════════════════════════════════════════════════════════════
 
 load('tests/lib/dom.js');
@@ -25,31 +26,21 @@ eval(files.map(function (f) { return '\n//<<<' + f + '>>>\n' + read(f); }).join(
 // ── общий каркас ────────────────────────────────────────────────────────────
 
 var SHELL_CSS = [
-  '.demo-app{min-height:100vh;display:flex;flex-direction:column;}',
-  '.demo-main{flex:1;width:100%;max-width:1720px;margin:0 auto;box-sizing:border-box;',
-  '  display:flex;flex-direction:column;gap:var(--gap-vert-lg);',
-  '  padding:var(--pad-vert-24) var(--pad-horiz-24);}',
+  'body{min-height:100vh;display:flex;flex-direction:column;}',
+  '.demo-app{flex:1;display:flex;flex-direction:column;}',
+  '.demo-main{flex:1;display:flex;flex-direction:column;gap:var(--gap-vert-lg);',
+  '  padding-top:var(--pad-vert-24);padding-bottom:var(--pad-vert-24);}',
   '.demo-footer{padding:var(--pad-vert-8) 0;}',
-  '.demo-page-card{width:100%;box-sizing:border-box;}',
+  '.demo-panel{width:100%;box-sizing:border-box;}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
-  '.demo-cols{display:flex;gap:var(--gap-horiz-lg);flex-wrap:wrap;align-items:stretch;}',
-  '.demo-col-main{flex:2 1 480px;min-width:0;}',
-  '.demo-col-side{flex:1 1 280px;min-width:0;}',
-  '.demo-toolbar{display:flex;justify-content:space-between;align-items:flex-end;',
-  '  gap:var(--gap-horiz-m);flex-wrap:wrap;}',
-  '.demo-server-time{display:flex;align-items:center;justify-content:flex-end;',
-  '  gap:var(--gap-horiz-m);flex-wrap:wrap;text-align:right;}',
   '.demo-table-scroll{overflow-x:auto;}',
+  '.demo-table-frame{display:inline-flex;max-width:100%;border:var(--border-width-1) solid var(--border);',
+  '  border-radius:var(--radius-8);overflow:hidden;background:var(--background);}',
   '.demo-login-wrap{flex:1;display:flex;align-items:center;justify-content:center;',
   '  padding:var(--pad-vert-24) var(--pad-horiz-16);}',
   '.demo-login-card{width:100%;max-width:400px;}',
   '.demo-login-card .sb-pw{width:100%;box-sizing:border-box;}',
   '.demo-btn-full{width:100%;}',
-  '.demo-upload-zone{border:var(--border-width-1) solid var(--border);',
-  '  border-radius:var(--radius-8);padding:var(--pad-vert-16) var(--pad-horiz-16);',
-  '  display:flex;justify-content:center;}',
-  '.demo-row-between{display:flex;justify-content:space-between;align-items:center;',
-  '  gap:var(--gap-horiz-m);flex-wrap:wrap;}',
   '[data-theme="dark"] .demo-ico-sun{display:none;}',
   'html:not([data-theme="dark"]) .demo-ico-moon{display:none;}',
 ].join('\n');
@@ -67,6 +58,11 @@ var SHELL_JS = [
   'function sbPwToggle(btn){',
   "  var i=btn.closest('.sb-pw').querySelector('input');",
   "  i.type=i.type==='password'?'text':'password';}",
+  '// Дропзона в демо статическая: обработчики File Uploader — заглушки.',
+  'function sbUploaderDragOver(){}',
+  'function sbUploaderDragLeave(){}',
+  'function sbUploaderDrop(){}',
+  'function sbUploaderPick(){}',
 ].join('\n');
 
 var THEME_BOOT = "(function(){try{var t=localStorage.getItem('demo-theme');"
@@ -86,8 +82,10 @@ function page(title, bodyHtml) {
 
 // ── общие элементы ──────────────────────────────────────────────────────────
 
-var LOGO = '<span class="sb-brand" style="font-size:18px;color:var(--primary)">APP HOST</span>';
-var LOGO_COMPACT = '<span class="sb-brand" style="font-size:18px;color:var(--primary)">AH</span>';
+// App Host — сторонний продукт, фирменный шрифт Spacebridge (sb-brand) ему
+// не полагается: обычная типографика DS.
+var LOGO = '<span class="sb-title-l sb-fw-bold" style="color:var(--primary)">APP HOST</span>';
+var LOGO_COMPACT = '<span class="sb-title-l sb-fw-bold" style="color:var(--primary)">AH</span>';
 
 var THEME_BTN = '<button type="button" class="sb-btn sb-btn-secondary sb-btn-icon"'
   + ' onclick="demoToggleTheme()" aria-label="Toggle theme">'
@@ -124,13 +122,13 @@ function sectionHeader(title) {
 }
 
 // Таблица без чекбокс-колонки: те же .sb-th/.sb-td ячейки, что собирает
-// sbMkTableFull (у него первая колонка всегда select — App Host'у не нужна).
+// sbMkTableFull (у него первая колонка всегда select — App Host'у не нужна;
+// кандидат на опцию selectable:false — см. wiki demo-app-host.md).
+// Ширины фиксированные, как в mkTableFull; рамка — .demo-table-frame
+// (canon обёртки из доков Table Footer).
 function demoTable(columns, rows) {
   var sep = '<span class="sb-sep sep-v sep-l"></span>';
-  function w(col) {
-    if (col.flex) return ' style="flex:1;width:auto;min-width:' + (col.min || 120) + 'px"';
-    return ' style="width:' + col.width + 'px;min-width:' + col.width + 'px"';
-  }
+  function w(col) { return ' style="width:' + col.width + 'px;min-width:' + col.width + 'px"'; }
   var h = columns.map(function (c, i) {
     var dir = c.sort ? ' data-sort="' + c.sort + '"' : '';
     var last = i === columns.length - 1;
@@ -154,6 +152,10 @@ function cellText(t) { return '<span class="sb-body-m">' + t + '</span>'; }
 function cellDotText(dot, t) {
   return '<span class="sb-status-dot ' + dot + '"></span>' + cellText(t);
 }
+// Бейдж в ячейке таблицы — canon mkCell: Badge-Status Mini.
+function cellBadge(color, label) {
+  return sbMkBadgeStatus({ label: label, color: color, mini: true });
+}
 
 // ── login.html ──────────────────────────────────────────────────────────────
 
@@ -174,14 +176,14 @@ var loginBody =
   navBar({
     rightSlot: [
       THEME_BTN,
-      sbMkButton({ label: 'Guest Mode', variant: 'link', attrs: ' onclick="location.href=\'events.html\'"' }),
+      sbMkButton({ label: 'Guest Mode', attrs: ' onclick="location.href=\'events.html\'"' }),
     ],
   })
   + '<div class="demo-login-wrap">'
   + sbMkCard({
       cls: 'demo-login-card',
       body: '<div class="demo-stack">'
-        + '<span class="sb-h6">Login</span>'
+        + sbMkHeaderM({ title: 'Login' })
         + sbMkField({ value: '', showTitle: false }, { label: 'Username' })
         + PW_FIELD
         + sbMkButton({ label: 'Sign In', variant: 'primary', cls: 'demo-btn-full',
@@ -195,9 +197,9 @@ var loginBody =
 
 var eventsTable = demoTable(
   [
-    { title: 'Date', sort: 'desc', width: 260 },
+    { title: 'Date', sort: 'desc', width: 240 },
     { title: 'Severity / Type', width: 340 },
-    { title: 'Parameters', flex: true, min: 160 },
+    { title: 'Parameters', width: 240 },
   ],
   [
     [cellText('2026-09-04 16:11:23'), cellDotText('online', 'firmware-update-success'), cellText('—')],
@@ -211,32 +213,32 @@ var eventsFooter = sbMkTableFooter({
   right: sbMkPagination({ total: 3, pageSize: 10, currentPage: 1 }),
 });
 
+var eventsHeader = sbMkHeaderL({
+  title: 'Events',
+  slotRight: sbMkFlex({ align: 'center', gap: 'm', content:
+      '<span class="sb-caption">Server time: <span class="sb-title-s">Sep 14, 2026, 12:16 PM</span></span>'
+      + sbMkButton({ label: 'Export', icon: 'download-2-line', variant: 'primary' }) }),
+});
+
 var eventsBody =
   navBar({
     rightSlot: [
       THEME_BTN,
       BELL_BTN,
-      sbMkButton({ label: 'Login', variant: 'link', attrs: ' onclick="location.href=\'login.html\'"' }),
+      sbMkButton({ label: 'Login', attrs: ' onclick="location.href=\'login.html\'"' }),
     ],
   })
-  + '<div class="demo-main">'
-  + sbMkCard({
-      cls: 'demo-page-card',
-      body: '<div class="demo-stack">'
-        + '<span class="sb-h6">Events</span>'
-        + '<div class="demo-toolbar">'
-        + sbMkButton({ label: 'Filter', icon: 'filter-line' })
-        + '<div class="demo-server-time">'
-        + '<span class="sb-caption">Server time: <span class="sb-title-s">Sep 14, 2026, 12:16 PM</span></span>'
-        + sbMkButton({ label: 'Export', icon: 'download-2-line', variant: 'primary' })
-        + '</div>'
-        + '</div>'
-        + '<div class="sb-table-wrap demo-page-card"><div class="demo-table-scroll">'
-        + eventsTable
-        + '</div><div class="sb-table-foot">' + eventsFooter + '</div></div>'
-        + '</div>',
-    })
-  + '</div>'
+  + sbMkPage({ cls: 'demo-main', content:
+      sbMkCard({
+        cls: 'demo-panel',
+        body: '<div class="demo-stack">'
+          + eventsHeader
+          + sbMkButtonWithLabel({ icon: 'filter-line', text: 'Filter', side: 'right' })
+          + '<div class="demo-table-scroll"><div class="demo-table-frame"><div class="sb-table-wrap">'
+          + eventsTable
+          + '<div class="sb-table-foot">' + eventsFooter + '</div></div></div></div>'
+          + '</div>',
+      }) })
   + infoFooter();
 
 // ── management.html ─────────────────────────────────────────────────────────
@@ -244,52 +246,52 @@ var eventsBody =
 var updateTable = demoTable(
   [
     { title: '#', width: 56 },
-    { title: 'Version', flex: true, min: 240 },
-    { title: 'Partition', width: 140 },
-    { title: 'Status', width: 130 },
+    { title: 'Version', width: 360 },
+    { title: 'Partition', width: 130 },
+    { title: 'Status', width: 120 },
     { title: 'Actions', width: 160 },
   ],
   [
     [cellText('1'), cellText('application-host-1.0.1-b51 / application-host'), cellText('/dev/sda2'),
-     sbMkBadgeStatus({ label: 'Alternate', color: 'grey' }),
+     cellBadge('grey', 'Alternate'),
      sbMkButton({ label: 'Update', variant: 'primary', size: 's' }) + ' '
        + sbMkButton({ icon: 'loop-left-line', iconSize: 'M', size: 's', attrs: ' aria-label="Reboot to slot"' })],
     [cellText('2'), cellText('application-host-1.0.1-b51 / application-host'), cellText('/dev/sda3'),
-     sbMkBadgeStatus({ label: 'Active', color: 'green' }),
+     cellBadge('green', 'Active'),
      sbMkButton({ icon: 'loop-left-line', iconSize: 'M', size: 's', attrs: ' aria-label="Reboot to slot"' })],
   ]
 );
 
+// Backup — дропзона File Uploader (наш компонент) + restore/save действия.
 var backupCard = sbMkCard({
   header: sbMkCardHeader({ title: 'Backup' }),
   body: '<div class="demo-stack">'
-    + '<div class="demo-upload-zone">'
-    + sbMkButton({ label: 'Upload Backup', icon: 'upload-cloud-2-line' })
-    + '</div>'
-    + '<div class="demo-row-between">'
-    + sbMkButton({ icon: 'arrow-go-back-line', attrs: ' aria-label="Restore backup"' })
-    + sbMkButton({ icon: 'save-line', attrs: ' aria-label="Save backup"' })
-    + '</div>'
+    + sbMkUploaderArea({ title: 'Upload Backup', hint: 'TAR archive, single file', multiple: false, wide: true })
+    + sbMkFlex({ justify: 'between', full: true, content:
+        sbMkButton({ icon: 'arrow-go-back-line', attrs: ' aria-label="Restore backup"' })
+        + sbMkButton({ icon: 'save-line', attrs: ' aria-label="Save backup"' }) })
     + '</div>',
 });
 
 var mgmtCard = sbMkCard({
   header: sbMkCardHeader({ title: 'MGMT' }),
-  body: '<div class="demo-cols">'
-    + sbMkCard({ border: true, cls: 'demo-col-side', body: '<div class="demo-stack">'
-        + sbMkToggle({ label: 'DHCP', labelLeft: true })
-        + sbMkField({ value: '10.10.140.211', showTitle: false }, { label: 'IP' })
-        + sbMkField({ value: '24', showTitle: false }, { label: 'Prefix Length' })
-        + sbMkField({ value: '10.10.140.1', showTitle: false }, { label: 'Gateway' })
-        + sbMkField({ value: '192.168.30.21', showTitle: false }, { label: 'DNS' })
-        + '</div>' })
-    + sbMkCard({ border: true, cls: 'demo-col-side', body:
-        sbMkToggle({ label: 'Link Auto negotiation', labelLeft: true, on: true }) })
-    + sbMkCard({ border: true, cls: 'demo-col-side', body: '<div class="demo-stack">'
-        + sbMkField({ value: '10.10.140.211', readOnly: true, lineView: true, showTitle: false }, { label: 'Current IP' })
-        + sbMkField({ value: 'cc:48:3a:11:e3:21', readOnly: true, lineView: true, showTitle: false }, { label: 'MAC Address' })
-        + '</div>' })
-    + '</div>',
+  body: sbMkFlex({ gap: 'lg', wrap: true, full: true, align: 'stretch', content:
+      sbMkFlexItem({ grow: 1, basis: '260px', content:
+        sbMkCard({ border: true, body: '<div class="demo-stack">'
+          + sbMkToggle({ label: 'DHCP', labelLeft: true })
+          + sbMkField({ value: '10.10.140.211', showTitle: false }, { label: 'IP' })
+          + sbMkField({ value: '24', showTitle: false }, { label: 'Prefix Length' })
+          + sbMkField({ value: '10.10.140.1', showTitle: false }, { label: 'Gateway' })
+          + sbMkField({ value: '192.168.30.21', showTitle: false }, { label: 'DNS' })
+          + '</div>' }) })
+      + sbMkFlexItem({ grow: 1, basis: '260px', content:
+        sbMkCard({ border: true, body:
+          sbMkToggle({ label: 'Link Auto negotiation', labelLeft: true, on: true }) }) })
+      + sbMkFlexItem({ grow: 1, basis: '260px', content:
+        sbMkCard({ border: true, body: '<div class="demo-stack">'
+          + sbMkField({ value: '10.10.140.211', readOnly: true, lineView: true, showTitle: false }, { label: 'Current IP' })
+          + sbMkField({ value: 'cc:48:3a:11:e3:21', readOnly: true, lineView: true, showTitle: false }, { label: 'MAC Address' })
+          + '</div>' }) }) }),
 });
 
 var ntpCard = sbMkCard({
@@ -312,18 +314,25 @@ var mgmtBody =
       sbMkAvatar({ type: 'initials', initials: 'D' }),
     ],
   })
-  + '<div class="demo-main">'
-  + '<div class="demo-cols">'
-  + '<div class="demo-col-main demo-stack">' + sectionHeader('Update')
-  + '<div class="sb-table-wrap demo-page-card"><div class="demo-table-scroll">' + updateTable + '</div></div>'
-  + '</div>'
-  + '<div class="demo-col-side demo-stack">' + sectionHeader('Control') + backupCard + '</div>'
-  + '</div>'
-  + '<div class="demo-cols">'
-  + '<div class="demo-col-main demo-stack">' + sectionHeader('Management') + mgmtCard + '</div>'
-  + '<div class="demo-col-side demo-stack">' + sectionHeader('') + ntpCard + '</div>'
-  + '</div>'
-  + '</div>'
+  + sbMkPage({ cls: 'demo-main', content:
+      sbMkCard({
+        cls: 'demo-panel',
+        body: '<div class="demo-stack">'
+        + sbMkHeaderL({ title: 'Management' })
+        + sbMkFlex({ gap: 'lg', wrap: true, full: true, content:
+            sbMkFlexItem({ grow: 2, basis: '480px', content: '<div class="demo-stack">'
+              + sectionHeader('Update')
+              + '<div class="demo-table-scroll"><div class="demo-table-frame">' + updateTable + '</div></div>'
+              + '</div>' })
+            + sbMkFlexItem({ grow: 1, basis: '280px', content: '<div class="demo-stack">'
+              + sectionHeader('Control') + backupCard + '</div>' }) })
+        + sbMkFlex({ gap: 'lg', wrap: true, full: true, content:
+            sbMkFlexItem({ grow: 2, basis: '480px', content: '<div class="demo-stack">'
+              + sectionHeader('Management') + mgmtCard + '</div>' })
+            + sbMkFlexItem({ grow: 1, basis: '280px', content: '<div class="demo-stack">'
+              + sectionHeader('NTP') + ntpCard + '</div>' }) })
+        + '</div>',
+      }) })
   + infoFooter();
 
 // ── запись ──────────────────────────────────────────────────────────────────

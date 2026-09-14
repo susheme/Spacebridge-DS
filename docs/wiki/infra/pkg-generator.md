@@ -9,7 +9,12 @@
 mkdir -p pkg/css/components pkg/fonts      # однократно
 jsc tools/gen-pkg.js
 cp -p fonts/*.woff2 pkg/fonts/             # бинарники jsc не копирует
+cp -p SpaceBridge-Classic.otf pkg/         # бренд-шрифт для .sb-brand
 ```
+
+ГРАБЛЯ 14.09.2026: бренд-шрифт не был включён в пакет — `@font-face` в tokens.css
+ссылается на `../SpaceBridge-Classic.otf`, и `.sb-brand` у потребителей падал в
+fallback. Генератор теперь предупреждает об отсутствии файла.
 
 ## Состав pkg/
 

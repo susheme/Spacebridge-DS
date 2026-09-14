@@ -193,5 +193,10 @@ if (tryRead(PKG + 'README.md') === null) {
 if (tryRead(PKG + 'fonts/roboto-latin.woff2') === null) {
   print('ВНИМАНИЕ: pkg/fonts пуст — скопируй шрифты: cp -p fonts/*.woff2 pkg/fonts/');
 }
+// tokens.css объявляет @font-face с url('../SpaceBridge-Classic.otf') —
+// без файла в корне пакета .sb-brand у потребителей падает в fallback.
+if (tryRead(PKG + 'SpaceBridge-Classic.otf') === null) {
+  print('ВНИМАНИЕ: нет pkg/SpaceBridge-Classic.otf — скопируй: cp -p SpaceBridge-Classic.otf pkg/');
+}
 
 print('pkg/: записано файлов — ' + written + ' (компонентов: ' + COMP_ORDER.length + ')');

@@ -29,11 +29,13 @@ var SHELL_CSS = [
   // App-shell: nav и footer прибиты, скроллится только средняя зона.
   'body{height:100vh;overflow:hidden;display:flex;flex-direction:column;}',
   '.demo-app{flex:1;display:flex;flex-direction:column;min-height:0;}',
-  '.demo-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;}',
-  '.demo-main{flex:1;display:flex;flex-direction:column;gap:var(--gap-vert-lg);',
+  '.demo-scroll{flex:1;min-height:0;display:flex;flex-direction:column;}',
+  '.demo-main{flex:1;min-height:0;display:flex;flex-direction:column;gap:var(--gap-vert-lg);',
   '  padding-top:var(--pad-vert-24);padding-bottom:var(--pad-vert-24);}',
   '.demo-footer{flex-shrink:0;overflow-x:auto;}',
-  '.demo-panel{width:100%;box-sizing:border-box;}',
+  '.demo-panel{width:100%;box-sizing:border-box;flex:1;min-height:0;',
+  '  display:flex;flex-direction:column;}',
+  '.demo-panel>.sb-card-body{flex:1;min-height:0;overflow-y:auto;}',
   '.demo-panel .sb-header-l{position:sticky;top:0;z-index:5;background:var(--background);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   '.demo-table-scroll{overflow-x:auto;}',
@@ -184,6 +186,7 @@ var loginBody =
   })
   + '<div class="demo-scroll"><div class="demo-login-wrap">'
   + sbMkCard({
+      border: true,
       cls: 'demo-login-card',
       body: '<div class="demo-stack">'
         + sbMkHeaderM({ title: 'Login' })
@@ -234,6 +237,7 @@ var eventsBody =
   + '<div class="demo-scroll">'
   + sbMkPage({ cls: 'demo-main', content:
       sbMkCard({
+        border: true,
         cls: 'demo-panel',
         body: '<div class="demo-stack">'
           + eventsHeader
@@ -269,6 +273,7 @@ var updateTable = demoTable(
 
 // Backup — дропзона File Uploader (наш компонент) + restore/save действия.
 var backupCard = sbMkCard({
+  border: true,
   header: sbMkCardHeader({ title: 'Backup' }),
   body: '<div class="demo-stack">'
     + sbMkUploaderArea({ title: 'Upload Backup', hint: 'TAR archive, single file', multiple: false, wide: true })
@@ -279,6 +284,7 @@ var backupCard = sbMkCard({
 });
 
 var mgmtCard = sbMkCard({
+  border: true,
   header: sbMkCardHeader({ title: 'MGMT' }),
   body: sbMkFlex({ gap: 'lg', wrap: true, full: true, align: 'stretch', content:
       sbMkFlexItem({ grow: 1, basis: '260px', content:
@@ -289,17 +295,18 @@ var mgmtCard = sbMkCard({
           + sbMkField({ value: '10.10.140.1', showTitle: false }, { label: 'Gateway' })
           + sbMkField({ value: '192.168.30.21', showTitle: false }, { label: 'DNS' })
           + '</div>' }) })
-      + sbMkFlexItem({ grow: 1, basis: '260px', content:
-        sbMkCard({ border: true, body:
-          sbMkToggle({ label: 'Link Auto negotiation', labelLeft: true, on: true }) }) })
-      + sbMkFlexItem({ grow: 1, basis: '260px', content:
-        sbMkCard({ border: true, body: '<div class="demo-stack">'
-          + sbMkField({ value: '10.10.140.211', readOnly: true, lineView: true, showTitle: false }, { label: 'Current IP' })
-          + sbMkField({ value: 'cc:48:3a:11:e3:21', readOnly: true, lineView: true, showTitle: false }, { label: 'MAC Address' })
-          + '</div>' }) }) }),
+      + sbMkFlexItem({ grow: 1, basis: '260px', content: '<div class="demo-stack">'
+        + sbMkCard({ border: true, body:
+            sbMkToggle({ label: 'Link Auto negotiation', labelLeft: true, on: true }) })
+        + sbMkCard({ border: true, body: '<div class="demo-stack">'
+            + sbMkField({ value: '10.10.140.211', readOnly: true, lineView: true, showTitle: false }, { label: 'Current IP' })
+            + sbMkField({ value: 'cc:48:3a:11:e3:21', readOnly: true, lineView: true, showTitle: false }, { label: 'MAC Address' })
+            + '</div>' })
+        + '</div>' }) }),
 });
 
 var ntpCard = sbMkCard({
+  border: true,
   header: sbMkCardHeader({ title: 'NTP' }),
   body: sbMkCard({ border: true, body: sbMkToggle({ label: 'Ntp server enabled', labelLeft: true }) }),
 });
@@ -322,6 +329,7 @@ var mgmtBody =
   + '<div class="demo-scroll">'
   + sbMkPage({ cls: 'demo-main', content:
       sbMkCard({
+        border: true,
         cls: 'demo-panel',
         body: '<div class="demo-stack">'
         + sbMkHeaderL({ title: 'Management' })

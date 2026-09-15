@@ -100,7 +100,8 @@ window.COMP_CSS['grid-system'] = `/* ── Flex ──────────�
    Боковые поля — --page-gutter (32 / 24 / 16 по режимам). */
 .sb-page {
   width: 100%;
-  max-width: var(--screens-max-screen-width);
+  min-width: var(--content-min-width);
+  max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 var(--page-gutter);
   box-sizing: border-box;

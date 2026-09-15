@@ -29,7 +29,9 @@ var SHELL_CSS = [
   // App-shell: nav и footer прибиты, скроллится только средняя зона.
   'body{height:100vh;overflow:hidden;display:flex;flex-direction:column;}',
   '.demo-app{flex:1;display:flex;flex-direction:column;min-height:0;}',
-  '.demo-scroll{flex:1;min-height:0;display:flex;flex-direction:column;}',
+  // overflow-x — контент Page не сжимается ниже --content-min-width,
+  // скролл при узком окне отдаёт эта зона.
+  '.demo-scroll{flex:1;min-height:0;display:flex;flex-direction:column;overflow-x:auto;}',
   // App Host: боковой гаттер страницы 24 на всех ширинах (решение юзера);
   // в DS --page-gutter адаптивный (16/24/32) — здесь локальный override.
   '.demo-main{--page-gutter:var(--pad-horiz-24);}',

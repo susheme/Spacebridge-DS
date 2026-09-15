@@ -226,7 +226,7 @@
   --gap-horiz-xxl: 32px;
   --gap-vert-0: 0;
   --gap-vert-xxs: 2px;
-  --gap-vert-xs: 2px;
+  --gap-vert-xs: 4px;
   --gap-vert-s: 8px;
   --gap-vert-m: 8px;
   --gap-vert-lg: 16px;
@@ -333,7 +333,7 @@
 
   /* ───────── NAVIGATION BAR ───────── */
   --nav-bar-min-width: 320px;
-  --nav-bar-max-width: 700px;
+  --nav-bar-max-width: 2000px;
   --nav-bar-max-height: 106px;
 
   /* ───────── NAVIGATION MENU ───────── */
@@ -408,6 +408,12 @@
   --topbar-height: 56px;
   --transition: 0.2s ease;
 
+
+  /* ───────── НОВОЕ ИЗ FIGMA ─────────
+     Появилось в экспорте и добавлено генератором. Перенеси в подходящую
+     секцию выше — расположение строк он не трогает. */
+  --content-max-width: 2000px;
+  --content-min-width: 392px;
 }
 
 /* Color tokens injected by COLOR_TOKENS script in <head> — не редактируй здесь */
@@ -421,7 +427,9 @@
   :root {
     --card-header-min-width: 320px;
     --card-min-width: 320px;
+    --content-max-width: 3000px;
     --content-max-width-text: 720px;
+    --content-min-width: 800px;
     --gap-horiz-lg: 24px;
     --gap-horiz-m: 16px;
     --gap-horiz-s: 8px;
@@ -431,7 +439,6 @@
     --gap-vert-lg: 24px;
     --gap-vert-m: 16px;
     --gap-vert-xl: 32px;
-    --gap-vert-xs: 4px;
     --gap-vert-xxl: 64px;
     --header-max-height: 88px;
     --header-max-height-m: 64px;
@@ -454,7 +461,7 @@
     --list-max-width-cell: 1024px;
     --map-min-width: 320px;
     --nav-bar-max-height: 114px;
-    --nav-bar-max-width: 1440px;
+    --nav-bar-max-width: 3000px;
     --nav-bar-min-width: 744px;
     --nav-menu-max-width: 1440px;
     --nav-menu-min-width: 744px;
@@ -482,6 +489,7 @@
     --card-max-height: 768px;
     --card-min-height: 104px;
     --card-min-width: 280px;
+    --content-max-width: 5000px;
     --content-max-width-text: 800px;
     --header-max-height-responsive: 112px;
     --nav-bar-max-height: 64px;

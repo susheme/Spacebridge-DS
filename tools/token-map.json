@@ -82,6 +82,8 @@
     "Status-Text/Padding/pad-vert-8": "--status-text-pad-vert-8",
     "Status-Text/Padding/pad-vert-4": "--status-text-pad-vert-4",
     "Page/gutter": "--page-gutter",
+    "Page/content-min-width": "--content-min-width",
+    "Page/content-max-width": "--content-max-width",
     "Page/content-max-width-text": "--content-max-width-text",
     "Grid/tile-min-width": "--tile-min-width",
     "Grid/tile-min-height": "--tile-min-height",

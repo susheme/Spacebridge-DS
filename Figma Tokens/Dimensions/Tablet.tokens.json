@@ -601,7 +601,7 @@
     },
     "Max Width": {
       "$type": "number",
-      "$value": 1440,
+      "$value": 3000,
       "$extensions": {
         "com.figma.variableId": "VariableID:611:1203",
         "com.figma.scopes": [
@@ -920,6 +920,26 @@
       "$value": 720,
       "$extensions": {
         "com.figma.variableId": "VariableID:1919:6770",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "content-min-width": {
+      "$type": "number",
+      "$value": 800,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:2121:16703",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "content-max-width": {
+      "$type": "number",
+      "$value": 3000,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:2121:16704",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]

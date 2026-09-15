@@ -225,7 +225,7 @@
     },
     "gap-vert-xs": {
       "$type": "number",
-      "$value": 2,
+      "$value": 4,
       "$extensions": {
         "com.figma.variableId": "VariableID:620:958",
         "com.figma.scopes": [
@@ -601,7 +601,7 @@
     },
     "Max Width": {
       "$type": "number",
-      "$value": 700,
+      "$value": 2000,
       "$extensions": {
         "com.figma.variableId": "VariableID:611:1203",
         "com.figma.scopes": [
@@ -920,6 +920,26 @@
       "$value": 392,
       "$extensions": {
         "com.figma.variableId": "VariableID:1919:6770",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "content-min-width": {
+      "$type": "number",
+      "$value": 392,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:2121:16703",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "content-max-width": {
+      "$type": "number",
+      "$value": 2000,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:2121:16704",
         "com.figma.scopes": [
           "ALL_SCOPES"
         ]

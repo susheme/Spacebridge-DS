@@ -924,6 +924,26 @@
           "ALL_SCOPES"
         ]
       }
+    },
+    "content-min-width": {
+      "$type": "number",
+      "$value": 800,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:2121:16703",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
+    },
+    "content-max-width": {
+      "$type": "number",
+      "$value": 5000,
+      "$extensions": {
+        "com.figma.variableId": "VariableID:2121:16704",
+        "com.figma.scopes": [
+          "ALL_SCOPES"
+        ]
+      }
     }
   },
   "Radius": {

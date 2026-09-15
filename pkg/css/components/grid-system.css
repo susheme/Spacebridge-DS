@@ -89,10 +89,14 @@
 
 /* ── Page ───────────────────────────────────────────────────────────────── */
 /* Контейнер продуктового экрана: тянется до предела, дальше центрируется.
-   Боковые поля — --page-gutter (32 / 24 / 16 по режимам). */
+   Боковые поля — --page-gutter (32 / 24 / 16 по режимам). Пределы ширины —
+   Page/content-min-width и Page/content-max-width из Figma: ниже минимума
+   контент не сжимается — горизонтальный скролл отдаёт scroll-контекст
+   страницы (body или скролл-зона app-shell). */
 .sb-page {
   width: 100%;
-  max-width: var(--screens-max-screen-width);
+  min-width: var(--content-min-width);
+  max-width: var(--content-max-width);
   margin: 0 auto;
   padding: 0 var(--page-gutter);
   box-sizing: border-box;

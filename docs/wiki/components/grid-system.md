@@ -4,7 +4,7 @@
 
 <!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-15), между маркерами руками не править -->
 **Факты из кода:**
-- Файлы: `js/components/grid-system.js` (455 строк) + `css/components/grid-system.css` (142 строк)
+- Файлы: `js/components/grid-system.js` (456 строк) + `css/components/grid-system.css` (146 строк)
 - Load order: 2/53 в `index.html`
 - Deps: нет (см. `js/_index.js`)
 - Используют его: `cards`, `side-panel`
@@ -19,3 +19,5 @@
 - `91bbc49` — 44 inline flex-декларации мигрированы на `sbMkFlex`; `7c63cdd` — gapX/gapY, `.sec-col`/`.sec-row` сняты с docs CSS.
 - `b4a08b2` — фикс слипания кнопок тулбара; `2096ebc` — доки про то, что реально делает stretch.
 - Статус Incomplete — ждёт взгляда дизайнера.
+
+**15.09.2026:** Page получил пределы ширины из Figma: `--content-min-width` (392/800/800) и `--content-max-width` (2000/3000/5000) вместо `--screens-max-screen-width`. Ниже минимума контент не сжимается — горизонтальный скролл отдаёт scroll-контекст страницы. Попутно из Figma доехали правки `--gap-vert-xs` (2→4) и `--nav-bar-max-width` (700→2000).

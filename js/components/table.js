@@ -297,10 +297,16 @@ window.COMP_CSS.table = `.sb-table {
   // Table Cell (body-ячейка ряда, 40px). Типы контента в слотовой системе:
   // левый слот = ведущая группа, правый = трейлинг. Узкие control-ячейки
   // control-ячейки по центру: checkbox=40, chevron/icon-button/drawer=32; toggle — по тоглу.
-  // mkCell({ type, value })
-  function mkCell({ type = 'text', value = '', state = '', width } = {}) {
+  // mkCell({ type, value, state, width, flexMin })
+  // flexMin — резиновая колонка: flex:1 от min-width (true = 160). Ширину и
+  // flexMin задаёт колонка mkTableFull — на хедер- и body-ячейке одинаково.
+  function mkCell({ type = 'text', value = '', state = '', width, flexMin } = {}) {
     const sc = state ? ` ${state}` : '';  // is-hover | is-selected
-    const ws = width ? ` style="width:${width}px"` : '';  // для выравнивания колонок
+    const fm = flexMin === true ? 160 : flexMin;
+    // min-width повторяет хедер-ячейку (w() в mkTableFull) — иначе на узком
+    // контейнере body-ячейки сжимаются, а хедер нет, и колонки расходятся.
+    const ws = fm ? ` style="flex:1 1 ${fm}px;width:auto;min-width:${fm}px"`
+      : width ? ` style="width:${width}px;min-width:${width}px"` : '';
     // Узкие control-ячейки: контент по центру, без слотов. Checkbox = 40px,
     // Chevron Button / Icon-Button / Drawer = 32px.
     const CTRL = { checkbox: [_cb, 'sb-td-w40'], chevron: [_chv, 'sb-td-w32'], 'icon-button': [_btn, 'sb-td-w32'], drawer: [_drag, 'sb-td-w32'] };
@@ -313,7 +319,12 @@ window.COMP_CSS.table = `.sb-table {
       case 'text':              left = [_txt(value || 'Text')]; break;
       case 'link':              left = [_lnk(value || 'Link')]; break;
       case 'date':              left = [_date(value)]; break;
-      case 'status-text':       left = [_badge('bs-green', value || 'Online')]; break;
+      // value: строка (green по умолчанию) или { label, color } — цвет из
+      // палитры Badge-Status (green/grey/blue/red/orange/yellow).
+      case 'status-text': {
+        const o = value && typeof value === 'object' ? value : { label: value };
+        left = [_badge(`bs-${o.color || 'green'}`, o.label || 'Online')]; break;
+      }
       case 'icon':              left = [_ic(value)]; break;
       case 'input':             left = [_inp(value)]; break;
       case 'icon-text':         left = [_ic(), _txt(value || 'Text')]; break;
@@ -323,8 +334,16 @@ window.COMP_CSS.table = `.sb-table {
       case 'avatar-text-icon':  left = [_av(), _txt(value || 'Text')]; right = [_ic()]; break;
       case 'avatar-link':       left = [_av(), _lnk(value || 'Link')]; break;
       case 'avatar-link-icon':  left = [_av(), _lnk(value || 'Link')]; right = [_ic()]; break;
-      case 'status-circle-text':left = [_dot('online'), _txt(value || 'Online')]; break;
+      // value: строка (online по умолчанию) или { text, dot } — класс точки из
+      // Status (online/connecting/info/warning/maintenance/error/offline).
+      case 'status-circle-text': {
+        const o = value && typeof value === 'object' ? value : { text: value };
+        left = [_dot(o.dot || 'online'), _txt(o.text || 'Online')]; break;
+      }
       case 'mark-text':         left = [_mark('success'), _txt(value || 'Value')]; break;
+      // Слот произвольного контента (кнопки действий и т.п.): value — готовый
+      // HTML из DS-фабрик. Разметку руками сюда не писать — догма.
+      case 'html':              left = [value || '']; break;
     }
     const l = left.length  ? `<span class="sb-td-l">${left.join('')}</span>` : '';
     const r = right.length ? `<span class="sb-td-r">${right.join('')}</span>` : '';
@@ -402,34 +421,46 @@ window.COMP_CSS.table = `.sb-table {
 
   // Полная таблица: Header Primary + N рядов body-ячеек. Колонки выровнены —
   // одна ширина на хедер- и body-ячейку столбца (обе box-sizing:border-box).
-  // Первый столбец — чекбокс (select-all в хедере, row-select в рядах).
+  // selectable (default true) — чекбокс-столбец (select-all в хедере,
+  // row-select в рядах); false — таблица без выбора рядов.
+  // Колонка: { title, type, width } или { title, type, flex } — flex:число
+  // делает столбец резиновым (flex:1 от min-width; true = 160).
   // С toolbar/footer оборачивается в .sb-table-wrap (Tool Bar всплывает по выбору,
   // Footer = row-info + Pagination). rowMenu: true|Array — kebab-колонка в конце.
   // pageSize>0 — рабочая пагинация (ряды режутся на страницы, переключение sbTablePage).
-  // mkTableFull({ columns, rows, checkW, toolbar, footer, rowMenu, pageSize })
-  function mkTableFull({ columns = [], rows = [], checkW = 40, toolbar = false, footer = false, rowMenu = false, pageSize = 0 } = {}) {
+  // mkTableFull({ columns, rows, selectable, checkW, toolbar, footer, rowMenu, pageSize })
+  function mkTableFull({ columns = [], rows = [], selectable = true, checkW = 40, toolbar = false, footer = false, rowMenu = false, pageSize = 0 } = {}) {
     const sep = '<span class="sb-sep sep-v sep-l"></span>';
     const w = px => ` style="width:${px}px;min-width:${px}px"`;
+    const wCol = c => {
+      if (!c.flex) return w(c.width);
+      const fm = c.flex === true ? 160 : c.flex;
+      return ` style="flex:1 1 ${fm}px;width:auto;min-width:${fm}px"`;
+    };
     const kebabW = 48;
     const menuItems = Array.isArray(rowMenu) ? rowMenu : _ROWMENU_DEFAULT;
     const total = rows.length;
     const paged = pageSize > 0;
     const totalPages = paged ? Math.max(1, Math.ceil(total / pageSize)) : 1;
-    // Header Primary: чекбокс-ячейка + колонки (sort-иконка, separator на стыках) +
-    // (опц.) пустая kebab-ячейка в конце.
-    const h = [`<div class="sb-th sb-th-check" role="columnheader"${w(checkW)} onclick="sbTableSelectAll(this)">${sbMkCheckbox({ managed: true })}${sep}</div>`];
+    // Header Primary: (опц.) чекбокс-ячейка + колонки (sort-иконка, separator
+    // на стыках) + (опц.) пустая kebab-ячейка в конце.
+    const h = selectable
+      ? [`<div class="sb-th sb-th-check" role="columnheader"${w(checkW)} onclick="sbTableSelectAll(this)">${sbMkCheckbox({ managed: true })}${sep}</div>`]
+      : [];
     columns.forEach((c, i) => {
       const dir = c.sort ? ` data-sort="${c.sort}"` : '';
       const isLast = i === columns.length - 1 && !rowMenu;  // kebab-колонка идёт после
-      h.push(`<div class="sb-th${c.sort ? ' is-sorted' : ''}" role="columnheader"${w(c.width)}${dir} onclick="sbTableSort(this)"><span class="sb-caption sb-fw-medium">${c.title}</span><span class="sb-th-sort">${sbIconRaw('arrow-up-s-fill', 'L')}</span>${isLast ? '' : sep}</div>`);
+      h.push(`<div class="sb-th${c.sort ? ' is-sorted' : ''}" role="columnheader"${wCol(c)}${dir} onclick="sbTableSort(this)"><span class="sb-caption sb-fw-medium">${c.title}</span><span class="sb-th-sort">${sbIconRaw('arrow-up-s-fill', 'L')}</span>${isLast ? '' : sep}</div>`);
     });
     if (rowMenu) h.push(`<div class="sb-th sb-th-kebab" role="columnheader"${w(kebabW)}></div>`);
     const head = `<div class="sb-thead-row" role="row">${h.join('')}</div>`;
-    // Body: ряды с row-чекбоксом (выровнен под хедер-чекбокс) + (опц.) kebab в конце.
+    // Body: ряды с (опц.) row-чекбоксом (выровнен под хедер-чекбокс) + (опц.) kebab в конце.
     const body = rows.map((row, ri) => {
       const hidden = paged && ri >= pageSize ? ' style="display:none"' : '';  // видна только 1-я страница
-      const cells = [`<div class="sb-td sb-td-ctrl" role="cell"${w(checkW)} onclick="sbTableRowSelect(this)">${sbMkCheckbox({ managed: true })}</div>`];
-      columns.forEach((c, i) => cells.push(mkCell({ type: c.type || 'text', value: row[i], width: c.width })));
+      const cells = selectable
+        ? [`<div class="sb-td sb-td-ctrl" role="cell"${w(checkW)} onclick="sbTableRowSelect(this)">${sbMkCheckbox({ managed: true })}</div>`]
+        : [];
+      columns.forEach((c, i) => cells.push(mkCell({ type: c.type || 'text', value: row[i], width: c.width, flexMin: c.flex })));
       if (rowMenu) cells.push(_rowKebab(menuItems, w(kebabW)));
       return `<div class="sb-trow" role="row"${hidden}>${cells.join('')}</div>`;
     }).join('');

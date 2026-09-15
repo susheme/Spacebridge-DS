@@ -11,8 +11,10 @@
   align-items: center;
   gap: var(--gap-vert-0);
   width: 328px;
-  min-width: 320px;
-  max-width: 1024px;
+  /* min() — на контейнерах уже 320 дропзона сжимается, а не распирает
+     их в горизонтальный скролл (телефон, узкие карточки). */
+  min-width: min(320px, 100%);
+  max-width: min(1024px, 100%);
   min-height: 96px;
   max-height: 640px;
   padding: var(--pad-vert-16) var(--pad-horiz-16);

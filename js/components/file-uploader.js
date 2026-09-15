@@ -7,7 +7,7 @@
 //  загрузок) — следующий заход, спека ожидается.
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--gap-vert-0); width: 328px; min-width: 320px; max-width: 1024px; min-height: 96px; max-height: 640px; padding: var(--pad-vert-16) var(--pad-horiz-16); box-sizing: border-box; border-radius: var(--radius-4); border: var(--border-width-1) dashed var(--border); background: var(--surface-1); cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+window.COMP_CSS['file-uploader'] = `.sb-uploader-area { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--gap-vert-0); width: 328px; min-width: min(320px, 100%); max-width: min(1024px, 100%); min-height: 96px; max-height: 640px; padding: var(--pad-vert-16) var(--pad-horiz-16); box-sizing: border-box; border-radius: var(--radius-4); border: var(--border-width-1) dashed var(--border); background: var(--surface-1); cursor: pointer; transition: background 0.15s, border-color 0.15s; }
 .sb-uploader-area:hover, .sb-uploader-area.dragover { border-color: var(--primary); background: var(--primary-hover); }
 .sb-uploader-center { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--gap-vert-s); padding: var(--pad-vert-0) var(--pad-horiz-0); text-align: center; }
 .sb-uploader-icon  { display: inline-flex; color: var(--text-primary); }

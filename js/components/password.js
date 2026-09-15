@@ -92,6 +92,12 @@ window.COMP_CSS.password = `.sb-pw { display: flex; align-items: center; justify
     </div>`;
   }
 
+  // Экспорт фабрик (15.09.2026, по итогам догфуда App Host): потребители
+  // собирают поле фабрикой, а не копией разметки (Догма Клементия) —
+  // симметрично sbMkTextField/sbMkField из input.js.
+  window.sbMkPassword = mkPw;
+  window.sbMkPasswordField = mkPwField;
+
   sbRegister({
     name: 'password',
     title: 'Password Input',

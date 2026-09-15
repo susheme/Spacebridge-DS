@@ -58,6 +58,8 @@ var SHELL_CSS = [
   // (паттерн no-cosmetic-overflow-hidden).
   '.demo-table-frame{display:flex;width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);',
   '  border-radius:var(--radius-8);overflow-x:auto;background:var(--background);}',
+  // .sb-table-wrap — inline-flex по контенту; в рамке растягиваем на всю ширину.
+  '.demo-table-frame>.sb-table-wrap{flex:1;min-width:0;max-width:none;}',
   '.demo-table-frame .sb-table{width:100%;}',
   '.demo-table-frame .sb-thead-row,.demo-table-frame .sb-trow{display:flex;width:100%;}',
   '.demo-login-wrap{flex:1;display:flex;align-items:center;justify-content:center;',

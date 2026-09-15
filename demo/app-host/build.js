@@ -51,7 +51,7 @@ var SHELL_CSS = [
   '.demo-panel .sb-header-l{max-width:none;',
   '  border-radius:var(--radius-8) var(--radius-8) var(--radius-0) var(--radius-0);}',
   // Скролл-зона под хэдэром; паддинги — те же, что были у тела панели.
-  '.demo-panel-scroll{flex:1;min-height:0;overflow-y:auto;padding:var(--pad-vert-16);',
+  '.demo-panel-scroll{flex:1;min-height:0;overflow-y:auto;padding:var(--pad-vert-16) var(--pad-horiz-16);',
   '  display:flex;flex-direction:column;gap:var(--gap-vert-m);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
   // Скролл — у самой рамки: overflow:hidden здесь резал таблицу

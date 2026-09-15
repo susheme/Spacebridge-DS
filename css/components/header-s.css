@@ -106,11 +106,15 @@
 
 /* Overflow-menu trigger — generic behavior in context-menu.css/js. */
 .sb-header-s-more { flex-shrink: 0; }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-s-more.is-menu-only { display: none; }
 .sb-header-s-menu-extra { display: none; }
 
 /* Responsive: < 400px — мобильный сжатый режим, inline-actions
    правого слота прячутся, всплывают в выпадающем меню под More. */
 @container (max-width: 400px) {
+  .sb-header-s-more.is-menu-only { display: flex; }
   .sb-header-s-action     { display: none; }
   .sb-header-s-menu-extra { display: flex; }
 }

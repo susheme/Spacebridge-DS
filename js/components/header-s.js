@@ -94,9 +94,13 @@ window.COMP_CSS.headerS = `.sb-header-s {
 }
 
 .sb-header-s-more { flex-shrink: 0; }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-s-more.is-menu-only { display: none; }
 .sb-header-s-menu-extra { display: none; }
 
 @container (max-width: 400px) {
+  .sb-header-s-more.is-menu-only { display: flex; }
   .sb-header-s-action     { display: none; }
   .sb-header-s-menu-extra { display: flex; }
 }
@@ -204,7 +208,7 @@ window.COMP_CSS.headerS = `.sb-header-s {
       .join('');
 
     return inlineHtml + sbMkPopover({
-      wrapCls: 'sb-header-s-more',
+      wrapCls: 'sb-header-s-more' + (moreItems.length === 0 ? ' is-menu-only' : ''),
       trigger: sbMkButton({ icon: 'more-2-line', iconSize: 'S', size: 's' }),
       content: sbMkContextCard(extraCells + moreCells),
       placement: 'bottom-end',

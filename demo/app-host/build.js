@@ -73,26 +73,25 @@ var SHELL_CSS = [
   'html:not([data-theme="dark"]) .demo-ico-moon{display:none;}',
 ].join('\n');
 
+// Скрипты DS — в порядке index.html, без хрома доксайта
+// (init.js строит сам сайт, updates-ui.js — его колокольчик).
+var SCRIPT_SKIP = { 'js/init.js': 1, 'js/updates-ui.js': 1 };
+var SCRIPTS = files.filter(function (f) { return !SCRIPT_SKIP[f]; })
+  .map(function (f) { return '<script src="../../' + f + '"></script>'; })
+  .join('\n');
+
+// Демо-специфика ПОВЕРХ рантайма: тема и переходы между страницами.
 var SHELL_JS = [
   'function demoToggleTheme(){var h=document.documentElement;',
   "  var d=h.getAttribute('data-theme')==='dark'?'light':'dark';",
   "  h.setAttribute('data-theme',d);",
   "  try{localStorage.setItem('demo-theme',d)}catch(e){}}",
   "var DEMO_NAV={'Management':'management.html','Events':'events.html'};",
-  'function sbSelectNavBtn(btn){var l=btn.textContent.trim();',
-  '  if(DEMO_NAV[l])location.href=DEMO_NAV[l];}',
-  'function sbNavBarDropdownClick(btn){sbSelectNavBtn(btn);}',
-  'function sbTableSort(){}',
-  'function sbPwToggle(btn){',
-  "  var i=btn.closest('.sb-pw').querySelector('input');",
-  "  i.type=i.type==='password'?'text':'password';}",
-  '// Дропзона в демо статическая: обработчики File Uploader — заглушки.',
-  'function sbUploaderDragOver(){}',
-  'function sbUploaderDragLeave(){}',
-  'function sbUploaderDrop(){}',
-  'function sbUploaderPick(){}',
-  '// Floating nav: is-stuck при скролле — код DS (sbWireNavBarFloating).',
-  'var sbWireNavBarFloating = ' + sbWireNavBarFloating.toString() + ';',
+  '// Навигация демо поверх штатного выбора таба.',
+  'var demoOrigSelect = window.sbSelectNavBtn;',
+  'window.sbSelectNavBtn = function(btn){var l=btn.textContent.trim();',
+  '  if(DEMO_NAV[l]){location.href=DEMO_NAV[l];return;}',
+  '  demoOrigSelect(btn);};',
   "document.addEventListener('DOMContentLoaded',function(){",
   "  var bar=document.querySelector('.sb-nav-bar.floating');",
   "  var scroll=document.querySelector('.demo-panel-scroll')",
@@ -113,7 +112,7 @@ function page(title, bodyHtml) {
     + '<link rel="stylesheet" href="../../pkg/css/spacebridge-ds.css">\n'
     + '<style>\n' + SHELL_CSS + '\n</style>\n'
     + '</head>\n<body>\n<div class="demo-app">\n' + bodyHtml
-    + '\n</div>\n<script>\n' + SHELL_JS + '\n</script>\n</body>\n</html>\n';
+    + '\n</div>\n' + SCRIPTS + '\n<script>\n' + SHELL_JS + '\n</script>\n</body>\n</html>\n';
 }
 
 // ── общие элементы ──────────────────────────────────────────────────────────
@@ -201,9 +200,11 @@ var eventsTable = sbMkTableFull({
 
 var eventsHeader = sbMkHeaderL({
   title: 'Events',
+  // Server time — статика, остаётся видимой; Export — action: на узком
+  // контейнере (@container 768) inline-кнопки уезжают в More (⋯).
   slotRight: sbMkFlex({ align: 'center', gap: 'm', content:
       '<span class="sb-caption">Server time: <span class="sb-title-s">Sep 14, 2026, 12:16 PM</span></span>'
-      + sbMkButton({ label: 'Export', icon: 'download-2-line', variant: 'primary' }) }),
+      + sbMkHeaderLActions({ inline: [{ label: 'Export', icon: 'download-2-line' }] }) }),
 });
 
 var eventsBody =

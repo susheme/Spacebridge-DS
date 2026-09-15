@@ -4975,11 +4975,15 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
 
 /* Overflow-menu trigger — generic behavior in context-menu.css/js. */
 .sb-section-header-more { flex-shrink: 0; }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-section-header-more.is-menu-only { display: none; }
 .sb-section-header-menu-extra { display: none; }
 
 /* Responsive: < 320px — узкие карточки, inline-actions сворачиваются
    в выпадающее меню под More-кнопкой. */
 @container (max-width: 320px) {
+  .sb-section-header-more.is-menu-only { display: flex; }
   .sb-section-header-action     { display: none; }
   .sb-section-header-menu-extra { display: flex; }
 }
@@ -5422,11 +5426,15 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
 
 /* Overflow-menu trigger — generic behavior in context-menu.css/js. */
 .sb-header-s-more { flex-shrink: 0; }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-s-more.is-menu-only { display: none; }
 .sb-header-s-menu-extra { display: none; }
 
 /* Responsive: < 400px — мобильный сжатый режим, inline-actions
    правого слота прячутся, всплывают в выпадающем меню под More. */
 @container (max-width: 400px) {
+  .sb-header-s-more.is-menu-only { display: flex; }
   .sb-header-s-action     { display: none; }
   .sb-header-s-menu-extra { display: flex; }
 }
@@ -5540,6 +5548,9 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
 
 /* Overflow-menu trigger — generic behavior in context-menu.css/js. */
 .sb-header-m-more { flex-shrink: 0; }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-m-more.is-menu-only { display: none; }
 .sb-header-m-menu-extra { display: none; }
 
 /* Responsive: when the Header M is narrower than 600 px, hide inline
@@ -5547,6 +5558,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
    tighter contexts (cards, modals) than Header L, so the breakpoint is
    smaller. */
 @container (max-width: 600px) {
+  .sb-header-m-more.is-menu-only { display: flex; }
   .sb-header-m-action     { display: none; }
   .sb-header-m-menu-extra { display: flex; }
 }
@@ -5627,6 +5639,9 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
 .sb-header-l-more {
   flex-shrink: 0;
 }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-l-more.is-menu-only { display: none; }
 
 /* Cells that mirror inline actions in the menu — hidden by default,
    surfaced only at narrow widths via the @container rule below. */
@@ -5636,6 +5651,7 @@ a.sb-breadcrumb-item:hover { color: var(--text-tertiary); }
 
 /* ── Responsive: < 768px container width ──────────────────────────── */
 @container (max-width: 768px) {
+  .sb-header-l-more.is-menu-only { display: flex; }
   .sb-header-l-left,
   .sb-header-l-right {
     gap: var(--gap-vert-s);          /* 16 → 8 */

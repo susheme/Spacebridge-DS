@@ -55,6 +55,9 @@
 
 /* Overflow-menu trigger — generic behavior in context-menu.css/js. */
 .sb-header-m-more { flex-shrink: 0; }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-m-more.is-menu-only { display: none; }
 .sb-header-m-menu-extra { display: none; }
 
 /* Responsive: when the Header M is narrower than 600 px, hide inline
@@ -62,6 +65,7 @@
    tighter contexts (cards, modals) than Header L, so the breakpoint is
    smaller. */
 @container (max-width: 600px) {
+  .sb-header-m-more.is-menu-only { display: flex; }
   .sb-header-m-action     { display: none; }
   .sb-header-m-menu-extra { display: flex; }
 }

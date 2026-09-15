@@ -61,63 +61,75 @@ html:not([data-theme="dark"]) .demo-ico-moon{display:none;}
     </div>
     </div><button type="button" class="sb-btn sb-btn-primary demo-btn-full" onclick="location.href='management.html'">Sign In</button></div></div></div></div></div><div class="demo-footer"><footer class="sb-info-footer is-long align-center"><span class="sb-info-footer-slot">P/N: XXX-NO-PARTNUMBER</span><span class="sb-sep sep-v sep-s"></span><span class="sb-info-footer-slot">S/N: 12345</span><span class="sb-sep sep-v sep-s"></span><span class="sb-info-footer-slot">FW Version: application-host-1.0.1-b51</span></footer></div>
 </div>
+<script src="../../js/tokens.js"></script>
+<script src="../../js/core.js"></script>
+<script src="../../js/docs-helpers.js"></script>
+<script src="../../js/docs-i18n.js"></script>
+<script src="../../js/updates.js"></script>
+<script src="../../js/components/chevron.js"></script>
+<script src="../../js/components/grid-system.js"></script>
+<script src="../../js/components/buttons.js"></script>
+<script src="../../js/components/badge.js"></script>
+<script src="../../js/components/banners.js"></script>
+<script src="../../js/components/snackbar.js"></script>
+<script src="../../js/components/checkbox.js"></script>
+<script src="../../js/components/toggles.js"></script>
+<script src="../../js/components/action-bar.js"></script>
+<script src="../../js/components/popover.js"></script>
+<script src="../../js/components/separators.js"></script>
+<script src="../../js/components/avatar.js"></script>
+<script src="../../js/components/radio.js"></script>
+<script src="../../js/components/counters.js"></script>
+<script src="../../js/components/kbd.js"></script>
+<script src="../../js/components/search-bar.js"></script>
+<script src="../../js/components/input.js"></script>
+<script src="../../js/components/textarea.js"></script>
+<script src="../../js/components/password.js"></script>
+<script src="../../js/components/tags.js"></script>
+<script src="../../js/components/status.js"></script>
+<script src="../../js/components/tooltips.js"></script>
+<script src="../../js/components/info-footer.js"></script>
+<script src="../../js/components/list.js"></script>
+<script src="../../js/components/context-menu.js"></script>
+<script src="../../js/components/table.js"></script>
+<script src="../../js/components/selectors.js"></script>
+<script src="../../js/components/section-header.js"></script>
+<script src="../../js/components/segment-menu.js"></script>
+<script src="../../js/components/tabs.js"></script>
+<script src="../../js/components/tab-bar.js"></script>
+<script src="../../js/components/toc.js"></script>
+<script src="../../js/components/breadcrumbs.js"></script>
+<script src="../../js/components/pagination.js"></script>
+<script src="../../js/components/table-footer.js"></script>
+<script src="../../js/components/header-xs.js"></script>
+<script src="../../js/components/file-uploader.js"></script>
+<script src="../../js/components/overlay.js"></script>
+<script src="../../js/components/chips.js"></script>
+<script src="../../js/components/toast.js"></script>
+<script src="../../js/components/led-panel.js"></script>
+<script src="../../js/components/sub-nav.js"></script>
+<script src="../../js/components/tool-bar.js"></script>
+<script src="../../js/components/header-s.js"></script>
+<script src="../../js/components/header-m.js"></script>
+<script src="../../js/components/header-l.js"></script>
+<script src="../../js/components/nav-bar.js"></script>
+<script src="../../js/components/side-navigation.js"></script>
+<script src="../../js/components/placeholder.js"></script>
+<script src="../../js/components/cards.js"></script>
+<script src="../../js/components/side-panel.js"></script>
+<script src="../../js/components/dialogues.js"></script>
+<script src="../../js/components/getting-started.js"></script>
 <script>
 function demoToggleTheme(){var h=document.documentElement;
   var d=h.getAttribute('data-theme')==='dark'?'light':'dark';
   h.setAttribute('data-theme',d);
   try{localStorage.setItem('demo-theme',d)}catch(e){}}
 var DEMO_NAV={'Management':'management.html','Events':'events.html'};
-function sbSelectNavBtn(btn){var l=btn.textContent.trim();
-  if(DEMO_NAV[l])location.href=DEMO_NAV[l];}
-function sbNavBarDropdownClick(btn){sbSelectNavBtn(btn);}
-function sbTableSort(){}
-function sbPwToggle(btn){
-  var i=btn.closest('.sb-pw').querySelector('input');
-  i.type=i.type==='password'?'text':'password';}
-// Дропзона в демо статическая: обработчики File Uploader — заглушки.
-function sbUploaderDragOver(){}
-function sbUploaderDragLeave(){}
-function sbUploaderDrop(){}
-function sbUploaderPick(){}
-// Floating nav: is-stuck при скролле — код DS (sbWireNavBarFloating).
-var sbWireNavBarFloating = function wireFloating(scrollRoot, navBar) {
-    if (!scrollRoot || !navBar) return () => {};
-    // Sentinel — 1px-плашка, отслеживающая «не скроллились ещё» состояние.
-    // Два сценария размещения:
-    //   1) Bar ВНУТРИ scrollRoot (классический page-level sticky): sentinel
-    //      кладём перед bar (его previousElementSibling) — уходит из view
-    //      ровно когда контент над баром прокручивается прочь.
-    //   2) Bar СНАРУЖИ scrollRoot (bar и scroll-area — sibling'и; используется
-    //      когда нужно, чтобы scrollbar упирался в низ bar'а, а не покрывал
-    //      его область): sentinel кладём первым ребёнком scrollRoot'а —
-    //      уходит из view как только пользователь начинает скроллить.
-    const barInside = scrollRoot.contains(navBar);
-    let sentinel;
-    if (barInside) {
-      sentinel = navBar.previousElementSibling;
-      if (!sentinel || !sentinel.classList.contains('sb-nav-bar-sentinel')) {
-        sentinel = document.createElement('div');
-        sentinel.className = 'sb-nav-bar-sentinel';
-        sentinel.style.height = '1px';
-        navBar.parentNode.insertBefore(sentinel, navBar);
-      }
-    } else {
-      sentinel = scrollRoot.firstElementChild;
-      if (!sentinel || !sentinel.classList.contains('sb-nav-bar-sentinel')) {
-        sentinel = document.createElement('div');
-        sentinel.className = 'sb-nav-bar-sentinel';
-        sentinel.style.height = '1px';
-        sentinel.style.width = '100%';
-        scrollRoot.insertBefore(sentinel, scrollRoot.firstChild);
-      }
-    }
-    const obs = new IntersectionObserver(
-      ([entry]) => navBar.classList.toggle('is-stuck', !entry.isIntersecting),
-      { root: scrollRoot === document.body ? null : scrollRoot, threshold: 0 }
-    );
-    obs.observe(sentinel);
-    return () => { obs.disconnect(); sentinel.remove(); };
-  };
+// Навигация демо поверх штатного выбора таба.
+var demoOrigSelect = window.sbSelectNavBtn;
+window.sbSelectNavBtn = function(btn){var l=btn.textContent.trim();
+  if(DEMO_NAV[l]){location.href=DEMO_NAV[l];return;}
+  demoOrigSelect(btn);};
 document.addEventListener('DOMContentLoaded',function(){
   var bar=document.querySelector('.sb-nav-bar.floating');
   var scroll=document.querySelector('.demo-panel-scroll')

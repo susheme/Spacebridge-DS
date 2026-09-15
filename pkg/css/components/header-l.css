@@ -65,6 +65,9 @@
 .sb-header-l-more {
   flex-shrink: 0;
 }
+/* Actions только inline (без menu-only пунктов): на широком контейнере
+   More открывал бы пустое меню — прячем, пока зеркала не нужны. */
+.sb-header-l-more.is-menu-only { display: none; }
 
 /* Cells that mirror inline actions in the menu — hidden by default,
    surfaced only at narrow widths via the @container rule below. */
@@ -74,6 +77,7 @@
 
 /* ── Responsive: < 768px container width ──────────────────────────── */
 @container (max-width: 768px) {
+  .sb-header-l-more.is-menu-only { display: flex; }
   .sb-header-l-left,
   .sb-header-l-right {
     gap: var(--gap-vert-s);          /* 16 → 8 */

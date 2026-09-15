@@ -49,6 +49,5 @@ Spacebridge DS по скриншотам юзера (14.09.2026). Цель — �
 
 ## Грабли / хвосты
 
-- Таблица без чекбокс-колонки собирается локальным `demoTable()` из ячеек `.sb-th/.sb-td`: `sbMkTableFull` всегда рисует select-колонку. Кандидат на опцию `selectable:false` в Table.
-- Password-фабрика не экспортирована из password.js — разметка взята copy-paste из code panel. Кандидат на экспорт (как sbMkTextField).
-- Пустой `sectionHeader('')` над NTP-колонкой держит вертикальное выравнивание с полосой Management — спорно, показать юзеру.
+- ~~Таблица demoTable / copy-paste Password~~ ЗАКРЫТО 15.09.2026: демо целиком на фабриках (sbMkTableFull selectable:false + html-ячейки, sbMkPasswordField). Разметки руками в демо не осталось. Попутная грабля: рамка таблицы с overflow:hidden резала контент — скролл перенесён в саму рамку (паттерн no-cosmetic-overflow-hidden).
+- ~~Пустой `sectionHeader('')` над NTP~~ неактуально: NTP получил собственный заголовок секции.

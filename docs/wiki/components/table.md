@@ -2,9 +2,9 @@
 
 > Spacebridge DS — компонент Table (хедеры, ячейки, состояния, footer, tool bar, пагинация, kebab). Статус: Incomplete (09.09.2026, решение юзера; был inProgress).
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-14), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-15), между маркерами руками не править -->
 **Факты из кода:**
-- Файлы: `js/components/table.js` (829 строк) + `css/components/table.css` (202 строк)
+- Файлы: `js/components/table.js` (860 строк) + `css/components/table.css` (202 строк)
 - Load order: 26/53 в `index.html`
 - Deps: `checkbox`, `chevron`, `avatar`, `toggles`, `context-menu`, `buttons` (см. `js/_index.js`)
 - Используют его: никто
@@ -49,3 +49,5 @@ Avatar 24px-вариант для ячейки; Context Menu danger/critical в�
 
 ---
 *Перенесено из памяти агента 07.09.2026, дословно.*
+
+**15.09.2026 (ASAP из догфуда App Host):** sbMkTableFull получил `selectable:false` (без чекбокс-столбца), колонки `{flex:N}` (резиновый столбец от min-width), mkCell — типы с параметрами: status-text `{label,color}`, status-circle-text `{text,dot}`, новый `html` (готовый HTML из фабрик). ГРАБЛЯ: body-ячейки не несли min-width в отличие от хедера — колонки расходились на узком контейнере; выровнено.

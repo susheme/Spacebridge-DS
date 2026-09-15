@@ -54,17 +54,16 @@ var SHELL_CSS = [
   '.demo-panel-scroll{flex:1;min-height:0;overflow-y:auto;padding:var(--pad-vert-16);',
   '  display:flex;flex-direction:column;gap:var(--gap-vert-m);}',
   '.demo-stack{display:flex;flex-direction:column;gap:var(--gap-vert-m);min-width:0;}',
-  '.demo-table-scroll{overflow-x:auto;}',
+  // Скролл — у самой рамки: overflow:hidden здесь резал таблицу
+  // (паттерн no-cosmetic-overflow-hidden).
   '.demo-table-frame{display:flex;width:100%;box-sizing:border-box;border:var(--border-width-1) solid var(--border);',
-  '  border-radius:var(--radius-8);overflow:hidden;background:var(--background);}',
+  '  border-radius:var(--radius-8);overflow-x:auto;background:var(--background);}',
   '.demo-table-frame .sb-table{width:100%;}',
   '.demo-table-frame .sb-thead-row,.demo-table-frame .sb-trow{display:flex;width:100%;}',
   '.demo-login-wrap{flex:1;display:flex;align-items:center;justify-content:center;',
   '  padding:var(--pad-vert-24) var(--pad-horiz-16);}',
   '.demo-login-card{width:100%;max-width:400px;}',
   '.demo-login-card .sb-pw{width:100%;box-sizing:border-box;}',
-  // Uploader: компонентный min-width:320 распирает панель на телефоне.
-  '.demo-stack .sb-uploader-area{min-width:0;}',
   '.demo-btn-full{width:100%;}',
   '[data-theme="dark"] .demo-ico-sun{display:none;}',
   'html:not([data-theme="dark"]) .demo-ico-moon{display:none;}',
@@ -155,59 +154,7 @@ function sectionHeader(title) {
     + '</div>';
 }
 
-// Таблица без чекбокс-колонки: те же .sb-th/.sb-td ячейки, что собирает
-// sbMkTableFull (у него первая колонка всегда select — App Host'у не нужна;
-// кандидат на опцию selectable:false — см. wiki demo-app-host.md).
-// Ширины фиксированные, как в mkTableFull; рамка — .demo-table-frame
-// (canon обёртки из доков Table Footer).
-function demoTable(columns, rows) {
-  var sep = '<span class="sb-sep sep-v sep-l"></span>';
-  function w(col) {
-    if (col.flex) return ' style="flex:1 1 ' + (col.min || 160) + 'px;width:auto;min-width:' + (col.min || 160) + 'px"';
-    return ' style="width:' + col.width + 'px;min-width:' + col.width + 'px"';
-  }
-  var h = columns.map(function (c, i) {
-    var dir = c.sort ? ' data-sort="' + c.sort + '"' : '';
-    var last = i === columns.length - 1;
-    return '<div class="sb-th' + (c.sort ? ' is-sorted' : '') + '" role="columnheader"' + w(c) + dir
-      + ' onclick="sbTableSort(this)"><span class="sb-caption sb-fw-medium">' + c.title + '</span>'
-      + '<span class="sb-th-sort">' + sbIconRaw('arrow-up-s-fill', 'L') + '</span>'
-      + (last ? '' : sep) + '</div>';
-  }).join('');
-  var body = rows.map(function (row) {
-    var cells = row.map(function (cell, i) {
-      return '<div class="sb-td" role="cell"' + w(columns[i]) + '>'
-        + '<span class="sb-td-l">' + cell + '</span></div>';
-    }).join('');
-    return '<div class="sb-trow" role="row">' + cells + '</div>';
-  }).join('');
-  return '<div class="sb-table" role="table">'
-    + '<div class="sb-thead-row" role="row">' + h + '</div>' + body + '</div>';
-}
-
-function cellText(t) { return '<span class="sb-body-m">' + t + '</span>'; }
-function cellDotText(dot, t) {
-  return '<span class="sb-status-dot ' + dot + '"></span>' + cellText(t);
-}
-// Бейдж в ячейке таблицы — canon mkCell: Badge-Status Mini.
-function cellBadge(color, label) {
-  return sbMkBadgeStatus({ label: label, color: color, mini: true });
-}
-
 // ── login.html ──────────────────────────────────────────────────────────────
-
-// Password — copy-paste разметка со страницы Password Input (фабрика не
-// экспортирована; блок в точности из code panel, value пуст).
-var PW_FIELD = '<div class="sb-field"><span class="sb-field-label">Password</span>'
-  + '<div class="sb-pw">'
-  + '<div class="sb-pw-left">'
-  + '<span class="sb-pw-lock">' + sbIcon('lock-2-line', 'M') + '</span>'
-  + '<input class="sb-pw-input" type="password" value="" placeholder="">'
-  + '</div>'
-  + '<div class="sb-pw-right">'
-  + '<button class="sb-pw-toggle" onclick="sbPwToggle(this)" title="Show/hide password">'
-  + sbIconRaw('eye-line', 'L') + '</button>'
-  + '</div></div></div>';
 
 var loginBody =
   navBar({
@@ -223,7 +170,7 @@ var loginBody =
       body: '<div class="demo-stack">'
         + sbMkHeaderM({ title: 'Login' })
         + sbMkField({ value: '', showTitle: false }, { label: 'Username' })
-        + PW_FIELD
+        + sbMkPasswordField({ value: '' }, { label: 'Password' })
         + sbMkButton({ label: 'Sign In', variant: 'primary', cls: 'demo-btn-full',
             attrs: ' onclick="location.href=\'management.html\'"' })
         + '</div>',
@@ -233,22 +180,19 @@ var loginBody =
 
 // ── events.html ─────────────────────────────────────────────────────────────
 
-var eventsTable = demoTable(
-  [
+var eventsTable = sbMkTableFull({
+  selectable: false,
+  footer: true,
+  columns: [
     { title: 'Date', sort: 'desc', width: 240 },
-    { title: 'Severity / Type', width: 340 },
-    { title: 'Parameters', flex: true, min: 160 },
+    { title: 'Severity / Type', width: 340, type: 'status-circle-text' },
+    { title: 'Parameters', flex: 160 },
   ],
-  [
-    [cellText('2026-09-04 16:11:23'), cellDotText('online', 'firmware-update-success'), cellText('—')],
-    [cellText('2026-09-04 16:10:32'), cellDotText('online', 'firmware-update-script-started'), cellText('—')],
-    [cellText('2026-09-04 16:07:42'), cellDotText('maintenance', 'system-reboot-requested'), cellText('—')],
-  ]
-);
-
-var eventsFooter = sbMkTableFooter({
-  left: '<span class="sb-body-s" style="color:var(--text-tertiary)">Rows: 3 of 3</span>',
-  right: sbMkPagination({ total: 3, pageSize: 10, currentPage: 1 }),
+  rows: [
+    ['2026-09-04 16:11:23', { text: 'firmware-update-success', dot: 'online' }, '—'],
+    ['2026-09-04 16:10:32', { text: 'firmware-update-script-started', dot: 'online' }, '—'],
+    ['2026-09-04 16:07:42', { text: 'system-reboot-requested', dot: 'maintenance' }, '—'],
+  ],
 });
 
 var eventsHeader = sbMkHeaderL({
@@ -274,9 +218,7 @@ var eventsBody =
         body: eventsHeader
           + '<div class="demo-panel-scroll">'
           + sbMkButtonWithLabel({ icon: 'filter-line', text: 'Filter', side: 'right' })
-          + '<div class="demo-table-scroll"><div class="demo-table-frame"><div class="sb-table-wrap">'
-          + eventsTable
-          + '<div class="sb-table-foot">' + eventsFooter + '</div></div></div></div>'
+          + '<div class="demo-table-frame">' + eventsTable + '</div>'
           + '</div>',
       }) })
   + '</div>'
@@ -284,24 +226,25 @@ var eventsBody =
 
 // ── management.html ─────────────────────────────────────────────────────────
 
-var updateTable = demoTable(
-  [
+var updateTable = sbMkTableFull({
+  selectable: false,
+  columns: [
     { title: '#', width: 56 },
-    { title: 'Version', flex: true, min: 260 },
+    { title: 'Version', flex: 260 },
     { title: 'Partition', width: 130 },
-    { title: 'Status', width: 120 },
-    { title: 'Actions', width: 160 },
+    { title: 'Status', width: 120, type: 'status-text' },
+    { title: 'Actions', width: 160, type: 'html' },
   ],
-  [
-    [cellText('1'), cellText('application-host-1.0.1-b51 / application-host'), cellText('/dev/sda2'),
-     cellBadge('grey', 'Alternate'),
+  rows: [
+    ['1', 'application-host-1.0.1-b51 / application-host', '/dev/sda2',
+     { label: 'Alternate', color: 'grey' },
      sbMkButton({ label: 'Update', variant: 'primary', size: 's' }) + ' '
        + sbMkButton({ icon: 'loop-left-line', iconSize: 'M', size: 's', attrs: ' aria-label="Reboot to slot"' })],
-    [cellText('2'), cellText('application-host-1.0.1-b51 / application-host'), cellText('/dev/sda3'),
-     cellBadge('green', 'Active'),
+    ['2', 'application-host-1.0.1-b51 / application-host', '/dev/sda3',
+     { label: 'Active', color: 'green' },
      sbMkButton({ icon: 'loop-left-line', iconSize: 'M', size: 's', attrs: ' aria-label="Reboot to slot"' })],
-  ]
-);
+  ],
+});
 
 // Backup — дропзона File Uploader (наш компонент) + restore/save действия.
 var backupCard = sbMkCard({
@@ -368,7 +311,7 @@ var mgmtBody =
         + sbMkFlex({ gap: 'lg', wrap: true, full: true, content:
             sbMkFlexItem({ grow: 2, basis: '480px', content: '<div class="demo-stack">'
               + sectionHeader('Update')
-              + '<div class="demo-table-scroll"><div class="demo-table-frame">' + updateTable + '</div></div>'
+              + '<div class="demo-table-frame">' + updateTable + '</div>'
               + '</div>' })
             + sbMkFlexItem({ grow: 1, basis: '280px', content: '<div class="demo-stack">'
               + sectionHeader('Control') + backupCard + '</div>' }) })

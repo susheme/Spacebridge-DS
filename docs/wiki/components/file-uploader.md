@@ -2,9 +2,9 @@
 
 # File Uploader — done (24.07.2026)
 
-<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-14), между маркерами руками не править -->
+<!-- GEN:BEGIN — собрано `jsc tools/gen-wiki.js` (2026-09-15), между маркерами руками не править -->
 **Факты из кода:**
-- Файлы: `js/components/file-uploader.js` (477 строк) + `css/components/file-uploader.css` (216 строк)
+- Файлы: `js/components/file-uploader.js` (477 строк) + `css/components/file-uploader.css` (218 строк)
 - Load order: 37/53 в `index.html`
 - Deps: `badge`, `header-xs`, `counters`, `toggles`, `buttons` (см. `js/_index.js`)
 - Используют его: `overlay`
@@ -34,3 +34,5 @@
 
 ---
 *Перенесено из памяти агента 07.09.2026, дословно.*
+
+**15.09.2026:** дропзона адаптивна — min/max-width через `min(…, 100%)`, на узких контейнерах сжимается вместо горизонтального распора (грабля из демо App Host).

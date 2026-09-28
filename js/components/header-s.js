@@ -188,9 +188,9 @@ window.COMP_CSS.headerS = `.sb-header-s {
   function mkHeaderSActions({ inline = [], more } = {}) {
     const inlineHtml = inline.map(a => {
       if (a.type === 'icon') {
-        return sbMkButton({ icon: a.icon, iconSize: 'S', size: 's', cls: 'sb-header-s-action' });
+        return sbMkButton({ icon: a.icon, iconSize: 'S', size: 's', variant: a.variant, critical: a.critical, cls: 'sb-header-s-action' });
       }
-      return sbMkButton({ label: a.label, size: 's', cls: 'sb-header-s-action' });
+      return sbMkButton({ label: a.label, size: 's', variant: a.variant, critical: a.critical, cls: 'sb-header-s-action' });
     }).join('');
 
     const hasInline = inline.length > 0;

@@ -204,7 +204,7 @@ var eventsHeader = sbMkHeaderL({
   // контейнере (@container 768) inline-кнопки уезжают в More (⋯).
   slotRight: sbMkFlex({ align: 'center', gap: 'm', content:
       '<span class="sb-caption">Server time: <span class="sb-title-s">Sep 14, 2026, 12:16 PM</span></span>'
-      + sbMkHeaderLActions({ inline: [{ label: 'Export', icon: 'download-2-line' }] }) }),
+      + sbMkHeaderLActions({ inline: [{ label: 'Export', icon: 'download-2-line', variant: 'primary' }] }) }),
 });
 
 var eventsBody =

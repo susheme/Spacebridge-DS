@@ -101,13 +101,16 @@ window.COMP_CSS.headerL = `.sb-header-l {
   //
   // If `more` is omitted but `inline` exists, a More button is still
   // rendered so narrow users have a way to access the actions.
+  // inline item: { type:'icon'|'text', icon, label, variant?, critical? } —
+  // variant/critical прокидываются в sbMkButton (primary-акцент главного
+  // действия экрана); зеркала в More-меню остаются обычными ячейками.
   function mkHeaderLActions({ inline = [], more } = {}) {
     const inlineHtml = inline.map(a => {
       if (a.type === 'icon') {
-        return sbMkButton({ icon: a.icon, cls: 'sb-header-l-action' });
+        return sbMkButton({ icon: a.icon, variant: a.variant, critical: a.critical, cls: 'sb-header-l-action' });
       }
       // text button
-      return sbMkButton({ label: a.label, cls: 'sb-header-l-action' });
+      return sbMkButton({ label: a.label, variant: a.variant, critical: a.critical, cls: 'sb-header-l-action' });
     }).join('');
 
     const hasInline = inline.length > 0;

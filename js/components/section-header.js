@@ -74,9 +74,9 @@ window.COMP_CSS.sectionHeader = `.sb-section-header {
   function mkSectionHeaderActions({ inline = [], more } = {}) {
     const inlineHtml = inline.map(a => {
       if (a.type === 'icon') {
-        return sbMkButton({ icon: a.icon, iconSize: 'S', size: 's', cls: 'sb-section-header-action' });
+        return sbMkButton({ icon: a.icon, iconSize: 'S', size: 's', variant: a.variant, critical: a.critical, cls: 'sb-section-header-action' });
       }
-      return sbMkButton({ label: a.label, size: 's', cls: 'sb-section-header-action' });
+      return sbMkButton({ label: a.label, size: 's', variant: a.variant, critical: a.critical, cls: 'sb-section-header-action' });
     }).join('');
 
     const hasInline = inline.length > 0;

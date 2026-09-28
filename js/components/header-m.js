@@ -95,9 +95,9 @@ window.COMP_CSS.headerM = `.sb-header-m {
   function mkHeaderMActions({ inline = [], more } = {}) {
     const inlineHtml = inline.map(a => {
       if (a.type === 'icon') {
-        return sbMkButton({ icon: a.icon, cls: 'sb-header-m-action' });
+        return sbMkButton({ icon: a.icon, variant: a.variant, critical: a.critical, cls: 'sb-header-m-action' });
       }
-      return sbMkButton({ label: a.label, cls: 'sb-header-m-action' });
+      return sbMkButton({ label: a.label, variant: a.variant, critical: a.critical, cls: 'sb-header-m-action' });
     }).join('');
 
     const hasInline = inline.length > 0;

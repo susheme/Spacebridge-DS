@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  GETTING_STARTED
-//  CSS в css/components/getting-started.css — SYNC-маркеры обязательны.
-//  При правке стилей — обновить ОБА места (window.COMP_CSS и CSS-файл).
+//  Своего CSS-файла нет: страница целиком собрана на docs-стилях
+//  (css/docs.css — .color-grid, .typo-scale и т.д.). COMP_CSS не нужен.
 // ═══════════════════════════════════════════════════════════════════════════
 
 // --- GETTING STARTED ---
@@ -15,6 +15,11 @@ if (!window.__sbGsThemeWatch) {
     const swatches = document.querySelectorAll('#content .color-swatch');
     if (!swatches.length) return; // Getting Started не открыт
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const note = document.querySelector('#content .gs-theme-note');
+    if (note) note.textContent = sbT(
+      'Currently showing the ' + (isDark ? 'dark' : 'light') + ' theme values.',
+      'Сейчас показаны значения ' + (isDark ? 'тёмной' : 'светлой') + ' темы.'
+    );
     let i = 0;
     window.COLOR_TOKENS.forEach(group => group.tokens.forEach(c => {
       const sw = swatches[i++];
@@ -57,30 +62,43 @@ sbRegister({
       colorHTML += '</div>';
     });
 
+    // Значения в meta-колонке НЕ хардкодятся: токены mobile-first и меняются
+    // по брейкпоинтам, а руками вписанные px уже дважды расходились с Figma.
+    // Читаем текущие значения токенов через getComputedStyle при рендере;
+    // копируется CSS на var(--…) — как в css/typography.css.
+    const rootStyle = getComputedStyle(document.documentElement);
+    const tok = v => rootStyle.getPropertyValue(v).trim();
     const weightName = w => ({ '300':'Light','400':'Regular','500':'Medium','600':'SemiBold','700':'Bold','900':'Black' }[w] || w);
+
+    // fs / fw / lh — токены из css/typography.css (Badge — из css/components/badge.css).
+    // extra — довесок класса, без которого копия неполна (caption, links).
     const typoRows = [
-      { label: 'Brand', cls: '', size: '', weight: '', lh: null, sample: 'SpaceBridge Classic', download: './SpaceBridge-Classic.otf', downloadName: 'SpaceBridge-Classic.otf' },
-      { label: 'H1',      cls: 'sb-h1',       size: '96px', weight: '300', lh: null,   sample: 'Headline' },
-      { label: 'H2',      cls: 'sb-h2',       size: '64px', weight: '900', lh: null,   sample: 'Headline' },
-      { label: 'H3',      cls: 'sb-h3',       size: '48px', weight: '900', lh: null,   sample: 'Headline' },
-      { label: 'H4',      cls: 'sb-h4',       size: '32px', weight: '900', lh: '32px', sample: 'Headline' },
-      { label: 'H5',      cls: 'sb-h5',       size: '28px', weight: '900', lh: '32px', sample: 'Headline' },
-      { label: 'H6',      cls: 'sb-h6',       size: '24px', weight: '900', lh: '32px', sample: 'Headline' },
-      { label: 'H7',      cls: 'sb-h7',       size: '22px', weight: '900', lh: null,   sample: 'Headline' },
-      { label: 'H8',      cls: 'sb-h8',       size: '20px', weight: '700', lh: null,   sample: 'Headline' },
-      { label: 'Title L', cls: 'sb-title-l',  size: '18px', weight: '500', lh: null,   sample: 'Section Title' },
-      { label: 'Title M', cls: 'sb-title-m',  size: '16px', weight: '500', lh: null,   sample: 'Component Label' },
-      { label: 'Title S', cls: 'sb-title-s',  size: '14px', weight: '600', lh: null,   sample: 'Section Title' },
-      { label: 'Body L',  cls: 'sb-body-l',   size: '16px', weight: '400', lh: '24px', sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
-      { label: 'Body M',  cls: 'sb-body-m',   size: '14px', weight: '400', lh: '20px', sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
-      { label: 'Body S',  cls: 'sb-body-s',   size: '12px', weight: '400', lh: '20px', sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
-      { label: 'Sub',     cls: 'sb-sub',      size: '10px', weight: '400', lh: '12px', sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
-      { label: 'Caption', cls: 'sb-caption',  size: '12px', weight: '500', lh: null,   sample: 'Status Label / Category' },
-      { label: 'Link L',  cls: 'sb-link-l',   size: '18px', weight: '500', lh: null,   sample: 'Learn more about Spacebridge' },
-      { label: 'Link M',  cls: 'sb-link-m',   size: '16px', weight: '500', lh: null,   sample: 'Learn more about Spacebridge' },
-      { label: 'Link S',  cls: 'sb-link-s',   size: '14px', weight: '500', lh: null,   sample: 'Learn more about Spacebridge' },
-      { label: 'Button',  cls: 'sb-btn-text',   size: '15px', weight: '600', lh: null,   sample: 'Button Label' },
-      { label: 'Badge',   cls: 'sb-badge-text', size: '10px', weight: '500', lh: '12px', sample: 'Default' },
+      { label: 'Brand', sample: 'SpaceBridge Classic', download: './SpaceBridge-Classic.otf', downloadName: 'SpaceBridge-Classic.otf' },
+      { label: 'H1',      cls: 'sb-h1',      fs: '--headline-font-size-h1', fw: '--font-weight-light',    lh: '--headline-line-height-96', sample: 'Headline' },
+      { label: 'H2',      cls: 'sb-h2',      fs: '--headline-font-size-h2', fw: '--font-weight-black',    lh: '--headline-line-height-64', sample: 'Headline' },
+      { label: 'H3',      cls: 'sb-h3',      fs: '--headline-font-size-h3', fw: '--font-weight-black',    lh: '--headline-line-height-48', sample: 'Headline' },
+      { label: 'H4',      cls: 'sb-h4',      fs: '--headline-font-size-h4', fw: '--font-weight-black',    lh: '--headline-line-height-32', sample: 'Headline' },
+      { label: 'H5',      cls: 'sb-h5',      fs: '--headline-font-size-h5', fw: '--font-weight-black',    lh: '--headline-line-height-h5', sample: 'Headline' },
+      { label: 'H6',      cls: 'sb-h6',      fs: '--headline-font-size-h6', fw: '--font-weight-black',    lh: '--headline-line-height-24', sample: 'Headline' },
+      { label: 'H7',      cls: 'sb-h7',      fs: '--headline-font-size-h7', fw: '--font-weight-black',    lh: '--headline-line-height-16', sample: 'Headline' },
+      { label: 'H8',      cls: 'sb-h8',      fs: '--headline-font-size-h8', fw: '--font-weight-bold',     lh: '--headline-line-height-h8', sample: 'Headline' },
+      { label: 'Title L', cls: 'sb-title-l', fs: '--title-font-size-l',     fw: '--font-weight-medium',   lh: '--title-line-height-l',     sample: 'Section Title' },
+      { label: 'Title M', cls: 'sb-title-m', fs: '--title-font-size-m',     fw: '--font-weight-semibold', lh: '--title-line-height-s',     sample: 'Component Label' },
+      { label: 'Title S', cls: 'sb-title-s', fs: '--title-font-size-s',     fw: '--font-weight-bold',     lh: '--title-line-height-s',     sample: 'Section Title' },
+      { label: 'Body L',  cls: 'sb-body-l',  fs: '--body-font-size-l',      fw: '--font-weight-regular',  lh: '--body-line-height',        sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
+      { label: 'Body M',  cls: 'sb-body-m',  fs: '--body-font-size-m',      fw: '--font-weight-regular',  lh: '--body-line-height',        sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
+      { label: 'Body S',  cls: 'sb-body-s',  fs: '--body-font-size-s',      fw: '--font-weight-regular',  lh: '--body-line-height',        sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
+      { label: 'Sub',     cls: 'sb-sub',     fs: '--subscription-font-size', fw: '--font-weight-regular', lh: '--subscription-line-height', sample: 'Saturn is the sixth planet from the Sun and is famous for its stunning rings.' },
+      { label: 'Caption', cls: 'sb-caption', fs: '--title-font-size-caption', fw: '--font-weight-medium', lh: '--title-line-height-caption', sample: 'Status Label / Category',
+        extra: 'letter-spacing: var(--letter-spacing-l); text-transform: uppercase;' },
+      { label: 'Link L',  cls: 'sb-link-l',  fs: '--link-font-size-l',      fw: '--font-weight-medium',   lh: '--link-line-height',        sample: 'Learn more about Spacebridge',
+        extra: 'color: var(--primary); text-decoration: underline;' },
+      { label: 'Link M',  cls: 'sb-link-m',  fs: '--link-font-size-m',      fw: '--font-weight-medium',   lh: '--link-line-height',        sample: 'Learn more about Spacebridge',
+        extra: 'color: var(--primary); text-decoration: underline;' },
+      { label: 'Link S',  cls: 'sb-link-s',  fs: '--link-font-size-s',      fw: '--font-weight-medium',   lh: '--link-line-height',        sample: 'Learn more about Spacebridge',
+        extra: 'color: var(--primary); text-decoration: underline;' },
+      { label: 'Button',  cls: 'sb-btn-text',   fs: '--button-font-size',   fw: '--font-weight-semibold', lh: '--button-line-height',      sample: 'Button Label' },
+      { label: 'Badge',   cls: 'sb-badge-text', fs: '--badge-font-size',    fw: '--font-weight-medium',   lh: '--button-line-height',      sample: 'Default' },
     ];
 
     let typoHTML = '<div class="typo-scale">';
@@ -97,9 +115,9 @@ sbRegister({
         </div>`;
         return;
       }
-      const meta = `${r.size} / ${weightName(r.weight)}${r.lh ? ' / ' + r.lh : ''}`;
-      let css = `font-size: ${r.size}; font-weight: ${r.weight};`;
-      if (r.lh) css += ` line-height: ${r.lh};`;
+      const meta = `${tok(r.fs)} / ${weightName(tok(r.fw))} / ${tok(r.lh)}`;
+      let css = `font-size: var(${r.fs}); font-weight: var(${r.fw}); line-height: var(${r.lh});`;
+      if (r.extra) css += ` ${r.extra}`;
       typoHTML += `<div class="typo-row">
         <div class="typo-label sb-body-s">${r.label}</div>
         <div class="typo-sample ${r.cls}">${r.sample}</div>
@@ -135,9 +153,12 @@ sbRegister({
       <div class="comp-section" id="sec-color-palette">
         <h2 class="comp-title sb-title-l">${sbT('Color Palette', 'Цветовая палитра')}</h2>
         <div class="comp-desc sb-body-m">${sbT(
-          'Semantic color tokens that adapt between the light and dark themes. A click on a swatch copies the value. Currently showing the ' + (isDark ? 'dark' : 'light') + ' theme values.',
-          'Семантические цветовые токены, адаптирующиеся между светлой и тёмной темой. Клик по свотчу копирует значение. Сейчас показаны значения ' + (isDark ? 'тёмной' : 'светлой') + ' темы.'
-        )}</div>
+          'Semantic color tokens that adapt between the light and dark themes. A click on a swatch copies the value.',
+          'Семантические цветовые токены, адаптирующиеся между светлой и тёмной темой. Клик по свотчу копирует значение.'
+        )} <span class="gs-theme-note">${sbT(
+          'Currently showing the ' + (isDark ? 'dark' : 'light') + ' theme values.',
+          'Сейчас показаны значения ' + (isDark ? 'тёмной' : 'светлой') + ' темы.'
+        )}</span></div>
         ${colorHTML}
       </div>
 
@@ -211,7 +232,7 @@ sbRegister({
             ` })}
             <div class="typo-end">
               <div class="typo-meta sb-sub" style="max-width:260px;word-break:break-all">${cssSnippet}</div>
-              <button class="pg-code-copy-btn" onclick="navigator.clipboard.writeText('${cssSnippet}').then(function(){ if (typeof sbShowSnackbar === 'function') sbShowSnackbar(); })" title="Copy">${sbIcon('file-copy-line','L')}</button>
+              <button class="pg-code-copy-btn" onclick="copyTypo(this,'${cssSnippet}')" title="Copy">${sbIcon('file-copy-line','L')}</button>
             </div>
           </div>`;
           }).join('')}

@@ -38,8 +38,8 @@ sbRegister({
   name: 'getting-started',
   title: 'Getting Started',
   description: sbT(
-    'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision and 24/7 operational environments. This page holds the foundation: color tokens, the type scale and effect styles.',
-    'Spacebridge UI — дизайн-система для ПО спутниковой связи и управления сетями. Создана ради ясности, точности и круглосуточных операционных сред. На этой странице — фундамент: цветовые токены, типографическая шкала и стили эффектов.'
+    'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision and 24/7 operational environments. This page holds the foundation: color tokens, the type scale, size tokens and effect styles.',
+    'Spacebridge UI — дизайн-система для ПО спутниковой связи и управления сетями. Создана ради ясности, точности и круглосуточных операционных сред. На этой странице — фундамент: цветовые токены, типографическая шкала, размерные токены и стили эффектов.'
   ),
   renderPage() {
     const colorGroups = window.COLOR_TOKENS;
@@ -129,12 +129,56 @@ sbRegister({
     });
     typoHTML += '</div>';
 
+    // Размерные токены. Списки имён — зеркало css/tokens.css (генерится из
+    // Figma Dimensions-DS.json); значения читаются живьём через tok(), как в
+    // шкале типографики. Демо-ячейки переиспользуют .color-swatch: observer
+    // темы их не трогает — он обходит только первые COLOR_TOKENS.length
+    // свотчей, а цветовая секция в DOM раньше этой.
+    const sizeGroups = [
+      {
+        label: 'Radius',
+        tokens: ['--radius-0','--radius-1','--radius-2','--radius-4','--radius-6','--radius-8','--radius-10','--radius-12','--radius-14','--radius-16','--radius-18','--radius-20','--radius-22','--radius-24','--radius-28','--radius-100'],
+        demo: v => `<div style="width:36px;height:36px;background:var(--background);border:var(--border-width-1) solid var(--border);border-radius:var(${v})"></div>`,
+      },
+      {
+        label: 'Border Width',
+        tokens: ['--border-width-1','--border-width-1-5','--border-width-2','--border-width-4'],
+        demo: v => `<div style="width:36px;border-top:var(${v}) solid var(--primary)"></div>`,
+      },
+      {
+        label: 'Gap',
+        tokens: ['--gap-horiz-0','--gap-horiz-xxs','--gap-horiz-xs','--gap-horiz-s','--gap-horiz-m','--gap-horiz-lg','--gap-horiz-xl','--gap-horiz-xxl','--gap-vert-0','--gap-vert-xxs','--gap-vert-xs','--gap-vert-s','--gap-vert-m','--gap-vert-lg','--gap-vert-xl','--gap-vert-xxl'],
+        demo: v => `<div style="height:24px;background:var(--primary);width:var(${v})"></div>`,
+      },
+      {
+        label: 'Padding',
+        tokens: ['--pad-horiz-0','--pad-horiz-2','--pad-horiz-4','--pad-horiz-8','--pad-horiz-16','--pad-horiz-24','--pad-horiz-28','--pad-horiz-32','--pad-horiz-40','--pad-horiz-42','--pad-horiz-44','--pad-horiz-48','--pad-vert-0','--pad-vert-2','--pad-vert-4','--pad-vert-8','--pad-vert-16','--pad-vert-24','--pad-vert-28','--pad-vert-32','--pad-vert-40','--pad-vert-42','--pad-vert-44','--pad-vert-48'],
+        demo: v => `<div style="height:24px;background:var(--primary);width:var(${v})"></div>`,
+      },
+    ];
+
+    let sizeHTML = '';
+    sizeGroups.forEach(group => {
+      sizeHTML += `<h3 class="sb-title-s" style="margin:24px 0 10px;color:var(--text-tertiary)">${group.label}</h3><div class="color-grid">`;
+      group.tokens.forEach(t => {
+        sizeHTML += `<div class="color-swatch" onclick="copyColor(this,'var(${t})')">
+          <div class="color-swatch-preview" style="height:56px;display:flex;align-items:center;justify-content:center;background:var(--surface-1)">${group.demo(t)}</div>
+          <div class="color-swatch-info">
+            <div class="color-swatch-name sb-body-s">${t}</div>
+            <div class="color-swatch-hex sb-sub">${tok(t)}</div>
+          </div>
+        </div>`;
+      });
+      sizeHTML += '</div>';
+    });
+
     // TOC-якоря: эта страница рендерится кастомно (renderPage), поэтому
     // TOC встраиваем вручную — стандартный auto-build из renderComponentPage
     // здесь не работает.
     const tocItems = [
       { id: 'sec-color-palette', label: sbT('Color Palette', 'Цветовая палитра') },
       { id: 'sec-typography',    label: sbT('Typography', 'Типографика') },
+      { id: 'sec-size-tokens',   label: sbT('Size Tokens', 'Размерные токены') },
       { id: 'sec-effect-styles', label: sbT('Effect Styles', 'Стили эффектов') },
     ];
 
@@ -146,8 +190,8 @@ sbRegister({
       ${bcBlock}
       <h1 class="page-title sb-h4">Getting Started</h1>
       <div class="page-desc sb-body-l">${sbT(
-        'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision and 24/7 operational environments. This page holds the foundation: color tokens, the type scale and effect styles.',
-        'Spacebridge UI — дизайн-система для ПО спутниковой связи и управления сетями. Создана ради ясности, точности и круглосуточных операционных сред. На этой странице — фундамент: цветовые токены, типографическая шкала и стили эффектов.'
+        'Spacebridge UI is the design system for satellite communication and network management software. Built for clarity, precision and 24/7 operational environments. This page holds the foundation: color tokens, the type scale, size tokens and effect styles.',
+        'Spacebridge UI — дизайн-система для ПО спутниковой связи и управления сетями. Создана ради ясности, точности и круглосуточных операционных сред. На этой странице — фундамент: цветовые токены, типографическая шкала, размерные токены и стили эффектов.'
       )}</div>
 
       <div class="comp-section" id="sec-color-palette">
@@ -169,6 +213,15 @@ sbRegister({
           'Во всех продуктах Spacebridge используется Roboto. Шкала — от display-размера 96px до subscription-текста 10px. Каждая строка копирует свой CSS; брендовый шрифт (SpaceBridge Classic) можно скачать в первой строке.'
         )}</div>
         ${typoHTML}
+      </div>
+
+      <div class="comp-section" id="sec-size-tokens">
+        <h2 class="comp-title sb-title-l">${sbT('Size Tokens', 'Размерные токены')}</h2>
+        <div class="comp-desc sb-body-m">${sbT(
+          'Radii, border widths, gaps and paddings from the Figma dimension tokens. Gap and padding values follow the breakpoint. A click on a cell copies the var() reference.',
+          'Радиусы, толщины обводок, гэпы и отступы из размерных токенов Figma. Значения gap и padding зависят от брейкпоинта. Клик по ячейке копирует var()-ссылку.'
+        )}</div>
+        ${sizeHTML}
       </div>
 
       <div class="comp-section" id="sec-effect-styles">

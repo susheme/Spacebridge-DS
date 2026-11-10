@@ -55,6 +55,7 @@
 - [toc.md](components/toc.md) — Sticky Table of Contents — скелет; заметки заполняются по ходу работы.
 - [breadcrumbs.md](components/breadcrumbs.md) — Breadcrumbs — скелет; заметки заполняются по ходу работы.
 - [pagination.md](components/pagination.md) — Pagination — скелет; заметки заполняются по ходу работы.
+- [datepicker.md](components/datepicker.md) — Выбор одной даты: Button + Popover, существующие токены DS. Статус In Progress.
 - [table-footer.md](components/table-footer.md) — Pagination (центр) + «Selected: N» (право); page-size селектора нет — см. BACKLOG.md.
 - [header-s.md](components/header-s.md) — Header S — скелет; заметки заполняются по ходу работы.
 - [header-m.md](components/header-m.md) — Header M — скелет; заметки заполняются по ходу работы.

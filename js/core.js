@@ -64,6 +64,7 @@ const NAV = [
     { id: 'buttons', label: 'Buttons', ready: true },
     { id: 'chevron', label: 'Chevron Button', ready: true },
     { id: 'chips', label: 'Chips', ready: true },
+    { id: 'datepicker', label: 'Datepicker / Calendar', inProgress: true },
     { id: 'file-uploader', label: 'File Uploader', ready: true, done: true },
     { id: 'search-bar', label: 'Search Bar', ready: true, done: true },
     // Классическая тройка полей выбора: одна роль, одно место в форме.

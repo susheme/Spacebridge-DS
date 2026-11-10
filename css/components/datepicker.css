@@ -1,0 +1,41 @@
+/* --- [SYNC:datepicker] Datepicker --- */
+.sb-datepicker-calendar {
+  padding: var(--pad-vert-16) var(--pad-horiz-16);
+  border: var(--border-width-1) solid var(--border);
+  border-radius: var(--radius-8);
+  background: var(--background);
+  color: var(--text-primary);
+  width: calc(var(--text-field-min-width) * 2 + var(--btn-rounded-max-width-s) * 2 + var(--gap-horiz-xs) * 3 + var(--pad-horiz-16) * 2);
+  max-width: 100%;
+}
+.sb-datepicker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-horiz-xs);
+  margin-bottom: var(--gap-vert-s);
+}
+.sb-datepicker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--gap-horiz-xxs);
+}
+.sb-datepicker-weekday {
+  text-align: center;
+  color: var(--text-secondary);
+}
+.sb-datepicker-select { flex: 1; min-width: 0; }
+.sb-datepicker-select .sb-sel-pop,
+.sb-datepicker-select .sb-sel { min-width: 0; width: 100%; }
+.sb-datepicker-day.sb-btn { min-width: 0; justify-self: center; }
+.sb-datepicker-day.sb-btn-text { color: var(--text-primary); }
+.sb-datepicker-weekday { padding: var(--pad-vert-8) var(--pad-horiz-0); color: var(--text-primary); }
+.sb-datepicker-weekday.is-weekend,
+.sb-datepicker-day.sb-btn-text.is-weekend { color: var(--info); }
+.sb-datepicker-day.sb-btn-text.is-outside { color: var(--text-secondary); }
+.sb-datepicker-menu .sb-ctx-card { max-height: calc(var(--text-field-height-l) * 6); overflow-y: auto; overscroll-behavior: contain; }
+.sb-datepicker-select input[aria-invalid="true"] { color: var(--error); }
+/* The existing Context Card owns the popup surface and shadow. */
+.sb-datepicker-popup-card.sb-ctx-card { padding: var(--pad-vert-0) var(--pad-horiz-0); gap: var(--gap-vert-0); min-width: 0; max-width: 100%; }
+.sb-datepicker-popup-card > .sb-datepicker-calendar { border: none; border-radius: inherit; }
+/* --- [/SYNC:datepicker] --- */

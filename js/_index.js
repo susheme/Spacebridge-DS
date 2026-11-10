@@ -49,6 +49,7 @@ window.SB_COMPONENTS = [
   { name: 'toc',           file: 'toc.js',            deps: [] },                    // sticky in-page nav, used by core.js renderComponentPage
   { name: 'breadcrumbs',   file: 'breadcrumbs.js',    deps: [] },                    // path-nav, типографика синхронна с toc
   { name: 'pagination',    file: 'pagination.js',     deps: ['buttons', 'input'] },  // на базе sb-btn-secondary + sb-tf
+  { name: 'datepicker', file: 'datepicker.js', deps: ['buttons', 'popover', 'selectors'] },
   { name: 'table-footer',  file: 'table-footer.js',   deps: ['pagination'] },        // demo юзает sbMkPagination → ПОСЛЕ pagination
   { name: 'header-s',      file: 'header-s.js',       deps: ['buttons', 'popover', 'context-menu', 'tool-bar'] }, // компактный хедер; действия сворачиваются в More
   { name: 'header-m',      file: 'header-m.js',       deps: ['buttons', 'popover', 'context-menu', 'tool-bar'] },

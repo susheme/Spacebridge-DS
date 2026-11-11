@@ -15,3 +15,5 @@
 ## Заметки
 
 **09.09.2026:** `mkTf`/`mkField` экспортированы наружу как `sbMkTextField`/`sbMkField` (для Dialogues type='form'). `placeholder` теперь принимает строку (свой текст), `true` — демо-'Placeholder'. Гочи для потребителей: `fieldMode: true` обязателен вне форм-лейаута (иначе sec-narrow c min-width), дефолт `value: 'Input'`.
+
+**11.11.2026:** радиус поля — `--radius-4`, Disabled border — `--border-soft`. У Title убран левый разделитель во всех состояниях; Line View сохраняет нулевой радиус и использует border-soft в Disabled.

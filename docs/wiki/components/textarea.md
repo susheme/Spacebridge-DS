@@ -15,3 +15,5 @@
 ## Заметки
 
 —
+
+**11.11.2026:** радиус поля — `--radius-4`, Disabled border — `--border-soft`.

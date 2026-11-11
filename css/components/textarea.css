@@ -6,7 +6,7 @@
   max-width: var(--textarea-max-width);
   min-height: var(--textarea-min-height);
   max-height: var(--textarea-max-height);
-  border-radius: var(--radius-2);
+  border-radius: var(--radius-4);
   border: var(--border-width-1-5) solid var(--border);
   background: var(--surface-1);
   transition: border-color 0.15s, background 0.15s;
@@ -63,7 +63,7 @@
   border-color: var(--error);
 }
 /* Disabled */
-.sb-ta.disabled { pointer-events: none; }
+.sb-ta.disabled { border-color: var(--border-soft); pointer-events: none; }
 .sb-ta.disabled .sb-ta-input { color: var(--border); }
 .sb-ta.disabled .sb-ta-input::placeholder { color: var(--border); }
 .sb-ta.disabled::after {

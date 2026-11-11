@@ -4,7 +4,18 @@
 //  При правке стилей — обновить ОБА места (window.COMP_CSS и CSS-файл).
 // ═══════════════════════════════════════════════════════════════════════════
 
-window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 100%; max-width: var(--textarea-max-width); min-height: var(--textarea-min-height); max-height: var(--textarea-max-height); border-radius: var(--radius-2); border: var(--border-width-1-5) solid var(--border); background: var(--surface-1); transition: border-color 0.15s, background 0.15s; }
+window.COMP_CSS.textarea = `.sb-ta {
+  position: relative;
+  display: flex;
+  width: 100%;
+  max-width: var(--textarea-max-width);
+  min-height: var(--textarea-min-height);
+  max-height: var(--textarea-max-height);
+  border-radius: var(--radius-4);
+  border: var(--border-width-1-5) solid var(--border);
+  background: var(--surface-1);
+  transition: border-color 0.15s, background 0.15s;
+}
 .sb-ta-input {
   flex: 1;
   padding: var(--pad-vert-4) var(--pad-horiz-8) var(--pad-vert-24);
@@ -21,10 +32,54 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
   min-height: 93px;
 }
 .sb-ta-input::placeholder { color: var(--text-secondary); }
-.sb-ta:focus-within { background: var(--background); border-color: var(--primary); }
-.sb-ta.critical { background: var(--background); border-color: var(--error); }
-.sb-ta.disabled { pointer-events: none; }
-.sb-ta.disabled .sb-ta-input { color: var(--border); }`;
+.sb-ta-input::-webkit-resizer { display: none; }
+/* Resize dots indicator */
+.sb-ta::after {
+  content: '';
+  position: absolute;
+  right: 4px; bottom: 4px;
+  width: 14px; height: 14px;
+  background-image:
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px);
+  background-size: 3px 3px;
+  background-position:
+    right 0px  bottom 0px,
+    right 5px  bottom 0px,
+    right 0px  bottom 5px,
+    right 5px  bottom 5px,
+    right 0px  bottom 10px,
+    right 10px bottom 0px;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+/* Selected / Focus */
+.sb-ta.selected, .sb-ta:focus-within {
+  background: var(--background);
+  border-color: var(--primary);
+}
+/* Critical */
+.sb-ta.critical {
+  background: var(--background);
+  border-color: var(--error);
+}
+/* Disabled */
+.sb-ta.disabled { border-color: var(--border-soft); pointer-events: none; }
+.sb-ta.disabled .sb-ta-input { color: var(--border); }
+.sb-ta.disabled .sb-ta-input::placeholder { color: var(--border); }
+.sb-ta.disabled::after {
+  background-image:
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px),
+    radial-gradient(circle, var(--border) 1.5px, transparent 1.5px);
+}`;
 
 // --- TEXTAREA ---
 (() => {
@@ -70,9 +125,9 @@ window.COMP_CSS.textarea = `.sb-ta { position: relative; display: flex; width: 1
       'Многострочное текстовое поле. Состояния: Default, Placeholder, Selected, Critical, Disabled. Label и Subscription — через sb-field. Пример: поле комментария или описания.'
     ) + sbDocNote('Tech Info', sbT(
       '<b>Geometry:</b>'
-      + '<ul><li>Height: from 96px;</li><li>Border-radius: 2px.</li></ul>',
+      + '<ul><li>Height: from 96px;</li><li>Border-radius: 4px.</li></ul>',
       '<b>Геометрия:</b>'
-      + '<ul><li>Высота: от 96px;</li><li>Border-radius: 2px.</li></ul>'
+      + '<ul><li>Высота: от 96px;</li><li>Border-radius: 4px.</li></ul>'
     )),
     playground: {
       title: 'Textarea Playground',
